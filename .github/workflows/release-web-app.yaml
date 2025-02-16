@@ -1,0 +1,57 @@
+name: Deploy Web Wallet
+
+on:
+  push:
+    # TODO: after release stable we can build based on github tags
+    branches:
+      - main
+  workflow_dispatch:  
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout main branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./
+
+      - name: Build Next.js project
+        run: npm run build
+        working-directory: ./apps/web
+
+      - name: Push to "web" branch
+        run: |
+          COMMIT_ID=$(git rev-parse --short HEAD)
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout --orphan web
+          git rm -rf .
+          mv apps/web/out/* .
+          git add .
+          git commit -m "deploy Pactus web wallet based on $COMMIT_ID"
+          git push -f origin web
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
