@@ -169,4 +169,25 @@ export class Wallet {
         const mnemonic = this.wallet.mnemonic();
         return mnemonic.trim().split(/\s+/).length;
     }
+
+    /**
+     * Export wallet data for storage
+     * @returns WalletData object ready for serialization
+     */
+    export(): WalletData {
+        return {
+            mnemonic: this.getMnemonic(),
+            addresses: this.addresses,
+            nextEd25519Index: this.nextEd25519Index
+        };
+    }
+
+    /**
+     * Import wallet data from storage
+     * @param data WalletData object from storage
+     */
+    import(data: WalletData): void {
+        this.nextEd25519Index = data.nextEd25519Index;
+        this.addresses = [...data.addresses];
+    }
 }
