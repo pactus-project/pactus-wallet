@@ -163,4 +163,43 @@ export class Wallet {
         const mnemonic = this.wallet.mnemonic();
         return mnemonic.trim().split(/\s+/).length;
     }
+    /**
+     * Serialize the wallet data for storage or export
+     *
+     * Note: This does NOT include the mnemonic by default for security.
+     * For backup purposes, use getMnemonic() separately.
+     *
+     * @returns The wallet data as a serializable object
+     */
+    serialize(): WalletData {
+        return {
+            addresses: this.getAddresses(),
+            nextEd25519Index: this.nextEd25519Index
+        };
+    }
+
+    /**
+     * Create a wallet instance from previously saved data
+     *
+     * @param core - WalletCore instance
+     * @param data - Wallet data from storage
+     * @param password - Password for wallet decryption
+     * @returns A new wallet instance with restored data
+     * @throws Error if the mnemonic is missing from the data
+     */
+    static fromData(core: WalletCore, data: WalletData, password: string): Wallet {
+        // The mnemonic is required to restore the wallet
+        if (!data.mnemonic) {
+            throw new Error('Cannot restore wallet: mnemonic is missing from wallet data');
+        }
+
+        // First restore the wallet from the mnemonic
+        const wallet = Wallet.restore(core, data.mnemonic, password);
+
+        // Then restore the additional data
+        wallet.nextEd25519Index = data.nextEd25519Index;
+        wallet.addresses = [...data.addresses];
+
+        return wallet;
+    }
 }
