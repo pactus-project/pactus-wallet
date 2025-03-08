@@ -1,124 +1,95 @@
 import { WalletCore } from '@trustwallet/wallet-core';
 import { HDWallet } from '@trustwallet/wallet-core/dist/src/wallet-core';
 
-// Enum to define mnemonic strength options
+/**
+ * Mnemonic Strength options for wallet creation
+ * Normal = 128 bits (12 words)
+ * High = 256 bits (24 words)
+ */
 export enum MnemonicStrength {
     Normal = 128, // 12 words
     High = 256 // 24 words
 }
+
 /**
- * Wallet Data Interface
- * Represents the data structure for a wallet, including mnemonic, addresses, and next Ed25519 index
+ * Address Model
+ * Represents a wallet address with its derivation path, public key, and user-defined label
  */
-export interface WalletData {
-    mnemonic?: string;
-    addresses: Array<{
-        path: string;
-        address: string;
-        label: string;
-    }>;
-    nextEd25519Index: number;
+export interface Address {
+    path: string; // Derivation path (e.g., m/44'/21888'/3'/0')
+    address: string; // The public address string
+    label: string; // User-defined label
+    publicKey: string; // The public key in hex format
 }
 
 /**
- * Wallet Class
- * Represents a wallet instance with methods for creating, restoring, and managing addresses
+ * Wallet Data Model
+ * Used for exporting/importing wallet data
+ */
+export interface WalletData {
+    mnemonic?: string; // Optional mnemonic (included only during secure exports)
+    addresses: Array<Address>; // List of addresses
+    nextEd25519Index: number; // Next index to use for address generation
+}
+
+/**
+ * Wallet Information Model
+ * Contains user-friendly wallet statistics
+ */
+export interface WalletInfo {
+    mnemonicWordCount: number; // Number of words in the recovery phrase
+    addressCount: number; // Number of addresses in the wallet
+    createdAt?: Date; // When the wallet was created
+}
+
+/**
+ * Pactus Wallet Implementation
+ * Manages cryptographic operations using Trust Wallet Core
  */
 export class Wallet {
     private wallet: HDWallet;
     private core: WalletCore;
     private nextEd25519Index: number;
-    private addresses: Array<{ path: string; address: string; label: string }> = [];
+    private addresses: Array<Address> = [];
+    private createdAt: Date;
 
+    /**
+     * Private constructor - use static factory methods instead
+     */
     private constructor(core: WalletCore, wallet: HDWallet, password: string) {
         this.core = core;
         this.wallet = wallet;
         this.nextEd25519Index = 0;
         this.addresses = [];
+        this.createdAt = new Date();
     }
 
     /**
-     * Create a new wallet with the specified entropy strength
+     * Create a new wallet
      * @param core WalletCore instance
-     * @param strength Mnemonic strength (128 for 12 words, 256 for 24 words)
-     * @param password Password for encryption
-     * @returns A new Wallet instance
+     * @param strength Mnemonic strength (security level)
+     * @param password Password for wallet encryption
+     * @returns A new wallet instance
      */
     static create(
         core: WalletCore,
         strength: MnemonicStrength = MnemonicStrength.Normal,
         password: string
     ): Wallet {
-        let wallet = core.HDWallet.create(strength, '');
+        const wallet = core.HDWallet.create(strength, '');
         return new Wallet(core, wallet, password);
     }
 
     /**
-     * Validate a mnemonic phrase
-     * @param mnemonic The mnemonic phrase to validate
-     * @returns An object with validity status and error message if invalid
-     */
-    static validateMnemonic(mnemonic: string): { isValid: boolean; error?: string } {
-        try {
-            // Check if mnemonic is provided
-            if (!mnemonic || mnemonic.trim() === '') {
-                return { isValid: false, error: 'Mnemonic phrase is required' };
-            }
-
-            // Check word count
-            const words = mnemonic.trim().split(/\s+/);
-            const wordCount = words.length;
-
-            if (wordCount !== 12 && wordCount !== 24) {
-                return {
-                    isValid: false,
-                    error: `Invalid mnemonic: expected 12 or 24 words, got ${wordCount}`
-                };
-            }
-
-            // Validate proper BIP-39 words (in a real implementation)
-            // For this example, we just check if any word is too short or contains non-alphabet chars
-            for (const word of words) {
-                if (word.length < 3) {
-                    return {
-                        isValid: false,
-                        error: `Invalid word in mnemonic: "${word}" is too short`
-                    };
-                }
-
-                if (!/^[a-zA-Z]+$/.test(word)) {
-                    return {
-                        isValid: false,
-                        error: `Invalid word in mnemonic: "${word}" contains non-alphabet characters`
-                    };
-                }
-            }
-
-            return { isValid: true };
-        } catch (error) {
-            return {
-                isValid: false,
-                error: error instanceof Error ? error.message : 'Unknown error validating mnemonic'
-            };
-        }
-    }
-
-    /**
-     * Restore a wallet from an existing mnemonic
+     * Restore a wallet from mnemonic
      * @param core WalletCore instance
-     * @param mnemonic Mnemonic phrase (12 or 24 words)
-     * @param password Password for encryption
-     * @returns A restored Wallet instance
+     * @param mnemonic Recovery phrase
+     * @param password Password for wallet encryption
+     * @returns A restored wallet instance
      */
     static restore(core: WalletCore, mnemonic: string, password: string): Wallet {
-        // Validate mnemonic
-        const validation = Wallet.validateMnemonic(mnemonic);
-        if (!validation.isValid) {
-            throw new Error(validation.error);
-        }
-
         try {
-            let wallet = core.HDWallet.createWithMnemonic(mnemonic, '');
+            const wallet = core.HDWallet.createWithMnemonic(mnemonic, '');
             return new Wallet(core, wallet, password);
         } catch (error) {
             throw new Error(
@@ -129,42 +100,65 @@ export class Wallet {
         }
     }
 
-    // Get all addresses
-    getAddresses(): Array<{ address: string; label: string }> {
-        return this.addresses.map(({ address, label }) => ({ address, label }));
+    /**
+     * Get all addresses in the wallet
+     * @returns Array of addresses with their metadata
+     */
+    getAddresses(): Array<Address> {
+        return [...this.addresses]; // Return a copy to prevent external modification
     }
 
-    // Get info about this wallet
-    getWalletInfo(): { mnemonicWordCount: number; addressCount: number } {
+    /**
+     * Get general wallet information
+     * @returns WalletInfo object
+     */
+    getWalletInfo(): WalletInfo {
         return {
             mnemonicWordCount: this.getMnemonicWordCount(),
-            addressCount: this.addresses.length
+            addressCount: this.addresses.length,
+            createdAt: this.createdAt
         };
     }
 
-    newEd25519Address(label: string): string {
+    /**
+     * Create a new Ed25519 address
+     * @param label User-friendly label for the address
+     * @returns The generated address string
+     */
+    createAddress(label: string): string {
         const derivationPath = `m/44'/21888'/3'/${this.nextEd25519Index}'`;
         const privateKey = this.wallet.getKey(this.core.CoinType.pactus, derivationPath);
         const address = this.core.CoinTypeExt.deriveAddress(this.core.CoinType.pactus, privateKey);
+
+        // Get public key
+        const publicKey = privateKey.getPublicKeyCurve25519();
+        const publicKeyHex = Buffer.from(publicKey.data()).toString('hex');
 
         // Save address info
         this.addresses.push({
             path: derivationPath,
             address,
-            label: label || `Address ${this.nextEd25519Index + 1}`
+            label: label || `Address ${this.nextEd25519Index + 1}`,
+            publicKey: publicKeyHex
         });
 
         this.nextEd25519Index++;
-
         return address;
     }
 
-    // Get wallet mnemonic (should be used carefully, only for backup purposes)
+    /**
+     * Get the wallet's recovery phrase
+     * @warning This should be used carefully, only for backup purposes
+     * @returns The mnemonic phrase
+     */
     getMnemonic(): string {
         return this.wallet.mnemonic();
     }
 
-    // Get the word count of the mnemonic
+    /**
+     * Get the number of words in the recovery phrase
+     * @returns Word count (12 or 24)
+     */
     getMnemonicWordCount(): number {
         const mnemonic = this.wallet.mnemonic();
         return mnemonic.trim().split(/\s+/).length;
