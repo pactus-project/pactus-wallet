@@ -93,8 +93,7 @@ export class Wallet {
             return new Wallet(core, wallet, password);
         } catch (error) {
             throw new Error(
-                `Failed to restore wallet: ${
-                    error instanceof Error ? error.message : 'Unknown error'
+                `Failed to restore wallet: ${error instanceof Error ? error.message : 'Unknown error'
                 }`
             );
         }

@@ -5,7 +5,7 @@ on:
     # TODO: after release stable we can build based on github tags
     branches:
       - main
-  workflow_dispatch:  
+  workflow_dispatch:
 
 permissions:
   contents: write
