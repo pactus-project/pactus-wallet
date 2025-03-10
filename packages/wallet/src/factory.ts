@@ -1,7 +1,7 @@
 import { initWasm, WalletCore } from '@trustwallet/wallet-core';
-import { Wallet, MnemonicStrength, WalletData } from './wallet';
+import { Wallet, MnemonicStrength, WalletData, NetworkType } from './wallet';
 import { WalletConfig } from './config';
-import { InitializationError } from './errors';
+import { WalletError, InitializationError } from './errors';
 
 /**
  * Interface for Pactus Wallet
@@ -9,10 +9,19 @@ import { InitializationError } from './errors';
  */
 export interface IPactusWallet {
     getAddresses(): Array<{ address: string; label: string }>;
-    getWalletInfo(): { mnemonicWordCount: number; addressCount: number };
-    newEd25519Address(label: string): string;
+    getWalletInfo(): {
+        mnemonicWordCount: number;
+        addressCount: number;
+        network: NetworkType;
+        name: string;
+    };
+    createAddress(label: string): string;
     getMnemonic(): string;
     getMnemonicWordCount(): number;
+    getNetworkType(): NetworkType;
+    isTestnet(): boolean;
+    getName(): string;
+    setName(name: string): void;
     export(): WalletData;
     import(data: WalletData): void;
 }
@@ -87,56 +96,141 @@ export class WalletCoreFactory {
  */
 export class PactusWalletFactory {
     /**
-     * Create a new wallet
+     * Create a new wallet with the given options
      * @param password The password to encrypt the wallet
-     * @param config Configuration options or MnemonicStrength
+     * @param options Optional configuration options
+     * @param options.strength The mnemonic strength (security level)
+     * @param options.network The blockchain network type (mainnet/testnet)
+     * @param options.name A user-friendly name for the wallet
+     * @param options.config Advanced wallet configuration (storage, etc.)
      * @returns Promise resolving to a new wallet instance
      */
     static async create(
         password: string,
-        config?: WalletConfig | MnemonicStrength
+        options?: {
+            strength?: MnemonicStrength;
+            network?: NetworkType;
+            name?: string;
+            config?: WalletConfig;
+        }
     ): Promise<IPactusWallet> {
         try {
             const core = await WalletCoreFactory.initialize();
 
-            // Determine if config is a MnemonicStrength enum or a WalletConfig
-            const strength = typeof config === 'number' ? config : MnemonicStrength.Normal;
+            // Extract options with defaults
+            const {
+                strength = MnemonicStrength.Normal,
+                network = NetworkType.Mainnet,
+                name = 'My Pactus Wallet',
+                config
+            } = options || {};
 
-            return Wallet.create(core, strength, password);
-        } catch (error) {
-            throw new InitializationError(
-                `Failed to create wallet: ${
-                    error instanceof Error ? error.message : 'Unknown error'
-                }`
-            );
+            // Apply config if provided
+            if (config) {
+                // TODO: Implement configuration handling
+                // This will handle storage configuration and other advanced options
+            }
+
+            const wallet = Wallet.create(core, strength, password, network, name);
+            return this.createWalletInterface(wallet);
+        } catch (error: unknown) {
+            const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+            throw new WalletCreationError(`Failed to create wallet: ${errorMessage}`);
         }
     }
 
     /**
-     * Restore a wallet from mnemonic
-     * @param mnemonic The mnemonic phrase
+     * Restore a wallet from mnemonic phrase
+     * @param mnemonic The mnemonic recovery phrase
      * @param password The password to encrypt the wallet
+     * @param options Optional configuration options
+     * @param options.network The blockchain network type (mainnet/testnet)
+     * @param options.name A user-friendly name for the wallet
+     * @param options.config Advanced wallet configuration (storage, etc.)
      * @returns Promise resolving to a restored wallet instance
      */
-    static async restore(mnemonic: string, password: string): Promise<IPactusWallet> {
+    static async restore(
+        mnemonic: string,
+        password: string,
+        options?: {
+            network?: NetworkType;
+            name?: string;
+            config?: WalletConfig;
+        }
+    ): Promise<IPactusWallet> {
         try {
             const core = await WalletCoreFactory.initialize();
-            return Wallet.restore(core, mnemonic, password);
-        } catch (error) {
-            throw new InitializationError(
-                `Failed to restore wallet: ${
-                    error instanceof Error ? error.message : 'Unknown error'
-                }`
-            );
+
+            // Extract options with defaults
+            const {
+                network = NetworkType.Mainnet,
+                name = 'My Pactus Wallet',
+                config
+            } = options || {};
+
+            // Apply config if provided
+            if (config) {
+                // TODO: Implement configuration handling
+                // This will handle storage configuration and other advanced options
+            }
+
+            const wallet = Wallet.restore(core, mnemonic, password, network, name);
+            return this.createWalletInterface(wallet);
+        } catch (error: unknown) {
+            if (error instanceof InvalidMnemonicError) {
+                throw error;
+            }
+            const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+            throw new WalletRestoreError(`Failed to restore wallet: ${errorMessage}`);
         }
     }
 
     /**
-     * Validate a mnemonic phrase
-     * @param mnemonic The mnemonic to validate
-     * @returns Validation result with isValid flag and optional error message
+     * Helper method to create a consistent wallet interface
+     * @param wallet The underlying wallet implementation
+     * @returns A standardized IPactusWallet interface
      */
-    static validateMnemonic(mnemonic: string): { isValid: boolean; error?: string } {
-        return Wallet.validateMnemonic(mnemonic);
+    private static createWalletInterface(wallet: Wallet): IPactusWallet {
+        return {
+            getAddresses: () =>
+                wallet.getAddresses().map(({ address, label }) => ({ address, label })),
+            getWalletInfo: () => ({
+                mnemonicWordCount: wallet.getMnemonicWordCount(),
+                addressCount: wallet.getAddresses().length,
+                network: wallet.getNetworkType(),
+                name: wallet.getName()
+            }),
+            createAddress: (label: string) => wallet.createAddress(label),
+            getMnemonic: () => wallet.getMnemonic(),
+            getMnemonicWordCount: () => wallet.getMnemonicWordCount(),
+            getNetworkType: () => wallet.getNetworkType(),
+            isTestnet: () => wallet.isTestnet(),
+            getName: () => wallet.getName(),
+            setName: (name: string) => wallet.setName(name),
+            export: () => wallet.export(),
+            import: (data: WalletData) => wallet.import(data)
+        };
+    }
+}
+
+// Define the new error classes needed for our refactoring
+export class WalletCreationError extends WalletError {
+    constructor(message: string = 'Failed to create wallet') {
+        super(message);
+        this.name = 'WalletCreationError';
+    }
+}
+
+export class WalletRestoreError extends WalletError {
+    constructor(message: string = 'Failed to restore wallet') {
+        super(message);
+        this.name = 'WalletRestoreError';
+    }
+}
+
+export class InvalidMnemonicError extends WalletError {
+    constructor(message: string = 'Invalid mnemonic phrase') {
+        super(message);
+        this.name = 'InvalidMnemonicError';
     }
 }

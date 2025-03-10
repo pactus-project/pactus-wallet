@@ -2,20 +2,18 @@
  * Wallet Configuration
  * Handles all configuration options for the wallet
  */
+import { IStorage, MemoryStorage } from './storage';
+
 export interface WalletConfig {
-    network: string;
-    chainId: string;
-    debug: boolean;
-    storage?: any; // Replace with your storage interface
+    /** Storage implementation for persistence */
+    storage?: IStorage;
 }
 
 /**
  * Default configuration values
  */
 const DEFAULT_CONFIG: WalletConfig = {
-    network: 'https://mainnet-rpc.pactus.org',
-    chainId: 'mainnet',
-    debug: false
+    storage: new MemoryStorage()
 };
 
 /**
@@ -28,44 +26,19 @@ export class WalletConfigBuilder {
     constructor() {
         this.config = { ...DEFAULT_CONFIG };
     }
-
     /**
-     * Set the network endpoint
-     * @param network The RPC endpoint URL
+     * Set custom storage implementation
+     * @param storage The storage implementation
+     * @returns This builder instance for chaining
      */
-    withNetwork(network: string): WalletConfigBuilder {
-        this.config.network = network;
-        return this;
-    }
-
-    /**
-     * Set the chain ID
-     * @param chainId The blockchain chain ID
-     */
-    withChainId(chainId: string): WalletConfigBuilder {
-        this.config.chainId = chainId;
-        return this;
-    }
-
-    /**
-     * Enable debug mode
-     */
-    withDebugMode(): WalletConfigBuilder {
-        this.config.debug = true;
-        return this;
-    }
-
-    /**
-     * Set a custom storage provider
-     * @param storage Storage implementation
-     */
-    withStorage(storage: any): WalletConfigBuilder {
+    withStorage(storage: IStorage): WalletConfigBuilder {
         this.config.storage = storage;
         return this;
     }
 
     /**
      * Build the final configuration
+     * @returns The complete wallet configuration
      */
     build(): WalletConfig {
         return { ...this.config };
@@ -74,6 +47,7 @@ export class WalletConfigBuilder {
 
 /**
  * Create a new wallet configuration builder
+ * @returns A new WalletConfigBuilder instance
  */
 export function configureWallet(): WalletConfigBuilder {
     return new WalletConfigBuilder();

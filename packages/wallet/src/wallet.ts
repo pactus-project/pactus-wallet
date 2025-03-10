@@ -2,6 +2,14 @@ import { WalletCore } from '@trustwallet/wallet-core';
 import { HDWallet } from '@trustwallet/wallet-core/dist/src/wallet-core';
 
 /**
+ * Network type for wallet operation
+ */
+export enum NetworkType {
+    Mainnet = 'mainnet',
+    Testnet = 'testnet'
+}
+
+/**
  * Mnemonic Strength options for wallet creation
  * Normal = 128 bits (12 words)
  * High = 256 bits (24 words)
@@ -30,6 +38,8 @@ export interface WalletData {
     mnemonic?: string; // Optional mnemonic (included only during secure exports)
     addresses: Array<Address>; // List of addresses
     nextEd25519Index: number; // Next index to use for address generation
+    network: NetworkType; // Network type (mainnet/testnet)
+    name: string; // User-defined wallet name
 }
 
 /**
@@ -40,6 +50,8 @@ export interface WalletInfo {
     mnemonicWordCount: number; // Number of words in the recovery phrase
     addressCount: number; // Number of addresses in the wallet
     createdAt?: Date; // When the wallet was created
+    network: NetworkType; // Network type (mainnet/testnet)
+    name: string; // User-defined wallet name
 }
 
 /**
@@ -52,16 +64,26 @@ export class Wallet {
     private nextEd25519Index: number;
     private addresses: Array<Address> = [];
     private createdAt: Date;
+    private network: NetworkType;
+    private name: string;
 
     /**
      * Private constructor - use static factory methods instead
      */
-    private constructor(core: WalletCore, wallet: HDWallet, password: string) {
+    private constructor(
+        core: WalletCore,
+        wallet: HDWallet,
+        password: string,
+        network: NetworkType = NetworkType.Mainnet,
+        name: string = 'My Wallet'
+    ) {
         this.core = core;
         this.wallet = wallet;
         this.nextEd25519Index = 0;
         this.addresses = [];
         this.createdAt = new Date();
+        this.network = network;
+        this.name = name;
     }
 
     /**
@@ -69,15 +91,19 @@ export class Wallet {
      * @param core WalletCore instance
      * @param strength Mnemonic strength (security level)
      * @param password Password for wallet encryption
+     * @param network Network type (mainnet/testnet)
+     * @param name User-defined wallet name
      * @returns A new wallet instance
      */
     static create(
         core: WalletCore,
         strength: MnemonicStrength = MnemonicStrength.Normal,
-        password: string
+        password: string,
+        network: NetworkType = NetworkType.Mainnet,
+        name: string = 'My Wallet'
     ): Wallet {
         const wallet = core.HDWallet.create(strength, '');
-        return new Wallet(core, wallet, password);
+        return new Wallet(core, wallet, password, network, name);
     }
 
     /**
@@ -85,12 +111,20 @@ export class Wallet {
      * @param core WalletCore instance
      * @param mnemonic Recovery phrase
      * @param password Password for wallet encryption
+     * @param network Network type (mainnet/testnet)
+     * @param name User-defined wallet name
      * @returns A restored wallet instance
      */
-    static restore(core: WalletCore, mnemonic: string, password: string): Wallet {
+    static restore(
+        core: WalletCore,
+        mnemonic: string,
+        password: string,
+        network: NetworkType = NetworkType.Mainnet,
+        name: string = 'My Wallet'
+    ): Wallet {
         try {
             const wallet = core.HDWallet.createWithMnemonic(mnemonic, '');
-            return new Wallet(core, wallet, password);
+            return new Wallet(core, wallet, password, network, name);
         } catch (error) {
             throw new Error(
                 `Failed to restore wallet: ${
@@ -116,7 +150,9 @@ export class Wallet {
         return {
             mnemonicWordCount: this.getMnemonicWordCount(),
             addressCount: this.addresses.length,
-            createdAt: this.createdAt
+            createdAt: this.createdAt,
+            network: this.network,
+            name: this.name
         };
     }
 
@@ -165,6 +201,38 @@ export class Wallet {
     }
 
     /**
+     * Get the network type the wallet is configured for
+     * @returns NetworkType (mainnet or testnet)
+     */
+    getNetworkType(): NetworkType {
+        return this.network;
+    }
+
+    /**
+     * Check if wallet is using testnet
+     * @returns true if wallet is using testnet
+     */
+    isTestnet(): boolean {
+        return this.network === NetworkType.Testnet;
+    }
+
+    /**
+     * Get the wallet's name
+     * @returns The wallet's name
+     */
+    getName(): string {
+        return this.name;
+    }
+
+    /**
+     * Set the wallet's name
+     * @param name The new name for the wallet
+     */
+    setName(name: string): void {
+        this.name = name;
+    }
+
+    /**
      * Export wallet data for storage
      * @returns WalletData object ready for serialization
      */
@@ -172,7 +240,9 @@ export class Wallet {
         return {
             mnemonic: this.getMnemonic(),
             addresses: this.addresses,
-            nextEd25519Index: this.nextEd25519Index
+            nextEd25519Index: this.nextEd25519Index,
+            network: this.network,
+            name: this.name
         };
     }
 
@@ -183,5 +253,11 @@ export class Wallet {
     import(data: WalletData): void {
         this.nextEd25519Index = data.nextEd25519Index;
         this.addresses = [...data.addresses];
+        if (data.network) {
+            this.network = data.network;
+        }
+        if (data.name) {
+            this.name = data.name;
+        }
     }
 }
