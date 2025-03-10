@@ -1,4 +1,4 @@
-import Activity from "@/scens/activity";
+import Activity from "@/scenes/activity";
 
 
 

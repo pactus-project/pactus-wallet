@@ -1,8 +1,18 @@
 import { chooseNameIcon } from '@/assets'
 import Image from 'next/image'
-import React from 'react'
+import React, { useContext } from 'react'
 import './style.css'
+import { useRouter } from 'next/navigation'
+import { GuardContext } from '@/providers/guard'
 const ChooseNameWallet = () => {
+    const navigate = useRouter().replace;
+    const { setHasWallet } = useContext(GuardContext);
+
+    const handleEnableWallet = () => {
+        setHasWallet(true);
+        navigate('/');
+    };
+
     const emojis = [
         "😀", "😃", "😄", "😁", "😆", "😅", "😂", "🤣", "🥲", "🥹", "☺️", "😊", "😇", "🙂", "🙃", "😉", "😌",
         "😍", "🥰", "😘", "😗", "😙", "😚", "😋", "😛", "😝", "😜", "🤪", "🤨", "🧐", "🤓", "😎", "🥸", "🤩",
@@ -29,7 +39,7 @@ const ChooseNameWallet = () => {
             <div className='emoji-ChooseNameWallet' >
                 {emojis.map((emoji, index) => (<button key={`${index}-emoji`} >{emoji}</button>))}
             </div>
-            <button className='cta-ChooseNameWallet'  >Finish</button>
+            <button className='cta-ChooseNameWallet' onClick={() => handleEnableWallet()}  >Finish</button>
         </div>
     )
 }

@@ -1,4 +1,4 @@
-import Wallet from "@/scens/wallet";
+import Wallet from "@/scenes/wallet";
 
 
 export default function WalletPage() {

@@ -1,5 +1,5 @@
 
-import GetStarted from "@/scens/get-started";
+import GetStarted from "@/scenes/get-started";
 
 
 

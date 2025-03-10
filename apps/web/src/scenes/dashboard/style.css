@@ -1,0 +1,228 @@
+.container-dashboard {
+    display: flex;
+    width: 100%;
+    min-height: 100dvh;
+
+}
+
+.content-dashboard {
+    width: calc(100% - 219px);
+    display: flex;
+    flex-direction: column;
+    margin-left: auto;
+}
+
+.section1-dashboard {
+    width: 98%;
+    margin-left: auto;
+    margin-right: auto;
+    height: 349px;
+    border-radius: 8px;
+    background: #1D2328;
+    box-shadow: 0px 0px 3px 2px #272B33 inset;
+
+}
+
+.section1-dashboard>div {
+    display: flex;
+    justify-content: space-between;
+    padding: 21px 30px;
+}
+
+.section1-dashboard hr {
+    background: #15191C;
+    border: none;
+    height: 1px;
+    width: 100%;
+}
+
+.amountSection-dashboard {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.amountSection-dashboard>h1 {
+    display: flex;
+    align-items: center;
+    color: #D2D3E0;
+    font-size: 19px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.amountSection-dashboard>div {
+    display: flex;
+    align-items: flex-end;
+    gap: 5px;
+}
+
+.amountSection-dashboard p {
+    color: #D2D3E0;
+    font-size: 34px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.amountSection-dashboard span {
+    color: #6E6E6E;
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.amountCtas-dashboard {
+    margin-top: 40px;
+    gap: 12px !important;
+}
+
+.chart-dashboard {
+    position: relative;
+    width: calc(100% - 420px);
+    height: 205px;
+    border-radius: 8px;
+    padding: 20px;
+    background: #15191C;
+    overflow: hidden;
+
+}
+
+.chart-dashboard>label {
+    position: absolute;
+    inset: 0;
+    background: #15191ce8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.totalNumbers-dashboard {
+    justify-content: flex-start !important;
+    align-items: center;
+    gap: 20px;
+}
+
+.totalNumbers-dashboard>div>div {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.totalNumbers-dashboard p {
+    color: #D2D3E0;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.totalNumbers-dashboard span {
+    color: #6F6F6F;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.totalNumbers-dashboard hr {
+    width: 2px;
+    height: 10px;
+    background: #0FEF9E;
+    border: none;
+}
+
+.transactionsContainer-dashboard {
+    width: 98%;
+    margin-left: auto;
+    margin-right: auto;
+    height: 529px;
+    border-radius: 8px;
+    background: #1D2328;
+    box-shadow: 0px 0px 3px 2px #272B33 inset;
+    margin-top: 15px;
+    margin-bottom: 30px;
+
+}
+
+.transactionsContainer-dashboard>hr {
+    background: #15191C;
+    border: none;
+    height: 1px;
+    width: 100%;
+}
+
+.headerTransaction-dashboard {
+    display: flex;
+    padding: 25px 35px 17px 35px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.transactions-dashboard {
+    padding: 25px 35px 17px 35px;
+    width: 100%;
+}
+
+.headerTransaction-dashboard>h3 {
+    color: #D2D3E0;
+    font-size: 19px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.searchTransactions-dashboard {
+    display: flex;
+    position: relative;
+    border-radius: 8px;
+    border: 1px solid #1D2328;
+    background: #15191C;
+    box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.15);
+    height: 32px;
+    width: calc(100% - 350px);
+    min-width: 100px;
+}
+
+.searchTransactions-dashboard>input {
+    width: 100%;
+    background: none;
+    border: none;
+    outline: none;
+    padding-left: 25px;
+    color: #FFF;
+    text-align: left;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+
+
+}
+
+.searchTransactions-dashboard>img {
+    position: absolute;
+    left: 5px;
+    top: 8px;
+}
+
+.filterTransactions-dashboard {
+    display: flex;
+    align-items: center;
+    border-radius: 8px;
+    border: 1px solid #1D2328;
+    background: #15191C;
+    box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.15);
+    padding: 6px;
+}
+
+.filterTransactions-dashboard button {
+    color: #858699;
+    text-align: center;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}

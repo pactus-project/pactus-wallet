@@ -1,23 +1,23 @@
 {
-  "name": "pactus-wallet",
-  "version": "0.1.0",
-  "repository": "https://github.com/pactus-project/pactus-wallet.git",
-  "dependencies": {
-    "turbo": "^2.4.1",
-    "typescript": "^5.7.3"
-  },
-  "scripts": {
-    "build": "npx turbo build",
-    "build:web": "npx turbo build:web",
-    "build:pkg": "npx turbo build:pkg"
-  },
-  "workspaces": {
-    "packages": [
-      "packages/*",
-      "apps/*",
-      "tests/*"
-    ]
-  },
-  "packageManager": "yarn@4.6.0",
-  "private": true
+    "name": "pactus-wallet",
+    "version": "0.1.0",
+    "repository": "https://github.com/pactus-project/pactus-wallet.git",
+    "license": "MIT",
+    "dependencies": {
+        "turbo": "^2.4.1",
+        "typescript": "^5.7.3"
+    },
+    "scripts": {
+        "build": "npx turbo build",
+        "build:web": "npx turbo build:web",
+        "build:pkg": "npx turbo build:pkg"
+    },
+    "workspaces": {
+        "packages": [
+            "packages/*",
+            "apps/*",
+            "tests/*"
+        ]
+    },
+    "private": true
 }

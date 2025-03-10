@@ -1,0 +1,17 @@
+.cta-BridgePac {
+    display: flex;
+    width: 119px;
+    height: 38px;
+    padding: 13px 7px;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    border-radius: 8px;
+    background: #15191C;
+    color: #FFF;
+    text-align: center;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}

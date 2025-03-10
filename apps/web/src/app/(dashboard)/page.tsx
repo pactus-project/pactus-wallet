@@ -1,4 +1,4 @@
-import Dashboard from "@/scens/dashboard";
+import Dashboard from "@/scenes/dashboard";
 
 
 

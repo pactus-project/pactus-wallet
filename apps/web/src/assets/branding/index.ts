@@ -1,2 +1,3 @@
 import pactusLogo from './pactus-logo.png';
-export { pactusLogo };
+import simpleLogo from './simple-logo.svg';
+export { pactusLogo, simpleLogo };

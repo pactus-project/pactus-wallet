@@ -1,0 +1,213 @@
+.sidebarContainer {
+    display: flex;
+    flex-direction: column;
+    width: 219px;
+    min-height: 100dvh;
+    padding: 25px 15px;
+    background: #1D2328;
+    position: fixed;
+}
+
+.walletName-sidebar {
+    display: flex;
+    align-items: center;
+    width: 100%;
+
+}
+
+.walletName-sidebar>span {
+    display: flex;
+    padding: 2px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 4px;
+    background: #CA6534;
+    margin-right: 8px;
+}
+
+.walletName-sidebar>h2 {
+    color: #D2D3E0;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.walletName-sidebar>img {
+    margin-left: auto;
+}
+
+.addAccount-sidebar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.addAccount-sidebar>button {
+    display: flex;
+    align-items: center;
+    border-radius: 4px;
+    border: 1px solid #414144;
+    background: #15191C;
+    box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.15);
+    color: #D2D3E0;
+    text-align: center;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    text-wrap: no-wrap;
+    position: relative;
+    gap: 9px;
+}
+
+.addAccount-sidebar :first-child {
+    justify-content: flex-start;
+    width: calc(100% - 45px);
+
+}
+
+.addAccount-sidebar :first-child>img {
+    object-fit: scale-down;
+    max-width: 15px;
+}
+
+.addAccount-sidebar> :last-child {
+    width: 38px;
+    height: 38px;
+}
+
+.accountList-sidebar {
+    margin-top: 20px;
+}
+
+.addAccount-sidebar> :last-child>img {
+    object-fit: scale-down;
+    width: 16px;
+    height: 16px;
+}
+
+
+
+.accountList-sidebar> :last-child {
+    display: flex;
+    padding-left: 14px;
+}
+
+.accountList-sidebar hr {
+    background: #525252;
+    border: none;
+    width: 1px;
+    margin-right: 5px;
+    margin-top: 5px;
+}
+
+.accountItems-sidebar {
+    margin-top: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin: 10px 0;
+}
+
+.accountItems-sidebar>button {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    border-radius: 4px;
+    padding: 5px;
+}
+
+.accountItems-sidebar span {
+    font-size: 11px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.accountItems-sidebar p {
+    color: #D2D3E0;
+    font-family: Inter;
+    font-size: 11px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.route-sidebar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    margin-top: 20px;
+    gap: 10px;
+    width: 100%;
+    padding: 5.5px 10px 5.5px 7px;
+    gap: 10px;
+    border-radius: 4px;
+}
+
+.route-sidebar h3 {
+    color: #D2D3E0;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+
+}
+
+.activeRoute-sidebar {
+
+    background: #15191C;
+}
+
+.Contributing-sidebar {
+    display: flex;
+    border-radius: 4px;
+    background: #15191C;
+    box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.10);
+    width: 191px;
+    height: 111px;
+    flex-shrink: 0;
+    padding: 11px;
+    gap: 5px;
+    margin-top: 25px;
+}
+
+.Contributing-sidebar>div {
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+
+}
+
+.Contributing-sidebar h4 {
+    color: #EEEFFC;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.Contributing-sidebar p {
+    color: #858699;
+    font-family: Inter;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.Contributing-sidebar button {
+    font-family: Inter;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    background: var(--Ocean, linear-gradient(91deg, #0FEF9E -0.23%, #064560 105.78%));
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    justify-content: flex-start;
+}

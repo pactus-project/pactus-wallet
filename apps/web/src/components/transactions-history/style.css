@@ -1,0 +1,58 @@
+.container-TransactionsHistory {
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    background: #15191C;
+    padding: 16px 21px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.grid-header {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    position: sticky;
+    top: 0;
+    background: #15191C;
+    z-index: 1;
+    padding-bottom: 10px;
+}
+
+.grid-header-cell {
+    color: #858699;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    padding: 10px;
+    text-align: left;
+}
+
+.grid-body {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    overflow-y: auto;
+
+}
+
+.grid-row {
+    display: contents;
+}
+
+.grid-cell {
+    color: #FFF;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    padding: 10px;
+    border-bottom: 1px solid #333;
+}
+
+.gradientTxHash-TransactionsHistory {
+    background: var(--Ocean, linear-gradient(91deg, #0FEF9E -0.23%, #064560 105.78%));
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
