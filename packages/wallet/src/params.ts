@@ -20,7 +20,7 @@ export class Params {
 
     getNumber(key: string, defaultValue: number): number {
         const val = this.data.get(key);
-        if (!val)
+        if (val === undefined)
             return defaultValue;
 
         return parseInt(val, 10);
