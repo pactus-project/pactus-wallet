@@ -2,7 +2,8 @@
  * Wallet Configuration
  * Handles all configuration options for the wallet
  */
-import { IStorage, MemoryStorage } from './storage';
+import { MemoryStorage } from './storage/memory-storage';
+import { IStorage } from './storage/storage';
 
 export interface WalletConfig {
     /** Storage implementation for persistence */

@@ -1,8 +1,8 @@
 import { initWasm, WalletCore } from '@trustwallet/wallet-core';
-import { MnemonicStrength, NetworkType, Wallet, WalletData } from '../src/wallet';
-import { WalletManager } from '../src/wallet-manager';
-import { MemoryStorage } from '../src/storage';
-import { StorageError } from '../src/error';
+import { MnemonicStrength, NetworkType, Wallet, WalletData } from './wallet';
+import { WalletManager } from './wallet-manager';
+import { StorageError } from './error';
+import { MemoryStorage } from './storage/memory-storage';
 
 describe('WalletManager Tests', () => {
     let core: WalletCore;
@@ -238,49 +238,6 @@ describe('WalletManager Tests', () => {
 
             // Attempt to delete should throw StorageError
             await expect(walletManager.deleteWallet()).rejects.toThrow(StorageError);
-        });
-    });
-
-    describe('Wallet Manager without Storage', () => {
-        it('should create a wallet without storage', async () => {
-            const walletManager = new WalletManager(core);
-            const wallet = await walletManager.createWallet(testPassword);
-            expect(wallet).toBeTruthy();
-            expect(walletManager.getCurrentWallet()).toBe(wallet);
-        });
-
-        it('should not save wallet to storage when no storage is provided', async () => {
-            const walletManager = new WalletManager(core);
-            const wallet = await walletManager.createWallet(testPassword);
-
-            const savedData = await walletManager.saveWallet(testPassword);
-            expect(savedData).toBeTruthy();
-            expect(savedData?.mnemonic).toBe(wallet.getMnemonic());
-        });
-
-        it('should return null when loading wallet without storage', async () => {
-            const walletManager = new WalletManager(core);
-            const wallet = await walletManager.createWallet(testPassword);
-
-            const loadedWallet = await walletManager.loadWallet(testPassword);
-            expect(loadedWallet).toBeNull();
-        });
-
-        it('should return false for hasWallet when no storage is provided', async () => {
-            const walletManager = new WalletManager(core);
-            await walletManager.createWallet(testPassword);
-
-            const hasWallet = await walletManager.hasWallet();
-            expect(hasWallet).toBe(false);
-        });
-
-        it('should delete current wallet when no storage is provided', async () => {
-            const walletManager = new WalletManager(core);
-            await walletManager.createWallet(testPassword);
-
-            const result = await walletManager.deleteWallet();
-            expect(result).toBe(true);
-            expect(walletManager.getCurrentWallet()).toBeUndefined();
         });
     });
 });

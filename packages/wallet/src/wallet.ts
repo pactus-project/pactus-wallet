@@ -44,6 +44,7 @@ export interface WalletData {
     nextEd25519Index: number; // Next index to use for address generation
     network: NetworkType; // Network type (mainnet/testnet)
     name: string; // User-defined wallet name
+    keystore?: string; // Keystore data
 }
 
 /**
@@ -70,6 +71,7 @@ export class Wallet {
     private createdAt: Date;
     private network: NetworkType;
     private name: string;
+    private keystore?: string;
 
     /**
      * Private constructor - use static factory methods instead
@@ -88,6 +90,7 @@ export class Wallet {
         this.createdAt = new Date();
         this.network = network;
         this.name = name;
+        this.keystore = '';
     }
 
     /**
@@ -245,14 +248,15 @@ export class Wallet {
         const uuid = crypto.randomUUID ? crypto.randomUUID() : this.generateUUID();
 
         return {
-            version: '1.0',
+            version: '3.0',
             uuid: uuid,
             creation_time: this.createdAt.getTime(),
             mnemonic: this.getMnemonic(),
             addresses: this.addresses,
             nextEd25519Index: this.nextEd25519Index,
             network: this.network,
-            name: this.name
+            name: this.name,
+            keystore: this.keystore
         };
     }
 

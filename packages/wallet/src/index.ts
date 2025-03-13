@@ -5,11 +5,11 @@
 
 // Core wallet functionality
 export * from './wallet';
-export * from './storage';
-export * from './wallet-manager';
+export * from './storage/storage';
+export * from './wallet-manager'; // This will now include the WalletList interface
 export * from './error'; // Import as a type to show intent
 import { initWasm } from '@trustwallet/wallet-core';
-import { IStorage } from './storage';
+import { IStorage } from './storage/storage';
 import { WalletManager } from './wallet-manager';
 // Configuration
 export * from './config';

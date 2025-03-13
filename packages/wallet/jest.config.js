@@ -12,5 +12,5 @@ module.exports = {
             }
         ]
     },
-    roots: ['<rootDir>/src/', '<rootDir>/test/']
+    roots: ['<rootDir>/src/']
 };

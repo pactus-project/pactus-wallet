@@ -1,7 +1,7 @@
 import { WalletCore } from '@trustwallet/wallet-core';
 import { Wallet, WalletData, NetworkType, MnemonicStrength } from './wallet';
-import { IStorage } from './storage';
 import { StorageError } from './error';
+import { IStorage } from './storage/storage';
 
 /**
  * WalletManager
@@ -9,7 +9,7 @@ import { StorageError } from './error';
  */
 export class WalletManager {
     private core: WalletCore;
-    private storage?: IStorage;
+    private storage: IStorage;
     private currentWallet?: Wallet;
     private readonly walletStorageKey = 'pactus_wallet_data';
 
@@ -18,7 +18,7 @@ export class WalletManager {
      * @param core WalletCore instance
      * @param storage Optional storage implementation
      */
-    constructor(core: WalletCore, storage?: IStorage) {
+    constructor(core: WalletCore, storage: IStorage) {
         this.core = core;
         this.storage = storage;
     }
