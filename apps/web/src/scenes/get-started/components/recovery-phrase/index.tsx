@@ -30,7 +30,7 @@ const RecoveryPhrase = () => {
         const indexes: number[] = [];
         const numValidationWords = count === 12 ? 4 : 8;
         while (indexes.length < numValidationWords) {
-            let randomIndex = Math.floor(Math.random() * count);
+            const randomIndex = Math.floor(Math.random() * count);
             if (!indexes.includes(randomIndex)) {
                 indexes.push(randomIndex);
             }
@@ -45,7 +45,7 @@ const RecoveryPhrase = () => {
         setUserInputs({ ...userInputs, [index]: value });
 
         // Validate input and apply color styles
-        let errors = { ...inputErrors };
+        const errors = { ...inputErrors };
         if (value.trim() !== walletCeeds[index]) {
             errors[index] = 'error';  // Incorrect input
         } else {
@@ -57,7 +57,7 @@ const RecoveryPhrase = () => {
 
     // Validate user inputs before proceeding
     const validateInputs = () => {
-        let errors = {};
+        const errors = {};
         let allInputsValid = true;
         validationIndexes.forEach((index) => {
             if (userInputs[index]?.trim() !== walletCeeds[index]) {
