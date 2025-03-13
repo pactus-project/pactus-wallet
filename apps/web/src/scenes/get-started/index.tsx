@@ -1,5 +1,4 @@
 "use client";
-
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState, Suspense, JSX } from 'react';
 import AddWallet from './components/add-wallet';
@@ -9,11 +8,9 @@ import MasterPassword from './components/master-password';
 import RecoveryPhrase from './components/recovery-phrase';
 import Welcome from './components/welcome';
 import './style.css';
-
 const GetStartedContent = () => {
   const searchParams = useSearchParams();
   const [step, setStep] = useState<string | null>(null);
-
   useEffect(() => {
     setStep(searchParams.get('step'));
   }, [searchParams]);
