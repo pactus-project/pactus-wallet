@@ -1,5 +1,5 @@
-import { Encrypter, defaultEncrypter } from '../src/encrypter';
-import { Params } from '../src/params';
+import { Encrypter, defaultEncrypter } from '../src/encrypter/encrypter';
+import { Params } from '../src/encrypter/params';
 
 describe('Encrypter Tests', () => {
     it('should handle NopeEncrypter', async () => {
