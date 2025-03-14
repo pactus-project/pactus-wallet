@@ -1,5 +1,6 @@
 import { Params } from './params';
-
+const argon2 = require('argon2-browser');
+import * as crypto from 'crypto';
 
 interface Argon2dParameters {
     iterations: number;
@@ -18,7 +19,6 @@ const nameParamKeylen = "keylen";
 const nameFuncNope = "";
 const nameFuncArgon2ID = "ARGON2ID";
 const nameFuncAES256CTR = "AES_256_CTR";
-const nameFuncAES256CBC = "AES_256_CBC";
 const nameFuncMACv1 = "MACV1";
 
 const defaultIterations = 3
@@ -39,7 +39,7 @@ export class Encrypter {
         return this.method !== nameFuncNope;
     }
 
-    encrypt(message: string, password: string): string {
+    async encrypt(message: string, password: string): Promise<string> {
         if (this.method === nameFuncNope) {
             if (password !== "") {
                 throw new Error("Invalid password");
@@ -57,8 +57,19 @@ export class Encrypter {
         }
 
         try {
-            const salt = bcrypt.genSaltSync(16);
-            const derivedByte = ...;
+            var salt = new Uint8Array(16);
+            crypto.getRandomValues(salt);
+
+            const derivedByte = await argon2.hash({
+                pass: password,
+                salt: "salt",
+
+                // parallelism: parallelism,
+                // mem: memory,
+                // time: iterations,
+                // hashLen: keyLen,
+                type: argon2.ArgonType.Argon2id,
+            });
 
 
             // Encrypter method

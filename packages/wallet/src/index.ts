@@ -13,7 +13,6 @@ import { IStorage } from './storage/storage';
 import { WalletManager } from './wallet-manager';
 // Configuration
 export * from './config';
-export * from './params';
 
 // Re-export version for easier access
 export const VERSION = '1.0.0';
