@@ -12,7 +12,8 @@
         "test:watch": "jest --watch --forceExit --detectOpenHandles"
     },
     "dependencies": {
-        "@trustwallet/wallet-core": "^4.2"
+        "@trustwallet/wallet-core": "^4.2",
+        "argon2-browser": "1.18.0"
     },
     "devDependencies": {
         "@types/jest": "^29.5",
