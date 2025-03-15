@@ -98,23 +98,8 @@ describe('WalletManager Tests', () => {
             // Create a wallet
             const wallet = await walletManager.createWallet(testPassword);
             wallet.createAddress('Address 1');
-
             // Modify wallet (add an address)
             wallet.createAddress('Address 2');
-
-            // Detailed logging before save
-            const walletToSave = walletManager.getCurrentWallet();
-            console.log('Wallet Before Save:', {
-                mnemonic: walletToSave?.getMnemonic(),
-                addresses: walletToSave?.getAddresses().map(addr => ({
-                    path: addr.path,
-                    address: addr.address,
-                    label: addr.label,
-                    publicKey: addr.publicKey
-                })),
-                nextEd25519Index: (walletToSave as any)?.nextEd25519Index
-            });
-
             // Attempt to save with comprehensive error handling
             let savedData;
             try {
@@ -122,20 +107,15 @@ describe('WalletManager Tests', () => {
                 const testKey = 'test_storage_check';
                 const testValue = 'test_value';
 
-                console.log('Checking storage availability...');
                 await storage.set(testKey, testValue);
                 const retrievedValue = await storage.get(testKey);
-                console.log('Storage test:', { testKey, testValue, retrievedValue });
 
                 if (retrievedValue !== testValue) {
                     throw new Error('Storage get/set test failed');
                 }
-
                 await storage.delete(testKey);
-
                 // Now save the wallet
                 savedData = await walletManager.saveWallet(testPassword);
-                console.log('Saved Data:', savedData);
             } catch (error) {
                 console.error('Comprehensive save error:', {
                     error,
@@ -143,14 +123,6 @@ describe('WalletManager Tests', () => {
                     errorMessage: error instanceof Error ? error.message : 'No error message',
                     errorStack: error instanceof Error ? error.stack : 'No stack trace'
                 });
-
-                // If storage methods are not working, log the storage object
-                console.log('Storage object:', {
-                    storageType: storage.constructor.name,
-                    storageKeys: Object.keys(storage),
-                    storagePrototype: Object.getPrototypeOf(storage)
-                });
-
                 throw error;
             }
 
