@@ -1,5 +1,4 @@
 "use client";
-
 import React, { Suspense } from 'react'
 import './style.css'
 import Sidebar from '@/components/sidebar';
@@ -11,7 +10,6 @@ import RefetchBalance from '@/components/refetch';
 import SendPac from '@/components/send';
 import BridgePac from '@/components/bridge';
 const Wallet = () => {
-
     return (
         <Suspense fallback={<div>Loading...</div>}>
             <div className='container-wallet' >

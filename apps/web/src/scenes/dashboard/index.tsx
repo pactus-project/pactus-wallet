@@ -10,9 +10,7 @@ import SendPac from '@/components/send';
 import ReceivePac from '@/components/receive';
 import BridgePac from '@/components/bridge';
 import TransactionsHistory from '@/components/transactions-history';
-
 const Dashboard = () => {
-
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <div className='container-dashboard' >

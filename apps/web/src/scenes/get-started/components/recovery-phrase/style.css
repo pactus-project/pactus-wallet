@@ -56,6 +56,10 @@
     /* 136.899% */
 }
 
+.cta-RecoveryPhrase:disabled {
+    opacity: 0.5;
+}
+
 .hint-RecoveryPhrase>select {
     border-radius: 8px;
     border: 1px solid #3E3E3E;
@@ -74,7 +78,7 @@
 
 .ceed-RecoveryPhrase {
     display: grid;
-    grid-template-columns: repeat(4, 200px); 
+    grid-template-columns: repeat(4, 200px);
     width: 967px;
     min-height: 235px;
     padding: 33px 38px;
@@ -87,8 +91,8 @@
 }
 
 .ceed-RecoveryPhrase span {
-    display: flex; 
-    padding: 2px 16px 6px 16px;
+    display: flex;
+    padding: 2px 16px 2px 0;
     justify-content: flex-start;
     align-items: center;
     border-radius: 100px;
@@ -100,9 +104,40 @@
     font-weight: 600;
     line-height: 150%;
     letter-spacing: -0.16px;
-    white-space: nowrap; 
-    overflow: hidden; 
-    text-overflow: ellipsis; 
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ceed-RecoveryPhrase span>label {
+    margin-right: 5px;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    padding-left: 16px;
+}
+
+.ceed-RecoveryPhrase input {
+    width: calc(100% - 24px);
+    height: 100%;
+    display: flex;
+
+    justify-content: flex-start;
+    align-items: center;
+    border-radius: 100px;
+    background: inherit;
+    color: inherit;
+    text-align: left;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border: none;
+    outline: none;
 }
 
 .copyCeed-RecoveryPhrase {
@@ -115,6 +150,20 @@
     line-height: 20px;
     /* 142.857% */
 }
-.copyCeed-RecoveryPhrase img{
+
+.copyCeed-RecoveryPhrase img {
     margin-right: 5px;
+}
+
+.error-ceed-RecoveryPhrase {
+    border: 2px solid red !important;
+    color: #BD0F0F !important;
+    background-color: #ffe5e5 !important;
+}
+
+
+.success-ceed-RecoveryPhrase {
+    border: 2px solid green !important;
+    background-color: #C6FFBD !important;
+    color: #0F840B !important;
 }
