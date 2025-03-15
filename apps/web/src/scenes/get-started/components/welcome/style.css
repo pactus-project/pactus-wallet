@@ -5,7 +5,7 @@
     max-width: 1000px;
 }
 
-.contianer-GetStarted h1 {
+.container-GetStarted h1 {
     color: #FFF;
     font-family: Inter;
     font-size: 45px;
@@ -15,7 +15,7 @@
     /* 119.259% */
 }
 
-.contianer-GetStarted h1 span {
+.container-GetStarted h1 span {
     font-weight: 500;
     font-size: 30px;
 }
@@ -90,7 +90,9 @@
     padding: 5px 0;
     /* 136.899% */
 }
-
+.letsCta-GetStarted>button:disabled{
+    opacity: 0.5;
+}
 .letsCta-GetStarted>div {
     display: flex;
     gap: 5px;

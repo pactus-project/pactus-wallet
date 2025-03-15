@@ -42,15 +42,19 @@
     gap: 15px;
     transition: all 0.5s linear;
     box-shadow: -20px -26px 95px -48px rgb(0, 0, 0);
+    position: relative;
+    overflow: hidden;
+
 }
 
-.ctas-addwallet button:hover {
+/* .ctas-addwallet button:hover {
     box-shadow: -20px -26px 95px -48px rgba(39, 202, 63, 0.452);
 
-}
-.ctas-addwallet button:disabled{
+} */
+.ctas-addwallet button:disabled {
     opacity: .5;
 }
+
 .ctas-addwallet button h3 {
     color: #FFF;
     font-size: 20px;
