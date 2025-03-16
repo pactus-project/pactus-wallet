@@ -47,6 +47,10 @@
     /* 136.899% */
 }
 
+.cta-MasterPassword:disabled {
+    opacity: 0.5;
+}
+
 .input-MasterPassword {
     position: relative;
     width: 643px;
@@ -58,7 +62,7 @@
     height: 100%;
     border-radius: 8px;
     background: #1D2328;
-    border: none;
+
     outline: none;
     padding: 20px 44px 20px 15px;
     color: #E1E1E1;
