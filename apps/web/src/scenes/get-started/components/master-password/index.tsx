@@ -4,6 +4,10 @@ import React, { useState } from 'react'
 import './style.css'
 import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
+import { validatePassword } from '@/utils/passwordValidator'
+
+// Import the new validator function
+
 const LottiePlayer = dynamic(() => import('react-lottie-player'), { ssr: false });
 
 const MasterPassword = () => {
@@ -27,11 +31,6 @@ const MasterPassword = () => {
             ...prevState,
             [input]: !prevState[input]
         }));
-    }
-
-    const validatePassword = (pwd: string) => {
-        const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[~!@#$%^&*()_\-+=])[A-Za-z\d~!@#$%^&*()_\-+=]{8,}$/;
-        return regex.test(pwd);
     }
 
     const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
