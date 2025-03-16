@@ -50,7 +50,7 @@
 .input-MasterPassword {
     position: relative;
     width: 643px;
-
+    margin-bottom: 20px;
 }
 
 .input-MasterPassword input {
@@ -60,7 +60,7 @@
     background: #1D2328;
     border: none;
     outline: none;
-    padding: 20px 44px  20px 15px;
+    padding: 20px 44px 20px 15px;
     color: #E1E1E1;
     font-style: normal;
     font-weight: 400;
@@ -86,11 +86,17 @@
     align-items: center;
     margin-right: auto;
     gap: 5px;
-    margin-top: 46px;
+    margin-top: 26px;
     color: #FFF;
     font-size: 12px;
     font-style: normal;
     font-weight: 400;
     line-height: 30px;
     /* 250% */
+}
+
+.error {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
 }

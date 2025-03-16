@@ -51,7 +51,7 @@ const BorderBeam: React.FC<BorderBeamProps> = ({
             parentElement.style.setProperty('position', 'relative', 'important');
             parentElement.style.setProperty('z-index', '1', 'important');
 
-            if (boxShadow && (isHovered && showOnHover)) {
+            if (boxShadow && ((isHovered && showOnHover) || !showOnHover)) {
                 const updateBoxShadow = () => {
                     if (!innerRef.current) return;
 
@@ -67,8 +67,8 @@ const BorderBeam: React.FC<BorderBeamProps> = ({
                     const blur = boxShadow.blur || 20;
                     const spread = boxShadow.spread || 0;
 
-                    parentElement.style.setProperty('box-shadow', 
-                        `${x}px ${y}px ${blur}px ${spread}px ${boxShadow.color}`, 
+                    parentElement.style.setProperty('box-shadow',
+                        `${x}px ${y}px ${blur}px ${spread}px ${boxShadow.color}`,
                         'important'
                     );
                 };

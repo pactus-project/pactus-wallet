@@ -5,6 +5,7 @@ import './style.css'
 import { useRouter } from 'next/navigation'
 import * as bip39 from 'bip39';
 import dynamic from 'next/dynamic'
+import BorderBeam from '@/components/border-beam'
 const LottiePlayer = dynamic(() => import('react-lottie-player'), { ssr: false });
 const RecoveryPhrase = () => {
     const [step, setStep] = useState(1);
@@ -118,7 +119,7 @@ const RecoveryPhrase = () => {
                         loop={false}
                         play
                         style={{ height: '200px' }}
-                       
+
                     />
                     <h1>Recovery Phrase</h1>
                     <p>Write down the following {wordCount} words in the correct order and keep them in a safe place.</p>
@@ -126,10 +127,23 @@ const RecoveryPhrase = () => {
                         <option value={12}>12 Words</option>
                         <option value={24}>24 Words</option>
                     </select>
-                    <div className='seed-RecoveryPhrase'>
+                    <div id='recoveryPhraseStep2-parent' className='seed-RecoveryPhrase'>
                         {walletSeeds.map((word, index) => (
                             <span key={index}><label> {index + 1}.</label> {word}</span>
                         ))}
+                        <BorderBeam
+                            duration={10}
+                            size={400}
+                            colorFrom='#064560'
+                            colorTo='#0FEF9E'
+                            boxShadow={{
+                                color: '#0FEF9E',
+                                blur: 95,
+                                spread: -60
+                            }}
+                            parentId="recoveryPhraseStep2-parent"
+
+                        />
                     </div>
                     <button className='copySeed-RecoveryPhrase' onClick={() => navigator.clipboard.writeText(walletSeeds.join(' '))}>
                         <Image src={copyIcon} alt='' /> Copy to clipboard
@@ -148,7 +162,7 @@ const RecoveryPhrase = () => {
                     />
                     <h1>Confirm Recovery Phrase</h1>
                     <p>Enter the missing words in the correct order to verify your backup.</p>
-                    <div className='seed-RecoveryPhrase'>
+                    <div id="recoveryPhraseStep3-parent" className='seed-RecoveryPhrase'>
                         {walletSeeds.map((word, index) => (
                             validationIndexes.includes(index) ? (
                                 <span
@@ -168,6 +182,20 @@ const RecoveryPhrase = () => {
                                 <span key={index}><label> {index + 1}.</label> {word}</span>
                             )
                         ))}
+                        <BorderBeam
+                            duration={10}
+                            size={400}
+                            colorFrom='#064560'
+                            colorTo='#0FEF9E'
+                            boxShadow={{
+                                color: '#0FEF9E',
+                                blur: 95,
+                                spread: -60
+                            }}
+                            
+                            parentId="recoveryPhraseStep3-parent"
+
+                        />
                     </div>
                     <button className='cta-RecoveryPhrase' onClick={validateInputs} disabled={isConfirmButtonDisabled()}>Confirm</button>
                 </div>
