@@ -1,13 +1,47 @@
+# EditorConfig is awesome: https://editorconfig.org
+
 root = true
 
-
 [*]
-indent_style = space
-indent_size = 4
-end_of_line = lf
 charset = utf-8
 trim_trailing_whitespace = true
 insert_final_newline = true
 
-[src/ts]
-charset = utf-8
+[*.md]
+indent_style = space
+indent_size = 2
+# Wraps text at the max_line_length automatically.
+max_line_length = 80
+prose_wrap = always
+
+[Makefile]
+indent_style = tab
+indent_size = 4
+
+[*.{yml,yaml}]
+indent_style = space
+indent_size = 2
+
+[*.toml]
+indent_style = space
+indent_size = 2
+
+[*.json]
+indent_style = space
+indent_size = 2
+
+[{go.mod,go.sum,*.go}]
+indent_style = tab
+indent_size = 4
+
+[*.rs]
+indent_style = space
+indent_size = 4
+
+[*.{js,ts,jsx,tsx}]
+indent_style = space
+indent_size = 4
+tab_width = 4
+end_of_line = lf
+quote_type = double
+max_line_length = 80

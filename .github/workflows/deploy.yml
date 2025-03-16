@@ -2,10 +2,10 @@ name: Deploy Web Wallet
 
 on:
   push:
-    # TODO: after release stable we can build based on github tags
     branches:
       - main
-  workflow_dispatch:
+    tags:
+      - "v*"
 
 permissions:
   contents: write
@@ -22,11 +22,21 @@ jobs:
         with:
           fetch-depth: 1
 
+      # Check if the workflow was triggered by a tag (production) or a branch (staging)
+      - name: Set environment variables
+        run: |
+            if [[ "${{ github.ref }}" == refs/tags/* ]]; then
+              echo "🔥 Using production environment"
+              echo "CNAME=wallet.pactus.org" >> $GITHUB_ENV
+            else
+              echo "🧪 Using staging environment"
+              echo "CNAME=wallet-beta.pactus.org" >> $GITHUB_ENV
+            fi
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-
+          node-version: "22"
 
       - name: Install dependencies
         run: npm install
@@ -42,4 +52,4 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: web
           publish_dir: ./apps/web/out
-          cname: wallet.pactus.org
+          cname: ${{ env.CNAME }}
