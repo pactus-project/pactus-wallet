@@ -16,6 +16,7 @@ import {
     searchIcon,
     settingsIcon
 } from '@/assets';
+import BorderBeam from '../border-beam';
 
 
 const Sidebar = () => {
@@ -80,7 +81,7 @@ const Sidebar = () => {
                     <hr />
                     <div className="accountItems-sidebar">
                         {accountList.map((item, i) => (
-                            <button style={{background:isActiveRoute(`/wallet?address=${item?.address}`)?'#15191C':'none'}} onClick={()=>navigate(`/wallet?address=${item?.address}`)} key={`${i}-account`}>
+                            <button style={{ background: isActiveRoute(`/wallet?address=${item?.address}`) ? '#15191C' : 'none' }} onClick={() => navigate(`/wallet?address=${item?.address}`)} key={`${i}-account`}>
                                 <span>{item.emoji}</span>
                                 <p>{item.name}</p>
                             </button>
@@ -122,13 +123,26 @@ const Sidebar = () => {
                 <h3>Report Bug</h3>
             </button>
 
-            <div className='Contributing-sidebar' >
+            <div id='contributing-parent' className='Contributing-sidebar' >
                 <Image src={gradientCopyIcon} alt='gradientCopyIcon' />
                 <div>
                     <h4>Contributing</h4>
                     <p>You can contribute to the Pactus wallet project at any time.</p>
                     <button>Join<Image src={gradientArrowToRightIcon} alt='gradientArrowToRightIcon' /> </button>
                 </div>
+                <BorderBeam
+                    duration={4}
+                    size={100}
+                    colorFrom='#064560'
+                    colorTo='#0FEF9E'
+                    boxShadow={{
+                        color: '#0FEF9E',
+                        blur: 95,
+                        spread: -60
+                    }}
+                    parentId="contributing-parent"
+                    
+                />
             </div>
         </div>
     );

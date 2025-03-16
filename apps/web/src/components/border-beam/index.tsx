@@ -1,4 +1,5 @@
-import React, { useMemo, useEffect, useRef, useState } from "react";
+'use client';
+import React, { useMemo, useEffect, useRef, useState, useId } from "react";
 
 interface BorderBeamProps {
     size?: number;
@@ -19,7 +20,7 @@ interface BorderBeamProps {
     /**
      * If true, the border beam will only be visible on hover.
      */
-    showOnHover ?: boolean;
+    showOnHover?: boolean;
 }
 
 const BorderBeam: React.FC<BorderBeamProps> = ({
@@ -34,47 +35,63 @@ const BorderBeam: React.FC<BorderBeamProps> = ({
     initialOffset = 0,
     boxShadow,
     parentId,
-    showOnHover  = false,
+    showOnHover = false,
 }) => {
     const innerRef = useRef<HTMLDivElement>(null);
     const [isHovered, setIsHovered] = useState(false);
+    const uniqueId = useId();
 
     useEffect(() => {
-        if (boxShadow && parentId && (isHovered && showOnHover )) {
+        if (parentId) {
             const parentElement = document.getElementById(parentId);
             if (!parentElement) return;
 
-            const updateBoxShadow = () => {
-                if (!innerRef.current) return;
+            // Apply initial styles immediately
+            parentElement.style.setProperty('overflow', 'hidden', 'important');
+            parentElement.style.setProperty('position', 'relative', 'important');
+            parentElement.style.setProperty('z-index', '1', 'important');
 
-                const rect = innerRef.current.getBoundingClientRect();
-                const parentRect = parentElement.getBoundingClientRect();
+            if (boxShadow && (isHovered && showOnHover)) {
+                const updateBoxShadow = () => {
+                    if (!innerRef.current) return;
 
-                let x = rect.left - parentRect.left;
-                let y = rect.top - parentRect.top;
+                    const rect = innerRef.current.getBoundingClientRect();
+                    const parentRect = parentElement.getBoundingClientRect();
 
-                x = Math.max(-10, Math.min(10, x));
-                y = Math.max(-10, Math.min(10, y));
+                    let x = rect.left - parentRect.left;
+                    let y = rect.top - parentRect.top;
 
-                const blur = boxShadow.blur || 20;
-                const spread = boxShadow.spread || 0;
+                    x = Math.max(-10, Math.min(10, x));
+                    y = Math.max(-10, Math.min(10, y));
 
-                parentElement.style.boxShadow = `${x}px ${y}px ${blur}px ${spread}px ${boxShadow.color}`;
-            };
+                    const blur = boxShadow.blur || 20;
+                    const spread = boxShadow.spread || 0;
 
-            const animationFrame = setInterval(updateBoxShadow, 16);
+                    parentElement.style.setProperty('box-shadow', 
+                        `${x}px ${y}px ${blur}px ${spread}px ${boxShadow.color}`, 
+                        'important'
+                    );
+                };
 
-            return () => {
-                clearInterval(animationFrame);
-                if (parentElement) {
-                    parentElement.style.boxShadow = "";
-                }
-            };
+                // Initial update
+                updateBoxShadow();
+                const animationFrame = setInterval(updateBoxShadow, 16);
+
+                return () => {
+                    clearInterval(animationFrame);
+                    if (parentElement) {
+                        parentElement.style.removeProperty('box-shadow');
+                        parentElement.style.removeProperty('overflow');
+                        parentElement.style.removeProperty('position');
+                        parentElement.style.removeProperty('z-index');
+                    }
+                };
+            }
         }
-    }, [boxShadow, parentId, isHovered]);
+    }, [boxShadow, parentId, isHovered, showOnHover]);
 
     useEffect(() => {
-        if (!showOnHover  || !parentId) return;
+        if (!showOnHover || !parentId) return;
 
         const parentElement = document.getElementById(parentId);
         if (!parentElement) return;
@@ -89,14 +106,14 @@ const BorderBeam: React.FC<BorderBeamProps> = ({
             parentElement.removeEventListener("mouseenter", handleMouseEnter);
             parentElement.removeEventListener("mouseleave", handleMouseLeave);
         };
-    }, [showOnHover , parentId]);
+    }, [showOnHover, parentId]);
 
     const start = reverse ? 100 - initialOffset : initialOffset;
     const end = reverse ? -initialOffset : 100 + initialOffset;
 
     const animationId = useMemo(
-        () => `border-beam-animation-${Math.random().toString(36).substr(2, 9)}`,
-        []
+        () => `border-beam-animation-${uniqueId.replace(/:/g, '')}`,
+        [uniqueId]
     );
 
     const keyframes = `
@@ -119,7 +136,7 @@ const BorderBeam: React.FC<BorderBeamProps> = ({
         maskComposite: "intersect",
         maskImage:
             "linear-gradient(transparent, transparent), linear-gradient(#000, #000)",
-        display: showOnHover  && !isHovered ? "none" : "block",
+        display: showOnHover && !isHovered ? "none" : "block",
     };
 
     const innerStyle: React.CSSProperties = {
