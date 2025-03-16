@@ -8,12 +8,10 @@ const LottiePlayer = dynamic(() => import('react-lottie-player'), { ssr: false }
 const ChooseNameWallet = () => {
     const navigate = useRouter().replace;
     const { setHasWallet } = useContext(GuardContext);
-
     const handleEnableWallet = () => {
         setHasWallet(true);
         navigate('/');
     };
-
     const emojis = [
         "😀", "😃", "😄", "😁", "😆", "😅", "😂", "🤣", "🥲", "🥹", "☺️", "😊", "😇", "🙂", "🙃", "😉", "😌",
         "😍", "🥰", "😘", "😗", "😙", "😚", "😋", "😛", "😝", "😜", "🤪", "🤨", "🧐", "🤓", "😎", "🥸", "🤩",

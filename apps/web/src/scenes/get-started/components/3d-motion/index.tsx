@@ -5,12 +5,8 @@ const LazySpline = lazy(() => import("@splinetool/react-spline"));
 
 const ThreeDMotion = () => {
     const [showSpline, setShowSpline] = useState(false);
-
-
-
     useEffect(() => {
         // Don't show on mobile
-
         const timer = setTimeout(() => {
             setShowSpline(true);
         }, 1000);
@@ -18,7 +14,6 @@ const ThreeDMotion = () => {
         return () => clearTimeout(timer);
 
     }, []);
-
     return (
         <div style={{ width: '400px', height: '400px', overflow: 'hidden', position: 'relative' }} >
 

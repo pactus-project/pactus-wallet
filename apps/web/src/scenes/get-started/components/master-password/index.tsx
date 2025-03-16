@@ -7,13 +7,10 @@ import dynamic from 'next/dynamic'
 const LottiePlayer = dynamic(() => import('react-lottie-player'), { ssr: false });
 const MasterPassword = () => {
     const navigate = useRouter().push;
-
     const [showPassword, setShowPassword] = useState<boolean>(false)
-
     const togglePasswordVisibility = () => {
         setShowPassword(prevState => !prevState)
     }
-
     return (
         <div className='container-MasterPassword'>
             <LottiePlayer

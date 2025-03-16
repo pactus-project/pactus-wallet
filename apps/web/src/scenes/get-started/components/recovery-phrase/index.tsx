@@ -14,9 +14,7 @@ const RecoveryPhrase = () => {
     const [validationIndexes, setValidationIndexes] = useState<number[]>([]);
     const [userInputs, setUserInputs] = useState({});
     const [inputErrors, setInputErrors] = useState({});
-
     const navigate = useRouter().push;
-
     // Generate recovery phrase when the component loads or word count changes
     useEffect(() => {
         generateRecoveryPhrase(wordCount);
@@ -103,7 +101,6 @@ const RecoveryPhrase = () => {
                         loop={true}
                         play
                         style={{ height: '300px' }}
-
                     />
                     <h1>Write Down Your Recovery Phrase</h1>
                     <p>Your recovery phrase is the only way to restore access to your wallet if you lose your device.
@@ -119,7 +116,6 @@ const RecoveryPhrase = () => {
                         loop={false}
                         play
                         style={{ height: '200px' }}
-
                     />
                     <h1>Recovery Phrase</h1>
                     <p>Write down the following {wordCount} words in the correct order and keep them in a safe place.</p>
@@ -192,7 +188,6 @@ const RecoveryPhrase = () => {
                                 blur: 95,
                                 spread: -60
                             }}
-                            
                             parentId="recoveryPhraseStep3-parent"
 
                         />

@@ -81,7 +81,9 @@ const Sidebar = () => {
                     <hr />
                     <div className="accountItems-sidebar">
                         {accountList.map((item, i) => (
-                            <button style={{ background: isActiveRoute(`/wallet?address=${item?.address}`) ? '#15191C' : 'none' }} onClick={() => navigate(`/wallet?address=${item?.address}`)} key={`${i}-account`}>
+                            <button style={{ background: isActiveRoute(`/wallet?address=${item?.address}`) ? '#15191C' : 'none' }}
+                             onClick={() => navigate(`/wallet?address=${item?.address}`)} 
+                             key={`${i}-account`}>
                                 <span>{item.emoji}</span>
                                 <p>{item.name}</p>
                             </button>
@@ -140,8 +142,7 @@ const Sidebar = () => {
                         blur: 95,
                         spread: -60
                     }}
-                    parentId="contributing-parent"
-                    
+                    parentId="contributing-parent"  
                 />
             </div>
         </div>
