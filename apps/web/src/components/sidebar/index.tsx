@@ -69,7 +69,7 @@ const Sidebar = () => {
                     <Image src={searchIcon} alt="search-icon" />
                 </button>
             </div>
-            <div className="accountList-sidebar">
+                   <div className="accountList-sidebar">
                 <button
                     className={`route-sidebar ${isActiveRoute('/') ? 'activeRoute-sidebar' : ''}`}
                     onClick={() => navigate('/')}
