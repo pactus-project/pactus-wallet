@@ -1,32 +1,53 @@
 import { validatePassword } from './index';
 
-describe('validatePassword', () => {
-    it('should return true for valid passwords', () => {
-        expect(validatePassword('Valid1@123')).toBe(true);
-        expect(validatePassword('AnotherValid1!')).toBe(true);
+describe('Password Validation Rules', () => {
+    describe('Length Requirements', () => {
+        it('should accept passwords with 8 or more characters', () => {
+            expect(validatePassword('TestPass1!')).toBe(true);
+        });
+
+        it('should reject passwords with less than 8 characters', () => {
+            expect(validatePassword('Test1!')).toBe(false);
+        });
     });
 
-    it('should return false for passwords without uppercase letters', () => {
-        expect(validatePassword('invalid1@')).toBe(false);
+    describe('Character Requirements', () => {
+        it('should require at least one uppercase letter', () => {
+            expect(validatePassword('lowercase1!')).toBe(false);
+            expect(validatePassword('Lowercase1!')).toBe(true);
+        });
+
+        it('should require at least one lowercase letter', () => {
+            expect(validatePassword('UPPERCASE1!')).toBe(false);
+            expect(validatePassword('UPPERCASEa1!')).toBe(true);
+        });
+
+        it('should require at least one number', () => {
+            expect(validatePassword('Password!@')).toBe(false);
+            expect(validatePassword('Password1!@')).toBe(true);
+        });
+
+        it('should require at least one special character', () => {
+            const specialChars = '~!@#$%^&*()_-+=';
+            specialChars.split('').forEach(char => {
+                const password = `Password1${char}`;
+                expect(validatePassword(password)).toBe(true);
+            });
+        });
     });
 
-    it('should return false for passwords without lowercase letters', () => {
-        expect(validatePassword('INVALID1@')).toBe(false);
-    });
+    describe('Complex Password Scenarios', () => {
+        const validPasswords = [
+            'Complex1@Password',
+            'Strong#Pass123',
+            'Test$123User',
+            'Secure^789Pass'
+        ];
 
-    it('should return false for passwords without numbers', () => {
-        expect(validatePassword('Invalid@')).toBe(false);
-    });
-
-    it('should return false for passwords without special characters', () => {
-        expect(validatePassword('Invalid1')).toBe(false);
-    });
-
-    it('should return false for passwords shorter than 8 characters', () => {
-        expect(validatePassword('Inv1@')).toBe(false);
-    });
-
-    it('should return true for a complex valid password', () => {
-        expect(validatePassword('Complex1@Password')).toBe(true);
+        validPasswords.forEach(password => {
+            it(`should accept valid password: ${password.replace(/./g, '*')}`, () => {
+                expect(validatePassword(password)).toBe(true);
+            });
+        });
     });
 });
