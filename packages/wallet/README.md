@@ -66,7 +66,7 @@ async function createWallet() {
 
 ### Restoring a Wallet
 
-```
+```typescript
 async function restoreWallet() {
     const storage = new MemoryStorage();
     const walletManager = await initWalletSDK(storage);
@@ -86,13 +86,13 @@ async function restoreWallet() {
 
 ### Export a Wallet
 
-```
+```typescript
 async function exportWallet() {
     const storage = new MemoryStorage(); // or browser storage
     const walletManager = await initWalletSDK(storage);
 
     try {
-         const wallet = walletManager.getCurrentWallet();
+        const wallet = walletManager.getCurrentWallet();
         if (!wallet) {
             console.error('No wallet loaded to export');
             return;
@@ -166,12 +166,3 @@ This project is licensed under the MIT License.
 ## Support
 
 For support, please open an issue on our GitHub repository or contact our developer community.
-
-## Disclaimer
-
-This SDK is provided "as is" without warranty. Always review and test thoroughly before production
-use.
-
-```
-
-```
