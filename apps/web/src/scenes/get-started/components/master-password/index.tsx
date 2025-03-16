@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import './style.css'
 import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
-import { validatePassword } from '@/utils/passwordValidator'
+import { validatePassword } from '@/utils/password-validator'
 
 // Import the new validator function
 
