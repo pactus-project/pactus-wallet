@@ -7,11 +7,6 @@
         "turbo": "^2.4.1",
         "typescript": "^5.7.3"
     },
-    "scripts": {
-        "build": "npx turbo build",
-        "build:web": "npx turbo build:web",
-        "build:pkg": "npx turbo build:pkg"
-    },
     "workspaces": {
         "packages": [
             "packages/*",

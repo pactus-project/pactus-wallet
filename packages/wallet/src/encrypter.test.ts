@@ -3,22 +3,28 @@ import { Params } from '../src/encrypter/params';
 
 describe('Encrypter Tests', () => {
     it('should handle NopeEncrypter', async () => {
+        // Create an Encrypter with no encryption method
         const enc = new Encrypter("", new Params());
         expect(enc.isEncrypted()).toBeFalsy();
 
         const msg = "foo";
+
+        // Trying to encrypt with a non-empty password should fail
         await expect(enc.encrypt(msg, "should-not-have-password")).rejects.toThrow("Invalid password");
 
-        enc.encrypt(msg, "").then(async (cipher) => {
-            await expect(enc.decrypt(cipher, "should-not-have-password")).rejects.toThrow("Invalid password");
+        // Encrypt with empty password
+        const cipher = await enc.encrypt(msg, "");
+        
+        // Trying to decrypt with non-empty password should fail
+        await expect(enc.decrypt(cipher, "should-not-have-password")).rejects.toThrow("Invalid password");
 
-            await enc.decrypt(cipher, "").then((decipher) => {
-                expect(decipher).toBe(msg);
-            });
-        });
+        // Decrypt with empty password should succeed
+        const decipher = await enc.decrypt(cipher, "");
+        expect(decipher).toBe(msg);
     });
 
     it('should handle defaultEncrypter', () => {
+        // Get the default Encrypter with Argon2id, AES-256-CTR, MACv1
         const enc = defaultEncrypter();
 
         expect(enc.method).toBe("ARGON2ID-AES_256_CTR-MACV1");
@@ -30,20 +36,25 @@ describe('Encrypter Tests', () => {
     });
 
     it('should handle encryption and decryption', async () => {
+        // Get the default Encrypter
         const enc = defaultEncrypter();
-
         const msg = "foo";
-        const password = "cowboy"
+        const password = "cowboy";
 
+        // Trying to encrypt with empty password should fail
         await expect(enc.encrypt(msg, "")).rejects.toThrow("Invalid password");
 
-        enc.encrypt(msg, password).then(async (cipher) => {
-            await expect(enc.decrypt(cipher, "")).rejects.toThrow("Invalid password");
-            await expect(enc.decrypt(cipher, "invalid-password")).rejects.toThrow("Invalid password");
+        // Encrypt with correct password
+        const cipher = await enc.encrypt(msg, password);
 
-            enc.decrypt(cipher, password).then((decipher) => {
-                expect(decipher).toBe(msg);
-            });
-        });
+        // Trying to decrypt with empty password should fail
+        await expect(enc.decrypt(cipher, "")).rejects.toThrow("Invalid password");
+
+        // Trying to decrypt with wrong password should fail
+        await expect(enc.decrypt(cipher, "invalid-password")).rejects.toThrow("Invalid password");
+
+        // Decrypt with correct password should succeed
+        const decipher = await enc.decrypt(cipher, password);
+        expect(decipher).toBe(msg);
     });
 });
