@@ -1,6 +1,7 @@
 import { WalletCore } from '@trustwallet/wallet-core';
 import { HDWallet } from '@trustwallet/wallet-core/dist/src/wallet-core';
 import { WalletRestoreError } from './error';
+import { WALLET_EMOJIS } from './constants';
 
 /**
  * Network type for wallet operation
@@ -44,6 +45,7 @@ export interface WalletData {
     nextEd25519Index: number; // Next index to use for address generation
     network: NetworkType; // Network type (mainnet/testnet)
     name: string; // User-defined wallet name
+    emoji?: string; // Emoji representation based on UUID
     keystore?: string; // Keystore data
 }
 
@@ -57,6 +59,7 @@ export interface WalletInfo {
     createdAt?: Date; // When the wallet was created
     network: NetworkType; // Network type (mainnet/testnet)
     name: string; // User-defined wallet name
+    emoji?: string; // Emoji representation of the wallet
 }
 
 /**
@@ -72,6 +75,8 @@ export class Wallet {
     private network: NetworkType;
     private name: string;
     private keystore?: string;
+    private uuid: string;
+    private emoji?: string;
 
     /**
      * Private constructor - use static factory methods instead
@@ -91,6 +96,8 @@ export class Wallet {
         this.network = network;
         this.name = name;
         this.keystore = '';
+        this.uuid = crypto.randomUUID();
+        this.emoji = this.generateEmojiFromUUID(this.uuid);
     }
 
     /**
@@ -159,7 +166,8 @@ export class Wallet {
             addressCount: this.addresses.length,
             createdAt: this.createdAt,
             network: this.network,
-            name: this.name
+            name: this.name,
+            emoji: this.emoji
         };
     }
 
@@ -240,12 +248,28 @@ export class Wallet {
     }
 
     /**
+     * Get the wallet's emoji
+     * @returns The emoji for the wallet
+     */
+    getEmoji(): string | undefined {
+        return this.emoji;
+    }
+
+    /**
+     * Set the wallet's emoji
+     * @param emoji The new emoji for the wallet
+     */
+    setEmoji(emoji: string): void {
+        this.emoji = emoji;
+    }
+
+    /**
      * Export wallet data for storage
      * @returns WalletData object ready for serialization
      */
     export(): WalletData {
-        // Generate a UUID if needed
-        const uuid = crypto.randomUUID ? crypto.randomUUID() : this.generateUUID();
+        // UUID should be already set during construction
+        const uuid = this.uuid;
 
         return {
             version: '3.0',
@@ -256,21 +280,19 @@ export class Wallet {
             nextEd25519Index: this.nextEd25519Index,
             network: this.network,
             name: this.name,
+            emoji: this.emoji,
             keystore: this.keystore
         };
     }
 
     /**
-     * Generate a simple UUID
-     * Fallback method when crypto.randomUUID is not available
-     * @returns A UUID v4 string
+     * Generate an emoji representation based on UUID
+     * @param uuid The wallet's UUID
+     * @returns An emoji character
      */
-    private generateUUID(): string {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-            const r = (Math.random() * 16) | 0;
-            const v = c === 'x' ? r : (r & 0x3) | 0x8;
-            return v.toString(16);
-        });
+    private generateEmojiFromUUID(uuid: string): string {
+        // Use the first character's code as index
+        return WALLET_EMOJIS[uuid.charCodeAt(0) % WALLET_EMOJIS.length];
     }
 
     /**
@@ -305,6 +327,13 @@ export class Wallet {
         // Update name if provided
         if (data.name) {
             this.name = data.name;
+        }
+
+        // Set UUID and emoji
+        if (data.uuid) {
+            this.uuid = data.uuid;
+            // If emoji is provided, use it. Otherwise, generate it from UUID
+            this.emoji = data.emoji || this.generateEmojiFromUUID(data.uuid);
         }
     }
 }

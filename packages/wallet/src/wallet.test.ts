@@ -182,4 +182,62 @@ describe('Pactus Wallet Tests', () => {
             expect(updatedExport.name).toBe('Modified Name');
         });
     });
+
+    describe('Wallet Emoji', () => {
+        let testWallet: Wallet;
+
+        beforeEach(() => {
+            testWallet = Wallet.create(core, MnemonicStrength.Normal, 'test-password');
+        });
+
+        it('should automatically generate a default emoji upon wallet creation', () => {
+            const emoji = testWallet.getEmoji();
+
+            expect(emoji).toBeTruthy();
+            expect(typeof emoji).toBe('string');
+
+            const info = testWallet.getWalletInfo();
+            expect(info.emoji).toBe(emoji);
+        });
+
+        it('should allow setting and retrieving a custom emoji', () => {
+            const customEmoji = '🚀';
+
+            testWallet.setEmoji(customEmoji);
+
+            expect(testWallet.getEmoji()).toBe(customEmoji);
+            expect(testWallet.getWalletInfo().emoji).toBe(customEmoji);
+        });
+
+        it('should persist emoji in exported wallet data', () => {
+            const customEmoji = '🎯';
+
+            testWallet.setEmoji(customEmoji);
+            const exportedData = testWallet.export();
+
+            expect(exportedData.emoji).toBe(customEmoji);
+        });
+
+        it('should generate consistent emoji for the same UUID', () => {
+            // Create a wallet with test mnemonic
+            const testMnemonic =
+                'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon cactus';
+            const wallet1 = Wallet.restore(core, testMnemonic, 'test-password');
+
+            // Store the UUID and emoji
+            const uuid = wallet1.export().uuid;
+            const emoji1 = wallet1.getEmoji();
+
+            // Create another wallet and manually import the same UUID
+            const wallet2 = Wallet.create(core, MnemonicStrength.Normal, 'test-password');
+            wallet2.import({
+                ...wallet2.export(),
+                uuid: uuid,
+                emoji: undefined // Force regeneration of emoji from UUID
+            });
+
+            // They should have the same emoji since they have the same UUID
+            expect(wallet2.getEmoji()).toBe(emoji1);
+        });
+    });
 });
