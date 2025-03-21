@@ -41,6 +41,26 @@ export class Encrypter {
         return this.method !== EncryptionMethod.None;
     }
 
+    // Helper to perform Argon2id hashing with parameters from this.params
+    private async deriveKeyFromPassword(password: string, salt: Buffer): Promise<Buffer> {
+        const iterations = this.params.getNumber(ParameterKey.Iterations);
+        const memory = this.params.getNumber(ParameterKey.Memory);
+        const parallelism = this.params.getNumber(ParameterKey.Parallelism);
+        const keyLen = this.params.getNumber(ParameterKey.KeyLength);
+
+        const argon2Hash = await argon2.hash({
+            pass: password,
+            salt: salt,
+            time: iterations,
+            mem: memory,
+            parallelism: parallelism,
+            hashLen: keyLen,
+            type: argon2.ArgonType.Argon2id
+        });
+
+        return Buffer.from(argon2Hash.hash);
+    }
+
     async encrypt(message: string, password: string): Promise<string> {
         if (this.method === EncryptionMethod.None) {
             if (password !== '') {
@@ -57,25 +77,10 @@ export class Encrypter {
             throw new Error('Method not supported');
         }
 
-        // Retrieve parameters from this.params
-        const iterations = this.params.getNumber(ParameterKey.Iterations);
-        const memory = this.params.getNumber(ParameterKey.Memory);
-        const parallelism = this.params.getNumber(ParameterKey.Parallelism);
-        const keyLen = this.params.getNumber(ParameterKey.KeyLength);
-
-
         const salt = crypto.randomBytes(16);
-        const argon2Hash = await argon2.hash({
-            pass: password,
-            salt: salt,
-            time: iterations, // Use iterations from params
-            mem: memory, // Use memory from params
-            parallelism: parallelism, // Use parallelism from params
-            hashLen: keyLen, // Use keyLen from params
-            type: argon2.ArgonType.Argon2id
-        });
+        const derivedByte = await this.deriveKeyFromPassword(password, salt);
 
-        const derivedByte = Buffer.from(argon2Hash.hash);
+        const keyLen = this.params.getNumber(ParameterKey.KeyLength);
         const cipherKey = derivedByte.subarray(0, 32);
         const iv = derivedByte.subarray(32, keyLen);
         const cipher = this.aesCrypt(Buffer.from(message), iv, cipherKey);
@@ -85,7 +90,6 @@ export class Encrypter {
         let data = Buffer.concat([salt, cipher, mac]);
 
         return data.toString('base64');
-
     }
 
     async decrypt(cipherText: string, password: string): Promise<string> {
@@ -111,24 +115,8 @@ export class Encrypter {
         switch (funcs[0]) {
             case EncryptionMethod.Argon2id:
                 const salt = data.subarray(0, 16);
-                const iterations = this.params.getNumber(ParameterKey.Iterations);
-                const memory = this.params.getNumber(ParameterKey.Memory);
-                const parallelism = this.params.getNumber(ParameterKey.Parallelism);
-                const keyLen = this.params.getNumber(ParameterKey.KeyLength);
-
-                const argon2Hash = await argon2.hash({
-                    pass: password,
-                    salt: salt,
-                    time: iterations,
-                    mem: memory,
-                    parallelism: parallelism,
-                    hashLen: keyLen,
-                    type: argon2.ArgonType.Argon2id
-                });
-                passwordHash = Buffer.from(argon2Hash.hash);
-
-
-                break
+                passwordHash = await this.deriveKeyFromPassword(password, salt);
+                break;
 
             default:
                 throw new Error('Method not supported');
