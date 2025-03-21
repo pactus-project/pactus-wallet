@@ -14,7 +14,7 @@ describe('Encrypter Tests', () => {
 
         // Encrypt with empty password
         const cipher = await enc.encrypt(msg, "");
-        
+
         // Trying to decrypt with non-empty password should fail
         await expect(enc.decrypt(cipher, "should-not-have-password")).rejects.toThrow("Invalid password");
 
@@ -28,10 +28,10 @@ describe('Encrypter Tests', () => {
         const enc = defaultEncrypter();
 
         expect(enc.method).toBe("ARGON2ID-AES_256_CTR-MACV1");
-        expect(enc.params.getNumber("iterations", 0)).toBe(3);
-        expect(enc.params.getNumber("memory", 0)).toBe(65536);
-        expect(enc.params.getNumber("parallelism", 0)).toBe(4);
-        expect(enc.params.getNumber("keylen", 0)).toBe(48);
+        expect(enc.params.getNumber("iterations")).toBe(3);
+        expect(enc.params.getNumber("memory")).toBe(65536);
+        expect(enc.params.getNumber("parallelism")).toBe(4);
+        expect(enc.params.getNumber("keylen")).toBe(48);
         expect(enc.isEncrypted()).toBeTruthy();
     });
 

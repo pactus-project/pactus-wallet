@@ -10,16 +10,10 @@ describe('Encrypter Params', () => {
         p.setNumber('k3', 0xFFFFFFFF);
         p.setNumber('k4', 0xFFFFFFFFFFFFFFFF);
 
-        expect(p.getNumber('k1', 0)).toBe(0);
-        expect(p.getNumber('k2', 0)).toBe(0xFF);
-        expect(p.getNumber('k3', 0)).toBe(0xFFFFFFFF);
-        expect(p.getNumber('k4', 0)).toBe(0xFFFFFFFFFFFFFFFF);
-    });
-
-    it('should return default values for non-existent keys', () => {
-        const p = new Params();
-
-        expect(p.getNumber('not-exist', 24)).toBe(24);
+        expect(p.getNumber('k1')).toBe(0);
+        expect(p.getNumber('k2')).toBe(0xFF);
+        expect(p.getNumber('k3')).toBe(0xFFFFFFFF);
+        expect(p.getNumber('k4')).toBe(0xFFFFFFFFFFFFFFFF);
     });
 
     it('should handle byte arrays', () => {

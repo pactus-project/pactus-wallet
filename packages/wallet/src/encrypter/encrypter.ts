@@ -2,29 +2,30 @@ import { Params } from './params';
 import * as crypto from 'crypto';
 import * as argon2 from 'argon2-browser';
 
-interface Argon2dParameters {
-    iterations: number;
-    memory: number;
-    parallelism: number;
-    keyLen: number;
-}
 
-type Option = (p: Argon2dParameters) => void;
+const ParameterKey = {
+    Iterations: 'iterations',
+    Memory: 'memory',
+    Parallelism: 'parallelism',
+    KeyLength: 'keylen'
+} as const;
 
-const nameParamIterations = 'iterations';
-const nameParamMemory = 'memory';
-const nameParamParallelism = 'parallelism';
-const nameParamKeylen = 'keylen';
+const EncryptionMethod = {
+    None: '',
+    Argon2id: 'ARGON2ID',
+    AES256CTR: 'AES_256_CTR',
+    MACv1: 'MACV1'
+} as const;
 
-const nameFuncNope = '';
-const nameFuncArgon2ID = 'ARGON2ID';
-const nameFuncAES256CTR = 'AES_256_CTR';
-const nameFuncMACv1 = 'MACV1';
 
-const defaultIterations = 3;
-const defaultMemory = 65536; // 64 MiB
-const defaultParallelism = 4;
-const defaultKeyLen = 48;
+// Default parameter values
+const DefaultParams = {
+    Iterations: 3,
+    Memory: 65536, // 64 MiB
+    Parallelism: 4,
+    KeyLength: 48
+} as const;
+
 
 export class Encrypter {
     method: string;
@@ -36,11 +37,11 @@ export class Encrypter {
     }
 
     isEncrypted(): boolean {
-        return this.method !== nameFuncNope;
+        return this.method !== EncryptionMethod.None;
     }
 
     async encrypt(message: string, password: string): Promise<string> {
-        if (this.method === nameFuncNope) {
+        if (this.method === EncryptionMethod.None) {
             if (password !== '') {
                 throw new Error('Invalid password');
             }
@@ -57,10 +58,10 @@ export class Encrypter {
         }
 
         // Retrieve parameters from this.params
-        const iterations = this.params.getNumber(nameParamIterations, defaultIterations);
-        const memory = this.params.getNumber(nameParamMemory, defaultMemory);
-        const parallelism = this.params.getNumber(nameParamParallelism, defaultParallelism);
-        const keyLen = this.params.getNumber(nameParamKeylen, defaultKeyLen);
+        const iterations = this.params.getNumber(ParameterKey.Iterations);
+        const memory = this.params.getNumber(ParameterKey.Memory);
+        const parallelism = this.params.getNumber(ParameterKey.Parallelism);
+        const keyLen = this.params.getNumber(ParameterKey.KeyLength);
 
         try {
             const salt = crypto.randomBytes(16);
@@ -91,7 +92,7 @@ export class Encrypter {
     }
 
     async decrypt(cipherText: string, password: string): Promise<string> {
-        if (this.method === nameFuncNope) {
+        if (this.method === EncryptionMethod.None) {
             if (password !== '') {
                 throw new Error('Invalid password');
             }
@@ -109,16 +110,19 @@ export class Encrypter {
             throw new Error('Invalid cipher');
         }
 
-        let text: string = '';
+        let dec: string = '';
+        let derivedByte: Buffer;
+        let cipherKey: Buffer;
+        let enc = data.subarray(16, data.length - 4);
 
         // Password hasher method
         switch (funcs[0]) {
-            case nameFuncArgon2ID:
+            case EncryptionMethod.Argon2id:
                 const salt = data.subarray(0, 16);
-                const iterations = this.params.getNumber(nameParamIterations, defaultIterations);
-                const memory = this.params.getNumber(nameParamMemory, defaultMemory);
-                const parallelism = this.params.getNumber(nameParamParallelism, defaultParallelism);
-                const keyLen = this.params.getNumber(nameParamKeylen, defaultKeyLen);
+                const iterations = this.params.getNumber(ParameterKey.Iterations);
+                const memory = this.params.getNumber(ParameterKey.Memory);
+                const parallelism = this.params.getNumber(ParameterKey.Parallelism);
+                const keyLen = this.params.getNumber(ParameterKey.KeyLength);
 
                 const argon2Hash = await argon2.hash({
                     pass: password,
@@ -129,44 +133,47 @@ export class Encrypter {
                     hashLen: keyLen,
                     type: argon2.ArgonType.Argon2id
                 });
-                const derivedByte = Buffer.from(argon2Hash.hash);
+                derivedByte = Buffer.from(argon2Hash.hash);
+                cipherKey = derivedByte.subarray(0, 32);
                 console.log('derivedByte', derivedByte);
                 console.log('derivedByte len', derivedByte.length);
 
-                // Encrypter method
-                switch (funcs[1]) {
-                    case nameFuncAES256CTR:
-                        const cipherKey = derivedByte.subarray(0, 32);
-                        const iv = derivedByte.subarray(32, derivedByte.length);
+                break
 
-                        const enc = data.subarray(16, data.length - 4);
-                        text = this.aesCrypt(enc, iv, cipherKey).toString();
-
-                        // MAC method
-                        switch (funcs[2]) {
-                            case nameFuncMACv1:
-                                const mac = data.subarray(data.length - 4);
-                                const calculatedMac = this.calcMACv1(
-                                    cipherKey.subarray(16, 32),
-                                    enc
-                                );
-                                if (!calculatedMac.equals(mac)) {
-                                    throw new Error('Invalid password');
-                                }
-                                break;
-                            default:
-                                throw new Error('Method not supported');
-                        }
-                        break;
-                    default:
-                        throw new Error('Method not supported');
-                }
-                break;
             default:
                 throw new Error('Method not supported');
         }
 
-        return text;
+        // Encrypter method
+        switch (funcs[1]) {
+            case EncryptionMethod.AES256CTR:
+                const iv = derivedByte.subarray(32, 48);
+                dec = this.aesCrypt(enc, iv, cipherKey).toString();
+
+                break;
+
+            default:
+                throw new Error('Method not supported');
+        }
+
+        // MAC method
+        switch (funcs[2]) {
+            case EncryptionMethod.MACv1:
+                const mac = data.subarray(data.length - 4);
+                const calculatedMac = this.calcMACv1(
+                    cipherKey.subarray(16, 32),
+                    enc
+                );
+                if (!calculatedMac.equals(mac)) {
+                    throw new Error('Invalid password');
+                }
+                break;
+
+            default:
+                throw new Error('Method not supported');
+        }
+
+        return dec;
     }
 
     aesCrypt(message: Buffer, initVec: Buffer, cipherKey: Buffer): Buffer {
@@ -183,20 +190,13 @@ export class Encrypter {
 }
 
 export function defaultEncrypter(): Encrypter {
-    const argon2dParameters: Argon2dParameters = {
-        iterations: defaultIterations,
-        memory: defaultMemory,
-        parallelism: defaultParallelism,
-        keyLen: defaultKeyLen
-    };
-
-    const method = `${nameFuncArgon2ID}-${nameFuncAES256CTR}-${nameFuncMACv1}`;
+    const method = `${EncryptionMethod.Argon2id}-${EncryptionMethod.AES256CTR}-${EncryptionMethod.MACv1}`;
 
     let encParams = new Params();
-    encParams.setNumber(nameParamIterations, argon2dParameters.iterations);
-    encParams.setNumber(nameParamMemory, argon2dParameters.memory);
-    encParams.setNumber(nameParamParallelism, argon2dParameters.parallelism);
-    encParams.setNumber(nameParamKeylen, argon2dParameters.keyLen);
+    encParams.setNumber(ParameterKey.Iterations, DefaultParams.Iterations);
+    encParams.setNumber(ParameterKey.Memory, DefaultParams.Memory);
+    encParams.setNumber(ParameterKey.Parallelism, DefaultParams.Parallelism);
+    encParams.setNumber(ParameterKey.KeyLength, DefaultParams.KeyLength);
 
     return new Encrypter(method, encParams);
 }

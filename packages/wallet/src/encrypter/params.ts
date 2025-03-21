@@ -21,24 +21,31 @@ export class Params {
         this.data.set(key, val);
     }
 
-    getNumber(key: string, defaultValue: number): number {
+    getNumber(key: string): number {
         const val = this.data.get(key);
         if (val === undefined)
-            return defaultValue;
+            throw new Error(`Key "${key}" not found`);
+
         // Parse string back to number
         return parseInt(val, 10);
     }
 
     getBytes(key: string): Uint8Array {
         const val = this.data.get(key);
-        if (val === undefined) throw new Error(`Key "${key}" not found`);
+        if (val === undefined) {
+            throw new Error(`Key "${key}" not found`);
+        }
+
         // Convert base64 string back to Uint8Array
         return new Uint8Array(Buffer.from(val, 'base64'));
     }
 
     getString(key: string): string {
         const val = this.data.get(key);
-        if (val === undefined) throw new Error(`Key "${key}" not found`);
+        if (val === undefined) {
+            throw new Error(`Key "${key}" not found`);
+        }
+
         return val;
     }
 }
