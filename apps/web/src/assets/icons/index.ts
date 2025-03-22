@@ -18,6 +18,9 @@ import RefetchBalanceIcon from './refetch-balance-icon.svg';
 import sendIcon from './send-icon.svg';
 import receiveIcon from './receive-icon.svg';
 import bridgeIcon from './bridge-icon.svg';
+import downloadIcon from './download-icon.svg';
+import successDownloadIcon from './success-download-icon.svg';
+import successIcon from './success-icon.svg';
 export {
     copyIcon,
     hidePasswordIcon,
@@ -38,5 +41,8 @@ export {
     RefetchBalanceIcon,
     sendIcon,
     receiveIcon,
-    bridgeIcon
+    bridgeIcon,
+    downloadIcon,
+    successDownloadIcon,
+    successIcon
 };

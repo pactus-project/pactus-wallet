@@ -9,7 +9,8 @@ out
 
 # dependencies
 node_modules
-
+.next
+next-env.d.ts
 # IDEs and editors
 .idea
 .vscode

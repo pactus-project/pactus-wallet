@@ -1,4 +1,4 @@
-import { copyIcon, generateRecoverySeedLottie, writePaperLottie } from '@/assets'
+import { copyIcon, downloadIcon, generateRecoverySeedLottie, successDownloadIcon, successIcon, writePaperLottie } from '@/assets'
 import Image from 'next/image'
 import React, { useState, useEffect } from 'react'
 import './style.css'
@@ -15,6 +15,31 @@ const RecoveryPhrase = () => {
     const [userInputs, setUserInputs] = useState({});
     const [inputErrors, setInputErrors] = useState({});
     const navigate = useRouter().push;
+    const [downloaded, setDownloaded] = useState(false);
+    const [copied, setCopied] = useState(false);
+
+    const handleDownload = () => {
+        const seedText = walletSeeds.join(' ');
+        const blob = new Blob([seedText], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'wallet-seed.txt'; 
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);  
+
+        setDownloaded(true);
+        setTimeout(() => setDownloaded(false), 2000);
+    };
+
+    const handleCopy = () => {
+        navigator.clipboard.writeText(walletSeeds.join(' '));
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+    };
     // Generate recovery phrase when the component loads or word count changes
     useEffect(() => {
         generateRecoveryPhrase(wordCount);
@@ -141,9 +166,14 @@ const RecoveryPhrase = () => {
 
                         />
                     </div>
-                    <button className='copySeed-RecoveryPhrase' onClick={() => navigator.clipboard.writeText(walletSeeds.join(' '))}>
-                        <Image src={copyIcon} alt='' /> Copy to clipboard
-                    </button>
+                    <div className='copySeed-RecoveryPhrase' >
+                        <button title='download seed' onClick={() => handleDownload()}>
+                            <Image src={downloaded ? successDownloadIcon : downloadIcon} alt='download-icon' />
+                        </button>
+                        <button title='copy seed' onClick={() => handleCopy()}>
+                            <Image src={copied ? successIcon : copyIcon} alt='copy-icon' />
+                        </button>
+                    </div>
                     <button className='cta-RecoveryPhrase' onClick={() => setStep(3)}>Continue</button>
                 </div>
             }

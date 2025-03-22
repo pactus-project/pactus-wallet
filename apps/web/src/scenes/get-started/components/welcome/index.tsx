@@ -56,7 +56,7 @@ const Welcome = () => {
       <div className='letsCta-GetStarted'>
         <div>
           <input type="checkbox" checked={isChecked} onChange={() => setIsChecked(!isChecked)} />
-          <p>
+          <p onClick={() => setIsChecked(!isChecked)}>
             I have read and agreed to the <span className='gradient-GetStarted'> Terms and Conditions</span>.
           </p>
         </div>
