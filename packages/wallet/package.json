@@ -3,16 +3,18 @@
     "version": "0.1.0",
     "description": "Pactus wallet manager",
     "license": "MIT",
-    "main": "index.js",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
     "scripts": {
-        "build": "rm -fr dist && tsc",
+        "build": "tsc",
         "start": "tsc -w",
+        "clean": "rimraf dist",
         "build:pkg": "yarn build",
         "test": "jest --forceExit --detectOpenHandles",
         "test:watch": "jest --watch --forceExit --detectOpenHandles"
     },
     "dependencies": {
-        "@trustwallet/wallet-core": "^4.2",
+        "@trustwallet/wallet-core": "^4.2.16",
         "argon2-browser": "^1.18.0"
     },
     "devDependencies": {
@@ -20,6 +22,7 @@
         "@types/jest": "^29.5",
         "jest": "^29.7",
         "jest-environment-jsdom": "^29.7.0",
+        "rimraf": "^6.0.1",
         "ts-jest": "^29.1",
         "typescript": "^5.7"
     }

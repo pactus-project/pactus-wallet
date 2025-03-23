@@ -1,17 +1,18 @@
-import {  walletNameLottie } from '@/assets'
-import React, { useContext } from 'react'
+'use client'
+import { walletNameLottie } from '@/assets'
+import React from 'react'
 import './style.css'
-import { useRouter } from 'next/navigation'
-import { GuardContext } from '@/providers/guard'
 import dynamic from 'next/dynamic'
+import { useRestoreWallet } from '@/wallet/hooks/use-restoreWallet'
+import { useWallet } from '@/wallet/hooks'
+
+
+
 const LottiePlayer = dynamic(() => import('react-lottie-player'), { ssr: false });
 const ChooseNameWallet = () => {
-    const navigate = useRouter().replace;
-    const { setHasWallet } = useContext(GuardContext);
-    const handleEnableWallet = () => {
-        setHasWallet(true);
-        navigate('/');
-    };
+
+    const { setWalletName, walletName } = useWallet();
+    const { restoreWallet } = useRestoreWallet();
     const emojis = [
         "😀", "😃", "😄", "😁", "😆", "😅", "😂", "🤣", "🥲", "🥹", "☺️", "😊", "😇", "🙂", "🙃", "😉", "😌",
         "😍", "🥰", "😘", "😗", "😙", "😚", "😋", "😛", "😝", "😜", "🤪", "🤨", "🧐", "🤓", "😎", "🥸", "🤩",
@@ -22,6 +23,7 @@ const ChooseNameWallet = () => {
         "🤕", "🤑", "🤠", "😈", "👿", "👹", "👺", "🤡", "💩", "👻", "💀", "☠️", "👽", "👾", "🤖", "🎃", "😺", "😸",
         "😹", "😻", "😼", "😽", "🙀", "😿", "😾"
     ];
+
 
     return (
         <div className='container-ChooseNameWallet' >
@@ -37,13 +39,14 @@ const ChooseNameWallet = () => {
                 <input
                     type='text'
                     placeholder="Wallet name"
+                    onChange={(e) => setWalletName(e.target.value)}
                 />
 
             </div>
             <div className='emoji-ChooseNameWallet' >
                 {emojis.map((emoji, index) => (<button key={`${index}-emoji`} >{emoji}</button>))}
             </div>
-            <button className='cta-ChooseNameWallet' onClick={() => handleEnableWallet()}  >Finish</button>
+            <button className='cta-ChooseNameWallet' disabled={walletName.length == 0} onClick={() => restoreWallet()}  >Finish</button>
         </div>
     )
 }

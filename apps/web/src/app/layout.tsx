@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import GuardProvider from "@/providers/guard";
+import WalletProvider from "@/wallet/provider";
 export const metadata: Metadata = {
   title: "Pactus Wallet",
   description: "Pactus Wallet is an open-source, client-based wallet for securely managing digital assets on the Pactus blockchain. Non-custodial, fast, and user-friendly.",
@@ -17,7 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-      <GuardProvider>{children}</GuardProvider>
+        <WalletProvider>{children}</WalletProvider>
       </body>
     </html>
   );

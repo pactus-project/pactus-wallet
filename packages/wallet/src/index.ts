@@ -7,7 +7,7 @@
 export * from './wallet';
 export * from './storage/storage';
 export * from './wallet-manager'; // This will now include the WalletList interface
-export * from './error'; // Import as a type to show intent
+export * from './error'; // Import as a type to show intent;
 import { initWasm } from '@trustwallet/wallet-core';
 import { IStorage } from './storage/storage';
 import { WalletManager } from './wallet-manager';

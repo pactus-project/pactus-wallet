@@ -2,12 +2,14 @@
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState, Suspense, JSX } from 'react';
 import AddWallet from './components/add-wallet';
-import ChooseNameWallet from './components/choose-name-wallet';
 import ImportWallet from './components/import-wallet';
 import MasterPassword from './components/master-password';
 import RecoveryPhrase from './components/recovery-phrase';
 import Welcome from './components/welcome';
+const ChooseNameWallet = dynamic(() => import('./components/choose-name-wallet'), { ssr: false });
+
 import './style.css';
+import dynamic from 'next/dynamic';
 const GetStartedContent = () => {
   const searchParams = useSearchParams();
   const [step, setStep] = useState<string | null>(null);

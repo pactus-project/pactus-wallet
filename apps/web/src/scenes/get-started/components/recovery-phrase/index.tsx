@@ -1,11 +1,12 @@
 import { copyIcon, downloadIcon, generateRecoverySeedLottie, successDownloadIcon, successIcon, writePaperLottie } from '@/assets'
 import Image from 'next/image'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import './style.css'
 import { useRouter } from 'next/navigation'
 import * as bip39 from 'bip39';
 import dynamic from 'next/dynamic'
 import BorderBeam from '@/components/border-beam'
+import { WalletContext } from '@/wallet/provider'
 const LottiePlayer = dynamic(() => import('react-lottie-player'), { ssr: false });
 const RecoveryPhrase = () => {
     const [step, setStep] = useState(1);
@@ -17,20 +18,18 @@ const RecoveryPhrase = () => {
     const navigate = useRouter().push;
     const [downloaded, setDownloaded] = useState(false);
     const [copied, setCopied] = useState(false);
-
+    const { setMnemonic, } = useContext(WalletContext);
     const handleDownload = () => {
         const seedText = walletSeeds.join(' ');
         const blob = new Blob([seedText], { type: 'text/plain' });
         const url = URL.createObjectURL(blob);
-
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'wallet-seed.txt'; 
+        a.download = 'wallet-seed.txt';
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
-        URL.revokeObjectURL(url);  
-
+        URL.revokeObjectURL(url);
         setDownloaded(true);
         setTimeout(() => setDownloaded(false), 2000);
     };
@@ -93,6 +92,7 @@ const RecoveryPhrase = () => {
 
         // If errors exist, display them and prevent navigation
         if (allInputsValid) {
+            setMnemonic(walletSeeds.join(' '))
             navigate('/get-started?step=master-password'); // Proceed if all inputs are correct
         } else {
             setInputErrors(errors); // Display error feedback
