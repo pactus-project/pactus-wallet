@@ -5,12 +5,8 @@ import './style.css'
 import dynamic from 'next/dynamic'
 import { useRestoreWallet } from '@/wallet/hooks/use-restoreWallet'
 import { useWallet } from '@/wallet/hooks'
-
-
-
 const LottiePlayer = dynamic(() => import('react-lottie-player'), { ssr: false });
 const ChooseNameWallet = () => {
-
     const { setWalletName, walletName } = useWallet();
     const { restoreWallet } = useRestoreWallet();
     const emojis = [
@@ -23,8 +19,6 @@ const ChooseNameWallet = () => {
         "🤕", "🤑", "🤠", "😈", "👿", "👹", "👺", "🤡", "💩", "👻", "💀", "☠️", "👽", "👾", "🤖", "🎃", "😺", "😸",
         "😹", "😻", "😼", "😽", "🙀", "😿", "😾"
     ];
-
-
     return (
         <div className='container-ChooseNameWallet' >
             <LottiePlayer

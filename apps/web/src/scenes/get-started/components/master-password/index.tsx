@@ -1,19 +1,15 @@
 import { showPasswordIcon, hidePasswordIcon, masterPasswordLottie } from '@/assets'
 import Image from 'next/image'
-import React, { useContext, useState } from 'react'
+import React, { useState } from 'react'
 import './style.css'
 import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import { validatePassword } from '@/utils/password-validator'
-import { WalletContext } from '@/wallet/provider'
-
-// Import the new validator function
-
+import { useWallet } from '@/wallet/hooks'
 const LottiePlayer = dynamic(() => import('react-lottie-player'), { ssr: false });
 
 const MasterPassword = () => {
     const navigate = useRouter().push;
-
     const [showPassword, setShowPassword] = useState<{ [key: string]: boolean }>({
         password: false,
         confirm: false
@@ -65,7 +61,7 @@ const MasterPassword = () => {
             }));
         }
     }
-    const { setPassword: setMasterPassword, } = useContext(WalletContext);
+    const { setPassword: setMasterPassword } = useWallet();
 
     return (
         <div className='container-MasterPassword'>

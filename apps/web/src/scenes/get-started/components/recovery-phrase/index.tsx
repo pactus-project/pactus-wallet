@@ -1,12 +1,12 @@
 import { copyIcon, downloadIcon, generateRecoverySeedLottie, successDownloadIcon, successIcon, writePaperLottie } from '@/assets'
 import Image from 'next/image'
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 import './style.css'
 import { useRouter } from 'next/navigation'
 import * as bip39 from 'bip39';
 import dynamic from 'next/dynamic'
 import BorderBeam from '@/components/border-beam'
-import { WalletContext } from '@/wallet/provider'
+import { useWallet } from '@/wallet/hooks'
 const LottiePlayer = dynamic(() => import('react-lottie-player'), { ssr: false });
 const RecoveryPhrase = () => {
     const [step, setStep] = useState(1);
@@ -18,7 +18,7 @@ const RecoveryPhrase = () => {
     const navigate = useRouter().push;
     const [downloaded, setDownloaded] = useState(false);
     const [copied, setCopied] = useState(false);
-    const { setMnemonic, } = useContext(WalletContext);
+    const { setMnemonic } = useWallet();
     const handleDownload = () => {
         const seedText = walletSeeds.join(' ');
         const blob = new Blob([seedText], { type: 'text/plain' });
