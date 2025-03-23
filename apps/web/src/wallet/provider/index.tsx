@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { Wallet, NetworkType } from '@pactus-wallet/wallet';
 import { WalletContextType, WalletStatus } from '../types';
 
-
 export const WalletContext = createContext<WalletContextType>({
   wallet: null,
   setWallet: () => {},
@@ -30,9 +29,12 @@ export default function WalletProvider({ children }: { children: ReactNode }) {
   const [walletName, setWalletNameState] = useState<string>('');
   const router = useRouter();
 
+  // Handle wallet status on component mount or router change
   useEffect(() => {
-    const walletExists = localStorage.getItem('walletStatus') === WalletStatus.WALLET_LOCKED;
-    if (walletExists) {
+    const storedWalletStatus = localStorage.getItem('walletStatus');
+
+    // If wallet is locked, load data and redirect to unlock page if not already there
+    if (storedWalletStatus === WalletStatus.WALLET_LOCKED) {
       const walletDataStr = localStorage.getItem('pactus_wallet_data');
       if (walletDataStr) {
         try {
@@ -53,17 +55,32 @@ export default function WalletProvider({ children }: { children: ReactNode }) {
         setWalletStatusState(WalletStatus.NO_WALLET);
         router.replace('/get-started');
       }
-    } else if (window.location.pathname !== '/get-started') {
-      router.replace('/get-started');
+    } 
+    // If wallet is unlocked, update state and stay on current page or redirect to dashboard
+    else if (storedWalletStatus === WalletStatus.WALLET_UNLOCKED) {
+      setWalletStatusState(WalletStatus.WALLET_UNLOCKED);
+      if (window.location.pathname !== '/') {
+        router.replace('/');
+      }
+    } 
+    // If no wallet exists, redirect to get-started page
+    else {
+      setWalletStatusState(WalletStatus.NO_WALLET);
+      if (window.location.pathname !== '/get-started') {
+        router.replace('/get-started');
+      }
     }
   }, [router]);
 
+  // Update wallet status and handle navigation
   const setWalletStatus = (value: WalletStatus) => {
     localStorage.setItem('walletStatus', value);
     setWalletStatusState(value);
     if (value === WalletStatus.NO_WALLET) {
       setWallet(null);
       router.replace('/get-started');
+    } else if (value === WalletStatus.WALLET_UNLOCKED && window.location.pathname !== '/') {
+      router.replace('/'); // Redirect to dashboard when wallet is unlocked
     }
   };
 
