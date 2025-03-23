@@ -3,8 +3,7 @@ import { walletNameLottie } from '@/assets'
 import React from 'react'
 import './style.css'
 import dynamic from 'next/dynamic'
-import { useRestoreWallet } from '@/wallet/hooks/use-restoreWallet'
-import { useWallet } from '@/wallet/hooks'
+import { useRestoreWallet, useWallet } from '@/wallet'
 const LottiePlayer = dynamic(() => import('react-lottie-player'), { ssr: false });
 const ChooseNameWallet = () => {
     const { setWalletName, walletName } = useWallet();

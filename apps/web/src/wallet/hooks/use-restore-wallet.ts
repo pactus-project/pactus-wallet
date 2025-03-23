@@ -3,7 +3,7 @@ import { useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { WalletManager, Wallet, NetworkType } from '@pactus-wallet/wallet';
 import { setupWallet } from '../utils';
-import { useWallet } from '.';
+import { useWallet } from './use-wallet';
 import { WalletStatus } from '../types';
 
 export function useRestoreWallet() {

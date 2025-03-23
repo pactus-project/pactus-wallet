@@ -7,20 +7,20 @@ import { WalletContextType, WalletStatus } from '../types';
 
 export const WalletContext = createContext<WalletContextType>({
   wallet: null,
-  setWallet: () => {},
+  setWallet: () => { },
   walletStatus: WalletStatus.NO_WALLET,
-  setWalletStatus: () => {},
+  setWalletStatus: () => { },
   password: '',
-  setPassword: () => {},
+  setPassword: () => { },
   mnemonic: '',
-  setMnemonic: () => {},
+  setMnemonic: () => { },
   networkType: NetworkType.Mainnet,
-  setNetworkType: () => {},
+  setNetworkType: () => { },
   walletName: '',
-  setWalletName: () => {},
+  setWalletName: () => { },
 });
 
-export default function WalletProvider({ children }: { children: ReactNode }) {
+export function WalletProvider({ children }: { children: ReactNode }) {
   const [wallet, setWallet] = useState<Wallet | null>(null);
   const [walletStatus, setWalletStatusState] = useState<WalletStatus>(WalletStatus.NO_WALLET);
   const [password, setPasswordState] = useState<string>('');
@@ -55,14 +55,14 @@ export default function WalletProvider({ children }: { children: ReactNode }) {
         setWalletStatusState(WalletStatus.NO_WALLET);
         router.replace('/get-started');
       }
-    } 
+    }
     // If wallet is unlocked, update state and stay on current page or redirect to dashboard
     else if (storedWalletStatus === WalletStatus.WALLET_UNLOCKED) {
       setWalletStatusState(WalletStatus.WALLET_UNLOCKED);
       if (window.location.pathname !== '/') {
         router.replace('/');
       }
-    } 
+    }
     // If no wallet exists, redirect to get-started page
     else {
       setWalletStatusState(WalletStatus.NO_WALLET);

@@ -5,7 +5,8 @@ import './style.css'
 import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import { validatePassword } from '@/utils/password-validator'
-import { useWallet } from '@/wallet/hooks'
+import { useWallet } from '@/wallet'
+
 const LottiePlayer = dynamic(() => import('react-lottie-player'), { ssr: false });
 
 const MasterPassword = () => {

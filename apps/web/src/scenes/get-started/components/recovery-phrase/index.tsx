@@ -6,7 +6,8 @@ import { useRouter } from 'next/navigation'
 import * as bip39 from 'bip39';
 import dynamic from 'next/dynamic'
 import BorderBeam from '@/components/border-beam'
-import { useWallet } from '@/wallet/hooks'
+import { useWallet } from '@/wallet'
+
 const LottiePlayer = dynamic(() => import('react-lottie-player'), { ssr: false });
 const RecoveryPhrase = () => {
     const [step, setStep] = useState(1);

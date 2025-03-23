@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import WalletProvider from "@/wallet/provider";
+import { WalletProvider } from "@/wallet";
+
 export const metadata: Metadata = {
   title: "Pactus Wallet",
   description: "Pactus Wallet is an open-source, client-based wallet for securely managing digital assets on the Pactus blockchain. Non-custodial, fast, and user-friendly.",
