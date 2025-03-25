@@ -39,11 +39,11 @@ jobs:
           node-version: "22"
 
       - name: Install dependencies
-        run: npm install
+        run: yarn install
         working-directory: ./
 
       - name: Build Next.js project
-        run: npm run build
+        run: yarn run build
         working-directory: ./apps/web
 
       - name: Deploy
