@@ -6,8 +6,9 @@ import ImportWallet from './components/import-wallet';
 import MasterPassword from './components/master-password';
 import RecoveryPhrase from './components/recovery-phrase';
 import Welcome from './components/welcome';
-import './style.css';
 
+
+import './style.css';
 import ChooseNameWallet from './components/choose-name-wallet';
 const GetStartedContent = () => {
   const searchParams = useSearchParams();
