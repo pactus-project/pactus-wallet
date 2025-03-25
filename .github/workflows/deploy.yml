@@ -43,7 +43,7 @@ jobs:
         working-directory: ./
 
       - name: Build Next.js project
-        run: yarn run build
+        run: yarn build
         working-directory: ./apps/web
 
       - name: Deploy
