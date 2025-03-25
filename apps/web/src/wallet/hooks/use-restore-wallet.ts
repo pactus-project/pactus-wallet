@@ -1,3 +1,4 @@
+"use client"
 // useRestoreWallet.ts
 import { useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
