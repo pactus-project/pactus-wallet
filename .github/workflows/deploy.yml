@@ -42,8 +42,15 @@ jobs:
         run: yarn install
         working-directory: ./
 
+      - name: Copy local package
+        run: cp -r ./packages/wallet ./apps/web/packages/wallet
+
+      - name: Install dependencies
+        run: yarn install
+        working-directory: ./apps/web
+
       - name: Install local package
-        run: yarn add file:../../packages/wallet
+        run: yarn add file:./packages/wallet
         working-directory: ./apps/web
 
       - name: Build Next.js project
