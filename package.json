@@ -4,15 +4,21 @@
     "repository": "https://github.com/pactus-project/pactus-wallet.git",
     "license": "MIT",
     "packageManager": "yarn@1.22.22",
+    "private": true,
+    "scripts": {
+        "build": "yarn workspaces run build",
+        "build:web": "yarn workspace web build",
+        "dev:web": "yarn workspace web dev",
+        "test": "yarn workspaces run test",
+        "lint": "yarn workspaces run lint"
+    },
     "dependencies": {
         "typescript": "^5.7.3"
     },
     "workspaces": {
         "packages": [
             "packages/*",
-            "apps/*",
-            "tests/*"
+            "apps/*"
         ]
-    },
-    "private": true
+    }
 }
