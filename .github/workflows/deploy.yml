@@ -51,8 +51,8 @@ jobs:
       - name: Build wallet package
         run: cd packages/wallet && yarn build
         
-      - name: Build web app
-        run: cd apps/web && yarn build
+      - name: Build and link web app
+        run: cd apps/web && yarn add file:${{ github.workspace }}/packages/wallet && yarn build
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4
