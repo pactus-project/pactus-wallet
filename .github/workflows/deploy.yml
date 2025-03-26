@@ -42,10 +42,8 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      # Build the wallet package
-      - name: Build wallet package
-        run: yarn build
-        working-directory: ./packages/wallet
+      - name: Build web app
+        run: yarn build:web
 
       # Build the Next.js project
       - name: Build Next.js project
