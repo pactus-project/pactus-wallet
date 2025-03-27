@@ -23,13 +23,16 @@ export const VERSION = '1.0.0';
  * @returns Promise that resolves with a WalletManager instance or throws an error
  */
 export async function initWalletSDK(storage: IStorage): Promise<WalletManager> {
-    try {
-        // Initialize the wallet core library
-        const core = await initWasm();
-        const walletManager = new WalletManager(core, storage);
-        return walletManager;
-    } catch (error) {
-        console.error('Failed to initialize wallet SDK with custom storage:', error);
-        throw error; // Rethrow error instead of returning false
-    }
+  try {
+    // Initialize the wallet core library
+    const core = await initWasm();
+    const walletManager = new WalletManager(core, storage);
+    return walletManager;
+  } catch (error) {
+    console.error(
+      'Failed to initialize wallet SDK with custom storage:',
+      error
+    );
+    throw error; // Rethrow error instead of returning false
+  }
 }
