@@ -1,8 +1,9 @@
 {
   "version": 3,
+  "name": "Test Wallet",
   "uuid": "44156117-268a-49f0-a906-400659b7a051",
   "created_at": "2024-08-27T16:45:08Z",
-  "network": 0,
+  "network": "mainnet",
   "crc": 261496310,
   "vault": {
     "type": 1,

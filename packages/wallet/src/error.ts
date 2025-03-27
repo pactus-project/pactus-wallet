@@ -2,6 +2,9 @@
  * Custom errors for wallet operations
  */
 
+//
+//TODO: better error management
+//
 /**
  * Enum for standard error codes used throughout the wallet
  */
@@ -15,7 +18,6 @@ export enum ErrorCode {
   INIT_ERROR = 'INIT_ERROR',
   WALLET_CREATION_ERROR = 'WALLET_CREATION_ERROR',
   WALLET_RESTORE_ERROR = 'WALLET_RESTORE_ERROR',
-  INVALID_MNEMONIC_ERROR = 'INVALID_MNEMONIC_ERROR',
   UNKNOWN_ERROR = 'UNKNOWN_ERROR',
 }
 
@@ -116,17 +118,6 @@ export class WalletRestoreError extends WalletError {
 }
 
 /**
- * Error for invalid mnemonic input
- */
-export class InvalidMnemonicError extends WalletError {
-  code = ErrorCode.INVALID_MNEMONIC_ERROR;
-
-  constructor(message = 'Invalid mnemonic phrase') {
-    super(message);
-    this.name = 'InvalidMnemonicError';
-  }
-}
-/**
  * Create a standardized error message with error code
  * @param code Error code for categorizing errors
  * @param message Human-readable error message
@@ -168,8 +159,7 @@ export function formatError(error: unknown): {
       code = ErrorCode.WALLET_CREATION_ERROR;
     else if (error instanceof WalletRestoreError)
       code = ErrorCode.WALLET_RESTORE_ERROR;
-    else if (error instanceof InvalidMnemonicError)
-      code = ErrorCode.INVALID_MNEMONIC_ERROR;
+    else code = ErrorCode.UNKNOWN_ERROR;
 
     return createErrorResponse(code, error.message);
   } else if (error instanceof Error) {

@@ -5,17 +5,20 @@
 
 // Core wallet functionality
 export * from './wallet';
+export { NetworkType } from './types';
 export * from './storage/storage';
-export * from './wallet-manager'; // This will now include the WalletList interface
-export * from './error'; // Import as a type to show intent;
+export * from './manager';
+export * from './error';
+
 import { initWasm } from '@trustwallet/wallet-core';
 import { IStorage } from './storage/storage';
-import { WalletManager } from './wallet-manager';
-// Configuration
-export * from './config';
+import { WalletManager } from './manager';
 
-// Re-export version for easier access
-export const VERSION = '1.0.0';
+//
+// QUESTIONS:
+// Shouldn't rename to initWalletManager() as it return WalletManager instance?
+// Shouldn't rename wallet-manager.ts to manager.ts?
+//
 
 /**
  * Initialize the wallet SDK with a custom storage implementation
@@ -23,16 +26,8 @@ export const VERSION = '1.0.0';
  * @returns Promise that resolves with a WalletManager instance or throws an error
  */
 export async function initWalletSDK(storage: IStorage): Promise<WalletManager> {
-  try {
-    // Initialize the wallet core library
-    const core = await initWasm();
-    const walletManager = new WalletManager(core, storage);
-    return walletManager;
-  } catch (error) {
-    console.error(
-      'Failed to initialize wallet SDK with custom storage:',
-      error
-    );
-    throw error; // Rethrow error instead of returning false
-  }
+  // Initialize the wallet core library
+  const core = await initWasm();
+  const walletManager = new WalletManager(core, storage);
+  return walletManager;
 }

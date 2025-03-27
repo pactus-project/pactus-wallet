@@ -13,7 +13,6 @@
     "@splinetool/react-spline": "^4.0.0",
     "@splinetool/runtime": "^1.9.72",
     "@pactus-wallet/wallet": "*",
-    "bip39": "^3.1.0",
     "copy-webpack-plugin": "^13.0.0",
     "framer-motion": "^12.4.10",
     "next": "15.2.3",

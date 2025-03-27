@@ -14,10 +14,6 @@ indent_size = 2
 max_line_length = 80
 prose_wrap = always
 
-[Makefile]
-indent_style = tab
-indent_size = 4
-
 [*.{yml,yaml}]
 indent_style = space
 indent_size = 2
@@ -29,14 +25,6 @@ indent_size = 2
 [*.json]
 indent_style = space
 indent_size = 2
-
-[{go.mod,go.sum,*.go}]
-indent_style = tab
-indent_size = 4
-
-[*.rs]
-indent_style = space
-indent_size = 4
 
 [*.{js,ts,jsx,tsx}]
 indent_style = space
