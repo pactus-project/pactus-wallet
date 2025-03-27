@@ -20,8 +20,9 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
-  },
+      "@/*": ["./src/*"],
+      "@pactus-wallet/*": ["../../packages/*/src"]
+    },
     "strictNullChecks": true
   },
   "include": [
@@ -30,7 +31,8 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "types",
-    "./src/assets/custom.d.ts"
+    "./src/assets/custom.d.ts",
+    "../../packages/*/src/**/*"
   ],
   "exclude": ["node_modules"]
 }
