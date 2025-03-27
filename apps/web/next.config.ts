@@ -7,6 +7,8 @@ const walletCoreWasmPath = require.resolve('@trustwallet/wallet-core/dist/lib/wa
 const nextConfig: NextConfig = {
     // Configure the output to be static export
     output: 'export',
+    // Transpile packages from the monorepo
+    transpilePackages: ['@pactus-wallet/wallet'],
     webpack: (config, { isServer, dev }) => {
         if (!isServer) {
             // Add the CopyPlugin to copy the wallet-core.wasm file to the appropriate directory

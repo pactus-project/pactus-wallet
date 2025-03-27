@@ -30,6 +30,7 @@
     "eslint": "^9",
     "eslint-config-next": "15.2.0",
     "ts-jest": "^29.2.6",
-    "typescript": "^5"
+    "typescript": "^5",
+    "copy-webpack-plugin": "^13.0.0"
   }
 }

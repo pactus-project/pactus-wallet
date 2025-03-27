@@ -42,13 +42,13 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
+      # Build the wallet package first
+      - name: Build wallet package
+        run: yarn workspace @pactus-wallet/wallet build
+
       - name: Build web app
         run: yarn build:web
 
-      # Build the Next.js project
-      - name: Build Next.js project
-        run: yarn build
-        working-directory: ./apps/web
 
       # Deploy the built project
       - name: Deploy
