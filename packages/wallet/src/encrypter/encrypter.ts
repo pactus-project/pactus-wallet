@@ -2,7 +2,6 @@ import { Params } from './params';
 import * as crypto from 'crypto';
 import * as argon2 from 'argon2-browser';
 
-
 export const ParameterKey = {
     Iterations: 'iterations',
     Memory: 'memory',
@@ -16,7 +15,6 @@ export const EncryptionMethod = {
     AES256CTR: 'AES_256_CTR',
     MACv1: 'MACV1'
 } as const;
-
 
 // Default parameter values
 export const DefaultParams = {
@@ -142,10 +140,7 @@ export class Encrypter {
         switch (funcs[2]) {
             case EncryptionMethod.MACv1:
                 const mac = data.subarray(data.length - 4);
-                const calculatedMac = this.calcMACv1(
-                    cipherKey.subarray(16, 32),
-                    cipher
-                );
+                const calculatedMac = this.calcMACv1(cipherKey.subarray(16, 32), cipher);
                 if (!calculatedMac.equals(mac)) {
                     throw new Error('Invalid password');
                 }

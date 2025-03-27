@@ -34,7 +34,7 @@ export class WalletManager {
         password: string,
         strength: MnemonicStrength = MnemonicStrength.Normal,
         network: NetworkType = NetworkType.Mainnet,
-        name: string = 'My Wallet'
+        name = 'My Wallet'
     ): Promise<Wallet> {
         this.currentWallet = Wallet.create(this.core, strength, password, network, name);
         await this.saveWallet(password);
@@ -53,7 +53,7 @@ export class WalletManager {
         mnemonic: string,
         password: string,
         network: NetworkType = NetworkType.Mainnet,
-        name: string = 'My Wallet'
+        name = 'My Wallet'
     ): Promise<Wallet> {
         this.currentWallet = Wallet.restore(this.core, mnemonic, password, network, name);
         await this.saveWallet(password);

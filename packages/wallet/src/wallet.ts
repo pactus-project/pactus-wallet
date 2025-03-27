@@ -81,7 +81,7 @@ export class Wallet {
         wallet: HDWallet,
         password: string,
         network: NetworkType = NetworkType.Mainnet,
-        name: string = 'My Wallet'
+        name = 'My Wallet'
     ) {
         this.core = core;
         this.wallet = wallet;
@@ -107,7 +107,7 @@ export class Wallet {
         strength: MnemonicStrength = MnemonicStrength.Normal,
         password: string,
         network: NetworkType = NetworkType.Mainnet,
-        name: string = 'My Wallet'
+        name = 'My Wallet'
     ): Wallet {
         const wallet = core.HDWallet.create(strength, '');
         return new Wallet(core, wallet, password, network, name);
@@ -127,7 +127,7 @@ export class Wallet {
         mnemonic: string,
         password: string,
         network: NetworkType = NetworkType.Mainnet,
-        name: string = 'My Wallet'
+        name = 'My Wallet'
     ): Wallet {
         try {
             const wallet = core.HDWallet.createWithMnemonic(mnemonic, '');

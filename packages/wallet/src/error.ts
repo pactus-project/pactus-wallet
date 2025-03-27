@@ -37,7 +37,7 @@ export class WalletError extends Error {
 export class AuthenticationError extends WalletError {
     code = ErrorCode.AUTH_ERROR;
 
-    constructor(message: string = 'Authentication failed. Wrong password.') {
+    constructor(message = 'Authentication failed. Wrong password.') {
         super(message);
         this.name = 'AuthenticationError';
     }
@@ -49,7 +49,7 @@ export class AuthenticationError extends WalletError {
 export class MnemonicError extends WalletError {
     code = ErrorCode.MNEMONIC_ERROR;
 
-    constructor(message: string = 'Invalid mnemonic phrase.') {
+    constructor(message = 'Invalid mnemonic phrase.') {
         super(message);
         this.name = 'MnemonicError';
     }
@@ -61,7 +61,7 @@ export class MnemonicError extends WalletError {
 export class StorageError extends WalletError {
     code = ErrorCode.STORAGE_ERROR;
 
-    constructor(message: string = 'Wallet storage operation failed.') {
+    constructor(message = 'Wallet storage operation failed.') {
         super(message);
         this.name = 'StorageError';
     }
@@ -73,7 +73,7 @@ export class StorageError extends WalletError {
 export class NetworkError extends WalletError {
     code = ErrorCode.NETWORK_ERROR;
 
-    constructor(message: string = 'Network operation failed.') {
+    constructor(message = 'Network operation failed.') {
         super(message);
         this.name = 'NetworkError';
     }
@@ -85,7 +85,7 @@ export class NetworkError extends WalletError {
 export class InitializationError extends WalletError {
     code = ErrorCode.INIT_ERROR;
 
-    constructor(message: string = 'Wallet initialization failed.') {
+    constructor(message = 'Wallet initialization failed.') {
         super(message);
         this.name = 'InitializationError';
     }
@@ -97,7 +97,7 @@ export class InitializationError extends WalletError {
 export class WalletCreationError extends WalletError {
     code = ErrorCode.WALLET_CREATION_ERROR;
 
-    constructor(message: string = 'Failed to create wallet') {
+    constructor(message = 'Failed to create wallet') {
         super(message);
         this.name = 'WalletCreationError';
     }
@@ -109,7 +109,7 @@ export class WalletCreationError extends WalletError {
 export class WalletRestoreError extends WalletError {
     code = ErrorCode.WALLET_RESTORE_ERROR;
 
-    constructor(message: string = 'Failed to restore wallet') {
+    constructor(message = 'Failed to restore wallet') {
         super(message);
         this.name = 'WalletRestoreError';
     }
@@ -121,7 +121,7 @@ export class WalletRestoreError extends WalletError {
 export class InvalidMnemonicError extends WalletError {
     code = ErrorCode.INVALID_MNEMONIC_ERROR;
 
-    constructor(message: string = 'Invalid mnemonic phrase') {
+    constructor(message = 'Invalid mnemonic phrase') {
         super(message);
         this.name = 'InvalidMnemonicError';
     }

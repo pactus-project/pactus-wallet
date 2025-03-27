@@ -23,8 +23,7 @@ export class Params {
 
     getNumber(key: string): number {
         const val = this.data.get(key);
-        if (val === undefined)
-            throw new Error(`Key "${key}" not found`);
+        if (val === undefined) throw new Error(`Key "${key}" not found`);
 
         // Parse string back to number
         return parseInt(val, 10);

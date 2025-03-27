@@ -7,4 +7,3 @@ export interface IStorage {
     delete: <R>(key: string) => Promise<R | null>;
     clear: () => Promise<void>;
 }
-

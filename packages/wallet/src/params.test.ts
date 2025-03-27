@@ -1,35 +1,34 @@
 import { Params } from '../src/encrypter/params';
 
 describe('Encrypter Params', () => {
-
     describe('should handle numbers', () => {
         const p = new Params();
 
         p.setNumber('k1', 0);
-        p.setNumber('k2', 0xFF);
-        p.setNumber('k3', 0xFFFFFFFF);
-        p.setNumber('k4', 0xFFFFFFFFFFFFFFFF);
+        p.setNumber('k2', 0xff);
+        p.setNumber('k3', 0xffffffff);
+        p.setNumber('k4', 0xffffffffffffffff);
 
         expect(p.getNumber('k1')).toBe(0);
-        expect(p.getNumber('k2')).toBe(0xFF);
-        expect(p.getNumber('k3')).toBe(0xFFFFFFFF);
-        expect(p.getNumber('k4')).toBe(0xFFFFFFFFFFFFFFFF);
+        expect(p.getNumber('k2')).toBe(0xff);
+        expect(p.getNumber('k3')).toBe(0xffffffff);
+        expect(p.getNumber('k4')).toBe(0xffffffffffffffff);
     });
 
     it('should handle byte arrays', () => {
         const p = new Params();
 
         p.setBytes('k1', new Uint8Array([0, 0]));
-        p.setBytes('k2', new Uint8Array([0xFF, 0xFF]));
+        p.setBytes('k2', new Uint8Array([0xff, 0xff]));
         p.setBytes('k3', new Uint8Array([]));
 
         expect(p.getBytes('k1')).toStrictEqual(new Uint8Array([0, 0]));
-        expect(p.getBytes('k2')).toStrictEqual(new Uint8Array([0xFF, 0xFF]));
+        expect(p.getBytes('k2')).toStrictEqual(new Uint8Array([0xff, 0xff]));
         expect(p.getBytes('k3')).toStrictEqual(new Uint8Array([]));
 
-        expect(p.getString('k1')).toBe("AAA=");
-        expect(p.getString('k2')).toBe("//8=");
-        expect(p.getString('k3')).toBe("");
+        expect(p.getString('k1')).toBe('AAA=');
+        expect(p.getString('k2')).toBe('//8=');
+        expect(p.getString('k3')).toBe('');
     });
 
     it('should handle byte strings', () => {
