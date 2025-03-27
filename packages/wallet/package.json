@@ -5,7 +5,6 @@
     "license": "MIT",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
-    "type": "module",
     "scripts": {
         "build": "tsc",
         "start": "tsc -w",
@@ -13,7 +12,7 @@
         "build:pkg": "yarn build",
         "test": "jest --forceExit --detectOpenHandles",
         "test:watch": "jest --watch --forceExit --detectOpenHandles",
-        "lint": "eslint 'src/**/*.{ts,tsx}' --fix"
+        "lint": "eslint --config eslint.config.cjs 'src/**/*.{ts,tsx}' --fix"
     },
     "dependencies": {
         "@trustwallet/wallet-core": "^4.2.16",
