@@ -3,90 +3,76 @@ const tsPlugin = require('@typescript-eslint/eslint-plugin');
 const prettierPlugin = require('eslint-plugin-prettier');
 const prettierConfig = require('eslint-config-prettier');
 const importPlugin = require('eslint-plugin-import');
+const path = require('path');
+
+// Load GTS prettier configuration
+let gtsPrettierConfig = {};
+try {
+  gtsPrettierConfig = require('./node_modules/gts/.prettierrc.json');
+} catch (error) {
+  console.warn('Could not load GTS Prettier config:', error.message);
+}
 
 module.exports = [
   // Ignore patterns
   {
-    ignores: ['node_modules/**', 'dist/**']
+    ignores: ['node_modules/**', 'dist/**', 'build/**'],
   },
-  
+
   // Import Prettier config
   prettierConfig,
-  
-  // Base configuration for all files
+
+  // JavaScript files configuration
   {
-    files: ['**/*.{js,ts,tsx}'],
+    files: ['**/*.js', '**/*.cjs'],
+    languageOptions: {
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+    },
+    plugins: {
+      prettier: prettierPlugin,
+    },
+    rules: {
+      'prettier/prettier': ['error', gtsPrettierConfig],
+      'object-curly-spacing': ['error', 'always'],
+    },
+  },
+
+  // TypeScript files configuration
+  {
+    files: ['**/*.ts', '**/*.tsx'],
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',
       parser: tsParser,
       parserOptions: {
-        project: './tsconfig.json'
-      }
+        project: './tsconfig.json',
+      },
     },
     plugins: {
       '@typescript-eslint': tsPlugin,
-      'prettier': prettierPlugin,
-      'import': importPlugin
+      prettier: prettierPlugin,
+      import: importPlugin,
     },
     rules: {
-      // Common rules
-      'no-underscore-dangle': 'off',
-      'no-plusplus': 'off',
-      'class-method-use-this': 'off',
-      'eqeqeq': ['error', 'smart'],
-      'complexity': 'error',
-      'no-empty': ['error'],
-      'no-restricted-globals': 'error',
-      'no-param-reassign': 'off',
-      'no-prototype-builtins': 'off',
-      
-      // Style rules
-      'array-bracket-spacing': ['error', 'never'],
+      // Override GTS defaults only where necessary
       'object-curly-spacing': ['error', 'always'],
-      'max-classes-per-file': ['error', 10],
-      'radix': 'off',
-      'no-return-assign': 'off',
-      'no-restricted-syntax': ['error', 'LabeledStatement', 'WithStatement'],
-      'no-console': [
-        'warn',
+      'prettier/prettier': ['error', 
         {
-          allow: ['debug', 'error', 'info']
+          ...gtsPrettierConfig,
+          bracketSpacing: true,
         }
       ],
-      
-      // TypeScript rules
-      '@typescript-eslint/no-use-before-define': 'off',
-      '@typescript-eslint/explicit-function-return-type': 'off',
-      '@typescript-eslint/no-explicit-any': ['error', { 
-        ignoreRestArgs: true 
-      }],
-      '@typescript-eslint/no-inferrable-types': 'error',
-      '@typescript-eslint/naming-convention': [
-        'error',
-        {
-          selector: 'enumMember',
-          format: ['UPPER_CASE', 'PascalCase']
-        }
-      ],
-      '@typescript-eslint/dot-notation': 'error',
-      '@typescript-eslint/no-empty-function': ['error', { allow: ['arrowFunctions'] }],
-      '@typescript-eslint/no-shadow': 'error',
-      '@typescript-eslint/no-non-null-assertion': 'off',
-      '@typescript-eslint/no-redeclare': ['error', { ignoreDeclarationMerge: true }],
-      
-      // Prettier rules
-      'prettier/prettier': 'error'
-    }
+    },
   },
-  
+
   // Specific rules for test files
   {
     files: ['tests/**/*.ts', 'tests/**/*.tsx', '**/*.test.ts', '**/*.test.tsx'],
     rules: {
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
-      'import/no-extraneous-dependencies': ['off']
-    }
-  }
-]; 
+      'import/no-extraneous-dependencies': ['off'],
+    },
+  },
+];
