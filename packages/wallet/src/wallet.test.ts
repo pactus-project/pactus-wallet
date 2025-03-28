@@ -2,7 +2,13 @@ import { initWasm, WalletCore } from '@trustwallet/wallet-core';
 import { Wallet } from './wallet';
 import * as bip39 from 'bip39';
 import { MnemonicError } from './error';
-import { Ledger, MnemonicStrength, NetworkType, Vault, WalletInfo } from './types';
+import {
+  Ledger,
+  MnemonicStrength,
+  NetworkType,
+  Vault,
+  WalletInfo,
+} from './types';
 import { MemoryStorage } from './storage/memory-storage';
 import { IStorage } from './storage/storage';
 import { getWordCount } from './utils';
@@ -230,12 +236,12 @@ describe('Pactus Wallet Tests', () => {
 
       const loadedWallet = Wallet.load(core, storage, wallet.getID());
 
-      expect(loadedWallet.getAddresses()).toBe(wallet.getAddresses());
-      expect(loadedWallet.getWalletInfo()).toBe(wallet.getWalletInfo());
+      expect(loadedWallet.getAddresses()).toStrictEqual(wallet.getAddresses());
+      expect(loadedWallet.getWalletInfo()).toStrictEqual(wallet.getWalletInfo());
     });
 
     it('should correctly load the wallet from test data', () => {
-      const password = "password";
+      const password = 'password';
       const walletID = '1234';
       const walletName = 'Test Wallet';
       const walletInfo: WalletInfo = {
@@ -244,7 +250,7 @@ describe('Pactus Wallet Tests', () => {
         uuid: walletID,
         creationTime: Date.now(),
         network: NetworkType.Mainnet,
-      }
+      };
       storage.set(StorageKey.walletInfoKey(walletID), walletInfo);
 
       const ledger: Ledger = {
@@ -259,18 +265,19 @@ describe('Pactus Wallet Tests', () => {
       storage.set(StorageKey.walletLedgerKey(walletID), ledger);
 
       let params = new Params();
-      params.setNumber("iterations", 1);
-      params.setNumber("memory", 8);
-      params.setNumber("parallelism", 1);
-      params.setNumber("keylen", 48);
+      params.setNumber('iterations', 1);
+      params.setNumber('memory', 8);
+      params.setNumber('parallelism', 1);
+      params.setNumber('keylen', 48);
 
       const vault: Vault = {
         encrypter: {
-          method: "ARGON2ID-AES_256_CTR-MACV1",
+          method: 'ARGON2ID-AES_256_CTR-MACV1',
           params: params,
         },
-        keyStore: "aLEdVCpZOJmZZz067JTxWivw/41sWooR+E2iM46WYjskjFTE3VviPzc9SQ6gba5g+8CWWcw1q1YT9x1XAg/QAt2Rd7zR2FKL+ACwCbmZ/H+lLPDBt3nlvOkD2qkxi2rjjLpbAtf2UjKrW2b3+/KxSJGuG5GPIqPvPonqHhSWrF1j0nnKqm+btD1gaeJ5IRLchi27BNorMR4qvETMeV7YjkvZlrEFdNffqpWee+o4+bnr33MwysXm4hZU1c4/zzMIODAyxsMRgbrfTDfdQ19c0yjYmDGAPDpAqNAvMmDL07nGKR2f",
-      }
+        keyStore:
+          'aLEdVCpZOJmZZz067JTxWivw/41sWooR+E2iM46WYjskjFTE3VviPzc9SQ6gba5g+8CWWcw1q1YT9x1XAg/QAt2Rd7zR2FKL+ACwCbmZ/H+lLPDBt3nlvOkD2qkxi2rjjLpbAtf2UjKrW2b3+/KxSJGuG5GPIqPvPonqHhSWrF1j0nnKqm+btD1gaeJ5IRLchi27BNorMR4qvETMeV7YjkvZlrEFdNffqpWee+o4+bnr33MwysXm4hZU1c4/zzMIODAyxsMRgbrfTDfdQ19c0yjYmDGAPDpAqNAvMmDL07nGKR2f',
+      };
       storage.set(StorageKey.walletVaultKey(walletID), vault);
 
       const wallet = Wallet.load(core, storage, walletID);

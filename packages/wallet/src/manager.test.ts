@@ -131,7 +131,7 @@ describe('WalletManager Tests', () => {
       const wallet2 = walletManager.loadWallet(wallet1.getID());
 
       expect(wallet2.getAddresses()).toHaveLength(2);
-      expect(wallet2.getAddresses()).toBe(wallet1.getAddresses());
+      expect(wallet2.getAddresses()).toStrictEqual(wallet1.getAddresses());
     });
   });
 
