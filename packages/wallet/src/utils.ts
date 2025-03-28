@@ -4,11 +4,18 @@
  * @returns A UUID v4 string
  */
 export function generateUUID(): string {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-    const r = (Math.random() * 16) | 0;
-    const v = c === 'x' ? r : (r & 0x3) | 0x8;
-    return v.toString(16);
-  });
+  const buffer = new Uint8Array(16);
+  crypto.getRandomValues(buffer);
+
+  buffer[6] = (buffer[6] & 0x0f) | 0x40;
+  buffer[8] = (buffer[8] & 0x3f) | 0x80;
+
+  return Array.from(buffer, (byte, index) => {
+    const hex = byte.toString(16).padStart(2, '0');
+    return hex + ([4, 6, 8, 10].includes(index) ? '-' : '');
+  })
+    .join('')
+    .slice(0, 36);
 }
 
 export function sprintf(format: string, ...args: any[]): string {

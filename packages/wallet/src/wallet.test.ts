@@ -3,6 +3,7 @@ import { Wallet } from './wallet';
 import * as bip39 from 'bip39';
 import { MnemonicError } from './error';
 import {
+  AddressInfo,
   Ledger,
   MnemonicStrength,
   NetworkType,
@@ -33,10 +34,24 @@ describe('Pactus Wallet Tests', () => {
     core = await initWasm();
     storage = new MemoryStorage();
   });
-
   function expectStoredValue(key: string, someValue: string) {
     const value = JSON.stringify(storage.get(key));
     expect(value).toContain(someValue);
+  }
+  function parseStoredObject(key: string, walletAddress: string): AddressInfo {
+    const ledger = storage.get(key);
+
+    if (!ledger || typeof ledger !== 'object') {
+      throw new Error('Ledger not found or invalid format');
+    }
+
+    if (!('addresses' in ledger) || !(ledger.addresses instanceof Map)) {
+      throw new Error(
+        'Invalid ledger structure: missing or invalid addresses Map'
+      );
+    }
+    const storedAddress = ledger.addresses.get(walletAddress);
+    return storedAddress;
   }
 
   describe('Wallet Seed', () => {
@@ -134,12 +149,14 @@ describe('Pactus Wallet Tests', () => {
       expect(addrInfo2.path).toBe("m/44'/21888'/3'/1'");
 
       const ledgerKey = StorageKey.walletLedgerKey(wallet.getID());
-      expectStoredValue(ledgerKey, addrInfo1.address);
-      expectStoredValue(ledgerKey, addrInfo1.path);
-      expectStoredValue(ledgerKey, addrInfo1.label);
-      expectStoredValue(ledgerKey, addrInfo2.address);
-      expectStoredValue(ledgerKey, addrInfo2.path);
-      expectStoredValue(ledgerKey, addrInfo2.label);
+      const storedAddress1 = parseStoredObject(ledgerKey, addrInfo1.address);
+      const storedAddress2 = parseStoredObject(ledgerKey, addrInfo2.address);
+      expect(storedAddress1.address).toEqual(addrInfo1.address);
+      expect(storedAddress1.label).toEqual(addrInfo1.label);
+      expect(storedAddress1.path).toEqual(addrInfo1.path);
+      expect(storedAddress2.address).toEqual(addrInfo2.address);
+      expect(storedAddress2.label).toEqual(addrInfo2.label);
+      expect(storedAddress2.path).toEqual(addrInfo2.path);
     });
 
     it('should restore a wallet with deterministic addresses from standard 24-word mnemonic', () => {
@@ -190,7 +207,7 @@ describe('Pactus Wallet Tests', () => {
       expect(addrInfo1.address.startsWith('pc1')).toBe(true);
       expect(addrInfo2.address.startsWith('pc1')).toBe(true);
       expect(addrInfo1.address).not.toBe(addrInfo2.address);
-      expect(wallet.isTestnet).toBeFalsy();
+      expect(wallet.isTestnet()).toBeFalsy();
     });
 
     it('should create unique Testnet addresses in correct format', () => {
@@ -237,7 +254,9 @@ describe('Pactus Wallet Tests', () => {
       const loadedWallet = Wallet.load(core, storage, wallet.getID());
 
       expect(loadedWallet.getAddresses()).toStrictEqual(wallet.getAddresses());
-      expect(loadedWallet.getWalletInfo()).toStrictEqual(wallet.getWalletInfo());
+      expect(loadedWallet.getWalletInfo()).toStrictEqual(
+        wallet.getWalletInfo()
+      );
     });
 
     it('should correctly load the wallet from test data', () => {
