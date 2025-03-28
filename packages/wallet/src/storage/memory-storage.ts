@@ -1,35 +1,35 @@
 import { IStorage } from './storage';
 
-/**
- * In-memory storage implementation of IStorage
- * Provides temporary storage in memory
- */
+/** In-memory storage implementation of IStorage. */
 export class MemoryStorage implements IStorage {
-  storage: Record<string, unknown> = {};
+  private storage: Record<string, unknown> = {};
 
-  get = async <R>(key: string) => {
+  get = <R>(key: string): R | null => {
     return (this.storage[key] as R) ?? null;
   };
 
-  set = async <R>(key: string, payload: R) => {
+  has = (key: string): boolean => {
+    return key in this.storage;
+  };
+
+  set = <R>(key: string, payload: R): void => {
     this.storage[key] = payload;
-    return payload;
   };
 
-  setBatch = async <V extends Record<string, unknown>>(values: V) => {
+  setBatch = <V extends Record<string, unknown>>(values: V): void => {
     Object.assign(this.storage, values);
-    return values;
   };
 
-  delete = async <R>(key: string) => {
-    const payload = await this.get<R>(key);
-    if (payload != null) {
+  delete = <R>(key: string): R | null => {
+    const payload = this.get<R>(key);
+    if (payload !== null) {
       delete this.storage[key];
     }
+
     return payload;
   };
 
-  clear = async () => {
+  clear = (): void => {
     this.storage = {};
   };
 }

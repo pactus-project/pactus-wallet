@@ -35,6 +35,16 @@ export class Encrypter {
     this.params = params;
   }
 
+  static defaultEncrypter(): Encrypter {
+    let params = new Params();
+    params.setNumber(ParameterKey.Iterations, DefaultParams.Iterations);
+    params.setNumber(ParameterKey.Memory, DefaultParams.Memory);
+    params.setNumber(ParameterKey.Parallelism, DefaultParams.Parallelism);
+    params.setNumber(ParameterKey.KeyLength, DefaultParams.KeyLength);
+
+    return new Encrypter(DefaultMethod, params);
+  }
+
   isEncrypted(): boolean {
     return this.method !== EncryptionMethod.None;
   }
@@ -174,14 +184,4 @@ export class Encrypter {
     data.forEach(d => hasher.update(d));
     return hasher.digest().subarray(0, 4);
   }
-}
-
-export function defaultEncrypter(): Encrypter {
-  let defaultParams = new Params();
-  defaultParams.setNumber(ParameterKey.Iterations, DefaultParams.Iterations);
-  defaultParams.setNumber(ParameterKey.Memory, DefaultParams.Memory);
-  defaultParams.setNumber(ParameterKey.Parallelism, DefaultParams.Parallelism);
-  defaultParams.setNumber(ParameterKey.KeyLength, DefaultParams.KeyLength);
-
-  return new Encrypter(DefaultMethod, defaultParams);
 }

@@ -1,9 +1,4 @@
-import {
-  DefaultMethod,
-  Encrypter,
-  ParameterKey,
-  defaultEncrypter,
-} from './encrypter';
+import { DefaultMethod, Encrypter, ParameterKey } from './encrypter';
 import { Params } from './params';
 
 describe('Encrypter Tests', () => {
@@ -40,7 +35,7 @@ describe('Encrypter Tests', () => {
   });
 
   it('should handle defaultEncrypter', () => {
-    const enc = defaultEncrypter();
+    const enc = Encrypter.defaultEncrypter();
 
     expect(enc.method).toBe('ARGON2ID-AES_256_CTR-MACV1');
     expect(enc.params.getNumber('iterations')).toBe(3);

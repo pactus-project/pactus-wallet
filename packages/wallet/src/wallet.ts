@@ -1,152 +1,186 @@
 import { WalletCore } from '@trustwallet/wallet-core';
 import { HDWallet } from '@trustwallet/wallet-core/dist/src/wallet-core';
-import { WalletRestoreError } from './error';
-
-/**
- * Network type for wallet operation
- */
-export enum NetworkType {
-  Mainnet = 'mainnet',
-  Testnet = 'testnet',
-}
-
-/**
- * Mnemonic Strength options for wallet creation
- * Normal = 128 bits (12 words)
- * High = 256 bits (24 words)
- */
-export enum MnemonicStrength {
-  Normal = 128, // 12 words
-  High = 256, // 24 words
-}
-
-/**
- * Address Model
- * Represents a wallet address with its derivation path, public key, and user-defined label
- */
-export interface Address {
-  path: string; // Derivation path (e.g., m/44'/21888'/3'/0')
-  address: string; // The public address string
-  label: string; // User-defined label
-  publicKey: string; // The public key in hex format
-}
-
-/**
- * Wallet Data Model
- * Used for exporting/importing wallet data
- */
-export interface WalletData {
-  version: string; // Wallet data version
-  uuid: string; // Unique identifier for this wallet
-  creation_time: number; // Timestamp of wallet creation
-  mnemonic?: string; // Optional mnemonic (included only during secure exports)
-  addresses: Array<Address>; // List of addresses
-  nextEd25519Index: number; // Next index to use for address generation
-  network: NetworkType; // Network type (mainnet/testnet)
-  name: string; // User-defined wallet name
-  keystore?: string; // Keystore data
-}
-
-/**
- * Wallet Information Model
- * Contains user-friendly wallet statistics
- */
-export interface WalletInfo {
-  mnemonicWordCount: number; // Number of words in the recovery phrase
-  addressCount: number; // Number of addresses in the wallet
-  createdAt?: Date; // When the wallet was created
-  network: NetworkType; // Network type (mainnet/testnet)
-  name: string; // User-defined wallet name
-}
+import * as bip39 from 'bip39';
+import { MnemonicError } from './error';
+import { Encrypter } from './encrypter/encrypter';
+import { Params } from './encrypter/params';
+import { generateUUID, sprintf } from './utils';
+import {
+  AddressInfo,
+  KeyStore,
+  Ledger,
+  MnemonicStrength,
+  NetworkType,
+  Vault,
+  WalletID,
+  WalletInfo,
+} from './types';
+import { StorageKey } from './storage-key';
+import { IStorage } from './storage/storage';
 
 /**
  * Pactus Wallet Implementation
  * Manages cryptographic operations using Trust Wallet Core
  */
 export class Wallet {
-  private wallet: HDWallet;
   private core: WalletCore;
-  private nextEd25519Index: number;
-  private addresses: Array<Address> = [];
-  private createdAt: Date;
-  private network: NetworkType;
-  private name: string;
-  private keystore?: string;
+  private storage: IStorage;
+  private info: WalletInfo;
+  private readonly vault: Vault;
+  private ledger: Ledger;
 
   /**
+   * Creates a new Wallet instance.
    * Private constructor - use static factory methods instead
+   * @param core WalletCore instance.
+   * @param storage Storage implementation.
+   * @param info Wallet information, including details like name, network, etc.
+   * @param vault Vault object that stores encrypted mnemonics and private keys. It is read-only.
+   * @param ledger Ledger object that contains all addresses and the path to derive new addresses.
    */
   private constructor(
     core: WalletCore,
-    wallet: HDWallet,
-    password: string,
-    network: NetworkType = NetworkType.Mainnet,
-    name = 'My Wallet'
+    storage: IStorage,
+    info: WalletInfo,
+    vault: Vault,
+    ledger: Ledger
   ) {
     this.core = core;
-    this.wallet = wallet;
-    this.nextEd25519Index = 0;
-    this.addresses = [];
-    this.createdAt = new Date();
-    this.network = network;
-    this.name = name;
-    this.keystore = '';
+    this.storage = storage;
+    this.info = info;
+    this.vault = vault;
+    this.ledger = ledger;
   }
 
   /**
    * Create a new wallet
    * @param core WalletCore instance
    * @param strength Mnemonic strength (security level)
-   * @param password Password for wallet encryption
    * @param network Network type (mainnet/testnet)
    * @param name User-defined wallet name
    * @returns A new wallet instance
    */
   static create(
     core: WalletCore,
-    strength: MnemonicStrength = MnemonicStrength.Normal,
+    storage: IStorage,
     password: string,
+    strength: MnemonicStrength = MnemonicStrength.Normal,
     network: NetworkType = NetworkType.Mainnet,
-    name = 'My Wallet'
+    name: string = 'My Wallet'
   ): Wallet {
-    const wallet = core.HDWallet.create(strength, '');
-    return new Wallet(core, wallet, password, network, name);
+    const mnemonic = bip39.generateMnemonic(strength);
+
+    return Wallet.restore(core, storage, mnemonic, password, network, name);
   }
 
   /**
-   * Restore a wallet from mnemonic
+   * Restore a wallet from a mnemonic phrase
    * @param core WalletCore instance
    * @param mnemonic Recovery phrase
    * @param password Password for wallet encryption
    * @param network Network type (mainnet/testnet)
    * @param name User-defined wallet name
-   * @returns A restored wallet instance
+   * @returns A new wallet instance created from the mnemonic
    */
   static restore(
     core: WalletCore,
+    storage: IStorage,
     mnemonic: string,
     password: string,
     network: NetworkType = NetworkType.Mainnet,
-    name = 'My Wallet'
+    name: string = 'My Wallet'
   ): Wallet {
-    try {
-      const wallet = core.HDWallet.createWithMnemonic(mnemonic, '');
-      return new Wallet(core, wallet, password, network, name);
-    } catch (error) {
-      throw new WalletRestoreError(
-        `Failed to restore wallet: ${
-          error instanceof Error ? error.message : 'Unknown error'
-        }`
-      );
+    if (bip39.validateMnemonic(mnemonic) == false) {
+      throw new MnemonicError();
     }
+
+    const id = crypto.randomUUID ? crypto.randomUUID() : generateUUID();
+    const infoKey = StorageKey.walletInfoKey(id);
+    const vaultKey = StorageKey.walletVaultKey(id);
+    const ledgerKey = StorageKey.walletLedgerKey(id);
+
+    const info: WalletInfo = {
+      name: name,
+      type: 1,
+      uuid: id,
+      creationTime: Date.now(),
+      network: network,
+    };
+
+    const vault: Vault = {
+      encrypter: Encrypter.defaultEncrypter(),
+      keyStore: JSON.stringify({
+        masterNode: { seed: mnemonic },
+        importedKeys: [],
+      }),
+    };
+    const ledger: Ledger = {
+      addresses: new Map<string, AddressInfo>(),
+      coinType: network === NetworkType.Mainnet ? 21888 : 21777,
+      purposes: {
+        purposeBIP44: {
+          nextEd25519Index: 0,
+        },
+      },
+    };
+
+    storage.set(infoKey, info);
+    storage.set(vaultKey, vault);
+    storage.set(ledgerKey, ledger);
+
+    return new Wallet(core, storage, info, vault, ledger);
+  }
+
+  // TODO: We can ask for password to check the validity of vault and password before loading the wallet
+  static load(core: WalletCore, storage: IStorage, id: WalletID): Wallet {
+    const infoKey = StorageKey.walletInfoKey(id);
+    const vaultKey = StorageKey.walletVaultKey(id);
+    const ledgerKey = StorageKey.walletLedgerKey(id);
+
+    const info = storage.get(infoKey) as WalletInfo;
+    const vault = storage.get(vaultKey) as Vault;
+    const ledger = storage.get(ledgerKey) as Ledger;
+
+    return new Wallet(core, storage, info, vault, ledger);
+  }
+
+  static generateMnemonic(strength: MnemonicStrength): string {
+    return bip39.generateMnemonic(strength);
   }
 
   /**
    * Get all addresses in the wallet
    * @returns Array of addresses with their metadata
    */
-  getAddresses(): Array<Address> {
-    return [...this.addresses]; // Return a copy to prevent external modification
+  getAddresses(): Array<AddressInfo> {
+    let addresses = Array.from(this.ledger.addresses.values());
+    addresses.sort((r, l) => (r.path < l.path ? -1 : 1));
+
+    return addresses;
+  }
+
+  /**
+   * Get the unique identifier (UUID) of the wallet.
+   * @returns The wallet's UUID as a string.
+   */
+  getID(): WalletID {
+    return this.info.uuid;
+  }
+
+  /**
+   * Get the wallet's name
+   * @returns The wallet's name
+   */
+  getName(): string {
+    return this.info.name;
+  }
+
+  /**
+   * Get the network type the wallet is configured for
+   * @returns NetworkType (mainnet or testnet)
+   */
+  getNetworkType(): NetworkType {
+    return this.info.network;
   }
 
   /**
@@ -154,23 +188,24 @@ export class Wallet {
    * @returns WalletInfo object
    */
   getWalletInfo(): WalletInfo {
-    return {
-      mnemonicWordCount: this.getMnemonicWordCount(),
-      addressCount: this.addresses.length,
-      createdAt: this.createdAt,
-      network: this.network,
-      name: this.name,
-    };
+    return this.info;
   }
 
   /**
    * Create a new Ed25519 address
    * @param label User-friendly label for the address
-   * @returns The generated address string
+   * @param password Password for wallet encryption
+   * @returns AddressInfo object containing the generated address and metadata
    */
-  createAddress(label: string): string {
-    const derivationPath = `m/44'/21888'/3'/${this.nextEd25519Index}'`;
-    const privateKey = this.wallet.getKey(
+  createAddress(label: string, password: string): AddressInfo {
+    const derivationPath = sprintf(
+      "m/44'/%d'/3'/%d'",
+      this.ledger.coinType.toString(),
+      this.ledger.purposes.purposeBIP44.nextEd25519Index.toString()
+    );
+
+    const hdWallet = this.hdWallet(password);
+    const privateKey = hdWallet.getKey(
       this.core.CoinType.pactus,
       derivationPath
     );
@@ -181,139 +216,66 @@ export class Wallet {
 
     // Get public key
     const publicKey = privateKey.getPublicKeyCurve25519();
-    const publicKeyHex = Buffer.from(publicKey.data()).toString('hex');
-
-    // Save address info
-    this.addresses.push({
+    const publicKeyHex = Buffer.from(publicKey.data()).toString('hex'); // TODO: use bech32m
+    const addressInfo: AddressInfo = {
+      address: address,
+      label: label,
       path: derivationPath,
-      address,
-      label: label || `Address ${this.nextEd25519Index + 1}`,
       publicKey: publicKeyHex,
-    });
+    };
 
-    this.nextEd25519Index++;
-    return address;
+    this.ledger.addresses.set(address, addressInfo);
+    this.ledger.purposes.purposeBIP44.nextEd25519Index++;
+
+    this.saveLedger();
+
+    return addressInfo;
   }
 
   /**
    * Get the wallet's recovery phrase
    * @warning This should be used carefully, only for backup purposes
+   * @param password Password for decrypting the wallet
    * @returns The mnemonic phrase
    */
-  getMnemonic(): string {
-    return this.wallet.mnemonic();
+  getMnemonic(password: string): string {
+    const keyStore = JSON.parse(this.vault.keyStore) as KeyStore;
+
+    return keyStore.masterNode.seed;
   }
 
   /**
-   * Get the number of words in the recovery phrase
-   * @returns Word count (12 or 24)
-   */
-  getMnemonicWordCount(): number {
-    const mnemonic = this.wallet.mnemonic();
-    return mnemonic.trim().split(/\s+/).length;
-  }
-
-  /**
-   * Get the network type the wallet is configured for
-   * @returns NetworkType (mainnet or testnet)
-   */
-  getNetworkType(): NetworkType {
-    return this.network;
-  }
-
-  /**
-   * Check if wallet is using testnet
-   * @returns true if wallet is using testnet
+   * Check if the wallet is created for Testnet
+   * @returns true if the wallet is created for Testnet, false otherwise
    */
   isTestnet(): boolean {
-    return this.network === NetworkType.Testnet;
+    return this.info.network === NetworkType.Testnet;
   }
 
   /**
-   * Get the wallet's name
-   * @returns The wallet's name
-   */
-  getName(): string {
-    return this.name;
-  }
-
-  /**
-   * Set the wallet's name
+   * Updates the wallet's name
    * @param name The new name for the wallet
    */
-  setName(name: string): void {
-    this.name = name;
+  updateName(name: string): void {
+    this.info.name = name;
+
+    this.saveInfo();
   }
 
-  /**
-   * Export wallet data for storage
-   * @returns WalletData object ready for serialization
-   */
-  export(): WalletData {
-    // Generate a UUID if needed
-    const uuid = crypto.randomUUID ? crypto.randomUUID() : this.generateUUID();
+  private hdWallet(password: string): HDWallet {
+    const mnemonic = this.getMnemonic(password);
+    const hdWallet = this.core.HDWallet.createWithMnemonic(mnemonic, '');
 
-    return {
-      version: '3.0',
-      uuid: uuid,
-      creation_time: this.createdAt.getTime(),
-      mnemonic: this.getMnemonic(),
-      addresses: this.addresses,
-      nextEd25519Index: this.nextEd25519Index,
-      network: this.network,
-      name: this.name,
-      keystore: this.keystore,
-    };
+    return hdWallet;
   }
 
-  /**
-   * Generate a simple UUID
-   * Fallback method when crypto.randomUUID is not available
-   * @returns A UUID v4 string
-   */
-  private generateUUID(): string {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
-      /[xy]/g,
-      function (c) {
-        const r = (Math.random() * 16) | 0;
-        const v = c === 'x' ? r : (r & 0x3) | 0x8;
-        return v.toString(16);
-      }
-    );
+  private saveLedger(): void {
+    const ledgerKey = StorageKey.walletLedgerKey(this.info.uuid);
+    this.storage.set(ledgerKey, this.ledger);
   }
 
-  /**
-   * Import wallet data from storage
-   * @param data WalletData object from storage
-   */
-  import(data: WalletData): void {
-    // Preserve the next index from imported data
-    this.nextEd25519Index = data.nextEd25519Index;
-
-    // Clear existing addresses to prevent duplicates
-    this.addresses = [];
-
-    // Optionally, import existing addresses if needed
-    if (data.addresses && data.addresses.length > 0) {
-      // Directly assign the imported addresses
-      this.addresses = data.addresses.map(addr => ({
-        ...addr,
-        // Ensure all required properties are present
-        path: addr.path || '',
-        address: addr.address || '',
-        label: addr.label || '',
-        publicKey: addr.publicKey || '',
-      }));
-    }
-
-    // Update network if provided
-    if (data.network) {
-      this.network = data.network;
-    }
-
-    // Update name if provided
-    if (data.name) {
-      this.name = data.name;
-    }
+  private saveInfo(): void {
+    const infoKey = StorageKey.walletInfoKey(this.info.uuid);
+    this.storage.set(infoKey, this.info);
   }
 }

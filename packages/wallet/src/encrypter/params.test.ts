@@ -1,4 +1,4 @@
-import { Params } from '../src/encrypter/params';
+import { Params } from './params';
 
 describe('Encrypter Params', () => {
   describe('should handle numbers', () => {
