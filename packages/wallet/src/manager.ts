@@ -62,7 +62,14 @@ export class WalletManager {
     network: NetworkType = NetworkType.Mainnet,
     name: string = 'My Wallet'
   ): Promise<Wallet> {
-    const wallet = Wallet.create(this.core, this.storage, password, strength, network, name);
+    const wallet = Wallet.create(
+      this.core,
+      this.storage,
+      password,
+      strength,
+      network,
+      name
+    );
 
     this.updateList(wallet);
 
@@ -83,7 +90,14 @@ export class WalletManager {
     network: NetworkType = NetworkType.Mainnet,
     name: string = 'My Wallet'
   ): Promise<Wallet> {
-    const wallet = Wallet.restore(this.core,  this.storage, mnemonic, password, network, name);
+    const wallet = Wallet.restore(
+      this.core,
+      this.storage,
+      mnemonic,
+      password,
+      network,
+      name
+    );
 
     this.updateList(wallet);
 
@@ -106,7 +120,7 @@ export class WalletManager {
    * @returns The loaded wallet or null if no wallet exists in storage
    */
   loadWallet(id: WalletID): Wallet {
-    return Wallet.load(this.core, this.storage,  id);
+    return Wallet.load(this.core, this.storage, id);
   }
 
   /**
@@ -127,7 +141,7 @@ export class WalletManager {
    * @returns True if wallet was deleted
    */
   deleteWallet(id: WalletID): boolean {
-    if (!this.hasWallet(id)) {
+    if (this.hasWallet(id)) {
       this.walletIDs = this.walletIDs.filter(walletID => walletID !== id);
 
       this.storage.set(StorageKey.walletListKey(), this.walletIDs);

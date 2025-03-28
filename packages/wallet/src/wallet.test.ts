@@ -2,11 +2,13 @@ import { initWasm, WalletCore } from '@trustwallet/wallet-core';
 import { Wallet } from './wallet';
 import * as bip39 from 'bip39';
 import { MnemonicError } from './error';
-import { MnemonicStrength, NetworkType } from './types';
+import { Ledger, MnemonicStrength, NetworkType, Vault, WalletInfo } from './types';
 import { MemoryStorage } from './storage/memory-storage';
 import { IStorage } from './storage/storage';
 import { getWordCount } from './utils';
 import { StorageKey } from './storage-key';
+import { Console } from 'console';
+import { Params } from './encrypter/params';
 
 // Jest typings setup
 declare global {
@@ -40,7 +42,12 @@ describe('Pactus Wallet Tests', () => {
       (strength, expectedWordCount) => {
         const password = '';
         const wallet = Wallet.create(
-          core, storage, password, strength, NetworkType.Mainnet);
+          core,
+          storage,
+          password,
+          strength,
+          NetworkType.Mainnet
+        );
 
         const mnemonic = wallet.getMnemonic(password);
         expect(getWordCount(mnemonic)).toBe(expectedWordCount);
@@ -54,32 +61,43 @@ describe('Pactus Wallet Tests', () => {
       [NetworkType.Testnet, 'Wallet-2'],
     ])('should return correct wallet info', (network, name) => {
       const password = '';
-      const wallet = Wallet.create(core, storage, password,
-        MnemonicStrength.Normal, network, name);
+      const wallet = Wallet.create(
+        core,
+        storage,
+        password,
+        MnemonicStrength.Normal,
+        network,
+        name
+      );
 
       const info = wallet.getWalletInfo();
       expect(info.uuid).toBeTruthy();
       expect(info.name).toBe(name);
       expect(info.network).toBe(network);
-      expect(info.version).toBe(1);
       expect(info.type).toBe(1);
       expect(info.creationTime).toBeLessThanOrEqual(Date.now());
 
-      const infoKey = StorageKey.walletInfoKey(info.uuid)
+      const infoKey = StorageKey.walletInfoKey(info.uuid);
       expectStoredValue(infoKey, info.name);
       expectStoredValue(infoKey, info.uuid);
       expectStoredValue(infoKey, info.network);
     });
 
     it('should update wallet name', () => {
-      const wallet = Wallet.create(core, storage, 'test-password',
-        MnemonicStrength.Normal, NetworkType.Mainnet, 'Initial Name');
+      const wallet = Wallet.create(
+        core,
+        storage,
+        'test-password',
+        MnemonicStrength.Normal,
+        NetworkType.Mainnet,
+        'Initial Name'
+      );
 
       const newName = 'Updated Name';
       wallet.updateName(newName);
       expect(wallet.getWalletInfo().name).toBe(newName);
 
-      const infoKey = StorageKey.walletInfoKey(wallet.getID())
+      const infoKey = StorageKey.walletInfoKey(wallet.getID());
       expectStoredValue(infoKey, newName);
     });
   });
@@ -109,7 +127,7 @@ describe('Pactus Wallet Tests', () => {
       expect(addrInfo2.label).toBe('Address 2');
       expect(addrInfo2.path).toBe("m/44'/21888'/3'/1'");
 
-      const ledgerKey = StorageKey.walletLedgerKey(wallet.getID())
+      const ledgerKey = StorageKey.walletLedgerKey(wallet.getID());
       expectStoredValue(ledgerKey, addrInfo1.address);
       expectStoredValue(ledgerKey, addrInfo1.path);
       expectStoredValue(ledgerKey, addrInfo1.label);
@@ -149,9 +167,9 @@ describe('Pactus Wallet Tests', () => {
       const invalidMnemonic =
         'invalid mnemonic phrase that will not work for restoration';
 
-      expect(() => Wallet.restore(core, storage, invalidMnemonic, password)).toThrow(
-        MnemonicError
-      );
+      expect(() =>
+        Wallet.restore(core, storage, invalidMnemonic, password)
+      ).toThrow(MnemonicError);
     });
   });
 
@@ -166,6 +184,7 @@ describe('Pactus Wallet Tests', () => {
       expect(addrInfo1.address.startsWith('pc1')).toBe(true);
       expect(addrInfo2.address.startsWith('pc1')).toBe(true);
       expect(addrInfo1.address).not.toBe(addrInfo2.address);
+      expect(wallet.isTestnet).toBeFalsy();
     });
 
     it('should create unique Testnet addresses in correct format', () => {
@@ -176,6 +195,7 @@ describe('Pactus Wallet Tests', () => {
       // expect(addrInfo1.address.startsWith('tpc1')).toBe(true);
       // expect(addrInfo2.address.startsWith('tpc1')).toBe(true);
       // expect(addrInfo1.address).not.toBe(addrInfo2.address);
+      // expect(wallet.isTestnet).toBeTruthy();
     });
 
     it('should store address with label, path, and public key', () => {
@@ -203,7 +223,7 @@ describe('Pactus Wallet Tests', () => {
   });
 
   describe('Load Wallet', () => {
-    it('should load wallet Storage by Wallet ID', () => {
+    it('should correctly load an existing wallet from storage', () => {
       const password = '';
       const wallet = Wallet.create(core, storage, password);
       wallet.createAddress('Address 1', password);
@@ -214,6 +234,59 @@ describe('Pactus Wallet Tests', () => {
       expect(loadedWallet.getWalletInfo()).toBe(wallet.getWalletInfo());
     });
 
-    // TODO: Add test for Vault??
+    it('should correctly load the wallet from test data', () => {
+      const password = "password";
+      const walletID = '1234';
+      const walletName = 'Test Wallet';
+      const walletInfo: WalletInfo = {
+        type: 1,
+        name: walletName,
+        uuid: walletID,
+        creationTime: Date.now(),
+        network: NetworkType.Mainnet,
+      }
+      storage.set(StorageKey.walletInfoKey(walletID), walletInfo);
+
+      const ledger: Ledger = {
+        coinType: 21888,
+        purposes: {
+          purposeBIP44: {
+            nextEd25519Index: 0,
+          },
+        },
+        addresses: new Map(),
+      };
+      storage.set(StorageKey.walletLedgerKey(walletID), ledger);
+
+      let params = new Params();
+      params.setNumber("iterations", 1);
+      params.setNumber("memory", 8);
+      params.setNumber("parallelism", 1);
+      params.setNumber("keylen", 48);
+
+      const vault: Vault = {
+        encrypter: {
+          method: "ARGON2ID-AES_256_CTR-MACV1",
+          params: params,
+        },
+        keyStore: "aLEdVCpZOJmZZz067JTxWivw/41sWooR+E2iM46WYjskjFTE3VviPzc9SQ6gba5g+8CWWcw1q1YT9x1XAg/QAt2Rd7zR2FKL+ACwCbmZ/H+lLPDBt3nlvOkD2qkxi2rjjLpbAtf2UjKrW2b3+/KxSJGuG5GPIqPvPonqHhSWrF1j0nnKqm+btD1gaeJ5IRLchi27BNorMR4qvETMeV7YjkvZlrEFdNffqpWee+o4+bnr33MwysXm4hZU1c4/zzMIODAyxsMRgbrfTDfdQ19c0yjYmDGAPDpAqNAvMmDL07nGKR2f",
+      }
+      storage.set(StorageKey.walletVaultKey(walletID), vault);
+
+      const wallet = Wallet.load(core, storage, walletID);
+
+      expect(wallet.getID()).toBe(walletID);
+      expect(wallet.getName()).toBe(walletName);
+      expect(wallet.getNetworkType()).toBe(NetworkType.Mainnet);
+
+      const expectedMnemonic =
+        'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon cactus';
+      expect(wallet.getMnemonic(password)).toBe(expectedMnemonic);
+
+      const addrInfo = wallet.createAddress('Address 1', password);
+      expect(addrInfo.address).toBe(
+        'pc1rcx9x55nfme5juwdgxd2ksjdcmhvmvkrygmxpa3'
+      );
+    });
   });
 });

@@ -5,7 +5,16 @@ import { MnemonicError } from './error';
 import { Encrypter } from './encrypter/encrypter';
 import { Params } from './encrypter/params';
 import { generateUUID, sprintf } from './utils';
-import { AddressInfo, KeyStore, Ledger, MnemonicStrength, NetworkType, Vault, WalletID, WalletInfo } from './types';
+import {
+  AddressInfo,
+  KeyStore,
+  Ledger,
+  MnemonicStrength,
+  NetworkType,
+  Vault,
+  WalletID,
+  WalletInfo,
+} from './types';
 import { StorageKey } from './storage-key';
 import { IStorage } from './storage/storage';
 
@@ -93,7 +102,6 @@ export class Wallet {
     const info: WalletInfo = {
       name: name,
       type: 1,
-      version: 1,
       uuid: id,
       creationTime: Date.now(),
       network: network,
@@ -159,7 +167,6 @@ export class Wallet {
     return this.info.uuid;
   }
 
-
   /**
    * Get the wallet's name
    * @returns The wallet's name
@@ -176,7 +183,6 @@ export class Wallet {
     return this.info.network;
   }
 
-
   /**
    * Get general wallet information
    * @returns WalletInfo object
@@ -192,7 +198,8 @@ export class Wallet {
    * @returns AddressInfo object containing the generated address and metadata
    */
   createAddress(label: string, password: string): AddressInfo {
-    const derivationPath = sprintf("m/44'/%d'/3'/%d'",
+    const derivationPath = sprintf(
+      "m/44'/%d'/3'/%d'",
       this.ledger.coinType.toString(),
       this.ledger.purposes.purposeBIP44.nextEd25519Index.toString()
     );
@@ -220,8 +227,7 @@ export class Wallet {
     this.ledger.addresses.set(address, addressInfo);
     this.ledger.purposes.purposeBIP44.nextEd25519Index++;
 
-    const ledgerKey = StorageKey.walletLedgerKey(this.info.uuid);
-    this.storage.set(ledgerKey, this.ledger);
+    this.saveLedger();
 
     return addressInfo;
   }
@@ -253,8 +259,7 @@ export class Wallet {
   updateName(name: string): void {
     this.info.name = name;
 
-    const infoKey = StorageKey.walletInfoKey(this.info.uuid);
-    this.storage.set(infoKey, this.info);
+    this.saveInfo();
   }
 
   private hdWallet(password: string): HDWallet {
@@ -262,5 +267,15 @@ export class Wallet {
     const hdWallet = this.core.HDWallet.createWithMnemonic(mnemonic, '');
 
     return hdWallet;
+  }
+
+  private saveLedger(): void {
+    const ledgerKey = StorageKey.walletLedgerKey(this.info.uuid);
+    this.storage.set(ledgerKey, this.ledger);
+  }
+
+  private saveInfo(): void {
+    const infoKey = StorageKey.walletInfoKey(this.info.uuid);
+    this.storage.set(infoKey, this.info);
   }
 }

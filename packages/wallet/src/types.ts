@@ -25,7 +25,6 @@ export enum MnemonicStrength {
  * Contains user-friendly wallet statistics
  */
 export interface WalletInfo {
-  version: number; // Wallet version
   type: number; // Wallet type. 1: Full keys, 2: Neutered
   name: string; // User-defined wallet name
   uuid: string; // Unique identifier for this wallet

@@ -87,7 +87,7 @@ describe('WalletManager Tests', () => {
       const walletIDs = walletManager.getWalletIDs();
 
       expect(walletIDs.length).toBe(1);
-      expect(walletIDs).toBe(wallet.getID());
+      expect(walletIDs).toContain(wallet.getID());
       expect(walletManager.hasWallet(wallet.getID())).toBeTruthy();
     });
 
@@ -110,7 +110,7 @@ describe('WalletManager Tests', () => {
 
       const walletIDs = walletManager.getWalletIDs();
       expect(walletIDs.length).toBe(1);
-      expect(walletIDs).toBe(wallet.getID());
+      expect(walletIDs).toContain(wallet.getID());
     });
 
     it('should correctly detect if a wallet exists in the wallet list', async () => {
