@@ -120,7 +120,11 @@ export class WalletManager {
    * @returns The loaded wallet or null if no wallet exists in storage
    */
   loadWallet(id: WalletID): Wallet {
-    return Wallet.load(this.core, this.storage, id);
+    try {
+      return Wallet.load(this.core, this.storage, id);
+    } catch (error) {
+      throw new StorageError(`Failed to load wallet: ${error}`);
+    }
   }
 
   /**
@@ -132,7 +136,11 @@ export class WalletManager {
     const id = wallet.getID();
     if (!this.hasWallet(id)) {
       this.walletIDs.push(id);
-      this.storage.set(StorageKey.walletListKey(), this.walletIDs);
+      try {
+        this.storage.set(StorageKey.walletListKey(), this.walletIDs);
+      } catch (error) {
+        throw new StorageError(`Failed to update wallet list: ${error}`);
+      }
     }
   }
 
@@ -143,13 +151,15 @@ export class WalletManager {
   deleteWallet(id: WalletID): boolean {
     if (this.hasWallet(id)) {
       this.walletIDs = this.walletIDs.filter(walletID => walletID !== id);
-
-      this.storage.set(StorageKey.walletListKey(), this.walletIDs);
-      this.storage.delete(StorageKey.walletInfoKey(id));
-      this.storage.delete(StorageKey.walletLedgerKey(id));
-      this.storage.delete(StorageKey.walletVaultKey(id));
-
-      return true;
+      try {
+        this.storage.set(StorageKey.walletListKey(), this.walletIDs);
+        this.storage.delete(StorageKey.walletInfoKey(id));
+        this.storage.delete(StorageKey.walletLedgerKey(id));
+        this.storage.delete(StorageKey.walletVaultKey(id));
+        return true;
+      } catch (error) {
+        throw new StorageError(`Failed to delete wallet: ${error}`);
+      }
     }
 
     return false;
