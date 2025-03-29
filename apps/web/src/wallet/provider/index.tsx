@@ -107,7 +107,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         router.replace('/get-started');
       }
     }
-  }, [router]);
+  }, [router,walletManager]);
 
   // Update wallet status and handle navigation
   const setWalletStatus = (value: WalletStatus) => {

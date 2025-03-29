@@ -8,7 +8,7 @@ export function useAddress() {
         (label: string) => {
             return wallet?.createAddress(label, password);
         },
-        [wallet]
+        [wallet,password]
     );
 
     return { createAddress };

@@ -54,7 +54,7 @@ export function useRestoreWallet() {
                 setIsRestoring(false);
             }
         },
-        [mnemonic, password, networkType, walletName, setWallet, setWalletStatus]
+        [mnemonic, password, networkType, walletName, setWallet, setWalletStatus, walletManager]
     );
 
     return { restoreWallet, isRestoring, restorationError };
