@@ -32,21 +32,30 @@ export function useRestoreWallet() {
                 const passwordToUse = providedPassword || password;
                 const networkTypeToUse = providedNetworkType || networkType;
                 const nameToUse = providedName || walletName;
+                
                 if (!mnemonicToUse || !passwordToUse || !nameToUse) {
                     throw new Error(
                         'Mnemonic, password, and name are required to restore the wallet.'
                     );
                 }
-                const restoredWallet = await walletManager?.restoreWallet(
+                
+                if (!walletManager) {
+                    throw new Error('Wallet manager is not available');
+                }
+                
+                const restoredWallet = await walletManager.restoreWallet(
                     mnemonicToUse,
                     passwordToUse,
                     networkTypeToUse,
                     nameToUse
                 );
-                const newWallet: Wallet | null = restoredWallet || null;
-                setWallet(newWallet);
+                
+                if (!restoredWallet) {
+                    throw new Error('Failed to restore wallet');
+                }
+                
+                setWallet(restoredWallet);
                 setWalletStatus(WalletStatus.WALLET_UNLOCKED);
-
             } catch (err) {
                 const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
                 setRestorationError(`Failed to restore wallet: ${errorMessage}`);
