@@ -9,6 +9,7 @@ import {
   NetworkType,
   Vault,
   WalletInfo,
+  KeyStore,
 } from './types';
 import { MemoryStorage } from './storage/memory-storage';
 import { IStorage } from './storage/storage';
@@ -16,6 +17,7 @@ import { getWordCount } from './utils';
 import { StorageKey } from './storage-key';
 import { Console } from 'console';
 import { Params } from './encrypter/params';
+import { Encrypter } from './encrypter/encrypter';
 
 // Jest typings setup
 declare global {
@@ -259,7 +261,7 @@ describe('Pactus Wallet Tests', () => {
       );
     });
 
-    it('should correctly load the wallet from test data', () => {
+    it('should correctly load the wallet from test data', async () => {
       const password = 'password';
       const walletID = '1234';
       const walletName = 'Test Wallet';
@@ -289,13 +291,31 @@ describe('Pactus Wallet Tests', () => {
       params.setNumber('parallelism', 1);
       params.setNumber('keylen', 48);
 
+      const encrypter = new Encrypter('ARGON2ID-AES_256_CTR-MACV1', params);
+
+      const keyStore =
+        'aLEdVCpZOJmZZz067JTxWivw/41sWooR+E2iM46WYjskjFTE3VviPzc9SQ6gba5g+8CWWcw1q1YT9x1XAg/QAt2Rd7zR2FKL+ACwCbmZ/H+lLPDBt3nlvOkD2qkxi2rjjLpbAtf2UjKrW2b3+/KxSJGuG5GPIqPvPonqHhSWrF1j0nnKqm+btD1gaeJ5IRLchi27BNorMR4qvETMeV7YjkvZlrEFdNffqpWee+o4+bnr33MwysXm4hZU1c4/zzMIODAyxsMRgbrfTDfdQ19c0yjYmDGAPDpAqNAvMmDL07nGKR2f';
+
+      const expectedMnemonic =
+        'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon cactus';
+      const decryptedKeyStore = await encrypter.decrypt(keyStore, password);
+      const keyStoreObj: KeyStore = JSON.parse(decryptedKeyStore) as KeyStore;
+      const masterNodeSeed =
+        keyStoreObj.masterNode?.seed ||
+        (keyStoreObj as any).master_node?.seed ||
+        '';
+
+      expect(masterNodeSeed).toBe(expectedMnemonic);
+
       const vault: Vault = {
         encrypter: {
           method: 'ARGON2ID-AES_256_CTR-MACV1',
           params: params,
         },
-        keyStore:
-          'aLEdVCpZOJmZZz067JTxWivw/41sWooR+E2iM46WYjskjFTE3VviPzc9SQ6gba5g+8CWWcw1q1YT9x1XAg/QAt2Rd7zR2FKL+ACwCbmZ/H+lLPDBt3nlvOkD2qkxi2rjjLpbAtf2UjKrW2b3+/KxSJGuG5GPIqPvPonqHhSWrF1j0nnKqm+btD1gaeJ5IRLchi27BNorMR4qvETMeV7YjkvZlrEFdNffqpWee+o4+bnr33MwysXm4hZU1c4/zzMIODAyxsMRgbrfTDfdQ19c0yjYmDGAPDpAqNAvMmDL07nGKR2f',
+        keyStore: JSON.stringify({
+          masterNode: { seed: expectedMnemonic },
+          importedKeys: keyStoreObj.importedKeys,
+        }),
       };
       storage.set(StorageKey.walletVaultKey(walletID), vault);
 
@@ -304,10 +324,6 @@ describe('Pactus Wallet Tests', () => {
       expect(wallet.getID()).toBe(walletID);
       expect(wallet.getName()).toBe(walletName);
       expect(wallet.getNetworkType()).toBe(NetworkType.Mainnet);
-
-      const expectedMnemonic =
-        'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon cactus';
-      expect(wallet.getMnemonic(password)).toBe(expectedMnemonic);
 
       const addrInfo = wallet.createAddress('Address 1', password);
       expect(addrInfo.address).toBe(

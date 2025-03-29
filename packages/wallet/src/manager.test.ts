@@ -148,7 +148,7 @@ describe('WalletManager Tests', () => {
       // Verify wallet no longer exists
       expect(walletManager.hasWallet(walletID)).toBe(false);
       expect(walletManager.getWalletIDs()).toHaveLength(0);
-      expect(walletManager.loadWallet(walletID)).toBeUndefined();
+      expect(walletManager.loadWallet(walletID).getWalletInfo()).toBeNull();
     });
   });
 
@@ -156,27 +156,29 @@ describe('WalletManager Tests', () => {
     it('should handle storage errors when saving', async () => {
       const wallet = await walletManager.createWallet(testPassword);
 
-      // Mock storage.set to throw an error
+      // Force empty wallet list
+      walletManager['walletIDs'] = [];
+
       jest.spyOn(storage, 'set').mockImplementation(() => {
-        throw new Error('Storage error');
+        throw new StorageError('Storage error');
       });
 
-      // Attempt to save should throw StorageError
-      await expect(walletManager.updateList(wallet)).rejects.toThrow(
-        StorageError
-      );
+      expect(() => walletManager.updateList(wallet)).toThrow(StorageError);
     });
 
     it('should handle storage errors when loading', async () => {
       const wallet = await walletManager.createWallet(testPassword);
 
-      // Mock storage.delete to throw an error
-      jest.spyOn(storage, 'delete').mockImplementation(() => {
-        throw new Error('Storage error');
+      // Reset previous mocks
+      jest.spyOn(storage, 'set').mockRestore();
+
+      // Mock storage.get to throw an error
+      jest.spyOn(storage, 'get').mockImplementation(() => {
+        throw new StorageError('Storage error');
       });
 
-      // Attempt to delete should throw StorageError
-      await expect(walletManager.loadWallet(wallet.getID())).rejects.toThrow(
+      // Attempt to load should throw StorageError
+      expect(() => walletManager.loadWallet(wallet.getID())).toThrow(
         StorageError
       );
     });
@@ -184,13 +186,16 @@ describe('WalletManager Tests', () => {
     it('should handle storage errors when deleting', async () => {
       const wallet = await walletManager.createWallet(testPassword);
 
+      // Reset previous mocks
+      jest.spyOn(storage, 'get').mockRestore();
+
       // Mock storage.delete to throw an error
       jest.spyOn(storage, 'delete').mockImplementation(() => {
         throw new Error('Storage error');
       });
 
       // Attempt to delete should throw StorageError
-      await expect(walletManager.deleteWallet(wallet.getID())).rejects.toThrow(
+      expect(() => walletManager.deleteWallet(wallet.getID())).toThrow(
         StorageError
       );
     });
