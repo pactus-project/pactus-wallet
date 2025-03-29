@@ -1,17 +1,22 @@
-"use client"
+'use client';
 // useRestoreWallet.ts
 import { useState, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
-import { WalletManager, Wallet, NetworkType } from '@pactus-wallet/wallet';
-import { setupWallet } from '../utils';
+import {  Wallet, NetworkType } from '@pactus-wallet/wallet';
 import { useWallet } from './use-wallet';
 import { WalletStatus } from '../types';
 
 export function useRestoreWallet() {
-    const { setWallet, setWalletStatus, mnemonic, password, networkType, walletName } = useWallet();
+    const {
+        setWallet,
+        setWalletStatus,
+        mnemonic,
+        password,
+        networkType,
+        walletName,
+        walletManager
+    } = useWallet();
     const [isRestoring, setIsRestoring] = useState(false);
     const [restorationError, setRestorationError] = useState<string | null>(null);
-    const router = useRouter();
 
     const restoreWallet = useCallback(
         async (
@@ -23,7 +28,6 @@ export function useRestoreWallet() {
             setIsRestoring(true);
             setRestorationError(null);
             try {
-                const walletManager: WalletManager = await setupWallet();
                 const mnemonicToUse = providedMnemonic || mnemonic;
                 const passwordToUse = providedPassword || password;
                 const networkTypeToUse = providedNetworkType || networkType;
@@ -33,15 +37,16 @@ export function useRestoreWallet() {
                         'Mnemonic, password, and name are required to restore the wallet.'
                     );
                 }
-                const newWallet: Wallet = await walletManager.restoreWallet(
+                const restoredWallet = await walletManager?.restoreWallet(
                     mnemonicToUse,
                     passwordToUse,
                     networkTypeToUse,
                     nameToUse
                 );
+                const newWallet: Wallet | null = restoredWallet || null;
                 setWallet(newWallet);
                 setWalletStatus(WalletStatus.WALLET_UNLOCKED);
-                router.replace('/');
+
             } catch (err) {
                 const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
                 setRestorationError(`Failed to restore wallet: ${errorMessage}`);
@@ -49,7 +54,7 @@ export function useRestoreWallet() {
                 setIsRestoring(false);
             }
         },
-        [mnemonic, password, networkType, walletName, setWallet, setWalletStatus, router]
+        [mnemonic, password, networkType, walletName, setWallet, setWalletStatus]
     );
 
     return { restoreWallet, isRestoring, restorationError };

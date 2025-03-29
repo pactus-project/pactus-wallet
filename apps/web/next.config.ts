@@ -5,20 +5,23 @@ import fs from 'fs';
 
 // Resolve the path to the wallet-core.wasm file from the @trustwallet/wallet-core package
 const walletCoreWasmPath = require.resolve('@trustwallet/wallet-core/dist/lib/wallet-core.wasm');
-const argon2WasmPath = path.resolve(__dirname, '../../node_modules/argon2-browser/dist/argon2.wasm');
+const argon2WasmPath = path.resolve(
+    __dirname,
+    '../../node_modules/argon2-browser/dist/argon2.wasm'
+);
 
 // Search for any WASM files in the monorepo packages that might need to be included
 const findWasmFiles = (dir: string, fileList: string[] = []): string[] => {
-  const files = fs.readdirSync(dir);
-  files.forEach(file => {
-    const filePath = path.join(dir, file);
-    if (fs.statSync(filePath).isDirectory() && !filePath.includes('node_modules')) {
-      findWasmFiles(filePath, fileList);
-    } else if (file.endsWith('.wasm')) {
-      fileList.push(filePath);
-    }
-  });
-  return fileList;
+    const files = fs.readdirSync(dir);
+    files.forEach(file => {
+        const filePath = path.join(dir, file);
+        if (fs.statSync(filePath).isDirectory() && !filePath.includes('node_modules')) {
+            findWasmFiles(filePath, fileList);
+        } else if (file.endsWith('.wasm')) {
+            fileList.push(filePath);
+        }
+    });
+    return fileList;
 };
 
 // Find all WASM files in the packages directory
@@ -47,26 +50,26 @@ const nextConfig: NextConfig = {
         });
 
         // Configure the publicPath to correctly load WASM files
-        config.output.publicPath = dev ? '/_next/' : './';
+        config.output.publicPath = '/_next/';
 
         if (!isServer) {
             // Copy patterns for the CopyPlugin
             const copyPatterns = [
                 {
                     from: walletCoreWasmPath,
-                    to: 'static/wasm/'
+                    to: 'static/chunks/app/'
                 },
                 {
                     from: argon2WasmPath,
-                    to: 'static/wasm/'
+                    to: 'static/chunks/app/'
                 }
             ];
-            
+
             // Add any additional WASM files found in packages
             wasmFiles.forEach(wasmFile => {
                 copyPatterns.push({
                     from: wasmFile,
-                    to: 'static/wasm/'
+                    to: 'static/chunks/app/'
                 });
             });
 
@@ -83,7 +86,7 @@ const nextConfig: NextConfig = {
                 fs: false
             };
         }
-        
+
         return config;
     }
 };

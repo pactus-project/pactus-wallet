@@ -1,23 +1,25 @@
 // types.ts
-import { Wallet, NetworkType } from '@pactus-wallet/wallet';
+import { Wallet, NetworkType, WalletManager } from '@pactus-wallet/wallet';
 
 export enum WalletStatus {
-  NO_WALLET = 'NO_WALLET',
-  WALLET_LOCKED = 'WALLET_LOCKED',
-  WALLET_UNLOCKED = 'WALLET_UNLOCKED',
+    WALLET_LOCKED = 'WALLET_LOCKED',
+    WALLET_UNLOCKED = 'WALLET_UNLOCKED'
 }
 
 export interface WalletContextType {
-  wallet: Wallet | null;
-  setWallet: (wallet: Wallet | null) => void;
-  walletStatus: WalletStatus;
-  setWalletStatus: (value: WalletStatus) => void;
-  password: string;
-  setPassword: (value: string) => void;
-  mnemonic: string;
-  setMnemonic: (value: string) => void;
-  networkType: NetworkType;
-  setNetworkType: (value: NetworkType) => void;
-  walletName: string;
-  setWalletName: (value: string) => void;
+    wallet: Wallet | null;
+    setWallet: React.Dispatch<React.SetStateAction<Wallet | null>>;
+    walletStatus: WalletStatus;
+    setWalletStatus: (status: WalletStatus) => void;
+    password: string;
+    setPassword: React.Dispatch<React.SetStateAction<string>>;
+    mnemonic: string;
+    setMnemonic: React.Dispatch<React.SetStateAction<string>>;
+    networkType: NetworkType;
+    setNetworkType: React.Dispatch<React.SetStateAction<NetworkType>>;
+    walletName: string;
+    setWalletName: React.Dispatch<React.SetStateAction<string>>;
+    walletManager: WalletManager | null;
+    isInitializingManager: boolean;
+    managerError: string | null;
 }

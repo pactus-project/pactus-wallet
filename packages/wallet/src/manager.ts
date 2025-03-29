@@ -99,6 +99,7 @@ export class WalletManager {
       name
     );
 
+    
     this.updateList(wallet);
 
     return wallet;

@@ -1,141 +1,32 @@
 'use client';
-import { walletNameLottie } from '@/assets';
+import { emojis, walletNameLottie } from '@/assets';
 import React from 'react';
 import './style.css';
 import dynamic from 'next/dynamic';
-import { useRestoreWallet, useWallet } from '@/wallet';
+import { useAddress, useRestoreWallet, useWallet } from '@/wallet';
+import { useRouter } from 'next/navigation';
+import Loading from '@/components/loading';
 const LottiePlayer = dynamic(() => import('react-lottie-player'), { ssr: false });
 const ChooseNameWallet = () => {
     const { setWalletName, walletName } = useWallet();
-    const { restoreWallet } = useRestoreWallet();
-    const emojis = [
-        '😀',
-        '😃',
-        '😄',
-        '😁',
-        '😆',
-        '😅',
-        '😂',
-        '🤣',
-        '🥲',
-        '🥹',
-        '☺️',
-        '😊',
-        '😇',
-        '🙂',
-        '🙃',
-        '😉',
-        '😌',
-        '😍',
-        '🥰',
-        '😘',
-        '😗',
-        '😙',
-        '😚',
-        '😋',
-        '😛',
-        '😝',
-        '😜',
-        '🤪',
-        '🤨',
-        '🧐',
-        '🤓',
-        '😎',
-        '🥸',
-        '🤩',
-        '🥳',
-        '🙂‍↕️',
-        '😏',
-        '😒',
-        '🙂‍↔️',
-        '😞',
-        '😔',
-        '😟',
-        '😕',
-        '🙁',
-        '☹️',
-        '😣',
-        '😖',
-        '😫',
-        '😩',
-        '🥺',
-        '😢',
-        '😭',
-        '😮‍💨',
-        '😤',
-        '😠',
-        '😡',
-        '🤬',
-        '🤯',
-        '😳',
-        '🥵',
-        '🥶',
-        '😱',
-        '😨',
-        '😰',
-        '😥',
-        '😓',
-        '🫣',
-        '🤗',
-        '🫡',
-        '🤔',
-        '🫢',
-        '🤭',
-        '🤫',
-        '🤥',
-        '😶',
-        '😶‍🌫️',
-        '😐',
-        '😑',
-        '😬',
-        '🫨',
-        '🫠',
-        '🙄',
-        '😯',
-        '😦',
-        '😧',
-        '😮',
-        '😲',
-        '🥱',
-        '😴',
-        '🤤',
-        '😪',
-        '😵',
-        '😵‍💫',
-        '🫥',
-        '🤐',
-        '🥴',
-        '🤢',
-        '🤮',
-        '🤧',
-        '😷',
-        '🤒',
-        '🤕',
-        '🤑',
-        '🤠',
-        '😈',
-        '👿',
-        '👹',
-        '👺',
-        '🤡',
-        '💩',
-        '👻',
-        '💀',
-        '☠️',
-        '👽',
-        '👾',
-        '🤖',
-        '🎃',
-        '😺',
-        '😸',
-        '😹',
-        '😻',
-        '😼',
-        '😽',
-        '🙀',
-        '😿',
-        '😾'
-    ];
+    const { restoreWallet, isRestoring } = useRestoreWallet();
+    console.log("🚀 ~ ChooseNameWal ~ isRestoring:", isRestoring)
+    const { createAddress } = useAddress();
+    const router = useRouter();
+    const handelCreateWallet = async () => {
+        try {
+            await restoreWallet();
+            await createAddress('Account 1');
+            router.replace('/');
+        } catch (error) {
+            console.log("🚀 ~ handelCreateWal ~ error:", error)
+
+        }
+
+    }
+    if (isRestoring) {
+        return <Loading />
+    }
     return (
         <div className="container-ChooseNameWallet">
             <LottiePlayer
@@ -164,7 +55,7 @@ const ChooseNameWallet = () => {
             <button
                 className="cta-ChooseNameWallet"
                 disabled={walletName.length == 0}
-                onClick={() => restoreWallet()}
+                onClick={async () => { handelCreateWallet() }}
             >
                 Finish
             </button>

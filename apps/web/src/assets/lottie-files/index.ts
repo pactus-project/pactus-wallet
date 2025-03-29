@@ -4,11 +4,14 @@ import importWalletLottie from './import-wallet-lottie.json';
 import masterPasswordLottie from './master-password-lottie.json';
 import walletNameLottie from './wallet-name-lottie.json';
 import writePaperLottie from './write-paper-lottie.json';
+import loadingLottie from './loading-lottie.json';
+
 export {
     addWalletLottie,
     generateRecoverySeedLottie,
     importWalletLottie,
     masterPasswordLottie,
     walletNameLottie,
-    writePaperLottie
+    writePaperLottie,
+    loadingLottie
 };
