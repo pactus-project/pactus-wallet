@@ -98,7 +98,6 @@ export class WalletManager {
       network,
       name
     );
-
     this.updateList(wallet);
 
     return wallet;
