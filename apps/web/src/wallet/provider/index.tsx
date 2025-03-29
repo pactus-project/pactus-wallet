@@ -85,6 +85,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
             router.replace('/get-started');
           }
         } catch (error) {
+          setManagerError(error.message || 'Failed to load wallet data');
           setWalletStatusState(WalletStatus.WALLET_LOCKED);
           router.replace('/get-started');
         }
