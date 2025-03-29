@@ -50,12 +50,22 @@ const nextConfig: NextConfig = {
         config.output.publicPath = dev ? '/_next/' : './';
 
         if (!isServer) {
-            // Copy patterns for the CopyPlugin
-            const copyPatterns = [
-                {
-                    from: walletCoreWasmPath,
-                    to: 'static/wasm/'
-                },
+            // Add the CopyPlugin to copy the wallet-core.wasm file to the original paths
+            config.plugins.push(
+                new CopyPlugin({
+                    patterns: [
+                        {
+                            // Copy the wallet-core.wasm file to the same paths as before
+                            // to 'static/chunks/app/' in development mode and to 'static/chunks/' in production
+                            from: walletCoreWasmPath,
+                            to: dev ? 'static/chunks/app/' : 'static/chunks/'
+                        }
+                    ]
+                })
+            );
+            
+            // Additional copy plugin for argon2.wasm and other package WASM files
+            const additionalPatterns = [
                 {
                     from: argon2WasmPath,
                     to: 'static/wasm/'
@@ -64,18 +74,20 @@ const nextConfig: NextConfig = {
             
             // Add any additional WASM files found in packages
             wasmFiles.forEach(wasmFile => {
-                copyPatterns.push({
+                additionalPatterns.push({
                     from: wasmFile,
                     to: 'static/wasm/'
                 });
             });
-
-            // Add the CopyPlugin with all patterns
-            config.plugins.push(
-                new CopyPlugin({
-                    patterns: copyPatterns
-                })
-            );
+            
+            // Add a separate CopyPlugin for the additional WASM files
+            if (additionalPatterns.length > 0) {
+                config.plugins.push(
+                    new CopyPlugin({
+                        patterns: additionalPatterns
+                    })
+                );
+            }
 
             // Set fallback for the 'fs' module to false to avoid issues in the browser
             config.resolve.fallback = {
