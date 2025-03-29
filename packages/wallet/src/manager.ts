@@ -120,11 +120,7 @@ export class WalletManager {
    * @returns The loaded wallet or null if no wallet exists in storage
    */
   loadWallet(id: WalletID): Wallet {
-    try {
-      return Wallet.load(this.core, this.storage, id);
-    } catch (error) {
-      throw new StorageError(`Failed to load wallet: ${error}`);
-    }
+    return Wallet.load(this.core, this.storage, id);
   }
 
   /**

@@ -153,20 +153,18 @@ describe('WalletManager Tests', () => {
   });
 
   describe('Error Handling', () => {
-    // it('should handle storage errors when saving', async () => {
-    //   const wallet = await walletManager.createWallet(testPassword);
+    it('should handle storage errors when saving', async () => {
+      const wallet = await walletManager.createWallet(testPassword);
 
-    //   // Reset previous mocks
-    //   jest.spyOn(storage, 'set').mockRestore();
+      // Force empty wallet list
+      walletManager['walletIDs'] = [];
 
-    //   // Mock storage.set to throw an error
-    //   jest.spyOn(storage, 'set').mockImplementation(() => {
-    //     throw new Error('Storage error');
-    //   });
+      jest.spyOn(storage, 'set').mockImplementation(() => {
+        throw new StorageError('Storage error');
+      });
 
-    //   // Attempt to save should throw StorageError
-    //   expect(() => walletManager.updateList(wallet)).toThrow(StorageError);
-    // });
+      expect(() => walletManager.updateList(wallet)).toThrow(StorageError);
+    });
 
     it('should handle storage errors when loading', async () => {
       const wallet = await walletManager.createWallet(testPassword);
@@ -176,7 +174,7 @@ describe('WalletManager Tests', () => {
 
       // Mock storage.get to throw an error
       jest.spyOn(storage, 'get').mockImplementation(() => {
-        throw new Error('Storage error');
+        throw new StorageError('Storage error');
       });
 
       // Attempt to load should throw StorageError
