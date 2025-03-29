@@ -51,7 +51,7 @@ const ChooseNameWallet = () => {
             <button
                 className="cta-ChooseNameWallet"
                 disabled={walletName.length == 0}
-                onClick={async () => { handleCreateWallet() }}
+                onClick={ () => { handleCreateWallet() }}
             >
                 Finish
             </button>
