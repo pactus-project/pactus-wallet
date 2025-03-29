@@ -1,9 +1,29 @@
 import CopyPlugin from 'copy-webpack-plugin';
 import type { NextConfig } from 'next';
 import path from 'path';
+import fs from 'fs';
 
 // Resolve the path to the wallet-core.wasm file from the @trustwallet/wallet-core package
 const walletCoreWasmPath = require.resolve('@trustwallet/wallet-core/dist/lib/wallet-core.wasm');
+const argon2WasmPath = path.resolve(__dirname, '../../node_modules/argon2-browser/dist/argon2.wasm');
+
+// Search for any WASM files in the monorepo packages that might need to be included
+const findWasmFiles = (dir: string, fileList: string[] = []): string[] => {
+  const files = fs.readdirSync(dir);
+  files.forEach(file => {
+    const filePath = path.join(dir, file);
+    if (fs.statSync(filePath).isDirectory() && !filePath.includes('node_modules')) {
+      findWasmFiles(filePath, fileList);
+    } else if (file.endsWith('.wasm')) {
+      fileList.push(filePath);
+    }
+  });
+  return fileList;
+};
+
+// Find all WASM files in the packages directory
+const packagesDir = path.resolve(__dirname, '../../packages');
+const wasmFiles = findWasmFiles(packagesDir);
 
 const nextConfig: NextConfig = {
     // Configure the output to be static export
@@ -11,50 +31,49 @@ const nextConfig: NextConfig = {
     // Transpile packages from the monorepo
     transpilePackages: ['@pactus-wallet/wallet'],
     webpack: (config, { isServer, dev }) => {
-        // Enable WebAssembly support globally (must be outside server check)
+        // Enable WebAssembly support
         config.experiments = {
-            syncWebAssembly: true,  // Like webpack 4
-            asyncWebAssembly: true, // Modern approach
-            layers: true,           // Enable module layer rules
+            asyncWebAssembly: true,
             ...config.experiments
         };
 
-        // CRITICAL: Add loader for WebAssembly files BEFORE other rules
-        const wasmRule = {
+        // Use webpack 5's Asset Modules instead of file-loader
+        config.module.rules.unshift({
             test: /\.wasm$/,
-            type: 'javascript/auto',
-            loader: 'file-loader',
-            options: {
-                name: 'static/wasm/[name].[hash].[ext]',
-            },
-        };
-        
-        // Insert our rule at the beginning
-        config.module.rules.unshift(wasmRule);
+            type: 'asset/resource',
+            generator: {
+                filename: 'static/wasm/[name].[hash][ext]'
+            }
+        });
 
-        // Ensure argon2 is handled correctly
-        config.resolve.alias = {
-            ...config.resolve.alias,
-            'argon2-browser': path.resolve(__dirname, '../../node_modules/argon2-browser'),
-        };
+        // Configure the publicPath to correctly load WASM files
+        config.output.publicPath = dev ? '/_next/' : './';
 
         if (!isServer) {
-            // Add the CopyPlugin to copy the wallet-core.wasm file to the appropriate directory
+            // Copy patterns for the CopyPlugin
+            const copyPatterns = [
+                {
+                    from: walletCoreWasmPath,
+                    to: 'static/wasm/'
+                },
+                {
+                    from: argon2WasmPath,
+                    to: 'static/wasm/'
+                }
+            ];
+            
+            // Add any additional WASM files found in packages
+            wasmFiles.forEach(wasmFile => {
+                copyPatterns.push({
+                    from: wasmFile,
+                    to: 'static/wasm/'
+                });
+            });
+
+            // Add the CopyPlugin with all patterns
             config.plugins.push(
                 new CopyPlugin({
-                    patterns: [
-                        {
-                            // Copy the file to 'static/chunks/app/' in development mode
-                            // and to 'static/chunks/' in production mode
-                            from: walletCoreWasmPath,
-                            to: dev ? 'static/chunks/app/' : 'static/chunks/'
-                        },
-                        {
-                            // Also copy argon2.wasm
-                            from: path.resolve(__dirname, '../../node_modules/argon2-browser/dist/argon2.wasm'),
-                            to: dev ? 'static/chunks/app/' : 'static/chunks/'
-                        }
-                    ]
+                    patterns: copyPatterns
                 })
             );
 
