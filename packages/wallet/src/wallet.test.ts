@@ -15,7 +15,6 @@ import { MemoryStorage } from './storage/memory-storage';
 import { IStorage } from './storage/storage';
 import { getWordCount } from './utils';
 import { StorageKey } from './storage-key';
-import { Console } from 'console';
 import { Params } from './encrypter/params';
 import { Encrypter } from './encrypter/encrypter';
 
