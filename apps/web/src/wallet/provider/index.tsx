@@ -56,7 +56,6 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         setManagerError(null);
       } catch (err) {
         setManagerError(err instanceof Error ? err.message : 'Failed to initialize wallet manager');
-        console.error('Failed to initialize wallet manager:', err);
       } finally {
         setIsInitializingManager(false);
       }
@@ -86,7 +85,6 @@ export function WalletProvider({ children }: { children: ReactNode }) {
             router.replace('/get-started');
           }
         } catch (error) {
-          console.error('Failed to load wallet data:', error);
           setWalletStatusState(WalletStatus.WALLET_LOCKED);
           router.replace('/get-started');
         }

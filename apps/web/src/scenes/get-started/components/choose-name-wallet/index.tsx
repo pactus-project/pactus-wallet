@@ -10,18 +10,14 @@ const LottiePlayer = dynamic(() => import('react-lottie-player'), { ssr: false }
 const ChooseNameWallet = () => {
     const { setWalletName, walletName } = useWallet();
     const { restoreWallet, isRestoring } = useRestoreWallet();
-    console.log("🚀 ~ ChooseNameWal ~ isRestoring:", isRestoring)
     const { createAddress } = useAddress();
     const router = useRouter();
     const handelCreateWallet = async () => {
-        try {
-            await restoreWallet();
-            await createAddress('Account 1');
-            router.replace('/');
-        } catch (error) {
-            console.log("🚀 ~ handelCreateWal ~ error:", error)
 
-        }
+        await restoreWallet();
+        await createAddress('Account 1');
+        router.replace('/');
+
 
     }
     if (isRestoring) {
