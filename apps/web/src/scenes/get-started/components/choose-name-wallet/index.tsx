@@ -12,7 +12,7 @@ const ChooseNameWallet = () => {
     const { restoreWallet, isRestoring } = useRestoreWallet();
     const { createAddress } = useAddress();
     const router = useRouter();
-    const handelCreateWallet = async () => {
+    const handleCreateWallet = async () => {
 
         await restoreWallet();
         await createAddress('Account 1');
@@ -51,7 +51,7 @@ const ChooseNameWallet = () => {
             <button
                 className="cta-ChooseNameWallet"
                 disabled={walletName.length == 0}
-                onClick={async () => { handelCreateWallet() }}
+                onClick={async () => { handleCreateWallet() }}
             >
                 Finish
             </button>
