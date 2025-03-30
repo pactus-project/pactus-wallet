@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Wallet, NetworkType, WalletManager, BrowserStorage, initWalletSDK } from '@pactus-wallet/wallet';
 import { WalletContextType, WalletStatus } from '../types';
 import Loading from '@/components/loading';
-import WalletLock from '@/components/wallet/WalletLock';
+import WalletLock from '@/components/wallet-lock';
 
 
 export const WalletContext = createContext<WalletContextType>({
