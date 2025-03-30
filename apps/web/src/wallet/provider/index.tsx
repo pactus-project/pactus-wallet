@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Wallet, NetworkType, WalletManager, BrowserStorage, initWalletSDK } from '@pactus-wallet/wallet';
 import { WalletContextType, WalletStatus } from '../types';
 import Loading from '@/components/loading';
+import WalletLock from '@/components/wallet/WalletLock';
 
 
 export const WalletContext = createContext<WalletContextType>({
@@ -64,22 +65,21 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     initWalletManager();
   }, []);
 
-  // Handle wallet status on component mount or router change
   useEffect(() => {
-    const storedWalletStatus = localStorage.getItem('walletStatus');
+    const handleStoredWalletStatus = async (status: string | null) => {
+      if (!status) {
+        setWalletStatusState(WalletStatus.WALLET_LOCKED);
+        router.replace('/get-started');
+        return;
+      }
 
-    // If wallet is locked, load data and redirect to unlock page if not already there
-    if (storedWalletStatus === WalletStatus.WALLET_LOCKED) {
-      const loadWalletData = async () => {
+      if (status === WalletStatus.WALLET_LOCKED) {
         try {
           const walletData = await walletManager?.loadFirstWallet();
           if (walletData) {
             const walletName = walletData.getName();
             setWalletNameState(walletName);
             setWalletStatusState(WalletStatus.WALLET_LOCKED);
-            if (window.location.pathname !== '/unlock') {
-              router.replace('/unlock');
-            }
           } else {
             setWalletStatusState(WalletStatus.WALLET_LOCKED);
             router.replace('/get-started');
@@ -89,25 +89,14 @@ export function WalletProvider({ children }: { children: ReactNode }) {
           setWalletStatusState(WalletStatus.WALLET_LOCKED);
           router.replace('/get-started');
         }
-      };
+      } else if (status === WalletStatus.WALLET_UNLOCKED) {
+        setWalletStatusState(WalletStatus.WALLET_UNLOCKED);
+      }
+    };
 
-      loadWalletData();
-    }
-    // If wallet is unlocked, update state and stay on current page or redirect to dashboard
-    else if (storedWalletStatus === WalletStatus.WALLET_UNLOCKED) {
-      setWalletStatusState(WalletStatus.WALLET_UNLOCKED);
-      if (window.location.pathname !== '/') {
-        // router.replace('/');
-      }
-    }
-    // If no wallet exists, redirect to get-started page
-    else {
-      setWalletStatusState(WalletStatus.WALLET_LOCKED);
-      if (window.location.pathname !== '/get-started') {
-        router.replace('/get-started');
-      }
-    }
-  }, [router,walletManager]);
+    const storedWalletStatus = localStorage.getItem('walletStatus');
+    handleStoredWalletStatus(storedWalletStatus);
+  }, [router, walletManager]);
 
   // Update wallet status and handle navigation
   const setWalletStatus = (value: WalletStatus) => {
@@ -115,9 +104,9 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     setWalletStatusState(value);
     if (value === WalletStatus.WALLET_LOCKED) {
       setWallet(null);
-      router.replace('/get-started');
-    } else if (value === WalletStatus.WALLET_UNLOCKED && window.location.pathname !== '/') {
-      // router.replace('/'); // Redirect to dashboard when wallet is unlocked
+      if (!wallet) {
+        router.replace('/get-started');
+      }
     }
   };
 
@@ -142,9 +131,18 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         managerError,
       }}
     >
-      {isLoading && (
-        <Loading />)}
-      {children}
+      {isLoading && <Loading />}
+      {!isLoading && (
+        <>
+          {walletStatus === WalletStatus.WALLET_LOCKED
+            && wallet
+            && window.location.pathname !== '/get-started' ? (
+            <WalletLock />
+          ) : (
+            children
+          )}
+        </>
+      )}
     </WalletContext.Provider>
   );
 }
