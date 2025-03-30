@@ -35,6 +35,10 @@ export class Encrypter {
     this.params = params;
   }
 
+  static noEncrypter(): Encrypter {
+    return new Encrypter(EncryptionMethod.None, new Params());
+  }
+
   static defaultEncrypter(): Encrypter {
     let params = new Params();
     params.setNumber(ParameterKey.Iterations, DefaultParams.Iterations);
@@ -43,6 +47,19 @@ export class Encrypter {
     params.setNumber(ParameterKey.KeyLength, DefaultParams.KeyLength);
 
     return new Encrypter(DefaultMethod, params);
+  }
+
+  // Custom JSON serialization
+  toJSON(): Record<string, any> {
+    return {
+      method: this.method,
+      params: this.params.toJSON(),
+    };
+  }
+
+  // Custom JSON deserialization
+  static fromJSON(json: Record<string, any>): Encrypter {
+    return new Encrypter(json.method, Params.fromJSON(json.params));
   }
 
   isEncrypted(): boolean {

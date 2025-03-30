@@ -10,8 +10,7 @@ describe('WalletManager Tests', () => {
   let core: WalletCore;
   let storage: MemoryStorage;
   let walletManager: WalletManager;
-  const testPassword = 'test-password';
-  const testMnemonic = bip39.generateMnemonic(128);
+  const password = ''; // Use an empty password to speed up tests
 
   beforeEach(async () => {
     core = await initWasm();
@@ -21,7 +20,7 @@ describe('WalletManager Tests', () => {
 
   describe('Wallet Creation', () => {
     it('should create a new wallet with default settings', async () => {
-      const wallet = await walletManager.createWallet(testPassword);
+      const wallet = await walletManager.createWallet(password);
 
       expect(wallet).toBeTruthy();
       expect(wallet.getNetworkType()).toBe(NetworkType.Mainnet);
@@ -32,7 +31,7 @@ describe('WalletManager Tests', () => {
     it('should create a wallet with custom settings', async () => {
       const customName = 'Custom Wallet';
       const wallet = await walletManager.createWallet(
-        testPassword,
+        password,
         MnemonicStrength.High,
         NetworkType.Testnet,
         customName
@@ -47,29 +46,28 @@ describe('WalletManager Tests', () => {
 
   describe('Wallet Restoration', () => {
     it('should restore a wallet from mnemonic with default settings', async () => {
-      const wallet = await walletManager.restoreWallet(
-        testMnemonic,
-        testPassword
-      );
+      const testMnemonic = bip39.generateMnemonic(128);
+      const wallet = await walletManager.restoreWallet(testMnemonic, password);
 
       expect(wallet).toBeTruthy();
-      expect(wallet.getMnemonic(testPassword)).toBe(testMnemonic);
+      expect(wallet.getMnemonic(password)).resolves.toBe(testMnemonic);
       expect(wallet.getNetworkType()).toBe(NetworkType.Mainnet); // Default network is Mainnet
       expect(wallet.getName()).toBe('My Wallet'); // Default name
       expect(walletManager.hasWallet(wallet.getID())).toBeTruthy();
     });
 
     it('should restore a wallet with custom settings', async () => {
+      const testMnemonic = bip39.generateMnemonic(128);
       const customName = 'Restored Wallet';
       const wallet = await walletManager.restoreWallet(
         testMnemonic,
-        testPassword,
+        password,
         NetworkType.Testnet,
         customName
       );
 
       expect(wallet).toBeTruthy();
-      expect(wallet.getMnemonic(testPassword)).toBe(testMnemonic);
+      expect(wallet.getMnemonic(password)).resolves.toBe(testMnemonic);
       expect(wallet.getNetworkType()).toBe(NetworkType.Testnet);
       expect(wallet.getName()).toBe(customName);
       expect(walletManager.hasWallet(wallet.getID())).toBeTruthy();
@@ -83,7 +81,7 @@ describe('WalletManager Tests', () => {
     });
 
     it('should add a wallet to the wallet list after creation', async () => {
-      const wallet = await walletManager.createWallet(testPassword);
+      const wallet = await walletManager.createWallet(password);
       const walletIDs = walletManager.getWalletIDs();
 
       expect(walletIDs.length).toBe(1);
@@ -92,7 +90,7 @@ describe('WalletManager Tests', () => {
     });
 
     it('should remove a wallet from the wallet list after deletion', async () => {
-      const wallet = await walletManager.createWallet(testPassword);
+      const wallet = await walletManager.createWallet(password);
 
       const result = walletManager.deleteWallet(wallet.getID());
       expect(result).toBe(true);
@@ -103,7 +101,7 @@ describe('WalletManager Tests', () => {
     });
 
     it('should not add duplicate wallets to the wallet list', async () => {
-      const wallet = await walletManager.createWallet(testPassword);
+      const wallet = await walletManager.createWallet(password);
 
       // Save the wallet again
       walletManager.updateList(wallet);
@@ -114,7 +112,7 @@ describe('WalletManager Tests', () => {
     });
 
     it('should correctly detect if a wallet exists in the wallet list', async () => {
-      const wallet = await walletManager.createWallet(testPassword);
+      const wallet = await walletManager.createWallet(password);
 
       expect(walletManager.hasWallet(wallet.getID())).toBe(true);
       expect(walletManager.hasWallet(generateUUID())).toBe(false);
@@ -123,9 +121,9 @@ describe('WalletManager Tests', () => {
 
   describe('Wallet Saving', () => {
     it('should save the current wallet to storage', async () => {
-      const wallet1 = await walletManager.createWallet(testPassword);
-      wallet1.createAddress('Address 1', testPassword);
-      wallet1.createAddress('Address 2', testPassword);
+      const wallet1 = await walletManager.createWallet(password);
+      await wallet1.createAddress('Address 1', password);
+      await wallet1.createAddress('Address 2', password);
       walletManager.updateList(wallet1);
 
       const wallet2 = walletManager.loadWallet(wallet1.getID());
@@ -137,7 +135,7 @@ describe('WalletManager Tests', () => {
 
   describe('Wallet Deletion', () => {
     it('should delete wallet from storage', async () => {
-      const wallet = await walletManager.createWallet(testPassword);
+      const wallet = await walletManager.createWallet(password);
       const walletID = wallet.getID();
       expect(walletManager.hasWallet(walletID)).toBeTruthy();
 
@@ -154,7 +152,7 @@ describe('WalletManager Tests', () => {
 
   describe('Error Handling', () => {
     it('should handle storage errors when saving', async () => {
-      const wallet = await walletManager.createWallet(testPassword);
+      const wallet = await walletManager.createWallet(password);
 
       // Force empty wallet list
       walletManager['walletIDs'] = [];
@@ -167,7 +165,7 @@ describe('WalletManager Tests', () => {
     });
 
     it('should handle storage errors when loading', async () => {
-      const wallet = await walletManager.createWallet(testPassword);
+      const wallet = await walletManager.createWallet(password);
 
       // Reset previous mocks
       jest.spyOn(storage, 'set').mockRestore();
@@ -184,7 +182,7 @@ describe('WalletManager Tests', () => {
     });
 
     it('should handle storage errors when deleting', async () => {
-      const wallet = await walletManager.createWallet(testPassword);
+      const wallet = await walletManager.createWallet(password);
 
       // Reset previous mocks
       jest.spyOn(storage, 'get').mockRestore();

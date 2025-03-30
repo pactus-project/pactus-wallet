@@ -5,6 +5,18 @@ export class Params {
     this.data = new Map<string, string>();
   }
 
+  // Custom JSON serialization
+  toJSON(): Record<string, string> {
+    return Object.fromEntries(this.data);
+  }
+
+  // Custom JSON deserialization
+  static fromJSON(json: Record<string, string>): Params {
+    const params = new Params();
+    params.data = new Map(Object.entries(json));
+    return params;
+  }
+
   setNumber(key: string, val: number): void {
     // Convert number to string and store
     this.data.set(key, val.toString());
