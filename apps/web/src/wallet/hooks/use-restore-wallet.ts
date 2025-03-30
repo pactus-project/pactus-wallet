@@ -49,8 +49,6 @@ export function useRestoreWallet() {
                     networkTypeToUse,
                     nameToUse
                 );
-                console.log('🚀 ~ useRestoreWallet ~ restoredWallet:', restoredWallet);
-
                 if (!restoredWallet) {
                     throw new Error('Failed to restore wallet');
                 }
