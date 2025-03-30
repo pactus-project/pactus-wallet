@@ -141,12 +141,18 @@ describe('Pactus Wallet Tests', () => {
       expect(addrInfo1.address).toBe(
         'pc1rcx9x55nfme5juwdgxd2ksjdcmhvmvkrygmxpa3'
       );
+      expect(addrInfo1.publicKey).toBe(
+        'public1rd5p573yq3j5wkvnasslqa7ne5vw87qcj5a0wlwxcj2t2xlaca9lstzm8u5'
+      );
       expect(addrInfo1.label).toBe('Address 1');
       expect(addrInfo1.path).toBe("m/44'/21888'/3'/0'");
 
       const addrInfo2 = await wallet.createAddress('Address 2', password);
       expect(addrInfo2.address).toBe(
         'pc1r7aynw9urvh66ktr3fte2gskjjnxzruflkgde94'
+      );
+      expect(addrInfo2.publicKey).toBe(
+        'public1r8jud8m6mfuyhwq6lupmuz0pq6uzhm9a6hkqfmc89jk7k6fr30e2sns7ghs'
       );
       expect(addrInfo2.label).toBe('Address 2');
       expect(addrInfo2.path).toBe("m/44'/21888'/3'/1'");
@@ -181,12 +187,18 @@ describe('Pactus Wallet Tests', () => {
       expect(addrInfo1.address).toBe(
         'pc1r8rel7ctk0p4cs49wlhdccvkk27rpllwhrv3g6z'
       );
+      expect(addrInfo1.publicKey).toBe(
+        'public1rs6yq6kf9hyll78qsfk338k06j96sv69j6dpn9rqats0urnqaj4fsfhxgza'
+      );
       expect(addrInfo1.label).toBe('Address 1');
       expect(addrInfo1.path).toBe("m/44'/21888'/3'/0'");
 
       const addrInfo2 = await wallet.createAddress('Address 2', password);
       expect(addrInfo2.address).toBe(
         'pc1rssed2c3h6l9fm6gu4v7nmj5s33a388e8ygtgc4'
+      );
+      expect(addrInfo2.publicKey).toBe(
+        'public1r503wn3q8hlf9hsq6f7v2vmke5mgphx3kvatasqtlzyfaadvuhy0s2tzq84'
       );
       expect(addrInfo2.label).toBe('Address 2');
       expect(addrInfo2.path).toBe("m/44'/21888'/3'/1'");
