@@ -97,7 +97,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     else if (storedWalletStatus === WalletStatus.WALLET_UNLOCKED) {
       setWalletStatusState(WalletStatus.WALLET_UNLOCKED);
       if (window.location.pathname !== '/') {
-        router.replace('/');
+        // router.replace('/');
       }
     }
     // If no wallet exists, redirect to get-started page
@@ -117,7 +117,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       setWallet(null);
       router.replace('/get-started');
     } else if (value === WalletStatus.WALLET_UNLOCKED && window.location.pathname !== '/') {
-      router.replace('/'); // Redirect to dashboard when wallet is unlocked
+      // router.replace('/'); // Redirect to dashboard when wallet is unlocked
     }
   };
 
