@@ -62,7 +62,7 @@ export class WalletManager {
     network: NetworkType = NetworkType.Mainnet,
     name: string = 'My Wallet'
   ): Promise<Wallet> {
-    const wallet = Wallet.create(
+    const wallet = await Wallet.create(
       this.core,
       this.storage,
       password,
@@ -90,7 +90,7 @@ export class WalletManager {
     network: NetworkType = NetworkType.Mainnet,
     name: string = 'My Wallet'
   ): Promise<Wallet> {
-    const wallet = Wallet.restore(
+    const wallet = await Wallet.restore(
       this.core,
       this.storage,
       mnemonic,

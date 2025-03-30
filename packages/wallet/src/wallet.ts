@@ -60,14 +60,14 @@ export class Wallet {
    * @param name User-defined wallet name
    * @returns A new wallet instance
    */
-  static create(
+  static async create(
     core: WalletCore,
     storage: IStorage,
     password: string,
     strength: MnemonicStrength = MnemonicStrength.Normal,
     network: NetworkType = NetworkType.Mainnet,
     name: string = 'My Wallet'
-  ): Wallet {
+  ): Promise<Wallet> {
     const mnemonic = bip39.generateMnemonic(strength);
 
     return Wallet.restore(core, storage, mnemonic, password, network, name);
@@ -82,14 +82,14 @@ export class Wallet {
    * @param name User-defined wallet name
    * @returns A new wallet instance created from the mnemonic
    */
-  static restore(
+  static async restore(
     core: WalletCore,
     storage: IStorage,
     mnemonic: string,
     password: string,
     network: NetworkType = NetworkType.Mainnet,
     name: string = 'My Wallet'
-  ): Wallet {
+  ): Promise<Wallet> {
     if (bip39.validateMnemonic(mnemonic) == false) {
       throw new MnemonicError();
     }
@@ -107,12 +107,21 @@ export class Wallet {
       network: network,
     };
 
+    const keyStoreObj: KeyStore = {
+      master_node: { seed: mnemonic },
+      imported_keys: [],
+    };
+
+    let encrypter = Encrypter.noEncrypter();
+    let keyStore = JSON.stringify(keyStoreObj);
+    if (password !== '') {
+      encrypter = Encrypter.defaultEncrypter();
+      keyStore = await encrypter.encrypt(keyStore, password);
+    }
+
     const vault: Vault = {
-      encrypter: Encrypter.defaultEncrypter(),
-      keyStore: JSON.stringify({
-        masterNode: { seed: mnemonic },
-        importedKeys: [],
-      }),
+      encrypter: encrypter,
+      keyStore: keyStore,
     };
     const ledger: Ledger = {
       addresses: new Map<string, AddressInfo>(),
@@ -197,14 +206,14 @@ export class Wallet {
    * @param password Password for wallet encryption
    * @returns AddressInfo object containing the generated address and metadata
    */
-  createAddress(label: string, password: string): AddressInfo {
+  async createAddress(label: string, password: string): Promise<AddressInfo> {
     const derivationPath = sprintf(
       "m/44'/%d'/3'/%d'",
       this.ledger.coinType.toString(),
       this.ledger.purposes.purposeBIP44.nextEd25519Index.toString()
     );
 
-    const hdWallet = this.hdWallet(password);
+    const hdWallet = await this.hdWallet(password);
     const privateKey = hdWallet.getKey(
       this.core.CoinType.pactus,
       derivationPath
@@ -234,14 +243,19 @@ export class Wallet {
 
   /**
    * Get the wallet's recovery phrase
-   * @warning This should be used carefully, only for backup purposes
+   * @warning This method exposes sensitive information. Handle it with caution.
    * @param password Password for decrypting the wallet
    * @returns The mnemonic phrase
+   * @throws An error if the password is incorrect
    */
-  getMnemonic(password: string): string {
-    const keyStore = JSON.parse(this.vault.keyStore) as KeyStore;
+  async getMnemonic(password: string): Promise<string> {
+    const keyStoreJSON = await this.vault.encrypter.decrypt(
+      this.vault.keyStore,
+      password
+    );
+    const keyStore = JSON.parse(keyStoreJSON) as KeyStore;
 
-    return keyStore.masterNode.seed;
+    return keyStore.master_node.seed;
   }
 
   /**
@@ -250,6 +264,14 @@ export class Wallet {
    */
   isTestnet(): boolean {
     return this.info.network === NetworkType.Testnet;
+  }
+
+  /**
+   * Check if the wallet is encrypted
+   * @returns `true` if the wallet is encrypted, `false` otherwise
+   */
+  isEncrypted(): boolean {
+    return this.vault.encrypter.isEncrypted();
   }
 
   /**
@@ -262,8 +284,8 @@ export class Wallet {
     this.saveInfo();
   }
 
-  private hdWallet(password: string): HDWallet {
-    const mnemonic = this.getMnemonic(password);
+  private async hdWallet(password: string): Promise<HDWallet> {
+    const mnemonic = await this.getMnemonic(password);
     const hdWallet = this.core.HDWallet.createWithMnemonic(mnemonic, '');
 
     return hdWallet;
