@@ -1,3 +1,4 @@
+import { Encrypter } from './encrypter/encrypter';
 import { Params } from './encrypter/params';
 
 export type WalletID = string;
@@ -40,14 +41,8 @@ export interface Vault {
 
 // Interface for KeyStore
 export interface KeyStore {
-  masterNode: MasterNode; // HD Root Tree (Master node)
-  importedKeys: string[]; // Imported private keys
-}
-
-// Interface for Encrypter
-interface Encrypter {
-  method: string; // Cipher algorithm method
-  params: Params; // Parameters for the cipher algorithm
+  master_node: MasterNode; // HD Root Tree (Master node)
+  imported_keys: string[]; // Imported private keys
 }
 
 // Interface for MasterNode
