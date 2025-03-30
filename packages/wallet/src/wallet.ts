@@ -4,7 +4,7 @@ import * as bip39 from 'bip39';
 import { MnemonicError } from './error';
 import { Encrypter } from './encrypter/encrypter';
 import { Params } from './encrypter/params';
-import { generateUUID, sprintf } from './utils';
+import { encodeBech32WithType, generateUUID, sprintf } from './utils';
 import {
   AddressInfo,
   KeyStore,
@@ -224,13 +224,19 @@ export class Wallet {
     );
 
     // Get public key
-    const publicKey = privateKey.getPublicKeyCurve25519();
-    const publicKeyHex = Buffer.from(publicKey.data()).toString('hex'); // TODO: use bech32m
+    const publicKey = privateKey.getPublicKeyEd25519();
+    console.log(
+      address,
+      ' publicKey: ' + Buffer.from(publicKey.data()).toString('hex')
+    );
+    const prefix = this.publicKeyPrefix();
+    const publicKeyStr = encodeBech32WithType(prefix, publicKey.data(), 3);
+
     const addressInfo: AddressInfo = {
       address: address,
       label: label,
       path: derivationPath,
-      publicKey: publicKeyHex,
+      publicKey: publicKeyStr,
     };
 
     this.ledger.addresses.set(address, addressInfo);
@@ -299,5 +305,16 @@ export class Wallet {
   private saveInfo(): void {
     const infoKey = StorageKey.walletInfoKey(this.info.uuid);
     this.storage.set(infoKey, this.info);
+  }
+
+  private publicKeyPrefix(): string {
+    switch (this.info.network) {
+      case NetworkType.Mainnet:
+        return 'public';
+      case NetworkType.Testnet:
+        return 'tpublic';
+      default:
+        throw new Error(`Unknown network type: ${this.info.network}`);
+    }
   }
 }
