@@ -9,7 +9,7 @@ import Loading from '@/components/loading';
 const LottiePlayer = dynamic(() => import('react-lottie-player'), { ssr: false });
 const ChooseNameWallet = () => {
     const { setWalletName, walletName, password } = useWallet();
-    const { restoreWallet, restorationError } = useRestoreWallet();
+    const { restoreWallet } = useRestoreWallet();
     const [isLoading, setIsLoading] = useState(false);
     const { createAddress } = useAddress();
     const router = useRouter();
