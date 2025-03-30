@@ -2,17 +2,17 @@ import { DefaultMethod, Encrypter, ParameterKey } from './encrypter';
 import { Params } from './params';
 
 describe('Encrypter Tests', () => {
-  // testParams are designed to set encryption parameters to the minimum values for
-  // faser and efficien tests
+  // testParams are configured with minimal settings
+  // for faster and more efficient tests
   let testParams = new Params();
   testParams.setNumber(ParameterKey.Iterations, 1);
   testParams.setNumber(ParameterKey.Memory, 8);
   testParams.setNumber(ParameterKey.Parallelism, 1);
   testParams.setNumber(ParameterKey.KeyLength, 48);
 
-  it('should handle NopeEncrypter', async () => {
+  it('should handle NoEncrypter', async () => {
     // Create an Encrypter with no encryption method
-    const enc = new Encrypter('', new Params());
+    const enc = Encrypter.noEncrypter();
     expect(enc.isEncrypted()).toBeFalsy();
 
     const msg = 'foo';
@@ -108,5 +108,40 @@ describe('Encrypter Tests', () => {
 
     const decipher = await enc.decrypt(cipher, password);
     expect(decipher).toBe(msg);
+  });
+
+  describe('JSON serialization', () => {
+    test('should correctly serialize to JSON', () => {
+      const params = new Params();
+      params.setString('key1', 'val1');
+      params.setNumber('key2', 5);
+
+      const encrypter = new Encrypter('METHOD', params);
+      const json = encrypter.toJSON();
+
+      expect(json).toEqual({
+        method: 'METHOD',
+        params: {
+          key1: 'val1',
+          key2: '5',
+        },
+      });
+    });
+
+    test('should correctly deserialize from JSON', () => {
+      const json = {
+        method: 'METHOD',
+        params: {
+          key1: 'val1',
+          key2: '5',
+        },
+      };
+
+      const encrypter = Encrypter.fromJSON(json);
+
+      expect(encrypter.method).toBe('METHOD');
+      expect(encrypter.params.getString('key1')).toBe('val1');
+      expect(encrypter.params.getNumber('key2')).toBe(5);
+    });
   });
 });
