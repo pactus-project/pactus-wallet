@@ -10,9 +10,9 @@
     "test": "jest"
   },
   "dependencies": {
+    "@pactus-wallet/wallet": "*",
     "@splinetool/react-spline": "^4.0.0",
     "@splinetool/runtime": "^1.9.72",
-    "@pactus-wallet/wallet": "*",
     "copy-webpack-plugin": "^13.0.0",
     "framer-motion": "^12.4.10",
     "next": "15.2.3",
@@ -27,11 +27,12 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "base64-loader": "^1.0.0",
+    "copy-webpack-plugin": "^13.0.0",
     "eslint": "^9",
     "eslint-config-next": "15.2.0",
     "file-loader": "^6.2.0",
     "ts-jest": "^29.2.6",
-    "typescript": "^5",
-    "copy-webpack-plugin": "^13.0.0"
+    "typescript": "^5"
   }
 }
