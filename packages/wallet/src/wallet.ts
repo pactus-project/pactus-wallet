@@ -225,10 +225,6 @@ export class Wallet {
 
     // Get public key
     const publicKey = privateKey.getPublicKeyEd25519();
-    console.log(
-      address,
-      ' publicKey: ' + Buffer.from(publicKey.data()).toString('hex')
-    );
     const prefix = this.publicKeyPrefix();
     const publicKeyStr = encodeBech32WithType(prefix, publicKey.data(), 3);
 

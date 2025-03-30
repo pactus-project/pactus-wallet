@@ -5,11 +5,10 @@ import Header from '@/components/header'
 import Sidebar from '@/components/sidebar'
 import RefetchBalance from '@/components/refetch';
 import Image from 'next/image';
-import { comingSoonChart, searchIcon, simpleLogo, transactions } from '@/assets';
+import { simpleLogo } from '@/assets';
 import SendPac from '@/components/send';
 import ReceivePac from '@/components/receive';
 import BridgePac from '@/components/bridge';
-import TransactionsHistory from '@/components/transactions-history';
 const Dashboard = () => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
@@ -25,10 +24,6 @@ const Dashboard = () => {
                 <div><span style={{ fontSize: '15px' }} >≈ 2343.56 USD</span></div>
                 <div className='amountCtas-dashboard' ><SendPac /><ReceivePac /><BridgePac /></div>
               </div>
-              <div className='chart-dashboard' >
-                <Image src={comingSoonChart} fill alt='chart' />
-                <label>coming soon...</label>
-              </div>
             </div>
             <hr />
             <div className='totalNumbers-dashboard' >
@@ -41,19 +36,6 @@ const Dashboard = () => {
                 <span>15</span>
               </div>
             </div>
-          </div>
-          <div className='transactionsContainer-dashboard'>
-            <div className='headerTransaction-dashboard' >
-              <h3>Overall Activity</h3>
-              <div className='searchTransactions-dashboard' >
-                <Image src={searchIcon} alt='search-icon' /><input placeholder='Search by tx hash or address' />
-              </div>
-              <div className='filterTransactions-dashboard'><button>1D</button><button>7D</button><button style={{color:'#FFF'}} >All</button></div></div>
-            <hr />
-            <div className='transactions-dashboard' >
-              <TransactionsHistory transactions={transactions} height={'400px'} />
-            </div>
-
           </div>
         </div>
       </div>

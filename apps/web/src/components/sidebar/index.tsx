@@ -4,7 +4,6 @@ import './style.css';
 import Image from 'next/image';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import {
-    activityIcon,
     documentationIcon,
     FAQsIcon,
     gradientArrowToRightIcon,
@@ -91,14 +90,6 @@ const Sidebar = () => {
                     </div>
                 </div>
             </div>
-            <button
-                className={`route-sidebar ${isActiveRoute('/activity') ? 'activeRoute-sidebar' : ''}`}
-                onClick={() => navigate('/activity')}
-                style={{ marginTop: '0px' }}
-            >
-                <Image src={activityIcon} alt="activity-icon" />
-                <h3>Activity</h3>
-            </button>
             <button
                 className={`route-sidebar ${isActiveRoute('/settings') ? 'activeRoute-sidebar' : ''}`}
                 style={{ marginTop: 'auto' }}
