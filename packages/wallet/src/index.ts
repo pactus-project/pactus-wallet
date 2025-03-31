@@ -4,6 +4,7 @@
  */
 
 // Core wallet functionality
+export * from './types/wallet_info';
 export * from './wallet';
 export * from './storage/storage';
 export * from './manager';
@@ -12,12 +13,6 @@ export * from './error';
 import { initWasm } from '@trustwallet/wallet-core';
 import { IStorage } from './storage/storage';
 import { WalletManager } from './manager';
-
-//
-// QUESTIONS:
-// Shouldn't rename to initWalletManager() as it return WalletManager instance?
-// Shouldn't rename wallet-manager.ts to manager.ts?
-//
 
 /**
  * Initialize the wallet SDK with a custom storage implementation
