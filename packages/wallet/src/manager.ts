@@ -2,8 +2,9 @@ import { WalletCore } from '@trustwallet/wallet-core';
 import { Wallet } from './wallet';
 import { StorageError } from './error';
 import { IStorage } from './storage/storage';
-import { MnemonicStrength, NetworkType, WalletID } from './types';
 import { StorageKey } from './storage-key';
+import { NetworkType, WalletID } from './types/wallet_info';
+import { MnemonicStrength } from './types/vault';
 
 interface WalletInfo {
   data: string;
@@ -25,11 +26,14 @@ export class WalletManager {
    * @param storage Optional storage implementation
    */
   constructor(core: WalletCore, storage: IStorage) {
-    const walletIDs = storage.get<WalletID[]>(StorageKey.walletListKey()) ?? [];
+    const walletListVal = storage.get(StorageKey.walletListKey());
+    const walletIDs = walletListVal
+      ? (JSON.parse(walletListVal) as WalletID[])
+      : [];
 
     this.core = core;
     this.storage = storage;
-    this.walletIDs = walletIDs ?? [];
+    this.walletIDs = walletIDs;
   }
 
   /**
@@ -132,7 +136,10 @@ export class WalletManager {
     if (!this.hasWallet(id)) {
       this.walletIDs.push(id);
       try {
-        this.storage.set(StorageKey.walletListKey(), this.walletIDs);
+        this.storage.set(
+          StorageKey.walletListKey(),
+          JSON.stringify(this.walletIDs)
+        );
       } catch (error) {
         throw new StorageError(`Failed to update wallet list: ${error}`);
       }
@@ -147,7 +154,10 @@ export class WalletManager {
     if (this.hasWallet(id)) {
       this.walletIDs = this.walletIDs.filter(walletID => walletID !== id);
       try {
-        this.storage.set(StorageKey.walletListKey(), this.walletIDs);
+        this.storage.set(
+          StorageKey.walletListKey(),
+          JSON.stringify(this.walletIDs)
+        );
         this.storage.delete(StorageKey.walletInfoKey(id));
         this.storage.delete(StorageKey.walletLedgerKey(id));
         this.storage.delete(StorageKey.walletVaultKey(id));

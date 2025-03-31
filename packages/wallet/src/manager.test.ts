@@ -4,7 +4,8 @@ import { StorageError } from './error';
 import { MemoryStorage } from './storage/memory-storage';
 import * as bip39 from 'bip39';
 import { generateUUID } from './utils';
-import { MnemonicStrength, NetworkType } from './types';
+import { NetworkType } from './types/wallet_info';
+import { MnemonicStrength } from './types/vault';
 
 describe('WalletManager Tests', () => {
   let core: WalletCore;

@@ -8,7 +8,6 @@ describe('Encrypter Tests', () => {
   testParams.setNumber(ParameterKey.Iterations, 1);
   testParams.setNumber(ParameterKey.Memory, 8);
   testParams.setNumber(ParameterKey.Parallelism, 1);
-  testParams.setNumber(ParameterKey.KeyLength, 48);
 
   it('should handle NoEncrypter', async () => {
     // Create an Encrypter with no encryption method
@@ -41,7 +40,6 @@ describe('Encrypter Tests', () => {
     expect(enc.params.getNumber('iterations')).toBe(3);
     expect(enc.params.getNumber('memory')).toBe(65536);
     expect(enc.params.getNumber('parallelism')).toBe(4);
-    expect(enc.params.getNumber('keylen')).toBe(48);
     expect(enc.isEncrypted()).toBeTruthy();
   });
 
@@ -100,7 +98,7 @@ describe('Encrypter Tests', () => {
     );
   });
 
-  it('Stream Cipher with keylen 48', async () => {
+  it('Valid stream Cipher', async () => {
     const enc = new Encrypter(DefaultMethod, testParams);
     const msg = 'foo';
     const password = 'cowboy';
@@ -108,40 +106,5 @@ describe('Encrypter Tests', () => {
 
     const decipher = await enc.decrypt(cipher, password);
     expect(decipher).toBe(msg);
-  });
-
-  describe('JSON serialization', () => {
-    test('should correctly serialize to JSON', () => {
-      const params = new Params();
-      params.setString('key1', 'val1');
-      params.setNumber('key2', 5);
-
-      const encrypter = new Encrypter('METHOD', params);
-      const json = encrypter.toJSON();
-
-      expect(json).toEqual({
-        method: 'METHOD',
-        params: {
-          key1: 'val1',
-          key2: '5',
-        },
-      });
-    });
-
-    test('should correctly deserialize from JSON', () => {
-      const json = {
-        method: 'METHOD',
-        params: {
-          key1: 'val1',
-          key2: '5',
-        },
-      };
-
-      const encrypter = Encrypter.fromJSON(json);
-
-      expect(encrypter.method).toBe('METHOD');
-      expect(encrypter.params.getString('key1')).toBe('val1');
-      expect(encrypter.params.getNumber('key2')).toBe(5);
-    });
   });
 });

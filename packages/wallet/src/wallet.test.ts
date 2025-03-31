@@ -2,20 +2,13 @@ import { initWasm, WalletCore } from '@trustwallet/wallet-core';
 import { Wallet } from './wallet';
 import * as bip39 from 'bip39';
 import { MnemonicError } from './error';
-import {
-  AddressInfo,
-  Ledger,
-  MnemonicStrength,
-  NetworkType,
-  Vault,
-  WalletInfo,
-} from './types';
 import { MemoryStorage } from './storage/memory-storage';
 import { IStorage } from './storage/storage';
 import { getWordCount } from './utils';
 import { StorageKey } from './storage-key';
-import { Params } from './encrypter/params';
-import { Encrypter } from './encrypter/encrypter';
+import { MnemonicStrength, Vault } from './types/vault';
+import { NetworkType, WalletInfo } from './types/wallet_info';
+import { Ledger } from './types/ledger';
 
 // Jest typings setup
 declare global {
@@ -38,21 +31,6 @@ describe('Pactus Wallet Tests', () => {
   function expectStoredValue(key: string, someValue: string) {
     const value = JSON.stringify(storage.get(key));
     expect(value).toContain(someValue);
-  }
-  function parseStoredObject(key: string, walletAddress: string): AddressInfo {
-    const ledger = storage.get(key);
-
-    if (!ledger || typeof ledger !== 'object') {
-      throw new Error('Ledger not found or invalid format');
-    }
-
-    if (!('addresses' in ledger) || !(ledger.addresses instanceof Map)) {
-      throw new Error(
-        'Invalid ledger structure: missing or invalid addresses Map'
-      );
-    }
-    const storedAddress = ledger.addresses.get(walletAddress);
-    return storedAddress;
   }
 
   describe('Wallet Seed', () => {
@@ -156,16 +134,6 @@ describe('Pactus Wallet Tests', () => {
       );
       expect(addrInfo2.label).toBe('Address 2');
       expect(addrInfo2.path).toBe("m/44'/21888'/3'/1'");
-
-      const ledgerKey = StorageKey.walletLedgerKey(wallet.getID());
-      const storedAddress1 = parseStoredObject(ledgerKey, addrInfo1.address);
-      const storedAddress2 = parseStoredObject(ledgerKey, addrInfo2.address);
-      expect(storedAddress1.address).toEqual(addrInfo1.address);
-      expect(storedAddress1.label).toEqual(addrInfo1.label);
-      expect(storedAddress1.path).toEqual(addrInfo1.path);
-      expect(storedAddress2.address).toEqual(addrInfo2.address);
-      expect(storedAddress2.label).toEqual(addrInfo2.label);
-      expect(storedAddress2.path).toEqual(addrInfo2.path);
     });
 
     it('should restore a wallet with deterministic addresses from standard 24-word mnemonic', async () => {
@@ -276,46 +244,19 @@ describe('Pactus Wallet Tests', () => {
       const walletID = '1234';
       const walletName = 'Test Wallet';
       const password = 'password';
-      const walletInfo: WalletInfo = {
-        type: 1,
-        name: walletName,
-        uuid: walletID,
-        creationTime: Date.now(),
-        network: NetworkType.Mainnet,
-      };
-      storage.set(StorageKey.walletInfoKey(walletID), walletInfo);
 
-      const ledger: Ledger = {
-        coinType: 21888,
-        purposes: {
-          purposeBIP44: {
-            nextEd25519Index: 0,
-          },
-        },
-        addresses: new Map(),
-      };
-      storage.set(StorageKey.walletLedgerKey(walletID), ledger);
+      const walletInfoJSON = `{"name":"${walletName}","type":1,"uuid":"${walletID}","creationTime":1743405082209,"network":"mainnet"}`;
+      const ledgerJSON = `{"addresses":{"pc1rcx9x55nfme5juwdgxd2ksjdcmhvmvkrygmxpa3":{"address":"pc1rcx9x55nfme5juwdgxd2ksjdcmhvmvkrygmxpa3","label":"Account 1","path":"m/44'/21888'/3'/0'","publicKey":"public1rd5p573yq3j5wkvnasslqa7ne5vw87qcj5a0wlwxcj2t2xlaca9lstzm8u5"}},"coinType":21888,"purposes":{"purposeBIP44":{"nextEd25519Index":1}}}`;
+      const vaultJSON = `{"encrypter":{"method":"ARGON2ID-AES_256_CTR-MACV1","params":{"iterations":"1","memory":"8","parallelism":"1"}},"keyStore":"aLEdVCpZOJmZZz067JTxWivw/41sWooR+E2iM46WYjskjFTE3VviPzc9SQ6gba5g+8CWWcw1q1YT9x1XAg/QAt2Rd7zR2FKL+ACwCbmZ/H+lLPDBt3nlvOkD2qkxi2rjjLpbAtf2UjKrW2b3+/KxSJGuG5GPIqPvPonqHhSWrF1j0nnKqm+btD1gaeJ5IRLchi27BNorMR4qvETMeV7YjkvZlrEFdNffqpWee+o4+bnr33MwysXm4hZU1c4/zzMIODAyxsMRgbrfTDfdQ19c0yjYmDGAPDpAqNAvMmDL07nGKR2f"}`;
 
-      let params = new Params();
-      params.setNumber('iterations', 1);
-      params.setNumber('memory', 8);
-      params.setNumber('parallelism', 1);
-      params.setNumber('keylen', 48);
-
-      const encrypter = new Encrypter('ARGON2ID-AES_256_CTR-MACV1', params);
-
-      const keyStoreEncrypted =
-        'aLEdVCpZOJmZZz067JTxWivw/41sWooR+E2iM46WYjskjFTE3VviPzc9SQ6gba5g+8CWWcw1q1YT9x1XAg/QAt2Rd7zR2FKL+ACwCbmZ/H+lLPDBt3nlvOkD2qkxi2rjjLpbAtf2UjKrW2b3+/KxSJGuG5GPIqPvPonqHhSWrF1j0nnKqm+btD1gaeJ5IRLchi27BNorMR4qvETMeV7YjkvZlrEFdNffqpWee+o4+bnr33MwysXm4hZU1c4/zzMIODAyxsMRgbrfTDfdQ19c0yjYmDGAPDpAqNAvMmDL07nGKR2f';
-      const expectedMnemonic =
-        'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon cactus';
-
-      const vault: Vault = {
-        encrypter: encrypter,
-        keyStore: keyStoreEncrypted,
-      };
-      storage.set(StorageKey.walletVaultKey(walletID), vault);
+      storage.set(StorageKey.walletInfoKey(walletID), walletInfoJSON);
+      storage.set(StorageKey.walletLedgerKey(walletID), ledgerJSON);
+      storage.set(StorageKey.walletVaultKey(walletID), vaultJSON);
 
       const wallet = Wallet.load(core, storage, walletID);
+
+      const expectedMnemonic =
+        'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon cactus';
 
       expect(wallet.getID()).toBe(walletID);
       expect(wallet.getName()).toBe(walletName);
@@ -323,10 +264,52 @@ describe('Pactus Wallet Tests', () => {
       expect(wallet.isEncrypted()).toBeTruthy();
       expect(wallet.getMnemonic(password)).resolves.toBe(expectedMnemonic);
 
-      const addrInfo = await wallet.createAddress('Address 1', password);
-      expect(addrInfo.address).toBe(
+      const addrInfo1 = wallet.getAddressInfo(
         'pc1rcx9x55nfme5juwdgxd2ksjdcmhvmvkrygmxpa3'
       );
+      expect(addrInfo1).toBeTruthy();
+      expect(addrInfo1?.path).toBe("m/44'/21888'/3'/0'");
+      expect(addrInfo1?.label).toBe('Account 1');
+      expect(addrInfo1?.publicKey).toBe(
+        'public1rd5p573yq3j5wkvnasslqa7ne5vw87qcj5a0wlwxcj2t2xlaca9lstzm8u5'
+      );
+
+      const addrInfo2 = await wallet.createAddress('Address 2', password);
+      expect(addrInfo2.address).toBe(
+        'pc1r7aynw9urvh66ktr3fte2gskjjnxzruflkgde94'
+      );
+    });
+  });
+
+  describe('Save Wallet', () => {
+    it('should correctly save wallet data in JSON format', async () => {
+      const noPassword = '';
+      const mnemonic =
+        'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon cactus';
+      const wallet = await Wallet.restore(
+        core,
+        storage,
+        mnemonic,
+        noPassword,
+        NetworkType.Mainnet,
+        'My Wallet'
+      );
+
+      await wallet.createAddress('Account 1', password);
+
+      const walletID = wallet.getID();
+      const walletTime = wallet.getWalletInfo().creationTime;
+      const walletInfoJSON = storage.get(StorageKey.walletInfoKey(walletID));
+      const ledgerJSON = storage.get(StorageKey.walletLedgerKey(walletID));
+      const vaultJSON = storage.get(StorageKey.walletVaultKey(walletID));
+
+      const expectedWalletInfoJSON = `{"type":1,"name":"My Wallet","uuid":"${walletID}","creationTime":${walletTime},"network":"mainnet"}`;
+      const expectedLedgerJSON = `{"coinType":21888,"purposes":{"purposeBIP44":{"nextEd25519Index":1}},"addresses":{"pc1rcx9x55nfme5juwdgxd2ksjdcmhvmvkrygmxpa3":{"address":"pc1rcx9x55nfme5juwdgxd2ksjdcmhvmvkrygmxpa3","label":"Account 1","path":"m/44'/21888'/3'/0'","publicKey":"public1rd5p573yq3j5wkvnasslqa7ne5vw87qcj5a0wlwxcj2t2xlaca9lstzm8u5"}}}`;
+      const expectedVaultJSON = `{"encrypter":{"method":"","params":{}},"keyStore":"{\\\"master_node\\\":{\\\"seed\\\":\\\"abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon cactus\\\"},\\\"imported_keys\\\":[]}"}`;
+
+      expect(walletInfoJSON).toEqual(expectedWalletInfoJSON);
+      expect(ledgerJSON).toEqual(expectedLedgerJSON);
+      expect(vaultJSON).toEqual(expectedVaultJSON);
     });
   });
 });

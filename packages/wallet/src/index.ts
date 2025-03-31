@@ -5,7 +5,6 @@
 
 // Core wallet functionality
 export * from './wallet';
-export { NetworkType } from './types';
 export * from './storage/storage';
 export * from './manager';
 export * from './error';

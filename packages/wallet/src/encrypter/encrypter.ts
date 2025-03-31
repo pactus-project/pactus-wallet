@@ -6,7 +6,6 @@ export const ParameterKey = {
   Iterations: 'iterations',
   Memory: 'memory',
   Parallelism: 'parallelism',
-  KeyLength: 'keylen',
 } as const;
 
 export const EncryptionMethod = {
@@ -21,7 +20,6 @@ export const DefaultParams = {
   Iterations: 3,
   Memory: 65536, // 64 MiB
   Parallelism: 4,
-  KeyLength: 48,
 } as const;
 
 export const DefaultMethod = `${EncryptionMethod.Argon2id}-${EncryptionMethod.AES256CTR}-${EncryptionMethod.MACv1}`;
@@ -44,7 +42,6 @@ export class Encrypter {
     params.setNumber(ParameterKey.Iterations, DefaultParams.Iterations);
     params.setNumber(ParameterKey.Memory, DefaultParams.Memory);
     params.setNumber(ParameterKey.Parallelism, DefaultParams.Parallelism);
-    params.setNumber(ParameterKey.KeyLength, DefaultParams.KeyLength);
 
     return new Encrypter(DefaultMethod, params);
   }
@@ -74,7 +71,6 @@ export class Encrypter {
     const iterations = this.params.getNumber(ParameterKey.Iterations);
     const memory = this.params.getNumber(ParameterKey.Memory);
     const parallelism = this.params.getNumber(ParameterKey.Parallelism);
-    const keyLen = this.params.getNumber(ParameterKey.KeyLength);
 
     const argon2Hash = await argon2.hash({
       pass: password,
@@ -82,7 +78,7 @@ export class Encrypter {
       time: iterations,
       mem: memory,
       parallelism: parallelism,
-      hashLen: keyLen,
+      hashLen: 48,
       type: argon2.ArgonType.Argon2id,
     });
 
@@ -108,9 +104,8 @@ export class Encrypter {
     const salt = crypto.randomBytes(16);
     const derivedByte = await this.deriveKeyFromPassword(password, salt);
 
-    const keyLen = this.params.getNumber(ParameterKey.KeyLength);
     const cipherKey = derivedByte.subarray(0, 32);
-    const iv = derivedByte.subarray(32, keyLen);
+    const iv = derivedByte.subarray(32, 48);
     const cipher = this.aesCrypt(Buffer.from(message), iv, cipherKey);
 
     // MAC method
