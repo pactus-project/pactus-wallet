@@ -65,6 +65,9 @@ export function WalletProvider({ children }: { children: ReactNode }) {
           router.replace('/get-started');
           return;
         }
+        if (window.location.pathname == '/get-started' && walletData) {
+          router.replace('/');
+        }
 
         // Load wallet data
         if (storedWalletStatus === WalletStatus.WALLET_LOCKED ||
