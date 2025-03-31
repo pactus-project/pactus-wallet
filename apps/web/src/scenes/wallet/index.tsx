@@ -4,18 +4,16 @@ import './style.css';
 import Sidebar from '@/components/sidebar';
 import Header from '@/components/header';
 import Image from 'next/image';
-import { simpleLogo } from '@/assets';
+import { copyIcon, simpleLogo } from '@/assets';
 import SendPac from '@/components/send';
 import BridgePac from '@/components/bridge';
 import {  successIcon } from '@/assets';
 import QRCode from 'react-qr-code';
-import { useWallet } from '@/wallet'
 import { useAddress } from '@/wallet/hooks/use-address';
 import { useSearchParams } from 'next/navigation';
 
 const Wallet = () => {
     const [copied, setCopied] = useState(false);
-    const { wallet } = useWallet();
     const { getAccountByAddress } = useAddress();
     const searchParams = useSearchParams();
     const address = searchParams.get('address');
@@ -64,10 +62,10 @@ const Wallet = () => {
                                         </div>
                                         <button title="copy address" onClick={() => handleCopy()}>
                                             <Image
-                                                src={copied ? successIcon : successIcon}
+                                                src={copied ? successIcon : copyIcon}
                                                 alt="copy-icon"
-                                                width={16}
-                                                height={16}
+                                                width={25}
+                                                height={25}
                                             />
                                         </button>
                                     </div>

@@ -13,7 +13,6 @@
 
 .input-MasterPassword {
   position: relative;
-  margin-bottom: 20px;
   width: 100%;
 }
 
@@ -60,8 +59,10 @@
   color: #FFF;
 }
 .emoji-ChooseNameWallet{
-    margin-bottom: 29px;
+    margin: 10px 0;
     font-size: 25px;
     display: flex;
     flex-wrap: wrap;
+    max-height: 168px;
+    overflow-y: auto;
 }

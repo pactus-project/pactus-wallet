@@ -76,8 +76,7 @@
 
 .modal-content {
   padding: 20px;
-  max-height: calc(100vh - 200px);
-  overflow-y: auto;
+
 }
 
 /* Custom scrollbar for the modal content */
@@ -134,7 +133,6 @@
 .modal-input-container {
   position: relative;
   width: 100%;
-  margin-bottom: 16px;
 }
 
 .modal-input {
