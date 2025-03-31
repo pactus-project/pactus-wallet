@@ -4,7 +4,8 @@ import { StorageError } from './error';
 import { MemoryStorage } from './storage/memory-storage';
 import * as bip39 from 'bip39';
 import { generateUUID } from './utils';
-import { MnemonicStrength, NetworkType } from './types';
+import { NetworkType } from './types/wallet_info';
+import { MnemonicStrength } from './types/vault';
 
 describe('WalletManager Tests', () => {
   let core: WalletCore;
@@ -146,7 +147,7 @@ describe('WalletManager Tests', () => {
       // Verify wallet no longer exists
       expect(walletManager.hasWallet(walletID)).toBe(false);
       expect(walletManager.getWalletIDs()).toHaveLength(0);
-      expect(walletManager.loadWallet(walletID).getWalletInfo()).toBeNull();
+      expect(() => walletManager.loadWallet(walletID)).toThrow(StorageError);
     });
   });
 

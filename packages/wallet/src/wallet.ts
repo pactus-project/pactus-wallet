@@ -1,22 +1,14 @@
 import { WalletCore } from '@trustwallet/wallet-core';
 import { HDWallet } from '@trustwallet/wallet-core/dist/src/wallet-core';
 import * as bip39 from 'bip39';
-import { MnemonicError } from './error';
+import { MnemonicError, StorageError } from './error';
 import { Encrypter } from './encrypter/encrypter';
-import { Params } from './encrypter/params';
 import { encodeBech32WithType, generateUUID, sprintf } from './utils';
-import {
-  AddressInfo,
-  KeyStore,
-  Ledger,
-  MnemonicStrength,
-  NetworkType,
-  Vault,
-  WalletID,
-  WalletInfo,
-} from './types';
 import { StorageKey } from './storage-key';
 import { IStorage } from './storage/storage';
+import { NetworkType, WalletID, WalletInfo } from './types/wallet_info';
+import { KeyStore, MnemonicStrength, Vault } from './types/vault';
+import { AddressInfo, Ledger, Purposes } from './types/ledger';
 
 /**
  * Pactus Wallet Implementation
@@ -26,7 +18,7 @@ export class Wallet {
   private core: WalletCore;
   private storage: IStorage;
   private info: WalletInfo;
-  private readonly vault: Vault;
+  private vault: Vault;
   private ledger: Ledger;
 
   /**
@@ -94,18 +86,9 @@ export class Wallet {
       throw new MnemonicError();
     }
 
-    const id = crypto.randomUUID ? crypto.randomUUID() : generateUUID();
-    const infoKey = StorageKey.walletInfoKey(id);
-    const vaultKey = StorageKey.walletVaultKey(id);
-    const ledgerKey = StorageKey.walletLedgerKey(id);
-
-    const info: WalletInfo = {
-      name: name,
-      type: 1,
-      uuid: id,
-      creationTime: Date.now(),
-      network: network,
-    };
+    const type = 1; // Full Wallet
+    const walletID = crypto.randomUUID ? crypto.randomUUID() : generateUUID();
+    const info = new WalletInfo(type, name, walletID, Date.now(), network);
 
     const keyStoreObj: KeyStore = {
       master_node: { seed: mnemonic },
@@ -118,37 +101,48 @@ export class Wallet {
       encrypter = Encrypter.defaultEncrypter();
       keyStore = await encrypter.encrypt(keyStore, password);
     }
+    const vault = new Vault(encrypter, keyStore);
 
-    const vault: Vault = {
-      encrypter: encrypter,
-      keyStore: keyStore,
-    };
-    const ledger: Ledger = {
-      addresses: new Map<string, AddressInfo>(),
-      coinType: network === NetworkType.Mainnet ? 21888 : 21777,
-      purposes: {
-        purposeBIP44: {
-          nextEd25519Index: 0,
-        },
+    const coinType = network === NetworkType.Mainnet ? 21888 : 21777;
+    const purposes: Purposes = {
+      purposeBIP44: {
+        nextEd25519Index: 0,
       },
     };
+    const ledger = new Ledger(coinType, purposes);
 
-    storage.set(infoKey, info);
-    storage.set(vaultKey, vault);
-    storage.set(ledgerKey, ledger);
+    const infoKey = StorageKey.walletInfoKey(walletID);
+    const vaultKey = StorageKey.walletVaultKey(walletID);
+    const ledgerKey = StorageKey.walletLedgerKey(walletID);
+
+    storage.set(infoKey, info.serialize());
+    storage.set(vaultKey, vault.serialize());
+    storage.set(ledgerKey, ledger.serialize());
 
     return new Wallet(core, storage, info, vault, ledger);
   }
 
-  // TODO: We can ask for password to check the validity of vault and password before loading the wallet
   static load(core: WalletCore, storage: IStorage, id: WalletID): Wallet {
     const infoKey = StorageKey.walletInfoKey(id);
-    const vaultKey = StorageKey.walletVaultKey(id);
-    const ledgerKey = StorageKey.walletLedgerKey(id);
+    const infoVal = storage.get(infoKey);
+    if (infoVal === null) {
+      throw new StorageError('Wallet Info does not exists');
+    }
+    const info = WalletInfo.deserialize(infoVal!);
 
-    const info = storage.get(infoKey) as WalletInfo;
-    const vault = storage.get(vaultKey) as Vault;
-    const ledger = storage.get(ledgerKey) as Ledger;
+    const vaultKey = StorageKey.walletVaultKey(id);
+    const vaultVal = storage.get(vaultKey);
+    if (vaultVal === null) {
+      throw new StorageError('Vault does not exists');
+    }
+    const vault = Vault.deserialize(vaultVal!);
+
+    const ledgerKey = StorageKey.walletLedgerKey(id);
+    const ledgerVal = storage.get(ledgerKey);
+    if (ledgerKey === null) {
+      throw new StorageError('Ledger does not exists');
+    }
+    const ledger = Ledger.deserialize(ledgerVal!);
 
     return new Wallet(core, storage, info, vault, ledger);
   }
@@ -162,10 +156,14 @@ export class Wallet {
    * @returns Array of addresses with their metadata
    */
   getAddresses(): Array<AddressInfo> {
-    let addresses = Array.from(this.ledger.addresses.values());
-    addresses.sort((r, l) => (r.path < l.path ? -1 : 1));
+    let infos = Array.from(this.ledger.addresses.values());
+    infos.sort((r, l) => (r.path < l.path ? -1 : 1));
 
-    return addresses;
+    return infos;
+  }
+
+  getAddressInfo(address: string): AddressInfo | undefined {
+    return this.ledger.addresses.get(address);
   }
 
   /**
@@ -295,12 +293,12 @@ export class Wallet {
 
   private saveLedger(): void {
     const ledgerKey = StorageKey.walletLedgerKey(this.info.uuid);
-    this.storage.set(ledgerKey, this.ledger);
+    this.storage.set(ledgerKey, this.ledger.serialize());
   }
 
   private saveInfo(): void {
     const infoKey = StorageKey.walletInfoKey(this.info.uuid);
-    this.storage.set(infoKey, this.info);
+    this.storage.set(infoKey, this.info.serialize());
   }
 
   private publicKeyPrefix(): string {
