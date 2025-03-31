@@ -83,7 +83,7 @@ const Wallet = () => {
                 </div>
             </div>
         </Suspense>
-    );
-};
+    )
+}
 
 export default Wallet;
