@@ -4,20 +4,20 @@ import './style.css';
 import Sidebar from '@/components/sidebar';
 import Header from '@/components/header';
 import Image from 'next/image';
-import { simpleLogo } from '@/assets';
+import { copyIcon, simpleLogo } from '@/assets';
 import SendPac from '@/components/send';
 import BridgePac from '@/components/bridge';
-import { documentCopyIcon, successIcon } from '@/assets';
+import {  successIcon } from '@/assets';
 import QRCode from 'react-qr-code';
-import { useWallet } from '@/wallet'
+import { useAccount } from '@/wallet/hooks/use-account';
 import { useSearchParams } from 'next/navigation';
 
 const Wallet = () => {
     const [copied, setCopied] = useState(false);
-    const { wallet } = useWallet();
+    const { getAccountByAddress } = useAccount();
     const searchParams = useSearchParams();
     const address = searchParams.get('address');
-    const addressInfo = wallet?.getAddresses().find((element) => element.address === address);
+    const addressInfo = address ? getAccountByAddress(address) : null;
 
     const handleCopy = () => {
         navigator.clipboard.writeText(addressInfo?.address ?? '');
@@ -60,12 +60,12 @@ const Wallet = () => {
                                         <div className="address-value">
                                             {addressInfo?.address ?? ''}
                                         </div>
-                                        <button title="copy seed" onClick={() => handleCopy()}>
+                                        <button title="copy address" onClick={() => handleCopy()}>
                                             <Image
-                                                src={copied ? successIcon : documentCopyIcon}
+                                                src={copied ? successIcon : copyIcon}
                                                 alt="copy-icon"
-                                                width={16}
-                                                height={16}
+                                                width={25}
+                                                height={25}
                                             />
                                         </button>
                                     </div>
@@ -81,7 +81,7 @@ const Wallet = () => {
                 </div>
             </div>
         </Suspense>
-    );
-};
+    )
+}
 
 export default Wallet;

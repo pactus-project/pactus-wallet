@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import React, { Suspense } from 'react'
 import './style.css'
 import Header from '@/components/header'

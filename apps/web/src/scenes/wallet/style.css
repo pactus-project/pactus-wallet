@@ -53,7 +53,7 @@
 
 .amountSection-wallet > div {
     display: flex;
-    align-items: flex-end;
+    align-items: center;
     gap: 5px;
 }
 
@@ -185,6 +185,7 @@
 .address-row {
     display: flex;
     flex-direction: row;
+    align-items: center;
     gap: 16px;
 }
 

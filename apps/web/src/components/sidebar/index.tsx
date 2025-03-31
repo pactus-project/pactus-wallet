@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import './style.css';
 import Image from 'next/image';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
@@ -17,21 +17,28 @@ import {
 } from '@/assets';
 import BorderBeam from '../border-beam';
 import { useWallet } from '@/wallet'
+import { useAccount } from '@/wallet/hooks/use-account';
+import AddAccountModal from '../add-account-modal';
 // External links
 const REPOSITORY_URL = 'https://github.com/pactus-project/pactus-wallet';
 
 const Sidebar = () => {
     const { wallet } = useWallet();
+    const { getAccountList } = useAccount();
     const pathname = usePathname();
     const searchParams = useSearchParams();
+    const [isAddAccountModalOpen, setIsAddAccountModalOpen] = useState(false);
     const navigate = useRouter().push;
-    const accountList = wallet?.getAddresses().map((address) => ({
-        name: address.label,
-        balance: 0,
-        address: address.address,
-        emoji: '🤝'
-    }));
-    
+
+
+    const openAddAccountModal = () => {
+        setIsAddAccountModalOpen(true);
+    };
+
+    const closeAddAccountModal = () => {
+        setIsAddAccountModalOpen(false);
+    };
+
     const parseRoute = (route: string) => {
         const [path, queryString] = route.split('?');
         const queryParams = new URLSearchParams(queryString);
@@ -56,7 +63,7 @@ const Sidebar = () => {
                 <Image src={lockIcon} alt="lock-icon" />
             </div>
             <div className="addAccount-sidebar">
-                <button>
+                <button onClick={openAddAccountModal}>
                     <Image src={plusIcon} alt="plus-icon" />
                     <p>Add Account</p>
                 </button>
@@ -75,10 +82,14 @@ const Sidebar = () => {
                 <div>
                     <hr />
                     <div className="accountItems-sidebar">
-                        {accountList?.map((item, i) => (
-                            <button style={{ background: isActiveRoute(`/wallet?address=${item?.address}`) ? '#15191C' : 'none' }}
-                             onClick={() => navigate(`/wallet?address=${item?.address}`)} 
-                             key={`${i}-account`}>
+                        {getAccountList()?.map((item, i) => (
+                            <button style={{
+                                background:
+                                    isActiveRoute(`/wallet?address=${item?.address}`) ?
+                                        '#15191C' : 'none'
+                            }}
+                                onClick={() => navigate(`/wallet?address=${item?.address}`)}
+                                key={`${i}-account`}>
                                 <span>{item.emoji}</span>
                                 <p>{item.name}</p>
                             </button>
@@ -100,7 +111,8 @@ const Sidebar = () => {
                 <h3>Documentation</h3>
             </button>
             <button
-                className={`route-sidebar ${isActiveRoute('/frequently-asked-questions') ? 'activeRoute-sidebar' : ''}`}
+                className={`route-sidebar ${isActiveRoute('/frequently-asked-questions') ?
+                        'activeRoute-sidebar' : ''}`}
             >
                 <Image src={FAQsIcon} alt="faqs-icon" />
                 <h3>FAQs</h3>
@@ -130,9 +142,13 @@ const Sidebar = () => {
                         blur: 95,
                         spread: -60
                     }}
-                    parentId="contributing-parent"  
+                    parentId="contributing-parent"
                 />
             </div>
+            <AddAccountModal
+                isOpen={isAddAccountModalOpen}
+                onClose={closeAddAccountModal}
+            />
         </div>
     );
 };

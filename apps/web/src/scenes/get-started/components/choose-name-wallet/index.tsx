@@ -3,7 +3,7 @@ import { emojis, walletNameLottie } from '@/assets';
 import React, { useState } from 'react';
 import './style.css';
 import dynamic from 'next/dynamic';
-import { useAddress, useRestoreWallet, useWallet } from '@/wallet';
+import { useAccount, useRestoreWallet, useWallet } from '@/wallet';
 import { useRouter } from 'next/navigation';
 import Loading from '@/components/loading';
 const LottiePlayer = dynamic(() => import('react-lottie-player'), { ssr: false });
@@ -11,7 +11,7 @@ const ChooseNameWallet = () => {
     const { setWalletName, walletName, password } = useWallet();
     const { restoreWallet } = useRestoreWallet();
     const [isLoading, setIsLoading] = useState(false);
-    const { createAddress } = useAddress();
+    const { createAddress } = useAccount();
     const router = useRouter();
     const handleCreateWallet = async () => {
         try {
@@ -19,7 +19,7 @@ const ChooseNameWallet = () => {
             const wallet = await restoreWallet();
             await new Promise(resolve => setTimeout(resolve, 1000));
             if (wallet) {
-                await createAddress('Account 1', wallet, password);
+                await createAddress('Account 1', password, wallet,);
                 router.replace('/');
             } else {
                 setIsLoading(false);
