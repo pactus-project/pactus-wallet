@@ -5,12 +5,6 @@ import { IStorage } from './storage/storage';
 import { StorageKey } from './storage-key';
 import { NetworkType, WalletID } from './types/wallet_info';
 import { MnemonicStrength } from './types/vault';
-
-interface WalletInfo {
-  data: string;
-  // customized fields for wallet goes here
-}
-
 /**
  * WalletManager
  * Manages wallet instances and their persistence using storage
@@ -113,7 +107,10 @@ export class WalletManager {
    * We can remove his function in future.
    * @returns The loaded wallet or null if no wallet exists in storage
    */
-  loadFirstWallet(): Wallet {
+  loadFirstWallet(): Wallet | null {
+    if (this.empty()) {
+      return null;
+    }
     return this.loadWallet(this.walletIDs[0]);
   }
 

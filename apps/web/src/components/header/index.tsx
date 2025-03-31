@@ -8,8 +8,7 @@ const Header = ({ title }: { title: string; }) => {
   const { setWallet } = useWallet();
 
   const handleLogout = () => {
-    localStorage.removeItem('walletStatus');
-    localStorage.removeItem('pactus_wallet_data');
+    localStorage.clear();
     setWallet(null);
     window.location.href = '/get-started';
   };

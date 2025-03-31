@@ -9,7 +9,6 @@ import { IStorage } from './storage/storage';
 import { NetworkType, WalletID, WalletInfo } from './types/wallet_info';
 import { KeyStore, MnemonicStrength, Vault } from './types/vault';
 import { AddressInfo, Ledger, Purposes } from './types/ledger';
-
 /**
  * Pactus Wallet Implementation
  * Manages cryptographic operations using Trust Wallet Core
@@ -20,7 +19,6 @@ export class Wallet {
   private info: WalletInfo;
   private vault: Vault;
   private ledger: Ledger;
-
   /**
    * Creates a new Wallet instance.
    * Private constructor - use static factory methods instead

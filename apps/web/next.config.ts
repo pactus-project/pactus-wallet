@@ -71,16 +71,29 @@ const nextConfig: NextConfig = {
 
         if (!isServer) {
             // Add CopyPlugin to copy wallet-core.wasm to the output directory
+            const walletCorePatterns = dev 
+                ? [
+                    {
+                        // In development, only copy to 'static/chunks/app/'
+                        from: walletCoreWasmPath,
+                        to: 'static/chunks/app/'
+                    }
+                ]
+                : [
+                    // In production, copy to both directories
+                    {
+                        from: walletCoreWasmPath,
+                        to: 'static/chunks/'
+                    },
+                    {
+                        from: walletCoreWasmPath,
+                        to: 'static/chunks/app/'
+                    }
+                ];
+                    
             config.plugins.push(
                 new CopyPlugin({
-                    patterns: [
-                        {
-                            // Copy wallet-core.wasm to the correct output directory
-                            // In development, copy to 'static/chunks/app/', in production to 'static/chunks/'
-                            from: walletCoreWasmPath,
-                            to: dev ? 'static/chunks/app/' : 'static/chunks/'
-                        }
-                    ]
+                    patterns: walletCorePatterns
                 })
             );
 

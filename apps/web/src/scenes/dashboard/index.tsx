@@ -20,8 +20,8 @@ const Dashboard = () => {
             <div>
               <div className='amountSection-dashboard' >
                 <h1>Total Balance<RefetchBalance /></h1>
-                <div><Image src={simpleLogo} alt='simple-logo' /><p>45778</p><span>PAC</span></div>
-                <div><span style={{ fontSize: '15px' }} >≈ 2343.56 USD</span></div>
+                <div><Image src={simpleLogo} alt='simple-logo' /><p>0</p><span>PAC</span></div>
+                <div><span style={{ fontSize: '15px' }} >≈ 0 USD</span></div>
                 <div className='amountCtas-dashboard' ><SendPac /><ReceivePac /><BridgePac /></div>
               </div>
             </div>
@@ -29,11 +29,11 @@ const Dashboard = () => {
             <div className='totalNumbers-dashboard' >
               <div>
                 <div><hr /><p>Total Accounts</p></div>
-                <span>2</span>
+                <span>0</span>
               </div>
               <div>
                 <div><hr /><p>Total Transactions</p></div>
-                <span>15</span>
+                <span>0</span>
               </div>
             </div>
           </div>

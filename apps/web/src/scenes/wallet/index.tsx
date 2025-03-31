@@ -45,11 +45,11 @@ const Wallet = () => {
                                     <h1>Balance</h1>
                                     <div className="amount-row">
                                         <Image src={simpleLogo} alt="simple-logo" />
-                                        <p>45778</p>
+                                        <p>0</p>
                                         <span>PAC</span>
                                     </div>
                                     <div>
-                                        <span style={{ fontSize: '15px' }}>≈ 2343.56 USD</span>
+                                        <span style={{ fontSize: '15px' }}>≈ 0 USD</span>
                                     </div>
 
                                     <div className="address-wallet">
