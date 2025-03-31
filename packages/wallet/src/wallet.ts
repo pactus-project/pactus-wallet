@@ -19,7 +19,6 @@ export class Wallet {
   private info: WalletInfo;
   private vault: Vault;
   private ledger: Ledger;
-
   /**
    * Creates a new Wallet instance.
    * Private constructor - use static factory methods instead
