@@ -1,6 +1,6 @@
 'use client';
 import { emojis, walletNameLottie } from '@/assets';
-import React from 'react';
+import React, { useState } from 'react';
 import './style.css';
 import dynamic from 'next/dynamic';
 import { useAddress, useRestoreWallet, useWallet } from '@/wallet';
@@ -8,23 +8,31 @@ import { useRouter } from 'next/navigation';
 import Loading from '@/components/loading';
 const LottiePlayer = dynamic(() => import('react-lottie-player'), { ssr: false });
 const ChooseNameWallet = () => {
-    const { setWalletName, walletName } = useWallet();
-    const { restoreWallet, isRestoring } = useRestoreWallet();
+    const { setWalletName, walletName, password } = useWallet();
+    const { restoreWallet } = useRestoreWallet();
+    const [isLoading, setIsLoading] = useState(false);
     const { createAddress } = useAddress();
     const router = useRouter();
     const handleCreateWallet = async () => {
+        try {
+            setIsLoading(true);
+            const wallet = await restoreWallet();
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            if (wallet) {
+                await createAddress('Account 1', wallet, password);
+                router.replace('/');
+            } else {
+                setIsLoading(false);
+            }
 
-        await restoreWallet();
-        await createAddress('Account 1');
-        router.replace('/');
-
-
+        } catch {
+            setIsLoading(false);
+        }
     }
-    if (isRestoring) {
-        return <Loading />
-    }
+
     return (
         <div className="container-ChooseNameWallet">
+            {isLoading && <Loading />}
             <LottiePlayer
                 animationData={walletNameLottie}
                 loop={false}
@@ -51,10 +59,11 @@ const ChooseNameWallet = () => {
             <button
                 className="cta-ChooseNameWallet"
                 disabled={walletName.length == 0}
-                onClick={ () => { handleCreateWallet() }}
+                onClick={() => { handleCreateWallet() }}
             >
                 Finish
             </button>
+
         </div>
     );
 };

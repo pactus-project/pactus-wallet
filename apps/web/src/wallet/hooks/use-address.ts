@@ -1,14 +1,12 @@
+import { Wallet } from '@pactus-wallet/wallet';
 import { useCallback } from 'react';
-import { useWallet } from './use-wallet';
 
 export function useAddress() {
-    const { wallet, password } = useWallet();
-
     const createAddress = useCallback(
-        (label: string) => {
+        (label: string, wallet: Wallet, password: string) => {
             return wallet?.createAddress(label, password);
         },
-        [wallet,password]
+        []
     );
 
     return { createAddress };

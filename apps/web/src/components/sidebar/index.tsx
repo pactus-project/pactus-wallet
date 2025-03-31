@@ -4,7 +4,6 @@ import './style.css';
 import Image from 'next/image';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import {
-    activityIcon,
     documentationIcon,
     FAQsIcon,
     gradientArrowToRightIcon,
@@ -18,6 +17,8 @@ import {
 } from '@/assets';
 import BorderBeam from '../border-beam';
 
+// External links
+const REPOSITORY_URL = 'https://github.com/pactus-project/pactus-wallet';
 
 const Sidebar = () => {
     const pathname = usePathname();
@@ -37,6 +38,7 @@ const Sidebar = () => {
             emoji: '😁'
         }
     ];
+    
     const parseRoute = (route: string) => {
         const [path, queryString] = route.split('?');
         const queryParams = new URLSearchParams(queryString);
@@ -69,7 +71,7 @@ const Sidebar = () => {
                     <Image src={searchIcon} alt="search-icon" />
                 </button>
             </div>
-                   <div className="accountList-sidebar">
+            <div className="accountList-sidebar">
                 <button
                     className={`route-sidebar ${isActiveRoute('/') ? 'activeRoute-sidebar' : ''}`}
                     onClick={() => navigate('/')}
@@ -92,14 +94,6 @@ const Sidebar = () => {
                 </div>
             </div>
             <button
-                className={`route-sidebar ${isActiveRoute('/activity') ? 'activeRoute-sidebar' : ''}`}
-                onClick={() => navigate('/activity')}
-                style={{ marginTop: '0px' }}
-            >
-                <Image src={activityIcon} alt="activity-icon" />
-                <h3>Activity</h3>
-            </button>
-            <button
                 className={`route-sidebar ${isActiveRoute('/settings') ? 'activeRoute-sidebar' : ''}`}
                 style={{ marginTop: 'auto' }}
             >
@@ -120,6 +114,7 @@ const Sidebar = () => {
             </button>
             <button
                 className={`route-sidebar ${isActiveRoute('/report-bug') ? 'activeRoute-sidebar' : ''}`}
+                onClick={() => window.open(REPOSITORY_URL, '_blank')}
             >
                 <Image src={ReportIcon} alt="report-icon" />
                 <h3>Report Bug</h3>
