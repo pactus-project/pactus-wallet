@@ -17,14 +17,14 @@ import {
 } from '@/assets';
 import BorderBeam from '../border-beam';
 import { useWallet } from '@/wallet'
-import { useAddress } from '@/wallet/hooks/use-address';
+import { useAccount } from '@/wallet/hooks/use-account';
 import AddAccountModal from '../add-account-modal';
 // External links
 const REPOSITORY_URL = 'https://github.com/pactus-project/pactus-wallet';
 
 const Sidebar = () => {
     const { wallet } = useWallet();
-    const { getAccountList } = useAddress();
+    const { getAccountList } = useAccount();
     const pathname = usePathname();
     const searchParams = useSearchParams();
     const [isAddAccountModalOpen, setIsAddAccountModalOpen] = useState(false);

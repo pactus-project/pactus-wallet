@@ -9,12 +9,12 @@ import SendPac from '@/components/send';
 import BridgePac from '@/components/bridge';
 import {  successIcon } from '@/assets';
 import QRCode from 'react-qr-code';
-import { useAddress } from '@/wallet/hooks/use-address';
+import { useAccount } from '@/wallet/hooks/use-account';
 import { useSearchParams } from 'next/navigation';
 
 const Wallet = () => {
     const [copied, setCopied] = useState(false);
-    const { getAccountByAddress } = useAddress();
+    const { getAccountByAddress } = useAccount();
     const searchParams = useSearchParams();
     const address = searchParams.get('address');
     const addressInfo = address ? getAccountByAddress(address) : null;
