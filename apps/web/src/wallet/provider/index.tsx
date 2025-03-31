@@ -60,24 +60,24 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         console.log("🚀 ~ initializeWal ~ walletData:", walletData)
         // Get wallet status from storage
         const storedWalletStatus = localStorage.getItem('walletStatus');
-        
-        if (!walletData.getWalletInfo()) {
+
+        if (!walletData) {
           setWalletStatusState(WalletStatus.WALLET_LOCKED);
           router.replace('/get-started');
           return;
         }
-        
+
         // Load wallet data
-        if (storedWalletStatus === WalletStatus.WALLET_LOCKED || 
-            storedWalletStatus === WalletStatus.WALLET_UNLOCKED) {
+        if (storedWalletStatus === WalletStatus.WALLET_LOCKED ||
+          storedWalletStatus === WalletStatus.WALLET_UNLOCKED) {
           try {
-      
+
             if (walletData) {
               const walletName = walletData.getName();
               setWalletNameState(walletName);
               setWallet(walletData);
               setWalletStatusState(storedWalletStatus as WalletStatus);
-              
+
               // If wallet is unlocked, ensure we have the wallet object available
               if (storedWalletStatus === WalletStatus.WALLET_UNLOCKED) {
                 // You might need additional steps here to fully restore an unlocked wallet
@@ -88,7 +88,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
               router.replace('/get-started');
             }
           } catch (error) {
-            setManagerError(error.message || 'Failed to load wallet data');
+            setManagerError((error as Error).message || 'Failed to load wallet data');
             setWalletStatusState(WalletStatus.WALLET_LOCKED);
             router.replace('/get-started');
           }
@@ -109,9 +109,6 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     setWalletStatusState(value);
     if (value === WalletStatus.WALLET_LOCKED) {
       setWallet(null);
-      if (!wallet) {
-        router.replace('/get-started');
-      }
     }
   };
 

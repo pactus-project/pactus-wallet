@@ -44,8 +44,8 @@ const nextConfig: NextConfig = {
         // Use base64-loader for argon2.wasm
         config.module.rules.push({
             test: /\.wasm$/,
-            loader: "base64-loader",
-            type: "javascript/auto",
+            loader: 'base64-loader',
+            type: 'javascript/auto'
         });
 
         // Prevent parsing of WASM files
@@ -55,8 +55,11 @@ const nextConfig: NextConfig = {
         config.module.rules.forEach(rule => {
             if (Array.isArray(rule.oneOf)) {
                 rule.oneOf.forEach(oneOf => {
-                    if (oneOf.loader && typeof oneOf.loader === 'string' && 
-                        oneOf.loader.includes('file-loader')) {
+                    if (
+                        oneOf.loader &&
+                        typeof oneOf.loader === 'string' &&
+                        oneOf.loader.includes('file-loader')
+                    ) {
                         if (!Array.isArray(oneOf.exclude)) {
                             oneOf.exclude = [oneOf.exclude || /^\s*$/];
                         }
@@ -78,7 +81,7 @@ const nextConfig: NextConfig = {
                             // Copy wallet-core.wasm to the correct output directory
                             // In development, copy to 'static/chunks/app/', in production to 'static/chunks/'
                             from: walletCoreWasmPath,
-                            to: dev ? 'static/chunks/app/' : 'static/chunks/'
+                            to: 'static/chunks/app/'
                         }
                     ]
                 })
