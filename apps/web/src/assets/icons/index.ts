@@ -21,6 +21,7 @@ import bridgeIcon from './bridge-icon.svg';
 import downloadIcon from './download-icon.svg';
 import successDownloadIcon from './success-download-icon.svg';
 import successIcon from './success-icon.svg';
+import documentCopyIcon from './document-copy.svg';
 export {
     copyIcon,
     hidePasswordIcon,
@@ -44,5 +45,6 @@ export {
     bridgeIcon,
     downloadIcon,
     successDownloadIcon,
-    successIcon
+    successIcon,
+    documentCopyIcon
 };

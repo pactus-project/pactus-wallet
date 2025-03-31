@@ -16,28 +16,21 @@ import {
     settingsIcon
 } from '@/assets';
 import BorderBeam from '../border-beam';
-
+import { useWallet } from '@/wallet'
 // External links
 const REPOSITORY_URL = 'https://github.com/pactus-project/pactus-wallet';
 
 const Sidebar = () => {
+    const { wallet } = useWallet();
     const pathname = usePathname();
     const searchParams = useSearchParams();
     const navigate = useRouter().push;
-    const accountList = [
-        {
-            name: 'Account 1',
-            balance: '0.00',
-            address: '0x2',
-            emoji: '🤝'
-        },
-        {
-            name: 'Account 2',
-            balance: '0.00',
-            address: '0x1',
-            emoji: '😁'
-        }
-    ];
+    const accountList = wallet?.getAddresses().map((address) => ({
+        name: address.label,
+        balance: 0,
+        address: address.address,
+        emoji: '🤝'
+    }));
     
     const parseRoute = (route: string) => {
         const [path, queryString] = route.split('?');
@@ -59,7 +52,7 @@ const Sidebar = () => {
         <div className="sidebarContainer">
             <div className="walletName-sidebar">
                 <span>😀</span>
-                <h2>Wallet 1</h2>
+                <h2>{wallet?.getName()}</h2>
                 <Image src={lockIcon} alt="lock-icon" />
             </div>
             <div className="addAccount-sidebar">
@@ -82,7 +75,7 @@ const Sidebar = () => {
                 <div>
                     <hr />
                     <div className="accountItems-sidebar">
-                        {accountList.map((item, i) => (
+                        {accountList?.map((item, i) => (
                             <button style={{ background: isActiveRoute(`/wallet?address=${item?.address}`) ? '#15191C' : 'none' }}
                              onClick={() => navigate(`/wallet?address=${item?.address}`)} 
                              key={`${i}-account`}>
