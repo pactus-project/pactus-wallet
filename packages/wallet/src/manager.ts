@@ -1,11 +1,10 @@
-import {WalletCore} from '@trustwallet/wallet-core';
-import {Wallet} from './wallet';
-import {StorageError} from './error';
-import {IStorage} from './storage/storage';
-import {StorageKey} from './storage-key';
-import {NetworkType, WalletID} from './types/wallet_info';
-import {MnemonicStrength} from './types/vault';
-
+import { WalletCore } from '@trustwallet/wallet-core';
+import { Wallet } from './wallet';
+import { StorageError } from './error';
+import { IStorage } from './storage/storage';
+import { StorageKey } from './storage-key';
+import { NetworkType, WalletID } from './types/wallet_info';
+import { MnemonicStrength } from './types/vault';
 /**
  * WalletManager
  * Manages wallet instances and their persistence using storage
