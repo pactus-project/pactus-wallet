@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import './style.css';
 import Image from 'next/image';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
@@ -17,6 +17,7 @@ import {
 } from '@/assets';
 import BorderBeam from '../border-beam';
 import { useWallet } from '@/wallet'
+import AddAccountModal from '../add-account-modal';
 // External links
 const REPOSITORY_URL = 'https://github.com/pactus-project/pactus-wallet';
 
@@ -24,13 +25,22 @@ const Sidebar = () => {
     const { wallet } = useWallet();
     const pathname = usePathname();
     const searchParams = useSearchParams();
+    const [isAddAccountModalOpen, setIsAddAccountModalOpen] = useState(false);
     const navigate = useRouter().push;
     const accountList = wallet?.getAddresses().map((address) => ({
         name: address.label,
         balance: 0,
         address: address.address,
         emoji: '🤝'
-    }));
+    })); 
+    
+    const openAddAccountModal = () => {
+      setIsAddAccountModalOpen(true);
+    };
+  
+    const closeAddAccountModal = () => {
+      setIsAddAccountModalOpen(false);
+    };
     
     const parseRoute = (route: string) => {
         const [path, queryString] = route.split('?');
@@ -56,7 +66,7 @@ const Sidebar = () => {
                 <Image src={lockIcon} alt="lock-icon" />
             </div>
             <div className="addAccount-sidebar">
-                <button>
+                <button onClick={openAddAccountModal}>
                     <Image src={plusIcon} alt="plus-icon" />
                     <p>Add Account</p>
                 </button>
@@ -133,6 +143,10 @@ const Sidebar = () => {
                     parentId="contributing-parent"  
                 />
             </div>
+            <AddAccountModal
+                isOpen={isAddAccountModalOpen}
+                onClose={closeAddAccountModal}
+            />
         </div>
     );
 };
