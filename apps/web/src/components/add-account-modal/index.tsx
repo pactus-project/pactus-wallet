@@ -44,7 +44,6 @@ const AddAccountModal: React.FC<AddAccountModalProps> = ({ isOpen, onClose }) =>
             setPassword('');
             setShowPassword(false);
             onClose();
-        } catch (err) {
         } finally {
             setIsSubmitting(false);
         }
@@ -102,7 +101,7 @@ const AddAccountModal: React.FC<AddAccountModalProps> = ({ isOpen, onClose }) =>
                     <button
                         type="button"
                         className="modal-button"
-                        style={{marginLeft: 'auto'}}
+                        style={{ marginLeft: 'auto' }}
                         onClick={handleSubmit}
                         disabled={isSubmitting || !accountName.trim() || !password.trim()}
                     >
