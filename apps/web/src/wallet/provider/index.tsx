@@ -57,7 +57,6 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         setWalletManager(manager);
         setManagerError(null);
         const walletData = await manager.loadFirstWallet();
-        console.log("🚀 ~ initializeWal ~ walletData:", walletData)
         // Get wallet status from storage
         const storedWalletStatus = localStorage.getItem('walletStatus');
 
