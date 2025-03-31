@@ -9,13 +9,18 @@ import SendPac from '@/components/send';
 import BridgePac from '@/components/bridge';
 import { documentCopyIcon, successIcon } from '@/assets';
 import QRCode from 'react-qr-code';
+import { useWallet } from '@/wallet'
+import { useSearchParams } from 'next/navigation';
 
 const Wallet = () => {
     const [copied, setCopied] = useState(false);
-    const accountAddress = 'pc1rek8n7m9hra4w0zlwsmufndrxftemkever9lsdy';
+    const { wallet } = useWallet();
+    const searchParams = useSearchParams();
+    const address = searchParams.get('address');
+    const addressInfo = wallet?.getAddresses().find((element) => element.address === address);
 
     const handleCopy = () => {
-        navigator.clipboard.writeText('pc1rek8n7m9hra4w0zlwsmufndrxftemkever9lsdy');
+        navigator.clipboard.writeText(addressInfo?.address ?? '');
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
     };
@@ -25,13 +30,13 @@ const Wallet = () => {
             <div className="container-wallet">
                 <Sidebar />
                 <div className="content-wallet">
-                    <Header title="🤝 Account 1" />
+                    <Header title={`🤝 ${addressInfo?.label ?? ''}`} />
                     <div className="section1-wallet">
                         <div>
                             <div className="address-row">
                                 <div className="qr-code-container">
                                     <QRCode
-                                        value={accountAddress}
+                                        value={addressInfo?.address ?? ''}
                                         size={214}
                                         level="H"
                                     />
@@ -53,7 +58,7 @@ const Wallet = () => {
 
                                     <div className="address-row">
                                         <div className="address-value">
-                                            {accountAddress}
+                                            {addressInfo?.address ?? ''}
                                         </div>
                                         <button title="copy seed" onClick={() => handleCopy()}>
                                             <Image
