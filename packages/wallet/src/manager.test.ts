@@ -147,7 +147,7 @@ describe('WalletManager Tests', () => {
       // Verify wallet no longer exists
       expect(walletManager.hasWallet(walletID)).toBe(false);
       expect(walletManager.getWalletIDs()).toHaveLength(0);
-      expect(walletManager.loadWallet(walletID).getWalletInfo()).toBeNull();
+      expect(() => walletManager.loadWallet(walletID)).toThrow(StorageError);
     });
   });
 

@@ -30,8 +30,11 @@ export class Ledger {
     this.addresses = new Map<string, AddressInfo>();
   }
 
-  // Custom JSON serialization
-  toJSON(): string {
+  /**
+   * Serializes the Ledger instance into a JSON string.
+   * @returns {string} JSON string representation of the Ledger instance.
+   */
+  serialize(): string {
     return JSON.stringify({
       coinType: this.coinType,
       purposes: this.purposes,
@@ -39,8 +42,12 @@ export class Ledger {
     });
   }
 
-  // Custom JSON deserialization
-  static fromJSON(jsonString: string): Ledger {
+  /**
+   * Deserializes a JSON string into a Ledger instance.
+   * @param {string} jsonString - JSON string representing a Ledger instance.
+   * @returns {Ledger} A new Ledger instance reconstructed from the JSON string.
+   */
+  static deserialize(jsonString: string): Ledger {
     const json = JSON.parse(jsonString);
     const ledger = new Ledger(json.coinType, json.purposes);
     ledger.addresses = new Map(Object.entries(json.addresses));

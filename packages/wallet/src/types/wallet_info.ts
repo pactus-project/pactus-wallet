@@ -33,8 +33,11 @@ export class WalletInfo {
     this.network = network;
   }
 
-  // Custom JSON serialization
-  toJSON(): string {
+  /**
+   * Serializes the Wallet Info instance into a JSON string.
+   * @returns {string} JSON string representation of the Wallet Info instance.
+   */
+  serialize(): string {
     return JSON.stringify({
       type: this.type,
       name: this.name,
@@ -44,8 +47,12 @@ export class WalletInfo {
     });
   }
 
-  // Custom JSON deserialization
-  static fromJSON(jsonString: string): WalletInfo {
+  /**
+   * Deserializes a JSON string into a Wallet Info instance.
+   * @param {string} jsonString - JSON string representing a Wallet Info instance.
+   * @returns {Wallet Info} A new Wallet Info instance reconstructed from the JSON string.
+   */
+  static deserialize(jsonString: string): WalletInfo {
     const json = JSON.parse(jsonString);
     return new WalletInfo(
       json.type,

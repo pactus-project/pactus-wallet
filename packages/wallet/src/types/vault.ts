@@ -37,16 +37,23 @@ export class Vault {
     this.keyStore = keyStore;
   }
 
-  // Custom JSON serialization
-  toJSON(): string {
+  /**
+   * Serializes the Vault instance into a JSON string.
+   * @returns {string} JSON string representation of the Vault instance.
+   */
+  serialize(): string {
     return JSON.stringify({
       encrypter: this.encrypter.toJSON(),
       keyStore: this.keyStore,
     });
   }
 
-  // Custom JSON deserialization
-  static fromJSON(jsonString: string): Vault {
+  /**
+   * Deserializes a JSON string into a Vault instance.
+   * @param {string} jsonString - JSON string representing a Vault instance.
+   * @returns {Vault} A new Vault instance reconstructed from the JSON string.
+   */
+  static deserialize(jsonString: string): Vault {
     const json = JSON.parse(jsonString);
     const encrypter = Encrypter.fromJSON(json.encrypter);
     const keyStore = json.keyStore;

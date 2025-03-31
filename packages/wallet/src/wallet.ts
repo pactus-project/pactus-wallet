@@ -115,9 +115,9 @@ export class Wallet {
     const vaultKey = StorageKey.walletVaultKey(walletID);
     const ledgerKey = StorageKey.walletLedgerKey(walletID);
 
-    storage.set(infoKey, info.toJSON());
-    storage.set(vaultKey, vault.toJSON());
-    storage.set(ledgerKey, ledger.toJSON());
+    storage.set(infoKey, info.serialize());
+    storage.set(vaultKey, vault.serialize());
+    storage.set(ledgerKey, ledger.serialize());
 
     return new Wallet(core, storage, info, vault, ledger);
   }
@@ -125,24 +125,24 @@ export class Wallet {
   static load(core: WalletCore, storage: IStorage, id: WalletID): Wallet {
     const infoKey = StorageKey.walletInfoKey(id);
     const infoVal = storage.get(infoKey);
-    if (infoVal === undefined) {
+    if (infoVal === null) {
       throw new StorageError('Wallet Info does not exists');
     }
-    const info = WalletInfo.fromJSON(infoVal!);
+    const info = WalletInfo.deserialize(infoVal!);
 
     const vaultKey = StorageKey.walletVaultKey(id);
     const vaultVal = storage.get(vaultKey);
-    if (vaultVal === undefined) {
+    if (vaultVal === null) {
       throw new StorageError('Vault does not exists');
     }
-    const vault = Vault.fromJSON(vaultVal!);
+    const vault = Vault.deserialize(vaultVal!);
 
     const ledgerKey = StorageKey.walletLedgerKey(id);
     const ledgerVal = storage.get(ledgerKey);
-    if (ledgerKey === undefined) {
+    if (ledgerKey === null) {
       throw new StorageError('Ledger does not exists');
     }
-    const ledger = Ledger.fromJSON(ledgerVal!);
+    const ledger = Ledger.deserialize(ledgerVal!);
 
     return new Wallet(core, storage, info, vault, ledger);
   }
@@ -293,12 +293,12 @@ export class Wallet {
 
   private saveLedger(): void {
     const ledgerKey = StorageKey.walletLedgerKey(this.info.uuid);
-    this.storage.set(ledgerKey, this.ledger.toJSON());
+    this.storage.set(ledgerKey, this.ledger.serialize());
   }
 
   private saveInfo(): void {
     const infoKey = StorageKey.walletInfoKey(this.info.uuid);
-    this.storage.set(infoKey, this.info.toJSON());
+    this.storage.set(infoKey, this.info.serialize());
   }
 
   private publicKeyPrefix(): string {

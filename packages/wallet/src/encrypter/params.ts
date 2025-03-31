@@ -14,6 +14,7 @@ export class Params {
   static fromJSON(json: Record<string, string>): Params {
     const params = new Params();
     params.data = new Map(Object.entries(json));
+
     return params;
   }
 
@@ -33,6 +34,7 @@ export class Params {
   getNumber(key: string): number {
     const val = this.data.get(key);
     if (val === undefined) throw new Error(`Key "${key}" not found`);
+
     return parseInt(val, 10);
   }
 
@@ -41,6 +43,7 @@ export class Params {
     if (val === undefined) {
       throw new Error(`Key "${key}" not found`);
     }
+
     return new Uint8Array(Buffer.from(val, 'base64'));
   }
 
@@ -49,6 +52,7 @@ export class Params {
     if (val === undefined) {
       throw new Error(`Key "${key}" not found`);
     }
+
     return val;
   }
 }

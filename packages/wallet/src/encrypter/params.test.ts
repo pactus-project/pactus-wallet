@@ -1,3 +1,4 @@
+import { Encrypter } from './encrypter';
 import { Params } from './params';
 
 describe('Encrypter Params', () => {
