@@ -48,13 +48,50 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     return () => clearTimeout(timer); // Cleanup timer
   }, []);
 
-  // Initialize wallet manager on component mount
+  // Initialize wallet manager and handle stored wallet status
   useEffect(() => {
-    const initWalletManager = async () => {
+    const initializeWallet = async () => {
       try {
+        // Initialize the wallet manager
         const manager = await setupWallet();
         setWalletManager(manager);
         setManagerError(null);
+        const walletData = await manager.loadFirstWallet();
+        // Get wallet status from storage
+        const storedWalletStatus = localStorage.getItem('walletStatus');
+        
+        if (!walletData) {
+          setWalletStatusState(WalletStatus.WALLET_LOCKED);
+          router.replace('/get-started');
+          return;
+        }
+        
+        // Load wallet data
+        if (storedWalletStatus === WalletStatus.WALLET_LOCKED || 
+            storedWalletStatus === WalletStatus.WALLET_UNLOCKED) {
+          try {
+      
+            if (walletData) {
+              const walletName = walletData.getName();
+              setWalletNameState(walletName);
+              setWallet(walletData);
+              setWalletStatusState(storedWalletStatus as WalletStatus);
+              
+              // If wallet is unlocked, ensure we have the wallet object available
+              if (storedWalletStatus === WalletStatus.WALLET_UNLOCKED) {
+                // You might need additional steps here to fully restore an unlocked wallet
+                // For example, if you need to reapply a saved password
+              }
+            } else {
+              setWalletStatusState(WalletStatus.WALLET_LOCKED);
+              router.replace('/get-started');
+            }
+          } catch (error) {
+            setManagerError(error.message || 'Failed to load wallet data');
+            setWalletStatusState(WalletStatus.WALLET_LOCKED);
+            router.replace('/get-started');
+          }
+        }
       } catch (err) {
         setManagerError(err instanceof Error ? err.message : 'Failed to initialize wallet manager');
       } finally {
@@ -62,41 +99,8 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       }
     };
 
-    initWalletManager();
-  }, []);
-
-  useEffect(() => {
-    const handleStoredWalletStatus = async (status: string | null) => {
-      if (!status) {
-        setWalletStatusState(WalletStatus.WALLET_LOCKED);
-        router.replace('/get-started');
-        return;
-      }
-
-      if (status === WalletStatus.WALLET_LOCKED) {
-        try {
-          const walletData = await walletManager?.loadFirstWallet();
-          if (walletData) {
-            const walletName = walletData.getName();
-            setWalletNameState(walletName);
-            setWalletStatusState(WalletStatus.WALLET_LOCKED);
-          } else {
-            setWalletStatusState(WalletStatus.WALLET_LOCKED);
-            router.replace('/get-started');
-          }
-        } catch (error) {
-          setManagerError(error.message || 'Failed to load wallet data');
-          setWalletStatusState(WalletStatus.WALLET_LOCKED);
-          router.replace('/get-started');
-        }
-      } else if (status === WalletStatus.WALLET_UNLOCKED) {
-        setWalletStatusState(WalletStatus.WALLET_UNLOCKED);
-      }
-    };
-
-    const storedWalletStatus = localStorage.getItem('walletStatus');
-    handleStoredWalletStatus(storedWalletStatus);
-  }, [router, walletManager]);
+    initializeWallet();
+  }, [router]); // Only depend on router to prevent unnecessary re-runs
 
   // Update wallet status and handle navigation
   const setWalletStatus = (value: WalletStatus) => {

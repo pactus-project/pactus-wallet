@@ -19,7 +19,7 @@ const ChooseNameWallet = () => {
             const wallet = await restoreWallet();
             await new Promise(resolve => setTimeout(resolve, 1000));
             if (wallet) {
-                await createAddress('Account 1', wallet, password);
+                await createAddress('Account 1', password, wallet,);
                 router.replace('/');
             } else {
                 setIsLoading(false);
