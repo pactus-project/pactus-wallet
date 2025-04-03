@@ -312,4 +312,72 @@ describe('Pactus Wallet Tests', () => {
       expect(vaultJSON).toEqual(expectedVaultJSON);
     });
   });
+
+  describe('Balance Operations', () => {
+    let wallet: Wallet;
+    let mockGrpcClient: any;
+
+    beforeEach(async () => {
+      // Setup wallet
+      wallet = await Wallet.create(core, storage, password);
+      await wallet.createAddress('Test Address', password);
+
+      // Mock the gRPC client
+      mockGrpcClient = {
+        getAccount: jest.fn(),
+      };
+
+      // Replace the real getGrpcClient method with one that returns our mock
+      jest
+        .spyOn(wallet as any, 'getGrpcClient')
+        .mockReturnValue(mockGrpcClient);
+    });
+
+    afterEach(() => {
+      jest.restoreAllMocks();
+    });
+
+    it('should fetch balance for a specific address', async () => {
+      // Arrange
+      const address = wallet.getAddresses()[0].address;
+      const mockResponse = {
+        address: address,
+        balance: '1000000000',
+        block_height: '100',
+      };
+
+      mockGrpcClient.getAccount.mockImplementation(
+        (req: any, callback: any) => {
+          callback(null, mockResponse);
+        }
+      );
+      // Act
+      const result = await wallet.getAddressBalance(address);
+      // Assert
+      expect(mockGrpcClient.getAccount).toHaveBeenCalledWith(
+        { address },
+        expect.any(Function)
+      );
+      expect(result).toEqual({
+        address: address,
+        balance: '1000000000',
+        blockHeight: '100',
+      });
+    });
+
+    it('should handle errors when fetching address balance', async () => {
+      // Arrange
+      const address = wallet.getAddresses()[0].address;
+      const mockError = new Error('Network error');
+
+      mockGrpcClient.getAccount.mockImplementation(
+        (req: any, callback: any) => {
+          callback(mockError, null);
+        }
+      );
+
+      // Act & Assert
+      await expect(wallet.getAddressBalance(address)).rejects.toThrow();
+    });
+  });
 });
