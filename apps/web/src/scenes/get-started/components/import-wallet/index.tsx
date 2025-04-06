@@ -16,12 +16,10 @@ const ImportWallet = () => {
     };
     const handleContinue = () => {
         if (words.some(word => word.trim() === '')) {
-            alert('Please fill in all words of your recovery phrase');
             return;
         }
         setMnemonic(words.join(' '));
         navigate('/get-started?step=master-password');
-        console.log('Wallet imported successfully');
     };
     return (
         <div className='container-ImportWallet'>
