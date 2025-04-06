@@ -11,13 +11,16 @@ const ImportWallet = () => {
     const { setMnemonic } = useWallet();
     const navigate = useRouter().push;
 
+    // Check if the recovery phrase has any empty words
+    const hasEmptyWords = () => words.some(word => word.trim() === '');
+
     const handleWordCountChange = (count: number) => {
         setWordCount(count);
         setWords(Array(count).fill(''));
     };
 
     const handleContinue = () => {
-        if (words.some(word => word.trim() === '')) {
+        if (hasEmptyWords()) {
             return;
         }
         setMnemonic(words.join(' '));
@@ -29,7 +32,7 @@ const ImportWallet = () => {
         e.preventDefault();
         const pastedText = e.clipboardData.getData('text');
         const pastedWords = pastedText.trim().split(/\s+/);
-        
+
         // Case 1: Standard valid seed phrases (12 or 24 words exactly)
         if (pastedWords.length === 12 || pastedWords.length === 24) {
             // Automatically adjust the word count to match
@@ -38,14 +41,14 @@ const ImportWallet = () => {
             setWords(pastedWords);
             return;
         }
-        
+
         // Case 2: More words than needed - take only what we need
         if (pastedWords.length > wordCount) {
             // Take only the first N words where N is the current wordCount
             setWords(pastedWords.slice(0, wordCount));
             return;
         }
-        
+
         // Case 3: Fewer words than needed - fill what we can
         if (pastedWords.length > 1 && pastedWords.length < wordCount) {
             // Create a new array starting with our current words
@@ -57,7 +60,7 @@ const ImportWallet = () => {
             setWords(newWords);
             return;
         }
-        
+
         // Case 4: Single word or invalid input - just put it in the current field
         const inputIndex = parseInt((e.target as HTMLElement).getAttribute('data-index') || '0');
         const newWords = [...words];
@@ -98,7 +101,11 @@ const ImportWallet = () => {
                     </span>
                 ))}
             </div>
-            <button disabled={(words.some(word => word.trim() === ''))} className='cta-ImportWallet' onClick={() => handleContinue()}>Continue</button>
+            <button
+                disabled={hasEmptyWords()}
+                className='cta-ImportWallet' onClick={() => handleContinue()}>
+                Continue
+            </button>
         </div>
     )
 }
