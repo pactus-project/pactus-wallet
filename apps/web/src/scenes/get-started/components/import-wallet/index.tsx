@@ -78,7 +78,6 @@ const ImportWallet = () => {
             />
             <h1>Import Existing Wallet</h1>
             <p>Restore access to your wallet by securely entering your 12 or 24-word recovery phrase.</p>
-            <p className="paste-tip">Tip: You can paste your entire seed phrase into any field.</p>
             <select defaultValue={24} onChange={(e) => handleWordCountChange(parseInt(e.target.value))}>
                 <option value={12}>12 Words</option>
                 <option value={24}>24 Words</option>
