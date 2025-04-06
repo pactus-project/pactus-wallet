@@ -51,7 +51,7 @@ const ImportWallet = () => {
                     </span>
                 ))}
             </div>
-            <button disabled={(words.some(word => word.trim() === ''))} className='cta-RecoveryPhrase' onClick={() => handleContinue()}>Continue</button>
+            <button disabled={(words.some(word => word.trim() === ''))} className='cta-ImportWallet' onClick={() => handleContinue()}>Continue</button>
         </div>
     )
 }

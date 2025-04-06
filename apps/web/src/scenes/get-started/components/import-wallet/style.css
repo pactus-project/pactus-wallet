@@ -106,3 +106,27 @@
     border: none;
     outline: none;
 }
+
+.cta-ImportWallet {
+    display: flex;
+    width: 100%;
+    padding: 0px 12.105px;
+    justify-content: center;
+    align-items: center;
+    gap: 4.035px;
+    border-radius: 4.035px;
+    background: var(--Ocean, linear-gradient(91deg, #0FEF9E -0.23%, #064560 105.78%));
+    box-shadow: 0px 0.303px 0.908px 0px rgba(0, 0, 0, 0.32), 0px 1.614px 3.631px 0px rgba(0, 0, 0, 0.28);
+    color: var(--Primitive-White, #FFF);
+    text-align: center;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 19.166px;
+    padding: 5px 0;
+    /* 136.899% */
+}
+
+.cta-ImportWallet:disabled {
+    opacity: 0.5;
+}
