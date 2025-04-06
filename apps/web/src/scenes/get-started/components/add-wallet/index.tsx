@@ -39,9 +39,25 @@ const AddWallet = () => {
                         showOnHover={true}
                     />
                 </button>
-                <button disabled >
+                <button id='ExistingWalletButton' onClick={() => navigate('/get-started?step=import-wallet')} >
                     <Image src={existingWalletIcon} alt='newWalletIcon' />
-                    <div><h3>Existing Wallet</h3><p>Restore access to your wallet by securely entering your recovery phrase or by importing a wallet file.</p></div>
+                    <div><h3>Existing Wallet</h3>
+                        <p>Restore access to your wallet by securely entering your recovery phrase or by importing a wallet file.
+                        </p>
+                    </div>
+                    <BorderBeam
+                        duration={4}
+                        size={300}
+                        colorFrom='#064560'
+                        colorTo='#0FEF9E'
+                        boxShadow={{
+                            color: '#0FEF9E',
+                            blur: 95,
+                            spread: -60
+                        }}
+                        parentId="ExistingWalletButton"
+                        showOnHover={true}
+                    />
                 </button>
             </div>
         </div>

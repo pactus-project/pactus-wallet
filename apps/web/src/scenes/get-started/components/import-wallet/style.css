@@ -1,0 +1,108 @@
+.container-ImportWallet {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
+
+.container-ImportWallet h1 {
+    color: #FFF;
+    font-size: 45px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 53.667px;
+    /* 119.259% */
+}
+
+.container-ImportWallet p {
+    color: #FFF;
+    text-align: center;
+    font-family: Inter;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 30px;
+    max-width: 800px;
+    /* 200% */
+}
+
+
+.container-ImportWallet>select {
+    border-radius: 8px;
+    border: 1px solid #3E3E3E;
+    background: #101010;
+    color: #FFF;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    padding: 5px;
+    margin-right: auto;
+    outline: none;
+    margin-top: 20px;
+}
+
+
+.seed-ImportWallet {
+    display: grid;
+    grid-template-columns: repeat(4, 200px);
+    width: 967px;
+    min-height: 235px;
+    padding: 33px 38px;
+    gap: 24px;
+    border-radius: 24px;
+    background: #101010;
+    margin-top: 15px;
+    margin-bottom: 25px;
+}
+
+.seed-ImportWallet span {
+    display: flex;
+    padding: 2px 16px 2px 0;
+    justify-content: flex-start;
+    align-items: center;
+    border-radius: 100px;
+    background: #242424;
+    color: var(--Colors-Neutral-Grey-White, #FFF);
+    text-align: left;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 150%;
+    letter-spacing: -0.16px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.seed-ImportWallet span>label {
+    margin-right: 5px;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    padding-left: 16px;
+}
+
+.seed-ImportWallet input {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    border-radius: 100px;
+    background: inherit;
+    color: inherit;
+    text-align: left;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border: none;
+    outline: none;
+}
