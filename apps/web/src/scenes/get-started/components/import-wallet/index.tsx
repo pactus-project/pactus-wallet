@@ -10,10 +10,12 @@ const ImportWallet = () => {
     const [words, setWords] = useState<string[]>(Array(wordCount).fill(''));
     const { setMnemonic } = useWallet();
     const navigate = useRouter().push;
+
     const handleWordCountChange = (count: number) => {
         setWordCount(count);
         setWords(Array(count).fill(''));
     };
+
     const handleContinue = () => {
         if (words.some(word => word.trim() === '')) {
             return;
@@ -21,6 +23,48 @@ const ImportWallet = () => {
         setMnemonic(words.join(' '));
         navigate('/get-started?step=master-password');
     };
+
+    // Handle paste event for seed phrase
+    const handlePaste = (e: React.ClipboardEvent) => {
+        e.preventDefault();
+        const pastedText = e.clipboardData.getData('text');
+        const pastedWords = pastedText.trim().split(/\s+/);
+        
+        // Case 1: Standard valid seed phrases (12 or 24 words exactly)
+        if (pastedWords.length === 12 || pastedWords.length === 24) {
+            // Automatically adjust the word count to match
+            setWordCount(pastedWords.length);
+            // Fill all inputs with the pasted words
+            setWords(pastedWords);
+            return;
+        }
+        
+        // Case 2: More words than needed - take only what we need
+        if (pastedWords.length > wordCount) {
+            // Take only the first N words where N is the current wordCount
+            setWords(pastedWords.slice(0, wordCount));
+            return;
+        }
+        
+        // Case 3: Fewer words than needed - fill what we can
+        if (pastedWords.length > 1 && pastedWords.length < wordCount) {
+            // Create a new array starting with our current words
+            const newWords = [...words];
+            // Replace the beginning portion with our pasted words
+            for (let i = 0; i < pastedWords.length; i++) {
+                newWords[i] = pastedWords[i];
+            }
+            setWords(newWords);
+            return;
+        }
+        
+        // Case 4: Single word or invalid input - just put it in the current field
+        const inputIndex = parseInt((e.target as HTMLElement).getAttribute('data-index') || '0');
+        const newWords = [...words];
+        newWords[inputIndex] = pastedText;
+        setWords(newWords);
+    };
+
     return (
         <div className='container-ImportWallet'>
             <LottiePlayer
@@ -31,6 +75,7 @@ const ImportWallet = () => {
             />
             <h1>Import Existing Wallet</h1>
             <p>Restore access to your wallet by securely entering your 12 or 24-word recovery phrase.</p>
+            <p className="paste-tip">Tip: You can paste your entire seed phrase into any field.</p>
             <select defaultValue={24} onChange={(e) => handleWordCountChange(parseInt(e.target.value))}>
                 <option value={12}>12 Words</option>
                 <option value={24}>24 Words</option>
@@ -42,6 +87,8 @@ const ImportWallet = () => {
                         <input
                             type="text"
                             value={words[index]}
+                            data-index={index}
+                            onPaste={handlePaste}
                             onChange={(e) => {
                                 const newWords = [...words];
                                 newWords[index] = e.target.value;
