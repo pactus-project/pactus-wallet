@@ -42,7 +42,7 @@ const AddWallet = () => {
                 <button id='ExistingWalletButton' onClick={() => navigate('/get-started?step=import-wallet')} >
                     <Image src={existingWalletIcon} alt='newWalletIcon' />
                     <div><h3>Existing Wallet</h3>
-                        <p>Restore access to your wallet by securely entering your recovery phrase or by importing a wallet file.
+                        <p>Restore access to your wallet by securely entering your recovery phrase or by importing the recovery file.
                         </p>
                     </div>
                     <BorderBeam
