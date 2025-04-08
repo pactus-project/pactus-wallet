@@ -13,12 +13,13 @@ const AddWallet = () => {
     const navigate = useRouter().push;
     return (
         <div className='container-addwallet' >
-            <LottiePlayer
-                animationData={addWalletLottie}
-                loop={true}
-                play
-                style={{ height: '400px' }}
-            />
+            <div style={{ height: '400px' }}>
+                <LottiePlayer
+                    animationData={addWalletLottie}
+                    loop={true}
+                    play
+                />
+            </div>
             <h1>Add Wallet</h1>
             <p>Easily create a new wallet or import an existing one to manage your digital assets securely.</p>
             <div className='ctas-addwallet' >

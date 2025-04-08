@@ -70,15 +70,17 @@ const ImportWallet = () => {
 
     return (
         <div className='container-ImportWallet'>
-            <LottiePlayer
-                animationData={importWalletLottie}
-                loop={true}
-                play
-                style={{ height: '200px' }}
-            />
+            <div style={{ height: '200px' }}>
+                <LottiePlayer
+                    animationData={importWalletLottie}
+                    loop={true}
+                    play
+                    style={{ height: '200px' }}
+                />
+            </div>
             <h1>Import Existing Wallet</h1>
             <p>Restore access to your wallet by securely entering your 12 or 24-word recovery phrase.</p>
-            <select defaultValue={24} onChange={(e) => handleWordCountChange(parseInt(e.target.value))}>
+            <select defaultValue={wordCount} value={wordCount} onChange={(e) => handleWordCountChange(parseInt(e.target.value))}>
                 <option value={12}>12 Words</option>
                 <option value={24}>24 Words</option>
             </select>
