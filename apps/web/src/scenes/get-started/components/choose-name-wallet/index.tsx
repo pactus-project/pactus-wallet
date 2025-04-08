@@ -9,7 +9,7 @@ import Loading from '@/components/loading';
 const LottiePlayer = dynamic(() => import('react-lottie-player'), { ssr: false });
 const ChooseNameWallet = () => {
     const { setWalletName, walletName, password } = useWallet();
-    const { restoreWallet } = useRestoreWallet();
+    const { restoreWallet, restorationError } = useRestoreWallet();
     const [isLoading, setIsLoading] = useState(false);
     const { createAddress } = useAccount();
     const router = useRouter();
@@ -63,7 +63,7 @@ const ChooseNameWallet = () => {
             >
                 Finish
             </button>
-
+            {restorationError && <p style={{ color: '#FF6B6B' }}>{restorationError}</p>}
         </div>
     );
 };
