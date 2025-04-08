@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import { validatePassword } from '@/utils/password-validator'
 import { useWallet } from '@/wallet'
+import { useI18n } from '@/utils/i18n'
 
 const LottiePlayer = dynamic(() => import('react-lottie-player'), { ssr: false });
 
@@ -15,7 +16,7 @@ const MasterPassword = () => {
         password: false,
         confirm: false
     });
-
+    const { t } = useI18n();
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [errors, setErrors] = useState<{ [key: string]: string }>({
@@ -37,7 +38,7 @@ const MasterPassword = () => {
         if (value && !validatePassword(value)) {
             setErrors(prevState => ({
                 ...prevState,
-                password: 'Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.'
+                password: t('passwordRequirements')
             }));
         } else {
             setErrors(prevState => ({
@@ -53,7 +54,7 @@ const MasterPassword = () => {
         if (value && value !== password) {
             setErrors(prevState => ({
                 ...prevState,
-                confirm: 'Passwords do not match.'
+                confirm: t('passwordsDoNotMatch')
             }));
         } else {
             setErrors(prevState => ({
@@ -72,13 +73,13 @@ const MasterPassword = () => {
                 play
                 style={{ height: '250px' }}
             />
-            <h1>Create Master Password</h1>
-            <p>Set a strong password to protect your wallet and keep your funds safe.</p>
+            <h1>{t('createMasterPassword')}</h1>
+            <p>{t('masterPasswordDescription')}</p>
 
             <div className='input-MasterPassword'>
                 <input
                     type={showPassword.password ? 'text' : 'password'}
-                    placeholder="Enter your password"
+                    placeholder={t('enterYourPassword')}
                     value={password}
                     onChange={handlePasswordChange}
                     style={{ border: errors.password ? '1px red solid' : 'none' }}
@@ -95,7 +96,7 @@ const MasterPassword = () => {
             <div className='input-MasterPassword'>
                 <input
                     type={showPassword.confirm ? 'text' : 'password'}
-                    placeholder="Confirm your password"
+                    placeholder={t('confirmYourPassword')}
                     value={confirmPassword}
                     onChange={handleConfirmPasswordChange}
                     style={{ border: errors.confirm ? '1px red solid' : 'none' }}
@@ -112,8 +113,8 @@ const MasterPassword = () => {
             <div className='terms-MasterPassword'>
                 <input type="checkbox" checked={isChecked} onChange={() => setIsChecked(!isChecked)} />
                 <p onClick={() => setIsChecked(!isChecked)}>
-                    I understand that Pactus cannot recover this password for me.
-                    <span className='gradient-MasterPassword'>Learn more</span>
+                    {t('cannotRecoverPassword')}
+                    <span className='gradient-MasterPassword'>{t('learnMore')}</span>
                 </p>
             </div>
 
@@ -125,7 +126,7 @@ const MasterPassword = () => {
                     || !confirmPassword
                     || !isChecked}
                 onClick={() => { navigate('/get-started?step=choose-name-wallet'); setMasterPassword(password); }}
-            >Continue
+            >{t('continue')}
             </button>
         </div>
     )
