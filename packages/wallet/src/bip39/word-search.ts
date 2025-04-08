@@ -8,8 +8,8 @@ const timers = new Map<string, NodeJS.Timeout>();
  * Results are returned via the provided callback function.
  *
  * @param query - The search string to match against the BIP39 words.
- * @param delay - The debounce delay in milliseconds. 
- *                This controls how long to wait after the user stops typing 
+ * @param delay - The debounce delay in milliseconds.
+ *                This controls how long to wait after the user stops typing
  *                before executing the search.
  * @param callback - A function that will be called with an array of matching words.
  *                   If no matches are found, an empty array will be returned.
@@ -19,7 +19,7 @@ export function bip39EnglishSearch(
   delay: number,
   callback: (results: string[]) => void
 ): void {
-  bip39Search(query, delay, callback, BIP39_ENGLISH_WORDS); 
+  bip39Search(query, delay, callback, BIP39_ENGLISH_WORDS);
 }
 
 function bip39Search(
@@ -49,10 +49,10 @@ function bip39Search(
       let results: string[];
 
       if (normalized.length >= 3 && startsWithMatches.length < 10) {
-        const fuzzyMatches = words.filter(word =>
-          word.includes(normalized)
-        );
-        results = Array.from(new Set([...startsWithMatches, ...fuzzyMatches])).slice(0, 20);
+        const fuzzyMatches = words.filter(word => word.includes(normalized));
+        results = Array.from(
+          new Set([...startsWithMatches, ...fuzzyMatches])
+        ).slice(0, 20);
       } else {
         results = startsWithMatches.slice(0, 20);
       }
