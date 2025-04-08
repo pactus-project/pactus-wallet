@@ -10,7 +10,6 @@ const LottiePlayer = dynamic(() => import('react-lottie-player'), { ssr: false }
 const ChooseNameWallet = () => {
     const { setWalletName, walletName, password } = useWallet();
     const { restoreWallet, restorationError } = useRestoreWallet();
-    console.log("🚀 ~ ChooseNameWal ~ restorationError:", restorationError)
     const [isLoading, setIsLoading] = useState(false);
     const { createAddress } = useAccount();
     const router = useRouter();
