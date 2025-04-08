@@ -14,7 +14,7 @@ export const I18nProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     if (translations && translations[key]) {
       let text = translations[key];
       params.forEach((param, index) => {
-        text = text.replace(`{${index}}`, param);
+        text = text.replace(new RegExp(`\\{${index}\\}`, 'g'), param);
       });
       return text;
     }
