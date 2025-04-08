@@ -20,7 +20,7 @@ import { useWallet } from '@/wallet'
 import { useAccount } from '@/wallet/hooks/use-account';
 import AddAccountModal from '../add-account-modal';
 // External links
-const REPOSITORY_URL = 'https://github.com/pactus-project/pactus-wallet';
+const REPOSITORY_URL = 'https://github.com/pactus-project/pactus-wallet/issues';
 
 const Sidebar = () => {
     const { wallet } = useWallet();

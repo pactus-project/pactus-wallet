@@ -96,6 +96,7 @@
 .letsCta-GetStarted>div {
     display: flex;
     gap: 5px;
+    align-items: center;
 }
 
 .letsCta-GetStarted p {
