@@ -4,11 +4,13 @@ import dynamic from 'next/dynamic';
 import React, { useState } from 'react'
 import './style.css'
 import { useRouter } from 'next/navigation'
+import * as bip39 from 'bip39';
 import { useI18n } from '@/utils/i18n';
 const LottiePlayer = dynamic(() => import('react-lottie-player'), { ssr: false });
 const ImportWallet = () => {
     const [wordCount, setWordCount] = useState(24);
     const [words, setWords] = useState<string[]>(Array(wordCount).fill(''));
+    const [error, setError] = useState<string>('');
     const { setMnemonic } = useWallet();
     const navigate = useRouter().push;
     const { t } = useI18n();
@@ -19,12 +21,29 @@ const ImportWallet = () => {
     const handleWordCountChange = (count: number) => {
         setWordCount(count);
         setWords(Array(count).fill(''));
+        setError('');
+    };
+
+    // Validate the recovery phrase using BIP39
+    const validateMnemonic = () => {
+        const mnemonic = words.join(' ');
+        return bip39.validateMnemonic(mnemonic);
     };
 
     const handleContinue = () => {
         if (hasEmptyWords()) {
             return;
         }
+        
+        // Validate the mnemonic using BIP39
+        if (!validateMnemonic()) {
+            setError(t('invalidSeedPhrase'));
+            return;
+        }
+        
+        // Clear any previous errors
+        setError('');
+        
         setMnemonic(words.join(' '));
         navigate('/get-started?step=master-password');
     };
@@ -41,6 +60,7 @@ const ImportWallet = () => {
             setWordCount(pastedWords.length);
             // Fill all inputs with the pasted words
             setWords(pastedWords);
+            setError('');
             return;
         }
 
@@ -48,6 +68,7 @@ const ImportWallet = () => {
         if (pastedWords.length > wordCount) {
             // Take only the first N words where N is the current wordCount
             setWords(pastedWords.slice(0, wordCount));
+            setError('');
             return;
         }
 
@@ -60,6 +81,7 @@ const ImportWallet = () => {
                 newWords[i] = pastedWords[i];
             }
             setWords(newWords);
+            setError('');
             return;
         }
 
@@ -72,15 +94,17 @@ const ImportWallet = () => {
 
     return (
         <div className='container-ImportWallet'>
-            <LottiePlayer
-                animationData={importWalletLottie}
-                loop={true}
-                play
-                style={{ height: '200px' }}
-            />
+            <div style={{ height: '200px' }}>
+                <LottiePlayer
+                    animationData={importWalletLottie}
+                    loop={true}
+                    play
+                    style={{ height: '200px' }}
+                />
+            </div>
             <h1>{t('importExistingWallet')}</h1>
             <p>{t('importWalletDescription')}</p>
-            <select defaultValue={24} onChange={(e) => handleWordCountChange(parseInt(e.target.value))}>
+            <select value={wordCount} onChange={(e) => handleWordCountChange(parseInt(e.target.value))}>
                 <option value={12}>{t('twelveWords')}</option>
                 <option value={24}>{t('twentyFourWords')}</option>
             </select>
@@ -97,13 +121,17 @@ const ImportWallet = () => {
                                 const newWords = [...words];
                                 newWords[index] = e.target.value;
                                 setWords(newWords);
+                                setError(''); // Clear error when user is typing
                             }}
                         />
                     </span>
                 ))}
             </div>
+            
+            {error && <label className='errorMessage'>{error}</label>}
+            
             <button
-                disabled={hasEmptyWords()}
+                disabled={hasEmptyWords() || error.length > 0}
                 className='cta-ImportWallet' onClick={() => handleContinue()}>
                 {t('continue')}
             </button>

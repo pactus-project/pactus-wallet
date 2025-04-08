@@ -16,12 +16,13 @@ const AddWallet = () => {
     
     return (
         <div className='container-addwallet' >
-            <LottiePlayer
-                animationData={addWalletLottie}
-                loop={true}
-                play
-                style={{ height: '400px' }}
-            />
+            <div style={{ height: '400px' }}>
+                <LottiePlayer
+                    animationData={addWalletLottie}
+                    loop={true}
+                    play
+                />
+            </div>
             <h1>{t('addWallet')}</h1>
             <p>{t('addWalletDescription')}</p>
             <div className='ctas-addwallet' >

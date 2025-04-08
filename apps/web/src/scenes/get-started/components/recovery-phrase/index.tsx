@@ -1,5 +1,4 @@
-import { copyIcon, downloadIcon, generateRecoverySeedLottie, successDownloadIcon, successIcon, writePaperLottie } from '@/assets'
-import Image from 'next/image'
+import { generateRecoverySeedLottie, writePaperLottie } from '@/assets'
 import React, { useState, useEffect } from 'react'
 import './style.css'
 import { useRouter } from 'next/navigation'
@@ -18,31 +17,9 @@ const RecoveryPhrase = () => {
     const [userInputs, setUserInputs] = useState({});
     const [inputErrors, setInputErrors] = useState({});
     const navigate = useRouter().push;
-    const [downloaded, setDownloaded] = useState(false);
-    const [copied, setCopied] = useState(false);
     const { setMnemonic } = useWallet();
     const { t } = useI18n();
-    
-    const handleDownload = () => {
-        const seedText = walletSeeds.join(' ');
-        const blob = new Blob([seedText], { type: 'text/plain' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'wallet-seed.txt';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-        setDownloaded(true);
-        setTimeout(() => setDownloaded(false), 2000);
-    };
 
-    const handleCopy = () => {
-        navigator.clipboard.writeText(walletSeeds.join(' '));
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
-    };
     // Generate recovery phrase when the component loads or word count changes
     useEffect(() => {
         generateRecoveryPhrase(wordCount);
@@ -134,9 +111,7 @@ const RecoveryPhrase = () => {
                     <h1>{t('writeDownRecoveryPhrase')}</h1>
                     <p>{t('recoveryPhraseDescription')}</p>
 
-                    <button className='cta-RecoveryPhrase' onClick={() => setStep(2)}>
-                        {t('continue')}
-                    </button>
+                    <button className='cta-RecoveryPhrase' onClick={() => setStep(2)}>{t('continue')}</button>
                 </div>}
 
             {step === 2 &&
@@ -171,17 +146,7 @@ const RecoveryPhrase = () => {
 
                         />
                     </div>
-                    <div className='copySeed-RecoveryPhrase' >
-                        <button title='download seed' onClick={() => handleDownload()}>
-                            <Image src={downloaded ? successDownloadIcon : downloadIcon} alt='download-icon' />
-                        </button>
-                        <button title='copy seed' onClick={() => handleCopy()}>
-                            <Image src={copied ? successIcon : copyIcon} alt='copy-icon' />
-                        </button>
-                    </div>
-                    <button className='cta-RecoveryPhrase' onClick={() => setStep(3)}>
-                        {t('continue')}
-                    </button>
+                    <button className='cta-RecoveryPhrase' onClick={() => setStep(3)}>{t('continue')}</button>
                 </div>
             }
 
@@ -229,9 +194,7 @@ const RecoveryPhrase = () => {
 
                         />
                     </div>
-                    <button className='cta-RecoveryPhrase' onClick={validateInputs} disabled={isConfirmButtonDisabled()}>
-                        {t('confirm')}
-                    </button>
+                    <button className='cta-RecoveryPhrase' onClick={validateInputs} disabled={isConfirmButtonDisabled()}>{t('confirm')}</button>
                 </div>
             }
         </div>

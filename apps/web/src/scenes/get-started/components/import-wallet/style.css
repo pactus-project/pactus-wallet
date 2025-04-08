@@ -55,7 +55,6 @@
     border-radius: 24px;
     background: #101010;
     margin-top: 15px;
-    margin-bottom: 25px;
 }
 
 .seed-ImportWallet span {
@@ -124,6 +123,7 @@
     font-weight: 600;
     line-height: 19.166px;
     padding: 5px 0;
+    margin-top: 15px;
     /* 136.899% */
 }
 
