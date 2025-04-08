@@ -4,12 +4,14 @@ import dynamic from 'next/dynamic';
 import React, { useState } from 'react'
 import './style.css'
 import { useRouter } from 'next/navigation'
+import { useI18n } from '@/utils/i18n';
 const LottiePlayer = dynamic(() => import('react-lottie-player'), { ssr: false });
 const ImportWallet = () => {
     const [wordCount, setWordCount] = useState(24);
     const [words, setWords] = useState<string[]>(Array(wordCount).fill(''));
     const { setMnemonic } = useWallet();
     const navigate = useRouter().push;
+    const { t } = useI18n();
 
     // Check if the recovery phrase has any empty words
     const hasEmptyWords = () => words.some(word => word.trim() === '');
@@ -76,11 +78,11 @@ const ImportWallet = () => {
                 play
                 style={{ height: '200px' }}
             />
-            <h1>Import Existing Wallet</h1>
-            <p>Restore access to your wallet by securely entering your 12 or 24-word recovery phrase.</p>
+            <h1>{t('importExistingWallet')}</h1>
+            <p>{t('importWalletDescription')}</p>
             <select defaultValue={24} onChange={(e) => handleWordCountChange(parseInt(e.target.value))}>
-                <option value={12}>12 Words</option>
-                <option value={24}>24 Words</option>
+                <option value={12}>{t('twelveWords')}</option>
+                <option value={24}>{t('twentyFourWords')}</option>
             </select>
             <div id='recoveryPhraseStep2-parent' className='seed-ImportWallet'>
                 {Array.from({ length: wordCount }).map((_, index) => (
@@ -103,7 +105,7 @@ const ImportWallet = () => {
             <button
                 disabled={hasEmptyWords()}
                 className='cta-ImportWallet' onClick={() => handleContinue()}>
-                Continue
+                {t('continue')}
             </button>
         </div>
     )

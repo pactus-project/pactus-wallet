@@ -6,7 +6,7 @@ import ImportWallet from './components/import-wallet';
 import MasterPassword from './components/master-password';
 import RecoveryPhrase from './components/recovery-phrase';
 import Welcome from './components/welcome';
-
+import { useI18n } from '@/utils/i18n';
 
 import './style.css';
 import ChooseNameWallet from './components/choose-name-wallet';
@@ -34,8 +34,9 @@ const GetStartedContent = () => {
 };
 
 const GetStarted = () => {
+  const { t } = useI18n();
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<div>{t('loading')}</div>}>
       <GetStartedContent />
     </Suspense>
   );

@@ -6,11 +6,14 @@ import './style.css'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 import BorderBeam from '@/components/border-beam'
+import { useI18n } from '@/utils/i18n'
 const LottiePlayer = dynamic(() => import('react-lottie-player'), { ssr: false });
 
 
 const AddWallet = () => {
     const navigate = useRouter().push;
+    const { t } = useI18n();
+    
     return (
         <div className='container-addwallet' >
             <LottiePlayer
@@ -19,12 +22,12 @@ const AddWallet = () => {
                 play
                 style={{ height: '400px' }}
             />
-            <h1>Add Wallet</h1>
-            <p>Easily create a new wallet or import an existing one to manage your digital assets securely.</p>
+            <h1>{t('addWallet')}</h1>
+            <p>{t('addWalletDescription')}</p>
             <div className='ctas-addwallet' >
                 <button id='newWalletButton' onClick={() => navigate('/get-started?step=recovery-phrase')}  >
                     <Image src={newWalletIcon} alt='newWalletIcon' />
-                    <div><h3>New Wallet</h3><p>Create a brand-new wallet and start your journey with Pactus securely.</p></div>
+                    <div><h3>{t('newWallet')}</h3><p>{t('newWalletDescription')}</p></div>
                     <BorderBeam
                         duration={4}
                         size={300}
@@ -41,8 +44,8 @@ const AddWallet = () => {
                 </button>
                 <button id='ExistingWalletButton' onClick={() => navigate('/get-started?step=import-wallet')} >
                     <Image src={existingWalletIcon} alt='newWalletIcon' />
-                    <div><h3>Existing Wallet</h3>
-                        <p>Restore access to your wallet by securely entering your recovery phrase or importing a backup file.
+                    <div><h3>{t('existingWallet')}</h3>
+                        <p>{t('existingWalletDescription')}
                         </p>
                     </div>
                     <BorderBeam
