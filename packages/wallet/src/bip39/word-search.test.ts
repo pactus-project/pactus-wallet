@@ -19,11 +19,9 @@ describe('bip39Search', () => {
 
     jest.advanceTimersByTime(200);
 
-    const expected = BIP39_ENGLISH_WORDS.filter(word =>
-      word.startsWith('ab')
-    ).slice(
+    const expected = BIP39_ENGLISH_WORDS.filter(word => word.startsWith('ab')).slice(
       0,
-      20 // Fixed line breaks here
+      20, // Fixed line breaks here
     );
     expect(mockCallback).toHaveBeenCalledWith(expected);
   });
@@ -38,7 +36,7 @@ describe('bip39Search', () => {
     const fuzzy = BIP39_ENGLISH_WORDS.filter(w => w.includes('acc'));
     const expected = Array.from(new Set([...startsWith, ...fuzzy])).slice(
       0,
-      20 // Fixed line breaks here
+      20, // Fixed line breaks here
     );
 
     expect(mockCallback).toHaveBeenCalledWith(expected);
@@ -56,7 +54,7 @@ describe('bip39Search', () => {
     const fuzzy = BIP39_ENGLISH_WORDS.filter(w => w.includes('abo'));
     const expected = Array.from(new Set([...startsWith, ...fuzzy])).slice(
       0,
-      20
+      20,
     );
 
     expect(mockCallback).toHaveBeenCalledTimes(1);

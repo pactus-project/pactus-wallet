@@ -50,7 +50,9 @@ export class Ledger {
   static deserialize(jsonString: string): Ledger {
     const json = JSON.parse(jsonString);
     const ledger = new Ledger(json.coinType, json.purposes);
+
     ledger.addresses = new Map(Object.entries(json.addresses));
+
     return ledger;
   }
 }

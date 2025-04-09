@@ -1,26 +1,41 @@
 // WalletProvider.tsx
 'use client';
-import { createContext, useEffect, useState, ReactNode } from 'react';
+import type { ReactNode } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Wallet, NetworkType, WalletManager, BrowserStorage, initWalletSDK } from '@pactus-wallet/wallet';
-import { WalletContextType, WalletStatus } from '../types';
+import type { Wallet, WalletManager} from '@pactus-wallet/wallet';
+import { NetworkType, BrowserStorage, initWalletSDK } from '@pactus-wallet/wallet';
+import type { WalletContextType} from '../types';
+import { WalletStatus } from '../types';
 import Loading from '@/components/loading';
 import WalletLock from '@/components/wallet-lock';
 
 
 export const WalletContext = createContext<WalletContextType>({
   wallet: null,
-  setWallet: () => { },
+  setWallet: () => {
+    /* Will be implemented in provider */
+  },
   walletStatus: WalletStatus.WALLET_LOCKED,
-  setWalletStatus: () => { },
+  setWalletStatus: () => {
+    /* Will be implemented in provider */
+  },
   password: '',
-  setPassword: () => { },
+  setPassword: () => {
+    /* Will be implemented in provider */
+  },
   mnemonic: '',
-  setMnemonic: () => { },
+  setMnemonic: () => {
+    /* Will be implemented in provider */
+  },
   networkType: NetworkType.Mainnet,
-  setNetworkType: () => { },
+  setNetworkType: () => {
+    /* Will be implemented in provider */
+  },
   walletName: '',
-  setWalletName: () => { },
+  setWalletName: () => {
+    /* Will be implemented in provider */
+  },
   walletManager: null,
   isInitializingManager: true,
   managerError: null,
@@ -151,11 +166,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   );
 }
 async function setupWallet(): Promise<WalletManager> {
-  try {
-    const storage = new BrowserStorage();
-    const walletManager = await initWalletSDK(storage);
-    return walletManager;
-  } catch (error) {
-    throw error;
-  }
+  const storage = new BrowserStorage();
+  const walletManager = await initWalletSDK(storage);
+  return walletManager;
 }

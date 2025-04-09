@@ -1,10 +1,11 @@
-import { WalletCore } from '@trustwallet/wallet-core';
-import { Wallet } from './wallet';
 import { StorageError } from './error';
-import { IStorage } from './storage/storage';
 import { StorageKey } from './storage-key';
-import { NetworkType, WalletID } from './types/wallet_info';
 import { MnemonicStrength } from './types/vault';
+import { NetworkType, WalletID } from './types/wallet_info';
+import { Wallet } from './wallet';
+import { IStorage } from './storage/storage';
+import { WalletCore } from '@trustwallet/wallet-core';
+
 /**
  * WalletManager
  * Manages wallet instances and their persistence using storage
@@ -96,6 +97,7 @@ export class WalletManager {
       network,
       name
     );
+
     this.updateList(wallet);
 
     return wallet;
@@ -111,6 +113,7 @@ export class WalletManager {
     if (this.empty()) {
       return null;
     }
+
     return this.loadWallet(this.walletIDs[0]);
   }
 
@@ -130,6 +133,7 @@ export class WalletManager {
    */
   public updateList(wallet: Wallet): void {
     const id = wallet.getID();
+
     if (!this.hasWallet(id)) {
       this.walletIDs.push(id);
       try {
@@ -158,6 +162,7 @@ export class WalletManager {
         this.storage.delete(StorageKey.walletInfoKey(id));
         this.storage.delete(StorageKey.walletLedgerKey(id));
         this.storage.delete(StorageKey.walletVaultKey(id));
+
         return true;
       } catch (error) {
         throw new StorageError(`Failed to delete wallet: ${error}`);

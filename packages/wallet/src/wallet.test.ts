@@ -1,17 +1,18 @@
-import { initWasm, WalletCore } from '@trustwallet/wallet-core';
-import { Wallet } from './wallet';
+import { initWasm } from '@trustwallet/wallet-core';
 import * as bip39 from 'bip39';
 import { MnemonicError } from './error';
 import { MemoryStorage } from './storage/memory-storage';
-import { IStorage } from './storage/storage';
-import { getWordCount } from './utils';
 import { StorageKey } from './storage-key';
-import { MnemonicStrength, Vault } from './types/vault';
-import { NetworkType, WalletInfo } from './types/wallet_info';
-import { Ledger } from './types/ledger';
+import { MnemonicStrength } from './types/vault';
+import { NetworkType } from './types/wallet_info';
+import { getWordCount } from './utils';
+import { Wallet } from './wallet';
+import { IStorage } from './storage/storage';
+import { WalletCore } from '@trustwallet/wallet-core';
 
 // Jest typings setup
 declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace jest {
     interface Matchers<R> {
       toBeInstanceOf(expected: any): R;
@@ -196,13 +197,15 @@ describe('Pactus Wallet Tests', () => {
     });
 
     it('should create unique Testnet addresses in correct format', () => {
-      // const wallet =await Wallet.create(core, password, MnemonicStrength.Normal, NetworkType.Testnet, 'Test Wallet');
-      // const addrInfo1 = await wallet.createAddress('Address 1', password);
-      // const addrInfo2 = await wallet.createAddress('Address 2', password);
-      // expect(addrInfo1.address.startsWith('tpc1')).toBe(true);
-      // expect(addrInfo2.address.startsWith('tpc1')).toBe(true);
-      // expect(addrInfo1.address).not.toBe(addrInfo2.address);
-      // expect(wallet.isTestnet).toBeTruthy();
+      /*
+       * const wallet =await Wallet.create(core, password, MnemonicStrength.Normal, NetworkType.Testnet, 'Test Wallet');
+       * const addrInfo1 = await wallet.createAddress('Address 1', password);
+       * const addrInfo2 = await wallet.createAddress('Address 2', password);
+       * expect(addrInfo1.address.startsWith('tpc1')).toBe(true);
+       * expect(addrInfo2.address.startsWith('tpc1')).toBe(true);
+       * expect(addrInfo1.address).not.toBe(addrInfo2.address);
+       * expect(wallet.isTestnet).toBeTruthy();
+       */
     });
 
     it('should store address with label, path, and public key', async () => {
@@ -246,8 +249,10 @@ describe('Pactus Wallet Tests', () => {
       const password = 'password';
 
       const walletInfoJSON = `{"name":"${walletName}","type":1,"uuid":"${walletID}","creationTime":1743405082209,"network":"mainnet"}`;
-      const ledgerJSON = `{"addresses":{"pc1rcx9x55nfme5juwdgxd2ksjdcmhvmvkrygmxpa3":{"address":"pc1rcx9x55nfme5juwdgxd2ksjdcmhvmvkrygmxpa3","label":"Account 1","path":"m/44'/21888'/3'/0'","publicKey":"public1rd5p573yq3j5wkvnasslqa7ne5vw87qcj5a0wlwxcj2t2xlaca9lstzm8u5"}},"coinType":21888,"purposes":{"purposeBIP44":{"nextEd25519Index":1}}}`;
-      const vaultJSON = `{"encrypter":{"method":"ARGON2ID-AES_256_CTR-MACV1","params":{"iterations":"1","memory":"8","parallelism":"1"}},"keyStore":"aLEdVCpZOJmZZz067JTxWivw/41sWooR+E2iM46WYjskjFTE3VviPzc9SQ6gba5g+8CWWcw1q1YT9x1XAg/QAt2Rd7zR2FKL+ACwCbmZ/H+lLPDBt3nlvOkD2qkxi2rjjLpbAtf2UjKrW2b3+/KxSJGuG5GPIqPvPonqHhSWrF1j0nnKqm+btD1gaeJ5IRLchi27BNorMR4qvETMeV7YjkvZlrEFdNffqpWee+o4+bnr33MwysXm4hZU1c4/zzMIODAyxsMRgbrfTDfdQ19c0yjYmDGAPDpAqNAvMmDL07nGKR2f"}`;
+      const ledgerJSON =
+        '{"addresses":{"pc1rcx9x55nfme5juwdgxd2ksjdcmhvmvkrygmxpa3":{"address":"pc1rcx9x55nfme5juwdgxd2ksjdcmhvmvkrygmxpa3","label":"Account 1","path":"m/44\'/21888\'/3\'/0\'","publicKey":"public1rd5p573yq3j5wkvnasslqa7ne5vw87qcj5a0wlwxcj2t2xlaca9lstzm8u5"}},"coinType":21888,"purposes":{"purposeBIP44":{"nextEd25519Index":1}}}';
+      const vaultJSON =
+        '{"encrypter":{"method":"ARGON2ID-AES_256_CTR-MACV1","params":{"iterations":"1","memory":"8","parallelism":"1"}},"keyStore":"aLEdVCpZOJmZZz067JTxWivw/41sWooR+E2iM46WYjskjFTE3VviPzc9SQ6gba5g+8CWWcw1q1YT9x1XAg/QAt2Rd7zR2FKL+ACwCbmZ/H+lLPDBt3nlvOkD2qkxi2rjjLpbAtf2UjKrW2b3+/KxSJGuG5GPIqPvPonqHhSWrF1j0nnKqm+btD1gaeJ5IRLchi27BNorMR4qvETMeV7YjkvZlrEFdNffqpWee+o4+bnr33MwysXm4hZU1c4/zzMIODAyxsMRgbrfTDfdQ19c0yjYmDGAPDpAqNAvMmDL07nGKR2f"}';
 
       storage.set(StorageKey.walletInfoKey(walletID), walletInfoJSON);
       storage.set(StorageKey.walletLedgerKey(walletID), ledgerJSON);
@@ -304,8 +309,10 @@ describe('Pactus Wallet Tests', () => {
       const vaultJSON = storage.get(StorageKey.walletVaultKey(walletID));
 
       const expectedWalletInfoJSON = `{"type":1,"name":"My Wallet","uuid":"${walletID}","creationTime":${walletTime},"network":"mainnet"}`;
-      const expectedLedgerJSON = `{"coinType":21888,"purposes":{"purposeBIP44":{"nextEd25519Index":1}},"addresses":{"pc1rcx9x55nfme5juwdgxd2ksjdcmhvmvkrygmxpa3":{"address":"pc1rcx9x55nfme5juwdgxd2ksjdcmhvmvkrygmxpa3","label":"Account 1","path":"m/44'/21888'/3'/0'","publicKey":"public1rd5p573yq3j5wkvnasslqa7ne5vw87qcj5a0wlwxcj2t2xlaca9lstzm8u5"}}}`;
-      const expectedVaultJSON = `{"encrypter":{"method":"","params":{}},"keyStore":"{\\\"master_node\\\":{\\\"seed\\\":\\\"abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon cactus\\\"},\\\"imported_keys\\\":[]}"}`;
+      const expectedLedgerJSON =
+        '{"coinType":21888,"purposes":{"purposeBIP44":{"nextEd25519Index":1}},"addresses":{"pc1rcx9x55nfme5juwdgxd2ksjdcmhvmvkrygmxpa3":{"address":"pc1rcx9x55nfme5juwdgxd2ksjdcmhvmvkrygmxpa3","label":"Account 1","path":"m/44\'/21888\'/3\'/0\'","publicKey":"public1rd5p573yq3j5wkvnasslqa7ne5vw87qcj5a0wlwxcj2t2xlaca9lstzm8u5"}}}';
+      const expectedVaultJSON =
+        '{"encrypter":{"method":"","params":{}},"keyStore":"{\\\"masterNode\\\":{\\\"seed\\\":\\\"abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon cactus\\\"},\\\"importedkeys\\\":[]}"}';
 
       expect(walletInfoJSON).toEqual(expectedWalletInfoJSON);
       expect(ledgerJSON).toEqual(expectedLedgerJSON);

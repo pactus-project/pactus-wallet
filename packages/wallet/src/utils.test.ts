@@ -35,7 +35,7 @@ describe('sprintf function', () => {
         const encoded = encodeBech32WithType(prefix, data, type);
 
         expect(encoded).toBe(expected);
-      }
+      },
     );
   });
 });

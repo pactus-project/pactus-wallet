@@ -24,7 +24,7 @@ export class WalletInfo {
     name: string,
     uuid: string,
     creationTime: number,
-    network: NetworkType
+    network: NetworkType,
   ) {
     this.type = type;
     this.name = name;
@@ -54,12 +54,13 @@ export class WalletInfo {
    */
   static deserialize(jsonString: string): WalletInfo {
     const json = JSON.parse(jsonString);
+
     return new WalletInfo(
       json.type,
       json.name,
       json.uuid,
       json.creationTime,
-      json.network as NetworkType
+      json.network as NetworkType,
     );
   }
 }

@@ -1,11 +1,12 @@
-import { initWasm, WalletCore } from '@trustwallet/wallet-core';
-import { WalletManager } from './manager';
-import { StorageError } from './error';
-import { MemoryStorage } from './storage/memory-storage';
+import { initWasm } from '@trustwallet/wallet-core';
+import type { WalletCore } from '@trustwallet/wallet-core';
 import * as bip39 from 'bip39';
-import { generateUUID } from './utils';
-import { NetworkType } from './types/wallet_info';
+import { StorageError } from './error';
+import { WalletManager } from './manager';
+import { MemoryStorage } from './storage/memory-storage';
 import { MnemonicStrength } from './types/vault';
+import { NetworkType } from './types/wallet_info';
+import { generateUUID } from './utils';
 
 describe('WalletManager Tests', () => {
   let core: WalletCore;

@@ -1,5 +1,4 @@
 import { Encrypter } from '../encrypter/encrypter';
-import { Params } from '../encrypter/params';
 
 /**
  * Mnemonic Strength options for wallet creation
@@ -13,8 +12,8 @@ export enum MnemonicStrength {
 
 // Interface for KeyStore
 export interface KeyStore {
-  master_node: MasterNode; // HD Root Tree (Master node)
-  imported_keys: string[]; // Imported private keys
+  masterNode: MasterNode; // HD Root Tree (Master node)
+  importedkeys: string[]; // Imported private keys
 }
 
 // Interface for MasterNode
@@ -57,6 +56,7 @@ export class Vault {
     const json = JSON.parse(jsonString);
     const encrypter = Encrypter.fromJSON(json.encrypter);
     const keyStore = json.keyStore;
+
     return new Vault(encrypter, keyStore);
   }
 }

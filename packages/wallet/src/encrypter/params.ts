@@ -13,6 +13,7 @@ export class Params {
   // Custom JSON deserialization
   static fromJSON(json: Record<string, string>): Params {
     const params = new Params();
+
     params.data = new Map(Object.entries(json));
 
     return params;
@@ -24,6 +25,7 @@ export class Params {
 
   setBytes(key: string, val: Uint8Array): void {
     const base64 = Buffer.from(val).toString('base64');
+
     this.data.set(key, base64);
   }
 
@@ -33,13 +35,17 @@ export class Params {
 
   getNumber(key: string): number {
     const val = this.data.get(key);
-    if (val === undefined) throw new Error(`Key "${key}" not found`);
+
+    if (val === undefined) {
+      throw new Error(`Key "${key}" not found`);
+    }
 
     return parseInt(val, 10);
   }
 
   getBytes(key: string): Uint8Array {
     const val = this.data.get(key);
+
     if (val === undefined) {
       throw new Error(`Key "${key}" not found`);
     }
@@ -49,6 +55,7 @@ export class Params {
 
   getString(key: string): string {
     const val = this.data.get(key);
+
     if (val === undefined) {
       throw new Error(`Key "${key}" not found`);
     }

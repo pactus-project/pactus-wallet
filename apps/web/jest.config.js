@@ -2,8 +2,8 @@ module.exports = {
     preset: 'ts-jest',
     testEnvironment: 'node',
     transform: {
-        '^.+\\.tsx?$': 'ts-jest'
+        '^.+\\.tsx?$': 'ts-jest',
     },
     moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
-    testMatch: ['**/?(*.)+(spec|test).[tj]s?(x)']
+    testMatch: ['**/?(*.)+(spec|test).[tj]s?(x)'],
 };

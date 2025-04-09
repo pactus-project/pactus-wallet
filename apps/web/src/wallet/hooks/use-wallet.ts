@@ -1,6 +1,6 @@
 // hooks.ts
 import { useContext } from 'react';
-import { WalletContextType } from '../types';
+import type { WalletContextType } from '../types';
 import { WalletContext } from '../provider';
 
 
