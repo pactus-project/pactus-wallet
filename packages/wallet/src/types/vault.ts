@@ -12,8 +12,8 @@ export enum MnemonicStrength {
 
 // Interface for KeyStore
 export interface KeyStore {
-  masterNode: MasterNode; // HD Root Tree (Master node)
-  importedkeys: string[]; // Imported private keys
+  master_node: MasterNode; // HD Root Tree (Master node)
+  imported_keys: string[]; // Imported private keys
 }
 
 // Interface for MasterNode

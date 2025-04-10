@@ -312,7 +312,7 @@ describe('Pactus Wallet Tests', () => {
       const expectedLedgerJSON =
         '{"coinType":21888,"purposes":{"purposeBIP44":{"nextEd25519Index":1}},"addresses":{"pc1rcx9x55nfme5juwdgxd2ksjdcmhvmvkrygmxpa3":{"address":"pc1rcx9x55nfme5juwdgxd2ksjdcmhvmvkrygmxpa3","label":"Account 1","path":"m/44\'/21888\'/3\'/0\'","publicKey":"public1rd5p573yq3j5wkvnasslqa7ne5vw87qcj5a0wlwxcj2t2xlaca9lstzm8u5"}}}';
       const expectedVaultJSON =
-        '{"encrypter":{"method":"","params":{}},"keyStore":"{\\\"masterNode\\\":{\\\"seed\\\":\\\"abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon cactus\\\"},\\\"importedkeys\\\":[]}"}';
+        '{"encrypter":{"method":"","params":{}},"keyStore":"{\\\"master_node\\\":{\\\"seed\\\":\\\"abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon cactus\\\"},\\\"imported_keys\\\":[]}"}';
 
       expect(walletInfoJSON).toEqual(expectedWalletInfoJSON);
       expect(ledgerJSON).toEqual(expectedLedgerJSON);

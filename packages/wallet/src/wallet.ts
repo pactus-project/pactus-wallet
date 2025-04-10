@@ -91,8 +91,8 @@ export class Wallet {
     const info = new WalletInfo(type, name, walletID, Date.now(), network);
 
     const keyStoreObj: KeyStore = {
-      masterNode: { seed: mnemonic },
-      importedkeys: [],
+      master_node: { seed: mnemonic },
+      imported_keys: [],
     };
 
     let encrypter = Encrypter.noEncrypter();
@@ -260,7 +260,7 @@ export class Wallet {
     );
     const keyStore = JSON.parse(keyStoreJSON) as KeyStore;
 
-    return keyStore.masterNode.seed;
+    return keyStore.master_node.seed;
   }
 
   /**

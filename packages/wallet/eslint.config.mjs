@@ -207,6 +207,25 @@ export default [
           ],
           format: ['camelCase', 'UPPER_CASE'],
           leadingUnderscore: 'allow',
+          // Exception for specific properties from external libraries
+          filter: {
+            regex: '^(master_node|imported_keys)$',
+            match: false
+          }
+        },
+
+        // Exception for the specific library properties
+        {
+          selector: [
+            'objectLiteralProperty',
+            'typeProperty',
+            'property',
+          ],
+          format: null,
+          filter: {
+            regex: '^(master_node|imported_keys)$',
+            match: true
+          }
         },
       ],
       '@typescript-eslint/no-non-null-assertion': 'error',
