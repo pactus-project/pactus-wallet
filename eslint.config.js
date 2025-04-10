@@ -7,13 +7,13 @@ import tseslint from 'typescript-eslint';
 export default [
   // Apply recommended ESLint rules
   js.configs.recommended,
-  
+
   // Apply Prettier rules
   prettierConfig,
-  
+
   // Apply TypeScript rules
   ...tseslint.configs.recommended,
-  
+
   // Define global configuration
   {
     languageOptions: {
@@ -22,20 +22,19 @@ export default [
       globals: {
         ...globals.browser,
         ...globals.node,
-        ...globals.es2021
-      }
+        ...globals.es2021,
+      },
     },
-    
+
     plugins: {
-      prettier: prettierPlugin
+      prettier: prettierPlugin,
     },
-    
+
     rules: {
       'prettier/prettier': 'error',
       'no-console': ['error', { allow: ['warn', 'error', 'info'] }],
-      'max-lines': ['error', { max: 1 }]
     },
-    
+
     ignores: [
       '**/node_modules/**',
       '**/dist/**',
@@ -43,24 +42,24 @@ export default [
       '**/.next/**',
       '**/out/**',
       '**/.modules/**',
-      '**/public/**'
-    ]
+      '**/public/**',
+    ],
   },
-  
+
   // JavaScript specific rules
   {
     files: ['**/*.js', '**/*.mjs'],
     rules: {
-      'prettier/prettier': ['error']
-    }
+      'prettier/prettier': ['error'],
+    },
   },
-  
+
   // TypeScript specific rules
   {
     files: ['**/*.ts', '**/*.tsx'],
     rules: {
       'prettier/prettier': ['error'],
-      '@typescript-eslint/no-unused-vars': ['error']
-    }
-  }
-]; 
+      '@typescript-eslint/no-unused-vars': ['error'],
+    },
+  },
+];

@@ -1,5 +1,2 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
-
-# Run lint-staged using the ESLint flat config format
+# Run lint-staged using ESLint flat config format
 yarn lint-staged
