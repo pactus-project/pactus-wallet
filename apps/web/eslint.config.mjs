@@ -55,6 +55,27 @@ export default [
             'no-duplicate-imports': 'error',
             'no-undef': 'error',
             'no-unused-vars': 'error',
+            
+            'no-implicit-coercion': 'error',
+            'no-negated-condition': 'error',
+            'no-else-return': 'error',
+            'consistent-return': 'error',
+            'no-shadow': ['error', { builtinGlobals: false, hoist: 'functions', allow: [], ignoreOnInitialization: false }],
+            'no-return-assign': 'error',
+            'require-atomic-updates': 'error',
+            'prefer-template': 'error',
+            'no-nested-ternary': 'error',
+            'no-lonely-if': 'error',
+            'lines-between-class-members': ['error', 'always', { exceptAfterSingleLine: false }],
+            'padding-line-between-statements': [
+                'error',
+                { blankLine: 'always', prev: '*', next: 'return' },
+                { blankLine: 'always', prev: ['const', 'let', 'var'], next: '*' },
+                { blankLine: 'any', prev: ['const', 'let', 'var'], next: ['const', 'let', 'var'] },
+                { blankLine: 'always', prev: '*', next: 'block-like' },
+                { blankLine: 'always', prev: 'block-like', next: '*' },
+                { blankLine: 'always', prev: '*', next: 'function' },
+            ],
 
             // Enhanced error prevention
             'no-return-await': 'error',
@@ -270,7 +291,6 @@ export default [
                     ignorePattern: '^\\s*expect\\('
                 }
             ],
-            'padding-line-between-statements': 'off',
             'object-curly-spacing': ['error', 'always'],
             'array-bracket-spacing': ['error', 'never'],
             'space-in-parens': ['error', 'never'],

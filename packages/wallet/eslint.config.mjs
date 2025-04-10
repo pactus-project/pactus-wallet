@@ -12,7 +12,18 @@ const sharedRules = {
   'no-unused-expressions': 'error',
   eqeqeq: ['error', 'always'],
   'no-var': 'error',
+  'no-implicit-coercion': 'error',
+  'require-atomic-updates': 'error',
+  'no-return-assign': 'error',
 
+  // Code structure
+  'no-negated-condition': 'error',
+  'no-else-return': 'error',
+  'consistent-return': 'error',
+  'no-shadow': ['error', { builtinGlobals: false, hoist: 'functions', allow: [], ignoreOnInitialization: false }],
+  'no-nested-ternary': 'error',
+  'no-lonely-if': 'error',
+  
   // Style and conventions
   'arrow-body-style': ['error', 'as-needed'],
   curly: ['error', 'all'],
@@ -39,9 +50,19 @@ const sharedRules = {
       asyncArrow: 'always',
     },
   ],
+  'prefer-template': 'error',
+  'lines-between-class-members': ['error', 'always', { exceptAfterSingleLine: false }],
 
   // Line breaks and whitespace formatting
-  'padding-line-between-statements': 'off',
+  'padding-line-between-statements': [
+    'error',
+    { blankLine: 'always', prev: '*', next: 'return' },
+    { blankLine: 'always', prev: ['const', 'let', 'var'], next: '*' },
+    { blankLine: 'any', prev: ['const', 'let', 'var'], next: ['const', 'let', 'var'] },
+    { blankLine: 'always', prev: '*', next: 'block-like' },
+    { blankLine: 'always', prev: 'block-like', next: '*' },
+    { blankLine: 'always', prev: '*', next: 'function' },
+  ],
   'brace-style': ['error', '1tbs', { allowSingleLine: false }],
   'comma-dangle': 'off',
   'array-element-newline': 'off',
