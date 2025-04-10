@@ -32,7 +32,8 @@ export default [
     
     rules: {
       'prettier/prettier': 'error',
-      'no-console': ['error', { allow: ['warn', 'error', 'info'] }]
+      'no-console': ['error', { allow: ['warn', 'error', 'info'] }],
+      'max-lines': ['error', { max: 1 }]
     },
     
     ignores: [
