@@ -20,10 +20,15 @@ const sharedRules = {
   'no-negated-condition': 'error',
   'no-else-return': 'error',
   'consistent-return': 'error',
-  'no-shadow': ['error', { builtinGlobals: false, hoist: 'functions', allow: [], ignoreOnInitialization: false }],
+  'no-shadow': ['error', {
+    builtinGlobals: false,
+    hoist: 'functions',
+    allow: [],
+    ignoreOnInitialization: false
+  }],
   'no-nested-ternary': 'error',
   'no-lonely-if': 'error',
-  
+
   // Style and conventions
   'arrow-body-style': ['error', 'as-needed'],
   curly: ['error', 'all'],

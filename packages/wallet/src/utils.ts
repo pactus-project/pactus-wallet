@@ -21,6 +21,7 @@ export function generateUUID(): string {
     .join('')
     .slice(0, 36);
 }
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function sprintf(format: string, ...args: any[]): string {
   return format.replace(/%s|%d/g, () => args.shift());

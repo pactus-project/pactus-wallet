@@ -26,6 +26,7 @@ export const DefaultMethod = `${EncryptionMethod.argon2id}-${EncryptionMethod.ae
 
 export class Encrypter {
   method: string;
+
   params: Params;
 
   constructor(method: string, params: Params) {
@@ -183,6 +184,7 @@ export class Encrypter {
         if (!calculatedMac.equals(mac)) {
           throw new Error('Invalid password');
         }
+
         break;
       }
 

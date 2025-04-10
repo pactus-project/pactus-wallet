@@ -3,13 +3,12 @@
 import type { ReactNode } from 'react';
 import { createContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import type { Wallet, WalletManager} from '@pactus-wallet/wallet';
-import { NetworkType, BrowserStorage, initWalletSDK } from '@pactus-wallet/wallet';
-import type { WalletContextType} from '../types';
+import type { Wallet, WalletManager } from '@pactus-wallet/wallet';
+import { NetworkType, NetworkValues, BrowserStorage, initWalletSDK } from '@pactus-wallet/wallet';
+import type { WalletContextType } from '../types';
 import { WalletStatus } from '../types';
 import Loading from '@/components/loading';
 import WalletLock from '@/components/wallet-lock';
-
 
 export const WalletContext = createContext<WalletContextType>({
   wallet: null,
@@ -28,7 +27,7 @@ export const WalletContext = createContext<WalletContextType>({
   setMnemonic: () => {
     /* Will be implemented in provider */
   },
-  networkType: NetworkType.Mainnet,
+  networkType: NetworkValues.MAINNET,
   setNetworkType: () => {
     /* Will be implemented in provider */
   },
@@ -47,7 +46,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   const [walletStatus, setWalletStatusState] = useState<WalletStatus>(WalletStatus.WALLET_LOCKED);
   const [password, setPasswordState] = useState<string>('');
   const [mnemonic, setMnemonicState] = useState<string>('');
-  const [networkType, setNetworkTypeState] = useState<NetworkType>(NetworkType.Mainnet);
+  const [networkType, setNetworkTypeState] = useState<NetworkType>(NetworkValues.MAINNET);
   const [walletName, setWalletNameState] = useState<string>('');
   const [walletManager, setWalletManager] = useState<WalletManager | null>(null);
   const [isInitializingManager, setIsInitializingManager] = useState<boolean>(true);
@@ -85,10 +84,11 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         }
 
         // Load wallet data
-        if (storedWalletStatus === WalletStatus.WALLET_LOCKED ||
-          storedWalletStatus === WalletStatus.WALLET_UNLOCKED) {
+        if (
+          storedWalletStatus === WalletStatus.WALLET_LOCKED ||
+          storedWalletStatus === WalletStatus.WALLET_UNLOCKED
+        ) {
           try {
-
             if (walletData) {
               const walletName = walletData.getName();
               setWalletNameState(walletName);
@@ -129,7 +129,6 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     }
   };
 
-
   return (
     <WalletContext.Provider
       value={{
@@ -153,9 +152,9 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       {isLoading && <Loading />}
       {!isLoading && (
         <>
-          {walletStatus === WalletStatus.WALLET_LOCKED
-            && wallet
-            && window.location.pathname !== '/get-started' ? (
+          {walletStatus === WalletStatus.WALLET_LOCKED &&
+          wallet &&
+          window.location.pathname !== '/get-started' ? (
             <WalletLock />
           ) : (
             children
