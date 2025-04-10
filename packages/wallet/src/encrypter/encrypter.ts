@@ -1,31 +1,32 @@
-import { Params } from './params';
 import * as crypto from 'crypto';
 import * as argon2 from 'argon2-browser';
+import { Params } from './params';
 
 export const ParameterKey = {
-  Iterations: 'iterations',
-  Memory: 'memory',
-  Parallelism: 'parallelism',
+  iterations: 'iterations',
+  memory: 'memory',
+  parallelism: 'parallelism',
 } as const;
 
 export const EncryptionMethod = {
-  None: '',
-  Argon2id: 'ARGON2ID',
-  AES256CTR: 'AES_256_CTR',
-  MACv1: 'MACV1',
+  none: '',
+  argon2id: 'ARGON2ID',
+  aes256ctr: 'AES_256_CTR',
+  macv1: 'MACV1',
 } as const;
 
 // Default parameter values
 export const DefaultParams = {
-  Iterations: 3,
-  Memory: 65536, // 64 MiB
-  Parallelism: 4,
+  iterations: 3,
+  memory: 65536, // 64 MiB
+  parallelism: 4,
 } as const;
 
-export const DefaultMethod = `${EncryptionMethod.Argon2id}-${EncryptionMethod.AES256CTR}-${EncryptionMethod.MACv1}`;
+export const DefaultMethod = `${EncryptionMethod.argon2id}-${EncryptionMethod.aes256ctr}-${EncryptionMethod.macv1}`;
 
 export class Encrypter {
   method: string;
+
   params: Params;
 
   constructor(method: string, params: Params) {
@@ -34,19 +35,21 @@ export class Encrypter {
   }
 
   static noEncrypter(): Encrypter {
-    return new Encrypter(EncryptionMethod.None, new Params());
+    return new Encrypter(EncryptionMethod.none, new Params());
   }
 
   static defaultEncrypter(): Encrypter {
-    let params = new Params();
-    params.setNumber(ParameterKey.Iterations, DefaultParams.Iterations);
-    params.setNumber(ParameterKey.Memory, DefaultParams.Memory);
-    params.setNumber(ParameterKey.Parallelism, DefaultParams.Parallelism);
+    const params = new Params();
+
+    params.setNumber(ParameterKey.iterations, DefaultParams.iterations);
+    params.setNumber(ParameterKey.memory, DefaultParams.memory);
+    params.setNumber(ParameterKey.parallelism, DefaultParams.parallelism);
 
     return new Encrypter(DefaultMethod, params);
   }
 
   // Custom JSON serialization
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   toJSON(): Record<string, any> {
     return {
       method: this.method,
@@ -55,29 +58,30 @@ export class Encrypter {
   }
 
   // Custom JSON deserialization
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static fromJSON(json: Record<string, any>): Encrypter {
     return new Encrypter(json.method, Params.fromJSON(json.params));
   }
 
   isEncrypted(): boolean {
-    return this.method !== EncryptionMethod.None;
+    return this.method !== EncryptionMethod.none;
   }
 
   // Helper to perform Argon2id hashing with parameters from this.params
   private async deriveKeyFromPassword(
     password: string,
-    salt: Buffer
+    salt: Buffer,
   ): Promise<Buffer> {
-    const iterations = this.params.getNumber(ParameterKey.Iterations);
-    const memory = this.params.getNumber(ParameterKey.Memory);
-    const parallelism = this.params.getNumber(ParameterKey.Parallelism);
+    const iterations = this.params.getNumber(ParameterKey.iterations);
+    const memory = this.params.getNumber(ParameterKey.memory);
+    const parallelism = this.params.getNumber(ParameterKey.parallelism);
 
     const argon2Hash = await argon2.hash({
       pass: password,
-      salt: salt,
+      salt,
       time: iterations,
       mem: memory,
-      parallelism: parallelism,
+      parallelism,
       hashLen: 48,
       type: argon2.ArgonType.Argon2id,
     });
@@ -86,10 +90,11 @@ export class Encrypter {
   }
 
   async encrypt(message: string, password: string): Promise<string> {
-    if (this.method === EncryptionMethod.None) {
+    if (this.method === EncryptionMethod.none) {
       if (password !== '') {
         throw new Error('Invalid password');
       }
+
       return message;
     }
 
@@ -110,36 +115,42 @@ export class Encrypter {
 
     // MAC method
     const mac = this.calcMACv1(cipherKey.subarray(16, 32), cipher);
-    let data = Buffer.concat([salt, cipher, mac]);
+    const data = Buffer.concat([salt, cipher, mac]);
 
     return data.toString('base64');
   }
 
   async decrypt(cipherText: string, password: string): Promise<string> {
-    if (this.method === EncryptionMethod.None) {
+    if (this.method === EncryptionMethod.none) {
       if (password !== '') {
         throw new Error('Invalid password');
       }
+
       return cipherText;
     }
 
     const funcs = this.method.split('-');
+
     if (funcs.length !== 3) {
       throw new Error('Method not supported');
     }
 
     const data = Buffer.from(cipherText, 'base64');
+
     if (data.length < 20) {
       throw new Error('Invalid cipher');
     }
 
     // Password hasher method
     let passwordHash: Buffer;
+
     switch (funcs[0]) {
-      case EncryptionMethod.Argon2id:
+      case EncryptionMethod.argon2id: {
         const salt = data.subarray(0, 16);
+
         passwordHash = await this.deriveKeyFromPassword(password, salt);
         break;
+      }
 
       default:
         throw new Error('Method not supported');
@@ -152,10 +163,10 @@ export class Encrypter {
     let msg: string;
 
     switch (funcs[1]) {
-      case EncryptionMethod.AES256CTR:
+      case EncryptionMethod.aes256ctr: {
         msg = this.aesCrypt(cipher, iv, cipherKey).toString();
-
         break;
+      }
 
       default:
         throw new Error('Method not supported');
@@ -163,16 +174,19 @@ export class Encrypter {
 
     // MAC method
     switch (funcs[2]) {
-      case EncryptionMethod.MACv1:
+      case EncryptionMethod.macv1: {
         const mac = data.subarray(data.length - 4);
         const calculatedMac = this.calcMACv1(
           cipherKey.subarray(16, 32),
-          cipher
+          cipher,
         );
+
         if (!calculatedMac.equals(mac)) {
           throw new Error('Invalid password');
         }
+
         break;
+      }
 
       default:
         throw new Error('Method not supported');
@@ -184,16 +198,19 @@ export class Encrypter {
   private aesCrypt(
     message: Buffer,
     initVec: Buffer,
-    cipherKey: Buffer
+    cipherKey: Buffer,
   ): Buffer {
     const cipher = crypto.createCipheriv('aes-256-ctr', cipherKey, initVec);
     const encrypted = Buffer.concat([cipher.update(message), cipher.final()]);
+
     return encrypted;
   }
 
   private calcMACv1(...data: Buffer[]): Buffer {
     const hasher = crypto.createHash('sha256');
+
     data.forEach(d => hasher.update(d));
+
     return hasher.digest().subarray(0, 4);
   }
 }
