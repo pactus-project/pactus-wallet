@@ -14,6 +14,7 @@ provides comprehensive wallet management capabilities.
 -   🔢 Address Generation
 -   💾 Memory Storage Options
 -   🛡️ Robust Error Handling
+-   📘 TypeScript Type Safety
 
 ## Installation
 
@@ -34,7 +35,11 @@ yarn add @pactus/wallet-sdk
 ### Initializing the Wallet SDK
 
 ```typescript
-import { initWalletSDK, NetworkType, MnemonicStrength } from '@pactus/wallet-sdk';
+import { 
+  initWalletSDK, 
+  NetworkValues, 
+  MnemonicValues 
+} from '@pactus/wallet-sdk';
 import { MemoryStorage } from '@pactus/wallet-sdk/storage';
 
 async function createWallet() {
@@ -46,15 +51,15 @@ async function createWallet() {
         const walletManager = await initWalletSDK(storage);
 
         // Create a new wallet
-        const wallet = await walletManager.createWallet(
-            'your-secure-password',
-            MnemonicStrength.Normal,
-            NetworkType.Mainnet,
-            'My First Wallet'
+        const myWallet = await walletManager.createWallet(
+            'my-secure-password',
+            'My Wallet',
+            MnemonicValues.NORMAL,
+            NetworkValues.MAINNET
         );
 
         // Create an address
-        const newAddress = wallet.createAddress('Personal Address');
+        const newAddress = myWallet.createAddress('Personal Address');
         console.log('New Address:', newAddress);
     } catch (error) {
         console.error('Wallet creation failed:', error);
@@ -109,17 +114,42 @@ async function exportWallet() {
 
 ### Wallet Creation Options
 
--   `password`: Encryption password (required)
--   `strength`: Mnemonic strength (default: `MnemonicStrength.Normal`)
-    -   `Normal`: 12-word mnemonic
-    -   `High`: 24-word mnemonic
--   `network`: Network type (default: `NetworkType.Mainnet`)
+-   `password`: Wallet encryption password
 -   `name`: Wallet name (default: 'My Wallet')
+-   `network`: Network type (default: `NetworkValues.MAINNET`)
+-   `strength`: Mnemonic strength (default: `MnemonicValues.NORMAL`)
 
-### Supported Networks
+**Network Types**:
+-   `NetworkValues.MAINNET`: Primary Pactus network
+-   `NetworkValues.TESTNET`: Development and testing network
 
--   `NetworkType.Mainnet`: Primary Pactus network
--   `NetworkType.Testnet`: Development and testing network
+**Mnemonic Strength**:
+-   `MnemonicValues.NORMAL`: 12-word phrase (128 bits entropy)
+-   `MnemonicValues.HIGH`: 24-word phrase (256 bits entropy)
+
+## Type Safety
+
+The SDK uses TypeScript literal types for enhanced type safety:
+
+```typescript
+// Network type is a string literal
+export type NetworkType = 'mainnet' | 'testnet';
+
+// Constant values with type assertions
+export const NetworkValues = {
+  MAINNET: 'mainnet' as NetworkType,
+  TESTNET: 'testnet' as NetworkType,
+} as const;
+
+// Mnemonic strength is a numeric literal
+export type MnemonicStrength = 128 | 256;
+
+// Constant values with type assertions
+export const MnemonicValues = {
+  NORMAL: 128 as MnemonicStrength, // 12 words
+  HIGH: 256 as MnemonicStrength, // 24 words
+} as const;
+```
 
 ## Security Recommendations
 

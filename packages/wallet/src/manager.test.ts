@@ -4,8 +4,8 @@ import * as bip39 from 'bip39';
 import { StorageError } from './error';
 import { WalletManager } from './manager';
 import { MemoryStorage } from './storage/memory-storage';
-import { MnemonicStrength } from './types/vault';
-import { NetworkType } from './types/wallet_info';
+import { MnemonicValues } from './types/vault';
+import { NetworkValues } from './types/wallet_info';
 import { generateUUID } from './utils';
 
 describe('WalletManager Tests', () => {
@@ -25,7 +25,7 @@ describe('WalletManager Tests', () => {
       const wallet = await walletManager.createWallet(password);
 
       expect(wallet).toBeTruthy();
-      expect(wallet.getNetworkType()).toBe(NetworkType.Mainnet);
+      expect(wallet.getNetworkType()).toBe(NetworkValues.MAINNET);
       expect(wallet.getName()).toBe('My Wallet');
       expect(walletManager.hasWallet(wallet.getID())).toBeTruthy();
     });
@@ -34,13 +34,13 @@ describe('WalletManager Tests', () => {
       const customName = 'Custom Wallet';
       const wallet = await walletManager.createWallet(
         password,
-        MnemonicStrength.High,
-        NetworkType.Testnet,
-        customName
+        customName,
+        MnemonicValues.HIGH,
+        NetworkValues.TESTNET
       );
 
       expect(wallet).toBeTruthy();
-      expect(wallet.getNetworkType()).toBe(NetworkType.Testnet);
+      expect(wallet.getNetworkType()).toBe(NetworkValues.TESTNET);
       expect(wallet.getName()).toBe(customName);
       expect(walletManager.hasWallet(wallet.getID())).toBeTruthy();
     });
@@ -53,7 +53,7 @@ describe('WalletManager Tests', () => {
 
       expect(wallet).toBeTruthy();
       expect(wallet.getMnemonic(password)).resolves.toBe(testMnemonic);
-      expect(wallet.getNetworkType()).toBe(NetworkType.Mainnet); // Default network is Mainnet
+      expect(wallet.getNetworkType()).toBe(NetworkValues.MAINNET); // Default network is Mainnet
       expect(wallet.getName()).toBe('My Wallet'); // Default name
       expect(walletManager.hasWallet(wallet.getID())).toBeTruthy();
     });
@@ -64,13 +64,13 @@ describe('WalletManager Tests', () => {
       const wallet = await walletManager.restoreWallet(
         testMnemonic,
         password,
-        NetworkType.Testnet,
+        NetworkValues.TESTNET,
         customName
       );
 
       expect(wallet).toBeTruthy();
       expect(wallet.getMnemonic(password)).resolves.toBe(testMnemonic);
-      expect(wallet.getNetworkType()).toBe(NetworkType.Testnet);
+      expect(wallet.getNetworkType()).toBe(NetworkValues.TESTNET);
       expect(wallet.getName()).toBe(customName);
       expect(walletManager.hasWallet(wallet.getID())).toBeTruthy();
     });
@@ -156,8 +156,10 @@ describe('WalletManager Tests', () => {
     it('should handle storage errors when saving', async () => {
       const wallet = await walletManager.createWallet(password);
 
-      // Force empty wallet list
-      walletManager['walletIDs'] = [];
+      // Force empty wallet list safely (without potential race condition)
+      const walletIDsCopy: string[] = [];
+      // eslint-disable-next-line require-atomic-updates
+      walletManager['walletIDs'] = walletIDsCopy;
 
       jest.spyOn(storage, 'set').mockImplementation(() => {
         throw new StorageError('Storage error');

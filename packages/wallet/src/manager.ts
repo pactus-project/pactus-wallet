@@ -1,7 +1,7 @@
 import { StorageError } from './error';
 import { StorageKey } from './storage-key';
-import { MnemonicStrength } from './types/vault';
-import { NetworkType, WalletID } from './types/wallet_info';
+import { MnemonicStrength, MnemonicValues } from './types/vault';
+import { NetworkType, NetworkValues, WalletID } from './types/wallet_info';
 import { Wallet } from './wallet';
 import { IStorage } from './storage/storage';
 import { WalletCore } from '@trustwallet/wallet-core';
@@ -12,7 +12,9 @@ import { WalletCore } from '@trustwallet/wallet-core';
  */
 export class WalletManager {
   private core: WalletCore;
+
   private storage: IStorage;
+
   private walletIDs: WalletID[];
 
   /**
@@ -50,16 +52,16 @@ export class WalletManager {
   /**
    * Create a new wallet
    * @param password Password for wallet encryption
+   * @param name User-defined wallet name
    * @param strength Mnemonic strength (security level)
    * @param network Network type (mainnet/testnet)
-   * @param name User-defined wallet name
    * @returns The created wallet instance
    */
   async createWallet(
     password: string,
-    strength: MnemonicStrength = MnemonicStrength.Normal,
-    network: NetworkType = NetworkType.Mainnet,
-    name: string = 'My Wallet'
+    name: string = 'My Wallet',
+    strength: MnemonicStrength = MnemonicValues.NORMAL,
+    network: NetworkType = NetworkValues.MAINNET
   ): Promise<Wallet> {
     const wallet = await Wallet.create(
       this.core,
@@ -86,7 +88,7 @@ export class WalletManager {
   async restoreWallet(
     mnemonic: string,
     password: string,
-    network: NetworkType = NetworkType.Mainnet,
+    network: NetworkType = NetworkValues.MAINNET,
     name: string = 'My Wallet'
   ): Promise<Wallet> {
     const wallet = await Wallet.restore(
@@ -136,6 +138,7 @@ export class WalletManager {
 
     if (!this.hasWallet(id)) {
       this.walletIDs.push(id);
+
       try {
         this.storage.set(
           StorageKey.walletListKey(),
@@ -154,6 +157,7 @@ export class WalletManager {
   deleteWallet(id: WalletID): boolean {
     if (this.hasWallet(id)) {
       this.walletIDs = this.walletIDs.filter(walletID => walletID !== id);
+
       try {
         this.storage.set(
           StorageKey.walletListKey(),

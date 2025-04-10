@@ -8,26 +8,28 @@
  *
  */
 /**
- * Enum for standard error codes used throughout the wallet
+ * Standard error codes used throughout the wallet
  */
-export enum ErrorCode {
-  WALLET_ERROR = 'WALLET_ERROR',
-  AUTH_ERROR = 'AUTH_ERROR',
-  MNEMONIC_ERROR = 'MNEMONIC_ERROR',
-  STORAGE_ERROR = 'STORAGE_ERROR',
-  NETWORK_ERROR = 'NETWORK_ERROR',
-  TX_ERROR = 'TX_ERROR',
-  INIT_ERROR = 'INIT_ERROR',
-  WALLET_CREATION_ERROR = 'WALLET_CREATION_ERROR',
-  WALLET_RESTORE_ERROR = 'WALLET_RESTORE_ERROR',
-  UNKNOWN_ERROR = 'UNKNOWN_ERROR',
-}
+export const ErrorCode = {
+  WALLET_ERROR: 'WALLET_ERROR',
+  AUTH_ERROR: 'AUTH_ERROR',
+  MNEMONIC_ERROR: 'MNEMONIC_ERROR',
+  STORAGE_ERROR: 'STORAGE_ERROR',
+  NETWORK_ERROR: 'NETWORK_ERROR',
+  TX_ERROR: 'TX_ERROR',
+  INIT_ERROR: 'INIT_ERROR',
+  WALLET_CREATION_ERROR: 'WALLET_CREATION_ERROR',
+  WALLET_RESTORE_ERROR: 'WALLET_RESTORE_ERROR',
+  UNKNOWN_ERROR: 'UNKNOWN_ERROR',
+} as const;
+
+export type ErrorCodeType = (typeof ErrorCode)[keyof typeof ErrorCode];
 
 /**
  * Base class for wallet errors
  */
 export class WalletError extends Error {
-  code = ErrorCode.WALLET_ERROR;
+  code: ErrorCodeType = ErrorCode.WALLET_ERROR;
 
   constructor(message: string) {
     super(message);
@@ -121,19 +123,19 @@ export class WalletRestoreError extends WalletError {
 
 /**
  * Create a standardized error response object
- * @param code Error code
+ * @param errorCode Error code
  * @param message Error message
  * @param details Optional error details
  * @returns Standardized error response object
  */
 export function createErrorResponse(
-  code: ErrorCode | string,
+  errorCode: ErrorCodeType | string,
   message: string,
-  details?: unknown,
+  details?: unknown
 ): { error: { code: string; message: string; details?: unknown } } {
   return {
     error: {
-      code,
+      code: errorCode,
       message,
       details,
     },
@@ -150,36 +152,17 @@ export function formatError(error: unknown): {
 } {
   if (error instanceof WalletError) {
     // Handle known wallet errors
-    let code = ErrorCode.WALLET_ERROR;
-
-    if (error instanceof AuthenticationError) {
-      code = ErrorCode.AUTH_ERROR;
-    } else if (error instanceof MnemonicError) {
-      code = ErrorCode.MNEMONIC_ERROR;
-    } else if (error instanceof StorageError) {
-      code = ErrorCode.STORAGE_ERROR;
-    } else if (error instanceof NetworkError) {
-      code = ErrorCode.NETWORK_ERROR;
-    } else if (error instanceof InitializationError) {
-      code = ErrorCode.INIT_ERROR;
-    } else if (error instanceof WalletCreationError) {
-      code = ErrorCode.WALLET_CREATION_ERROR;
-    } else if (error instanceof WalletRestoreError) {
-      code = ErrorCode.WALLET_RESTORE_ERROR;
-    } else {
-      code = ErrorCode.UNKNOWN_ERROR;
-    }
-
-    return createErrorResponse(code, error.message);
+    // Use the error's own code
+    return createErrorResponse(error.code, error.message);
   } else if (error instanceof Error) {
     // Handle generic Error instances
     return createErrorResponse(ErrorCode.UNKNOWN_ERROR, error.message);
-  } else {
-    // Handle non-Error instances
-    return createErrorResponse(
-      ErrorCode.UNKNOWN_ERROR,
-      'An unknown error occurred',
-      error,
-    );
   }
+
+  // Handle non-Error instances
+  return createErrorResponse(
+    ErrorCode.UNKNOWN_ERROR,
+    'An unknown error occurred',
+    error
+  );
 }

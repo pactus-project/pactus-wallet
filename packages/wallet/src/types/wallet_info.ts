@@ -3,10 +3,15 @@ export type WalletID = string;
 /**
  * Network type for wallet operation
  */
-export enum NetworkType {
-  Mainnet = 'mainnet',
-  Testnet = 'testnet',
-}
+export type NetworkType = 'mainnet' | 'testnet';
+
+/**
+ * Network type constants
+ */
+export const NetworkValues = {
+  MAINNET: 'mainnet' as NetworkType,
+  TESTNET: 'testnet' as NetworkType,
+} as const;
 
 /**
  * Wallet Information Model
@@ -14,17 +19,21 @@ export enum NetworkType {
  */
 export class WalletInfo {
   type: number; // Wallet type. 1: Full keys, 2: Neutered
+
   name: string; // User-defined wallet name
+
   uuid: string; // Unique identifier for this wallet
+
   creationTime: number; // Timestamp of wallet creation
-  network: NetworkType; // Network type: Mainnet or Testnet
+
+  network: NetworkType; // Network type: mainnet or testnet
 
   constructor(
     type: number,
     name: string,
     uuid: string,
     creationTime: number,
-    network: NetworkType,
+    network: NetworkType
   ) {
     this.type = type;
     this.name = name;
@@ -55,12 +64,22 @@ export class WalletInfo {
   static deserialize(jsonString: string): WalletInfo {
     const json = JSON.parse(jsonString);
 
+    // Validate network value
+    const network = json.network as string;
+
+    if (
+      network !== NetworkValues.MAINNET &&
+      network !== NetworkValues.TESTNET
+    ) {
+      throw new Error(`Invalid network type: ${network}`);
+    }
+
     return new WalletInfo(
       json.type,
       json.name,
       json.uuid,
       json.creationTime,
-      json.network as NetworkType,
+      network as NetworkType
     );
   }
 }

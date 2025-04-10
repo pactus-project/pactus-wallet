@@ -3,8 +3,8 @@ import * as bip39 from 'bip39';
 import { MnemonicError } from './error';
 import { MemoryStorage } from './storage/memory-storage';
 import { StorageKey } from './storage-key';
-import { MnemonicStrength } from './types/vault';
-import { NetworkType } from './types/wallet_info';
+import { MnemonicValues } from './types/vault';
+import { NetworkValues } from './types/wallet_info';
 import { getWordCount } from './utils';
 import { Wallet } from './wallet';
 import { IStorage } from './storage/storage';
@@ -36,8 +36,8 @@ describe('Pactus Wallet Tests', () => {
 
   describe('Wallet Seed', () => {
     it.each([
-      [MnemonicStrength.Normal, 12],
-      [MnemonicStrength.High, 24],
+      [MnemonicValues.NORMAL, 12],
+      [MnemonicValues.HIGH, 24],
     ])(
       'should create wallet with %s entropy giving %i words',
       async (strength, expectedWordCount) => {
@@ -46,7 +46,7 @@ describe('Pactus Wallet Tests', () => {
           storage,
           password,
           strength,
-          NetworkType.Mainnet
+          NetworkValues.MAINNET
         );
 
         const mnemonic = await wallet.getMnemonic(password);
@@ -57,14 +57,14 @@ describe('Pactus Wallet Tests', () => {
 
   describe('Wallet Info', () => {
     it.each([
-      [NetworkType.Mainnet, 'Wallet-1'],
-      [NetworkType.Testnet, 'Wallet-2'],
+      [NetworkValues.MAINNET, 'Wallet-1'],
+      [NetworkValues.TESTNET, 'Wallet-2'],
     ])('should return correct wallet info', async (network, name) => {
       const wallet = await Wallet.create(
         core,
         storage,
         password,
-        MnemonicStrength.Normal,
+        MnemonicValues.NORMAL,
         network,
         name
       );
@@ -87,8 +87,8 @@ describe('Pactus Wallet Tests', () => {
         core,
         storage,
         password,
-        MnemonicStrength.Normal,
-        NetworkType.Mainnet,
+        MnemonicValues.NORMAL,
+        NetworkValues.MAINNET,
         'Initial Name'
       );
 
@@ -196,9 +196,9 @@ describe('Pactus Wallet Tests', () => {
       expect(wallet.isTestnet()).toBeFalsy();
     });
 
-    it('should create unique Testnet addresses in correct format', () => {
+    it('should create unique Testnet addresses in correct format', async () => {
       /*
-       * const wallet =await Wallet.create(core, password, MnemonicStrength.Normal, NetworkType.Testnet, 'Test Wallet');
+       * const wallet =await Wallet.create(core, password, MnemonicStrengthOption.Normal, NetworkTypeOption.Testnet, 'Test Wallet');
        * const addrInfo1 = await wallet.createAddress('Address 1', password);
        * const addrInfo2 = await wallet.createAddress('Address 2', password);
        * expect(addrInfo1.address.startsWith('tpc1')).toBe(true);
@@ -246,7 +246,7 @@ describe('Pactus Wallet Tests', () => {
     it('should correctly load the wallet from test data', async () => {
       const walletID = '1234';
       const walletName = 'Test Wallet';
-      const password = 'password';
+      const testPassword = 'password';
 
       const walletInfoJSON = `{"name":"${walletName}","type":1,"uuid":"${walletID}","creationTime":1743405082209,"network":"mainnet"}`;
       const ledgerJSON =
@@ -265,9 +265,9 @@ describe('Pactus Wallet Tests', () => {
 
       expect(wallet.getID()).toBe(walletID);
       expect(wallet.getName()).toBe(walletName);
-      expect(wallet.getNetworkType()).toBe(NetworkType.Mainnet);
+      expect(wallet.getNetworkType()).toBe(NetworkValues.MAINNET);
       expect(wallet.isEncrypted()).toBeTruthy();
-      expect(wallet.getMnemonic(password)).resolves.toBe(expectedMnemonic);
+      expect(wallet.getMnemonic(testPassword)).resolves.toBe(expectedMnemonic);
 
       const addrInfo1 = wallet.getAddressInfo(
         'pc1rcx9x55nfme5juwdgxd2ksjdcmhvmvkrygmxpa3'
@@ -279,7 +279,7 @@ describe('Pactus Wallet Tests', () => {
         'public1rd5p573yq3j5wkvnasslqa7ne5vw87qcj5a0wlwxcj2t2xlaca9lstzm8u5'
       );
 
-      const addrInfo2 = await wallet.createAddress('Address 2', password);
+      const addrInfo2 = await wallet.createAddress('Address 2', testPassword);
       expect(addrInfo2.address).toBe(
         'pc1r7aynw9urvh66ktr3fte2gskjjnxzruflkgde94'
       );
@@ -296,7 +296,7 @@ describe('Pactus Wallet Tests', () => {
         storage,
         mnemonic,
         noPassword,
-        NetworkType.Mainnet,
+        NetworkValues.MAINNET,
         'My Wallet'
       );
 

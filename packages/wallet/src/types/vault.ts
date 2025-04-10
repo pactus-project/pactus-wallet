@@ -2,13 +2,18 @@ import { Encrypter } from '../encrypter/encrypter';
 
 /**
  * Mnemonic Strength options for wallet creation
- * - Normal = 128 bits (12 words)
- * - High = 256 bits (24 words)
+ * - Normal (128 bits): 12 words
+ * - High (256 bits): 24 words
  */
-export enum MnemonicStrength {
-  Normal = 128, // 12 words
-  High = 256, // 24 words
-}
+export type MnemonicStrength = 128 | 256;
+
+/**
+ * Mnemonic strength constants
+ */
+export const MnemonicValues = {
+  NORMAL: 128 as MnemonicStrength, // 12 words
+  HIGH: 256 as MnemonicStrength, // 24 words
+} as const;
 
 // Interface for KeyStore
 export interface KeyStore {
