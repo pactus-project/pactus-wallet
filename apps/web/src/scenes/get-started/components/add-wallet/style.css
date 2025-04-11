@@ -98,6 +98,7 @@
     }
     .ctas-addwallet button{
         max-width: 100%;
+        height: 120px;
     }
     .ctas-addwallet button h3{
         font-size: 15px;
