@@ -72,6 +72,7 @@
 .letsCta-GetStarted>button {
     display: flex;
     width: 682px;
+    max-width: 100%;
     padding: 0px 12.105px;
     justify-content: center;
     align-items: center;
@@ -112,4 +113,32 @@
     -ms-user-select: none;
     user-select: none;
     /* 250% */
+}
+
+
+
+
+@media (max-width: 768px) {
+    .letsCta-GetStarted {
+        max-width: 90%;
+    }
+
+    .slogans-GetStarted>div h3 {
+        font-size: 15px;
+    }
+
+    .letsCta-GetStarted {
+        margin-top: 40px;
+    }
+
+    .container-GetStarted h1 {
+        font-size: 25px;
+        margin-bottom: 20px;
+        text-wrap: nowrap;
+    }
+
+    .container-GetStarted h1 span {
+        font-weight: 500;
+        font-size: 25px;
+    }
 }
