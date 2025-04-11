@@ -156,7 +156,7 @@
 
     .seed-ImportWallet {
         display: grid;
-        grid-template-columns: repeat(3, 100px);
+        grid-template-columns: repeat(3, calc(100% /3.2));
         padding: 20px 15px;
         gap: 14px;
         margin-top: 10px;
