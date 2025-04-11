@@ -48,7 +48,7 @@
 
 .seed-ImportWallet {
     display: grid;
-    grid-template-columns: repeat(4, 200px);
+    grid-template-columns: repeat(4, calc(100% /4.4));
     width: 967px;
     min-height: 150px;
     padding: 33px 38px;

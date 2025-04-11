@@ -79,7 +79,7 @@
 
 .seed-RecoveryPhrase {
     display: grid;
-    grid-template-columns: repeat(4, 200px);
+    grid-template-columns: repeat(4, calc(100% /4.4));
     width: 967px;
     max-width: 100%;
     min-height: 150px;
