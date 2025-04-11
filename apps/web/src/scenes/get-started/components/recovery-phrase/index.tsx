@@ -118,12 +118,14 @@ const RecoveryPhrase = () => {
 
             {step === 2 &&
                 <div className='hint-RecoveryPhrase' style={{ gap: '10px' }}>
-                    <LottiePlayer
-                        animationData={generateRecoverySeedLottie}
-                        loop={false}
-                        play
-                        style={{ height: '200px' }}
-                    />
+                    <div className='lottie-RecoveryPhrase' >
+                        <LottiePlayer
+                            animationData={generateRecoverySeedLottie}
+                            loop={false}
+                            play
+                            className='lottie-RecoveryPhrase'
+                        />
+                    </div>
                     <h1>Recovery Phrase</h1>
                     <p>Write down the following {wordCount} words in the correct order and keep them in a safe place.</p>
                     <select defaultValue={24} onChange={(e) => setWordCount(parseInt(e.target.value))}>
@@ -154,12 +156,14 @@ const RecoveryPhrase = () => {
 
             {step === 3 &&
                 <div className='hint-RecoveryPhrase' style={{ gap: '10px' }}>
+                    <div className='lottie-RecoveryPhrase' >
                     <LottiePlayer
                         animationData={generateRecoverySeedLottie}
                         loop={false}
                         play
-                        style={{ height: '200px' }}
+                        className='lottie-RecoveryPhrase'
                     />
+                    </div>
                     <h1>Confirm Recovery Phrase</h1>
                     <p>Enter the missing words in the correct order to verify your backup.</p>
                     <div id="recoveryPhraseStep3-parent" className='seed-RecoveryPhrase'>

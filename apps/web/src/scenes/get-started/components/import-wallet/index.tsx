@@ -32,16 +32,16 @@ const ImportWallet = () => {
         if (hasEmptyWords()) {
             return;
         }
-        
+
         // Validate the mnemonic using BIP39
         if (!validateMnemonic()) {
             setError('Invalid recovery phrase. Please check your words and try again.');
             return;
         }
-        
+
         // Clear any previous errors
         setError('');
-        
+
         setMnemonic(words.join(' '));
         navigate('/get-started?step=master-password');
     };
@@ -93,12 +93,16 @@ const ImportWallet = () => {
     return (
         <div className='container-ImportWallet'>
             <div style={{ height: '200px' }}>
-                <LottiePlayer
-                    animationData={importWalletLottie}
-                    loop={true}
-                    play
-                    style={{ height: '200px' }}
-                />
+                <div className='lottie-ImportWallet'>
+
+
+                    <LottiePlayer
+                        animationData={importWalletLottie}
+                        loop={true}
+                        play
+                        className='lottie-ImportWallet'
+                    />
+                </div>
             </div>
             <h1>Import Existing Wallet</h1>
             <p>Restore access to your wallet by securely entering your 12 or 24-word recovery phrase.</p>
@@ -125,9 +129,9 @@ const ImportWallet = () => {
                     </span>
                 ))}
             </div>
-            
+
             {error && <label className='errorMessage'>{error}</label>}
-            
+
             <button
                 disabled={hasEmptyWords() || error.length > 0}
                 className='cta-ImportWallet' onClick={() => handleContinue()}>

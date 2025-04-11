@@ -3,6 +3,7 @@
     flex-direction: column;
     justify-content: center;
     gap: 15px;
+    max-width: 100%;
 }
 
 .hint-RecoveryPhrase {
@@ -80,6 +81,7 @@
     display: grid;
     grid-template-columns: repeat(4, 200px);
     width: 967px;
+    max-width: 100%;
     min-height: 235px;
     padding: 33px 38px;
     gap: 24px;
@@ -176,4 +178,22 @@
         height: 200px;
     }
 
+    .seed-RecoveryPhrase {
+        display: grid;
+        grid-template-columns: repeat(3, 100px);
+        padding: 20px 15px;
+        gap: 14px;
+    }
+
+    .seed-RecoveryPhrase span {
+        font-size: 12px;
+    }
+
+    .seed-RecoveryPhrase input {
+        font-size: 12px;
+    }
+
+    .seed-RecoveryPhrase span>label {
+        padding-left:10px;
+    }
 }
