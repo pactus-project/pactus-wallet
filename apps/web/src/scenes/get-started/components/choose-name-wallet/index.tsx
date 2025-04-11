@@ -46,7 +46,7 @@ const ChooseNameWallet = () => {
                 />
             </div>
 
-         <h1>{t('nameYourWallet')}</h1>
+            <h1>{t('nameYourWallet')}</h1>
 
             <p>
                 {t('walletNameDescription')}
@@ -70,7 +70,10 @@ const ChooseNameWallet = () => {
             >
                 {t('finish')}
             </button>
-            {restorationError && <p style={{ color: '#FF6B6B' }}>{restorationError}</p>}
+            {restorationError &&
+                <p style={{ color: '#FF6B6B' }}>
+                    {restorationError}
+                </p>}
         </div>
     );
 };

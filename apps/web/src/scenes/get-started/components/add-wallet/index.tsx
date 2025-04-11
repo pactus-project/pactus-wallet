@@ -24,7 +24,8 @@ const AddWallet = () => {
             <h1>{t('addWallet')}</h1>
             <p>{t('addWalletDescription')}</p>
             <div className='ctas-addwallet' >
-                <button id='newWalletButton' onClick={() => navigate('/get-started?step=recovery-phrase')}  >
+                <button id='newWalletButton' 
+                onClick={() => navigate('/get-started?step=recovery-phrase')}  >
                     <Image src={newWalletIcon} alt='newWalletIcon' />
                     <div><h3>{t('newWallet')}</h3><p>{t('newWalletDescription')}</p></div>
                     <BorderBeam
@@ -41,7 +42,8 @@ const AddWallet = () => {
                         showOnHover={true}
                     />
                 </button>
-                <button id='ExistingWalletButton' onClick={() => navigate('/get-started?step=import-wallet')} >
+                <button id='ExistingWalletButton'
+                 onClick={() => navigate('/get-started?step=import-wallet')} >
                     <Image src={existingWalletIcon} alt='newWalletIcon' />
                     <div><h3>{t('existingWallet')}</h3>
                         <p>{t('existingWalletDescription')}

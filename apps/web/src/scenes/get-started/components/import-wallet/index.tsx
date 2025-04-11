@@ -94,8 +94,6 @@ const ImportWallet = () => {
         <div className='container-ImportWallet'>
             <div style={{ height: '200px' }}>
                 <div className='lottie-ImportWallet'>
-
-
                     <LottiePlayer
                         animationData={importWalletLottie}
                         loop={true}
