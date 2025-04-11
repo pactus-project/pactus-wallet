@@ -100,12 +100,15 @@ const RecoveryPhrase = () => {
         <div className='container-RecoveryPhrase'>
             {step === 1 &&
                 <div className='hint-RecoveryPhrase'>
-                    <LottiePlayer
-                        animationData={writePaperLottie}
-                        loop={true}
-                        play
-                        style={{ height: '300px' }}
-                    />
+                    <div className='lottie-RecoveryPhrase' >
+                        <LottiePlayer
+                            animationData={writePaperLottie}
+                            loop={true}
+                            play
+                            className='lottie-RecoveryPhrase'
+                        />
+                    </div>
+
                     <h1>Write Down Your Recovery Phrase</h1>
                     <p>Your recovery phrase is the only way to restore access to your wallet if you lose your device.
                         We strongly recommend writing it down on paper and keeping it in a safe place.</p>

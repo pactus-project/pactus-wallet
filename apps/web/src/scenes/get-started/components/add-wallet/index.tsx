@@ -13,10 +13,11 @@ const AddWallet = () => {
     const navigate = useRouter().push;
     return (
         <div className='container-addwallet' >
-            <div style={{ height: '400px' }}>
+            <div className='lottie-addwallet' >
                 <LottiePlayer
                     animationData={addWalletLottie}
                     loop={true}
+                    className='lottie-addwallet'
                     play
                 />
             </div>

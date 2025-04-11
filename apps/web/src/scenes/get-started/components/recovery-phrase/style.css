@@ -21,6 +21,7 @@
     font-style: normal;
     font-weight: 600;
     line-height: 53.667px;
+    text-align: center;
     /* 119.259% */
 }
 
@@ -150,4 +151,29 @@
     border: 2px solid green !important;
     background-color: #C6FFBD !important;
     color: #0F840B !important;
+}
+
+
+
+.lottie-RecoveryPhrase {
+    height: 300px;
+}
+
+
+@media (max-width: 768px) {
+    .hint-RecoveryPhrase h1 {
+        font-size: 25px;
+        line-height: 40px;
+
+    }
+
+    .hint-RecoveryPhrase p {
+        font-size: 12px;
+        line-height: 25px;
+    }
+
+    .lottie-RecoveryPhrase {
+        height: 200px;
+    }
+
 }

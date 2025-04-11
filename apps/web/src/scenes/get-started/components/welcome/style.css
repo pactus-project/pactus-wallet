@@ -3,7 +3,7 @@
     max-width: 1000px;
 }
 
-.container-GetStarted h1 {
+.container-GetStarted>h1 {
     color: #FFF;
     font-family: Inter;
     font-size: 45px;
@@ -131,7 +131,7 @@
         margin-top: 40px;
     }
 
-    .container-GetStarted h1 {
+    .container-GetStarted>h1 {
         font-size: 25px;
         margin-bottom: 20px;
         text-wrap: nowrap;

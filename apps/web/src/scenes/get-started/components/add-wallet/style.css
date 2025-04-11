@@ -4,6 +4,7 @@
     align-items: center;
     justify-content: center;
     gap: 15px;
+    max-width: 100%;
 }
 
 .container-addwallet>h1 {
@@ -21,6 +22,7 @@
     font-weight: 400;
     line-height: 30px;
     margin-bottom: 50px;
+    text-align: center;
 }
 
 .ctas-addwallet {
@@ -28,6 +30,8 @@
     justify-content: center;
     align-items: center;
     gap: 20px;
+    flex-wrap: wrap;
+    max-width: 100%;
 }
 
 .ctas-addwallet button {
@@ -70,4 +74,39 @@
     font-weight: 400;
     line-height: 30px;
     text-align: left;
+}
+
+.lottie-addwallet {
+    height: 400px;
+}
+
+@media (max-width: 768px) {
+
+    .container-addwallet{
+        gap: 5px;
+    }
+    .lottie-addwallet {
+        height: 200px;
+    }
+    .container-addwallet>h1{
+        font-size: 30px;
+        line-height: 40px;
+    }
+    .container-addwallet>p {
+        font-size: 12px;
+        line-height: 20px;
+    }
+    .ctas-addwallet button{
+        max-width: 100%;
+    }
+    .ctas-addwallet button h3{
+        font-size: 15px;
+    }
+    .ctas-addwallet button p{
+        font-size: 10px;
+    }
+    .ctas-addwallet button img{
+        width: 43px;
+        height: 43px;
+    }
 }
