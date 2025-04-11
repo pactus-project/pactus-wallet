@@ -117,10 +117,28 @@ code {
     monospace;
 }
 
-
-
 .errorMessage {
   color: red;
   font-size: 12px;
   margin-top: 5px;
+}
+
+/* Override browser default autofill styling */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px #15191C inset !important;
+  -webkit-text-fill-color: #ebebeb !important;
+  transition: background-color 5000s ease-in-out 0s;
+  background-color: transparent !important;
+}
+
+/* For Firefox and other browsers */
+input:-internal-autofill-selected,
+input:-internal-autofill-previewed {
+  appearance: none !important;
+  background-image: none !important;
+  background-color: transparent !important;
+  color: inherit !important;
 }
