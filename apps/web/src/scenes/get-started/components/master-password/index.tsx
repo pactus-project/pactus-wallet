@@ -67,12 +67,12 @@ const MasterPassword = () => {
 
     return (
         <div className='container-MasterPassword'>
-            <div className='lottie-RecoveryPhrase' >
+            <div className='lottie-MasterPassword' >
                 <LottiePlayer
                     animationData={masterPasswordLottie}
                     loop={false}
                     play
-                    className='lottie-RecoveryPhrase'
+                    className='lottie-MasterPassword'
                 />
             </div>
             <h1>{t('createMasterPassword')}</h1>
