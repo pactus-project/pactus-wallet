@@ -105,8 +105,8 @@ const ImportWallet = () => {
             <h1>{t('importExistingWallet')}</h1>
             <p>{t('importWalletDescription')}</p>
             <select value={wordCount} onChange={(e) => handleWordCountChange(parseInt(e.target.value))}>
-                <option value={12}>12 Words</option>
-                <option value={24}>24 Words</option>
+            <option value={12}>{t('twelveWords')}</option>
+            <option value={24}>{t('twentyFourWords')}</option>
             </select>
             <div id='recoveryPhraseStep2-parent' className='seed-ImportWallet'>
                 {Array.from({ length: wordCount }).map((_, index) => (
