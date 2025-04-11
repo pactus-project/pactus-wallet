@@ -36,7 +36,7 @@ const ImportWallet = () => {
         }
         // Validate the mnemonic using BIP39
         if (!validateMnemonic()) {
-               setError(t('invalidSeedPhrase'));
+            setError(t('invalidSeedPhrase'));
             return;
         }
 
