@@ -67,15 +67,16 @@ const MasterPassword = () => {
 
     return (
         <div className='container-MasterPassword'>
-            <LottiePlayer
-                animationData={masterPasswordLottie}
-                loop={false}
-                play
-                style={{ height: '250px' }}
-            />
+            <div className='lottie-MasterPassword' >
+                <LottiePlayer
+                    animationData={masterPasswordLottie}
+                    loop={false}
+                    play
+                    className='lottie-MasterPassword'
+                />
+            </div>
             <h1>{t('createMasterPassword')}</h1>
             <p>{t('masterPasswordDescription')}</p>
-
             <div className='input-MasterPassword'>
                 <input
                     type={showPassword.password ? 'text' : 'password'}

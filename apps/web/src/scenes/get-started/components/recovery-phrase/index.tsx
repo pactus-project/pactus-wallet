@@ -19,7 +19,6 @@ const RecoveryPhrase = () => {
     const navigate = useRouter().push;
     const { setMnemonic } = useWallet();
     const { t } = useI18n();
-
     // Generate recovery phrase when the component loads or word count changes
     useEffect(() => {
         generateRecoveryPhrase(wordCount);
@@ -102,26 +101,29 @@ const RecoveryPhrase = () => {
         <div className='container-RecoveryPhrase'>
             {step === 1 &&
                 <div className='hint-RecoveryPhrase'>
-                    <LottiePlayer
-                        animationData={writePaperLottie}
-                        loop={true}
-                        play
-                        style={{ height: '300px' }}
-                    />
+                    <div className='lottie-RecoveryPhrase' >
+                        <LottiePlayer
+                            animationData={writePaperLottie}
+                            loop={true}
+                            play
+                            className='lottie-RecoveryPhrase'
+                        />
+                    </div>
                     <h1>{t('writeDownRecoveryPhrase')}</h1>
                     <p>{t('recoveryPhraseDescription')}</p>
-
                     <button className='cta-RecoveryPhrase' onClick={() => setStep(2)}>{t('continue')}</button>
                 </div>}
 
             {step === 2 &&
                 <div className='hint-RecoveryPhrase' style={{ gap: '10px' }}>
-                    <LottiePlayer
-                        animationData={generateRecoverySeedLottie}
-                        loop={false}
-                        play
-                        style={{ height: '200px' }}
-                    />
+                    <div className='lottie-RecoveryPhrase' >
+                        <LottiePlayer
+                            animationData={generateRecoverySeedLottie}
+                            loop={false}
+                            play
+                            className='lottie-RecoveryPhrase'
+                        />
+                    </div>
                     <h1>{t('recoveryPhrase')}</h1>
                     <p>{t('writeDownWords', wordCount.toString())}</p>
                     <select defaultValue={24} onChange={(e) => setWordCount(parseInt(e.target.value))}>
@@ -152,12 +154,14 @@ const RecoveryPhrase = () => {
 
             {step === 3 &&
                 <div className='hint-RecoveryPhrase' style={{ gap: '10px' }}>
+                    <div className='lottie-RecoveryPhrase' >
                     <LottiePlayer
                         animationData={generateRecoverySeedLottie}
                         loop={false}
                         play
-                        style={{ height: '200px' }}
+                        className='lottie-RecoveryPhrase'
                     />
+                    </div>
                     <h1>{t('confirmRecoveryPhrase')}</h1>
                     <p>{t('enterMissingWords')}</p>
                     <div id="recoveryPhraseStep3-parent" className='seed-RecoveryPhrase'>

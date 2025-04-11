@@ -34,16 +34,14 @@ const ImportWallet = () => {
         if (hasEmptyWords()) {
             return;
         }
-        
         // Validate the mnemonic using BIP39
         if (!validateMnemonic()) {
             setError(t('invalidSeedPhrase'));
             return;
         }
-        
+
         // Clear any previous errors
         setError('');
-        
         setMnemonic(words.join(' '));
         navigate('/get-started?step=master-password');
     };
@@ -95,18 +93,20 @@ const ImportWallet = () => {
     return (
         <div className='container-ImportWallet'>
             <div style={{ height: '200px' }}>
-                <LottiePlayer
-                    animationData={importWalletLottie}
-                    loop={true}
-                    play
-                    style={{ height: '200px' }}
-                />
+                <div className='lottie-ImportWallet'>
+                    <LottiePlayer
+                        animationData={importWalletLottie}
+                        loop={true}
+                        play
+                        className='lottie-ImportWallet'
+                    />
+                </div>
             </div>
             <h1>{t('importExistingWallet')}</h1>
             <p>{t('importWalletDescription')}</p>
             <select value={wordCount} onChange={(e) => handleWordCountChange(parseInt(e.target.value))}>
-                <option value={12}>{t('twelveWords')}</option>
-                <option value={24}>{t('twentyFourWords')}</option>
+            <option value={12}>{t('twelveWords')}</option>
+            <option value={24}>{t('twentyFourWords')}</option>
             </select>
             <div id='recoveryPhraseStep2-parent' className='seed-ImportWallet'>
                 {Array.from({ length: wordCount }).map((_, index) => (
@@ -127,9 +127,7 @@ const ImportWallet = () => {
                     </span>
                 ))}
             </div>
-            
             {error && <label className='errorMessage'>{error}</label>}
-            
             <button
                 disabled={hasEmptyWords() || error.length > 0}
                 className='cta-ImportWallet' onClick={() => handleContinue()}>

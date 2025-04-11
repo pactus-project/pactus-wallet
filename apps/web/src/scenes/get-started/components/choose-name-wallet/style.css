@@ -25,6 +25,7 @@
     max-width: 900px;
     /* 200% */
 }
+
 .cta-ChooseNameWallet {
     display: flex;
     width: 100%;
@@ -45,6 +46,7 @@
 
     /* 136.899% */
 }
+
 .input-ChooseNameWallet {
     position: relative;
     width: 100%;
@@ -58,16 +60,66 @@
     background: #1D2328;
     border: none;
     outline: none;
-    padding: 20px 44px  20px 15px;
+    padding: 20px 44px 20px 15px;
     color: #E1E1E1;
     font-style: normal;
     font-weight: 400;
     line-height: 30px;
 }
-.emoji-ChooseNameWallet{
+
+.emoji-ChooseNameWallet {
     max-width: 900px;
     margin-bottom: 29px;
     font-size: 25px;
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+    gap: 15px;
+    justify-content: center;
+}
+
+.lottie-ChooseNameWallet {
+    height: 200px;
+}
+
+
+@media (max-width: 768px) {
+    .container-ChooseNameWallet h1 {
+        font-size: 25px;
+
+    }
+
+    .container-ChooseNameWallet>p {
+        font-size: 12px;
+        line-height: 20px;
+
+    }
+
+    .input-ChooseNameWallet {
+        margin: 20px 0;
+    }
+
+    .emoji-ChooseNameWallet {
+        max-height: 200px;
+        overflow-y: auto;
+        max-width: 100%;
+        grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+        gap: 10px;
+    }
+
+    .lottie-ChooseNameWallet {
+        height: 100px;
+    }
+
+    .terms-MasterPassword>p {
+        text-wrap: nowrap;
+        font-size: 8px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .emoji-ChooseNameWallet {
+        grid-template-columns: repeat(auto-fill, minmax(30px, 1fr));
+        gap: 8px;
+        font-size: 20px;
+    }
 }

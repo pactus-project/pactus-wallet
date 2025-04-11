@@ -3,6 +3,7 @@
     flex-direction: column;
     justify-content: center;
     gap: 15px;
+    max-width: 100%;
 }
 
 .hint-RecoveryPhrase {
@@ -21,6 +22,7 @@
     font-style: normal;
     font-weight: 600;
     line-height: 53.667px;
+    text-align: center;
     /* 119.259% */
 }
 
@@ -77,9 +79,10 @@
 
 .seed-RecoveryPhrase {
     display: grid;
-    grid-template-columns: repeat(4, 200px);
+    grid-template-columns: repeat(4, calc(100% /4.4));
     width: 967px;
-    min-height: 235px;
+    max-width: 100%;
+    min-height: 150px;
     padding: 33px 38px;
     gap: 24px;
     border-radius: 24px;
@@ -150,4 +153,65 @@
     border: 2px solid green !important;
     background-color: #C6FFBD !important;
     color: #0F840B !important;
+}
+
+
+
+.lottie-RecoveryPhrase {
+    height: 300px;
+}
+
+
+@media (max-width: 768px) {
+    .hint-RecoveryPhrase h1 {
+        font-size: 25px;
+        line-height: 40px;
+
+    }
+
+    .hint-RecoveryPhrase p {
+        font-size: 12px;
+        line-height: 25px;
+    }
+
+    .lottie-RecoveryPhrase {
+        height: 200px;
+    }
+
+    .seed-RecoveryPhrase {
+        display: grid;
+        grid-template-columns: repeat(3, calc(100% /3.2));
+        padding: 20px 15px;
+        gap: 14px;
+        margin-top: 10px;
+    }
+
+    .seed-RecoveryPhrase span {
+        font-size: 12px;
+    }
+
+    .seed-RecoveryPhrase input {
+        font-size: 12px;
+    }
+
+    .seed-RecoveryPhrase span>label {
+        padding-left: 10px;
+    }
+}
+
+@media (max-width: 370px) {
+    .seed-RecoveryPhrase {
+        display: grid;
+        grid-template-columns: repeat(3, 90px);
+        padding: 20px 15px;
+        gap: 14px;
+    }
+
+    .seed-RecoveryPhrase span {
+        font-size: 10px;
+    }
+
+    .seed-RecoveryPhrase input {
+        font-size: 10px;
+    }
 }

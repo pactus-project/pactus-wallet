@@ -36,13 +36,18 @@ const ChooseNameWallet = () => {
     return (
         <div className="container-ChooseNameWallet">
             {isLoading && <Loading />}
-            <LottiePlayer
-                animationData={walletNameLottie}
-                loop={false}
-                play
-                style={{ height: '200px' }}
-            />
+
+            <div className='lottie-ChooseNameWallet' >
+                <LottiePlayer
+                    animationData={walletNameLottie}
+                    loop={false}
+                    play
+                    className='lottie-ChooseNameWallet'
+                />
+            </div>
+
             <h1>{t('nameYourWallet')}</h1>
+
             <p>
                 {t('walletNameDescription')}
             </p>
@@ -65,7 +70,10 @@ const ChooseNameWallet = () => {
             >
                 {t('finish')}
             </button>
-            {restorationError && <p style={{ color: '#FF6B6B' }}>{restorationError}</p>}
+            {restorationError &&
+                <p style={{ color: '#FF6B6B' }}>
+                    {restorationError}
+                </p>}
         </div>
     );
 };
