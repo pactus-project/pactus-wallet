@@ -8,12 +8,9 @@ import { useRouter } from 'next/navigation'
 import BorderBeam from '@/components/border-beam'
 import { useI18n } from '@/utils/i18n'
 const LottiePlayer = dynamic(() => import('react-lottie-player'), { ssr: false });
-
-
 const AddWallet = () => {
     const navigate = useRouter().push;
     const { t } = useI18n();
-    
     return (
         <div className='container-addwallet' >
             <div className='lottie-addwallet' >
