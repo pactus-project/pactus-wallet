@@ -2,12 +2,14 @@ import { DefaultMethod, Encrypter, ParameterKey } from './encrypter';
 import { Params } from './params';
 
 describe('Encrypter Tests', () => {
-  // testParams are configured with minimal settings
-  // for faster and more efficient tests
-  let testParams = new Params();
-  testParams.setNumber(ParameterKey.Iterations, 1);
-  testParams.setNumber(ParameterKey.Memory, 8);
-  testParams.setNumber(ParameterKey.Parallelism, 1);
+  /*
+   * testParams are configured with minimal settings
+   * for faster and more efficient tests
+   */
+  const testParams = new Params();
+  testParams.setNumber(ParameterKey.iterations, 1);
+  testParams.setNumber(ParameterKey.memory, 8);
+  testParams.setNumber(ParameterKey.parallelism, 1);
 
   it('should handle NoEncrypter', async () => {
     // Create an Encrypter with no encryption method
@@ -18,14 +20,14 @@ describe('Encrypter Tests', () => {
 
     // Trying to encrypt with a non-empty password should fail
     await expect(enc.encrypt(msg, 'password')).rejects.toThrow(
-      'Invalid password'
+      'Invalid password',
     );
 
     const cipher = await enc.encrypt(msg, '');
 
     // Trying to decrypt with a non-empty password should fail
     await expect(enc.decrypt(cipher, 'password')).rejects.toThrow(
-      'Invalid password'
+      'Invalid password',
     );
 
     // Decrypt with empty password, should succeed.
@@ -58,7 +60,7 @@ describe('Encrypter Tests', () => {
     await expect(enc.decrypt(cipher, '')).rejects.toThrow('Invalid password');
 
     await expect(enc.decrypt(cipher, 'invalid-password')).rejects.toThrow(
-      'Invalid password'
+      'Invalid password',
     );
 
     const decipher = await enc.decrypt(cipher, password);
@@ -77,11 +79,11 @@ describe('Encrypter Tests', () => {
       const enc = new Encrypter(tt.method, testParams);
 
       await expect(enc.encrypt('foo', 'password')).rejects.toThrow(
-        'Method not supported'
+        'Method not supported',
       );
 
       await expect(
-        enc.decrypt('AJFPsGu6bDMJ5iuMWDJS/87xVs7r', 'password')
+        enc.decrypt('AJFPsGu6bDMJ5iuMWDJS/87xVs7r', 'password'),
       ).rejects.toThrow('Method not supported');
     }
   });
@@ -94,7 +96,7 @@ describe('Encrypter Tests', () => {
 
     // Test decryption with invalid base64 ciphertext
     await expect(enc.decrypt('invalid-base64', 'password')).rejects.toThrow(
-      'Invalid cipher'
+      'Invalid cipher',
     );
   });
 

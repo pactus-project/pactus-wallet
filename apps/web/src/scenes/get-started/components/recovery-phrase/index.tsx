@@ -6,6 +6,7 @@ import * as bip39 from 'bip39';
 import dynamic from 'next/dynamic'
 import BorderBeam from '@/components/border-beam'
 import { useWallet } from '@/wallet'
+import { useI18n } from '@/utils/i18n'
 
 const LottiePlayer = dynamic(() => import('react-lottie-player'), { ssr: false });
 const RecoveryPhrase = () => {
@@ -17,7 +18,7 @@ const RecoveryPhrase = () => {
     const [inputErrors, setInputErrors] = useState({});
     const navigate = useRouter().push;
     const { setMnemonic } = useWallet();
-
+    const { t } = useI18n();
     // Generate recovery phrase when the component loads or word count changes
     useEffect(() => {
         generateRecoveryPhrase(wordCount);
@@ -108,12 +109,9 @@ const RecoveryPhrase = () => {
                             className='lottie-RecoveryPhrase'
                         />
                     </div>
-
-                    <h1>Write Down Your Recovery Phrase</h1>
-                    <p>Your recovery phrase is the only way to restore access to your wallet if you lose your device.
-                        We strongly recommend writing it down on paper and keeping it in a safe place.</p>
-
-                    <button className='cta-RecoveryPhrase' onClick={() => setStep(2)}>Continue</button>
+                    <h1>{t('writeDownRecoveryPhrase')}</h1>
+                    <p>{t('recoveryPhraseDescription')}</p>
+                    <button className='cta-RecoveryPhrase' onClick={() => setStep(2)}>{t('continue')}</button>
                 </div>}
 
             {step === 2 &&
@@ -126,11 +124,11 @@ const RecoveryPhrase = () => {
                             className='lottie-RecoveryPhrase'
                         />
                     </div>
-                    <h1>Recovery Phrase</h1>
-                    <p>Write down the following {wordCount} words in the correct order and keep them in a safe place.</p>
+                    <h1>{t('recoveryPhrase')}</h1>
+                    <p>{t('writeDownWords', wordCount.toString())}</p>
                     <select defaultValue={24} onChange={(e) => setWordCount(parseInt(e.target.value))}>
-                        <option value={12}>12 Words</option>
-                        <option value={24}>24 Words</option>
+                        <option value={12}>{t('twelveWords')}</option>
+                        <option value={24}>{t('twentyFourWords')}</option>
                     </select>
                     <div id='recoveryPhraseStep2-parent' className='seed-RecoveryPhrase'>
                         {walletSeeds.map((word, index) => (
@@ -150,7 +148,7 @@ const RecoveryPhrase = () => {
 
                         />
                     </div>
-                    <button className='cta-RecoveryPhrase' onClick={() => setStep(3)}>Continue</button>
+                    <button className='cta-RecoveryPhrase' onClick={() => setStep(3)}>{t('continue')}</button>
                 </div>
             }
 
@@ -164,8 +162,8 @@ const RecoveryPhrase = () => {
                         className='lottie-RecoveryPhrase'
                     />
                     </div>
-                    <h1>Confirm Recovery Phrase</h1>
-                    <p>Enter the missing words in the correct order to verify your backup.</p>
+                    <h1>{t('confirmRecoveryPhrase')}</h1>
+                    <p>{t('enterMissingWords')}</p>
                     <div id="recoveryPhraseStep3-parent" className='seed-RecoveryPhrase'>
                         {walletSeeds.map((word, index) => (
                             validationIndexes.includes(index) ? (
@@ -200,7 +198,7 @@ const RecoveryPhrase = () => {
 
                         />
                     </div>
-                    <button className='cta-RecoveryPhrase' onClick={validateInputs} disabled={isConfirmButtonDisabled()}>Confirm</button>
+                    <button className='cta-RecoveryPhrase' onClick={validateInputs} disabled={isConfirmButtonDisabled()}>{t('confirm')}</button>
                 </div>
             }
         </div>

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { WalletProvider } from "@/wallet";
+import { I18nProvider } from "@/utils/i18n";
 
 export const metadata: Metadata = {
   title: "Pactus Wallet",
@@ -18,7 +19,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <WalletProvider>{children}</WalletProvider>
+        <I18nProvider>
+          <WalletProvider>{children}</WalletProvider>
+        </I18nProvider>
       </body>
     </html>
   );
