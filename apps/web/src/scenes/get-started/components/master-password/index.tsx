@@ -66,12 +66,15 @@ const MasterPassword = () => {
 
     return (
         <div className='container-MasterPassword'>
-            <LottiePlayer
-                animationData={masterPasswordLottie}
-                loop={false}
-                play
-                style={{ height: '250px' }}
-            />
+            <div className='lottie-RecoveryPhrase' >
+                <LottiePlayer
+                    animationData={masterPasswordLottie}
+                    loop={false}
+                    play
+                    className='lottie-RecoveryPhrase'
+                />
+            </div>
+
             <h1>Create Master Password</h1>
             <p>Set a strong password to protect your wallet and keep your funds safe.</p>
 

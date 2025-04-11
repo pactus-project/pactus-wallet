@@ -33,12 +33,15 @@ const ChooseNameWallet = () => {
     return (
         <div className="container-ChooseNameWallet">
             {isLoading && <Loading />}
-            <LottiePlayer
-                animationData={walletNameLottie}
-                loop={false}
-                play
-                style={{ height: '200px' }}
-            />
+            <div className='lottie-ChooseNameWallet' >
+                <LottiePlayer
+                    animationData={walletNameLottie}
+                    loop={false}
+                    play
+                    className='lottie-ChooseNameWallet'
+                />
+            </div>
+
             <h1>Name your Wallet</h1>
             <p>
                 Name your wallet to easily identify it using the Pactus wallet. these names are

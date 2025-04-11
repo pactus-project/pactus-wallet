@@ -82,7 +82,7 @@
     grid-template-columns: repeat(4, 200px);
     width: 967px;
     max-width: 100%;
-    min-height: 235px;
+    min-height: 150px;
     padding: 33px 38px;
     gap: 24px;
     border-radius: 24px;
@@ -183,6 +183,7 @@
         grid-template-columns: repeat(3, 100px);
         padding: 20px 15px;
         gap: 14px;
+        margin-top: 10px;
     }
 
     .seed-RecoveryPhrase span {
@@ -194,6 +195,23 @@
     }
 
     .seed-RecoveryPhrase span>label {
-        padding-left:10px;
+        padding-left: 10px;
+    }
+}
+
+@media (max-width: 370px) {
+    .seed-RecoveryPhrase {
+        display: grid;
+        grid-template-columns: repeat(3, 90px);
+        padding: 20px 15px;
+        gap: 14px;
+    }
+
+    .seed-RecoveryPhrase span {
+        font-size: 10px;
+    }
+
+    .seed-RecoveryPhrase input {
+        font-size: 10px;
     }
 }

@@ -3,6 +3,7 @@
     flex-direction: column;
     align-items: center;
     gap: 15px;
+    max-width: 100%;
 }
 
 .container-MasterPassword h1 {
@@ -55,6 +56,7 @@
     position: relative;
     width: 643px;
     margin-bottom: 20px;
+    max-width: 100%;
 }
 
 .input-MasterPassword input {
@@ -105,3 +107,30 @@
     /* 250% */
 }
 
+
+.lottie-MasterPassword {
+    height: 300px;
+}
+
+
+@media (max-width: 768px) {
+    .container-MasterPassword h1 {
+        font-size: 25px;
+
+    }
+
+    .container-MasterPassword p {
+        font-size: 12px;
+        line-height: 25px;
+
+    }
+
+    .lottie-RecoveryPhrase {
+        height: 200px;
+    }
+
+    .terms-MasterPassword>p {
+        text-wrap: nowrap;
+        font-size: 8px !important;
+    }
+}
