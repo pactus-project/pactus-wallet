@@ -1,5 +1,6 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
-
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import './styles/variables.css';
+@import './styles/button.css';
 /*
   Css Reset
   1. Use a more-intuitive box-sizing model.
@@ -85,14 +86,14 @@ button {
 
 body {
   margin: 0;
-  font-family: "Inter", "Inria Serif", "DM Serif Display", sans-serif;
+  font-family: 'Inter', 'Inria Serif', 'DM Serif Display', sans-serif;
   font-optical-sizing: auto;
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.5;
   overflow-x: hidden;
-  background: #15191C;
+  background: #15191c;
   color: #ebebeb;
 }
 
@@ -113,11 +114,8 @@ body {
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
-
-
 
 .errorMessage {
   color: red;

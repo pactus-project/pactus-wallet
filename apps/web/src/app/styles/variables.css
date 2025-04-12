@@ -1,0 +1,99 @@
+/* ========================================
+   DESIGN TOKENS
+   ======================================== */
+
+:root {
+  /* Color System */
+  --color-primary: #0fef9e;
+  --color-primary-dark: #064560;
+  --color-background: #15191c;
+  --color-surface: #101010;
+  --color-surface-light: #242424;
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #e1e1e1;
+  --color-error: #bd0f0f;
+  --color-success: #0f840b;
+  --color-border: #3e3e3e;
+
+  /* Typography Scale */
+  --font-family-primary: 'Inter', sans-serif;
+  --font-size-base: 1rem; /* 16px */
+  --font-size-xs: 0.75rem; /* 12px */
+  --font-size-sm: 0.875rem; /* 14px */
+  --font-size-md: var(--font-size-base); /* 16px */
+  --font-size-lg: 1.125rem; /* 18px */
+  --font-size-xl: 1.25rem; /* 20px */
+  --font-size-2xl: 1.5rem; /* 24px */
+  --font-size-3xl: 1.75rem; /* 28px */
+  --font-size-4xl: 2.25rem; /* 36px */
+
+  /* Line heights */
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+  --line-height-loose: 1.8;
+
+  /* Font Weights */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Spacing Scale */
+  --spacing-unit: 0.25rem; /* 4px */
+  --spacing-xs: var(--spacing-unit); /* 4px */
+  --spacing-sm: calc(var(--spacing-unit) * 2); /* 8px */
+  --spacing-md: calc(var(--spacing-unit) * 4); /* 16px */
+  --spacing-lg: calc(var(--spacing-unit) * 6); /* 24px */
+  --spacing-xl: calc(var(--spacing-unit) * 8); /* 32px */
+  --spacing-2xl: calc(var(--spacing-unit) * 10); /* 40px */
+  --spacing-3xl: calc(var(--spacing-unit) * 12); /* 48px */
+
+  /* Border Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-pill: 100px;
+
+  /* Breakpoints */
+  --bp-mobile: 480px;
+  --bp-tablet: 768px;
+  --bp-desktop: 1024px;
+  --bp-large-desktop: 1440px;
+
+  /* Shadows */
+  --shadow-sm: 0px 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0px 4px 8px rgba(0, 0, 0, 0.15);
+  --button-shadow:
+    0px 0.303px 0.908px 0px rgba(0, 0, 0, 0.32), 0px 1.614px 3.631px 0px rgba(0, 0, 0, 0.28);
+
+  /* Gradients */
+  --gradient-primary: linear-gradient(
+    91deg,
+    var(--color-primary) -0.23%,
+    var(--color-primary-dark) 105.78%
+  );
+}
+
+/* Responsive token adjustments */
+@media (min-width: 768px) {
+  :root {
+    /* Typography adjustments */
+    --font-size-lg: 1.25rem; /* 20px */
+    --font-size-xl: 1.5rem; /* 24px */
+    --font-size-2xl: 1.75rem; /* 28px */
+    --font-size-3xl: 2rem; /* 32px */
+    --font-size-4xl: 2.5rem; /* 40px */
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    /* Typography adjustments */
+    --font-size-xl: 1.75rem; /* 28px */
+    --font-size-2xl: 2rem; /* 32px */
+    --font-size-3xl: 2.25rem; /* 36px */
+    --font-size-4xl: 2.8125rem; /* 45px */
+  }
+}
