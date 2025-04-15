@@ -1,58 +1,129 @@
-.container-TransactionsHistory {
+/* Transaction history component styles using BEM naming convention */
+
+.transactions-history {
     width: 100%;
-    height: 100%;
-    border-radius: 8px;
-    background: #15191C;
-    padding: 16px 21px;
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    padding: var(--spacing-md);
     overflow: hidden;
     display: flex;
     flex-direction: column;
 }
 
-.grid-header {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
+.transactions-history__table {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+
+.transactions-history__header {
     position: sticky;
     top: 0;
-    background: #15191C;
+    background: var(--color-surface);
     z-index: 1;
-    padding-bottom: 10px;
+    padding-bottom: var(--spacing-sm);
 }
 
-.grid-header-cell {
-    color: #858699;
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: normal;
-    padding: 10px;
-    text-align: left;
+.transactions-history__body {
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
-.grid-body {
+.transactions-history__row {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
-    overflow-y: auto;
-
+    width: 100%;
 }
 
-.grid-row {
-    display: contents;
+.transactions-history__cell {
+    padding: var(--spacing-sm);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--line-height-normal);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
-.grid-cell {
-    color: #FFF;
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: normal;
-    padding: 10px;
-    border-bottom: 1px solid #333;
+.transactions-history__cell--header {
+    color: var(--color-text-tertiary);
+    font-weight: var(--font-weight-medium);
+    position: relative;
 }
 
-.gradientTxHash-TransactionsHistory {
-    background: var(--Ocean, linear-gradient(91deg, #0FEF9E -0.23%, #064560 105.78%));
+.transactions-history__cell--hash {
+    background: var(--gradient-primary);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+}
+
+.transactions-history__body .transactions-history__row {
+    border-bottom: 1px solid var(--color-border);
+}
+
+.transactions-history__body .transactions-history__row:hover {
+    background-color: var(--color-surface-light);
+}
+
+.transactions-history__empty {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: var(--spacing-lg);
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-sm);
+}
+
+/* Custom scrollbar styling for the transaction body */
+.transactions-history__body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.transactions-history__body::-webkit-scrollbar-track {
+    background: var(--color-surface-medium);
+    border-radius: 3px;
+}
+
+.transactions-history__body::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: 3px;
+}
+
+.transactions-history__body::-webkit-scrollbar-thumb:hover {
+    background: var(--color-text-tertiary);
+}
+
+/* Responsive adjustments */
+@media (max-width: var(--bp-tablet)) {
+    .transactions-history__cell {
+        padding: var(--spacing-xs);
+        font-size: 11px;
+    }
+    
+    .transactions-history {
+        padding: var(--spacing-sm);
+    }
+}
+
+/* For very small screens, provide horizontal scrolling */
+@media (max-width: var(--bp-mobile)) {
+    .transactions-history__table {
+        min-width: 600px;
+    }
+    
+    .transactions-history {
+        overflow-x: auto;
+    }
+}
+
+/* Support for reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    .transactions-history__body .transactions-history__row {
+        transition: none;
+    }
 }

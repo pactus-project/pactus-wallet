@@ -2,10 +2,25 @@ import { sendIcon } from '@/assets'
 import Image from 'next/image'
 import React from 'react'
 import './style.css'
-const SendPac = () => {
 
+const SendPac: React.FC = () => {
   return (
-    <button className='cta-sendPac' ><Image src={sendIcon} alt='send-icon' />Send</button>
+    <button 
+      className="btn btn-send btn-sm send-button"
+      type="button"
+      aria-label="Send PAC tokens"
+    >
+      <span className="send-button__icon">
+        <Image 
+          src={sendIcon} 
+          alt="" 
+          width={20} 
+          height={20}
+          aria-hidden="true"
+        />
+      </span>
+      <span className="send-button__text">Send</span>
+    </button>
   )
 }
 
