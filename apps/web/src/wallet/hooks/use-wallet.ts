@@ -3,7 +3,6 @@ import { useContext } from 'react';
 import { WalletContextType } from '../types';
 import { WalletContext } from '../provider';
 
-
 export function useWallet(): WalletContextType {
   const context = useContext(WalletContext);
   if (!context) {

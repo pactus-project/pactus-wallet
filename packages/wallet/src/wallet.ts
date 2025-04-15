@@ -347,7 +347,7 @@ export class Wallet {
           resolve({
             address: response.address,
             balance: response.balance,
-            blockHeight: response.block_height,
+            blockHeight: response.blockHeight,
           });
         });
       } catch (error) {

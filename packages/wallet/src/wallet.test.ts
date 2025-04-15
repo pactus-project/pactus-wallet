@@ -343,7 +343,7 @@ describe('Pactus Wallet Tests', () => {
       const mockResponse = {
         address: address,
         balance: '1000000000',
-        block_height: '100',
+        blockHeight: '100',
       };
 
       mockGrpcClient.getAccount.mockImplementation(
