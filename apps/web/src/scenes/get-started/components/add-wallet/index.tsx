@@ -21,6 +21,7 @@ const AddWallet = () => {
                     animationData={addWalletLottie}
                     loop={true}
                     play
+                    className="add-wallet__animation"
                     aria-hidden="true"
                 />
             </div>

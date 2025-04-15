@@ -248,7 +248,7 @@
 
 .welcome__cta-button {
   width: auto;
-  max-width: 300px;
+  max-width: 600px;
   height: var(--button-primary-height-desktop);
   margin-top: var(--spacing-xs);
 }
@@ -275,8 +275,7 @@
   }
   
   .welcome__cta-button {
-    width: 100%;
-    max-width: 400px;
+    max-width: 100%;
     height: var(--button-primary-height-mobile);
   }
 }

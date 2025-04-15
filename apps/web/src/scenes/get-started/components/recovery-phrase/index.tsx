@@ -109,6 +109,7 @@ const RecoveryPhrase: React.FC = () => {
                             animationData={writePaperLottie}
                             loop={true}
                             play
+                            className="recovery-phrase__animation"
                             aria-hidden="true"
                         />
                     </div>
@@ -132,6 +133,7 @@ const RecoveryPhrase: React.FC = () => {
                             animationData={generateRecoverySeedLottie}
                             loop={false}
                             play
+                            className="recovery-phrase__animation"
                             aria-hidden="true"
                         />
                     </div>
@@ -141,9 +143,6 @@ const RecoveryPhrase: React.FC = () => {
                     </p>
                     
                     <div className="recovery-phrase__select-container">
-                        <label htmlFor="word-count-select" className="recovery-phrase__select-label">
-                            {t('selectWordCount')}
-                        </label>
                         <select 
                             id="word-count-select"
                             className="recovery-phrase__select"
@@ -193,6 +192,7 @@ const RecoveryPhrase: React.FC = () => {
                             animationData={generateRecoverySeedLottie}
                             loop={false}
                             play
+                            className="recovery-phrase__animation"
                             aria-hidden="true"
                         />
                     </div>

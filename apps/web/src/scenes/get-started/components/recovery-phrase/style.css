@@ -157,7 +157,7 @@
 
 .recovery-phrase__button {
     width: 100%;
-    max-width: 600px;
+    max-width: 1000px;
     height: var(--button-primary-height-desktop);
     margin-top: var(--spacing-md);
 }

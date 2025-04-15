@@ -82,6 +82,7 @@ const MasterPassword = () => {
             <div className="master-password__animation">
                 <LottiePlayer
                     animationData={masterPasswordLottie}
+                    className="master-password__animation"
                     loop={false}
                     play
                     aria-hidden="true"

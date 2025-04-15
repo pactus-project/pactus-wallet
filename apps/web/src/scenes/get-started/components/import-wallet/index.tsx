@@ -103,6 +103,7 @@ const ImportWallet = () => {
                     animationData={importWalletLottie}
                     loop={true}
                     play
+                    className="import-wallet__animation"
                     aria-hidden="true"
                 />
             </div>
@@ -111,9 +112,6 @@ const ImportWallet = () => {
             <p className="import-wallet__description">{t('importWalletDescription')}</p>
             
             <div className="import-wallet__controls">
-                <label htmlFor="word-count" className="import-wallet__select-label">
-                    {t('selectWordCount')}
-                </label>
                 <select 
                     id="word-count"
                     className="import-wallet__select"

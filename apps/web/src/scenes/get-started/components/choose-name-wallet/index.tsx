@@ -46,6 +46,7 @@ const ChooseNameWallet = () => {
                 <LottiePlayer
                     animationData={walletNameLottie}
                     loop={false}
+                    className="wallet-naming__animation"
                     play
                     style={{ height: '200px' }}
                     aria-hidden="true"
