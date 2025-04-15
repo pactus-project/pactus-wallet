@@ -175,13 +175,6 @@ const Sidebar = () => {
                     <BorderBeam
                         duration={4}
                         size={100}
-                        colorFrom="#064560"
-                        colorTo="#0FEF9E"
-                        boxShadow={{
-                            color: "#0FEF9E",
-                            blur: 95,
-                            spread: -60
-                        }}
                         parentId="contributing-parent"
                     />
                 </div>

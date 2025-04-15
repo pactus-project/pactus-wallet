@@ -158,8 +158,6 @@ const ImportWallet = () => {
                 <BorderBeam
                     duration={4}
                     size={300}
-                    colorFrom='#064560'
-                    colorTo='#0FEF9E'
                     parentId="recovery-phrase-parent"
                     showOnHover={true}
                 />

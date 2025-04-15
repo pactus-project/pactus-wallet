@@ -1,7 +1,7 @@
 /* Import style modules */
-@import './assets/styles/variables.css';
-@import './assets/styles/utilities.css';
-@import './assets/styles/button.css';
+@import './variables.css';
+@import './utilities.css';
+@import './button.css';
 
 /* ========================================
    CSS RESET & BASE STYLES

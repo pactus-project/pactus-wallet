@@ -172,13 +172,6 @@ const RecoveryPhrase: React.FC = () => {
                         <BorderBeam
                             duration={10}
                             size={400}
-                            colorFrom='#064560'
-                            colorTo='#0FEF9E'
-                            boxShadow={{
-                                color: '#0FEF9E',
-                                blur: 95,
-                                spread: -60
-                            }}
                             parentId="recoveryPhraseStep2-parent"
                         />
                     </div>
@@ -254,13 +247,6 @@ const RecoveryPhrase: React.FC = () => {
                         <BorderBeam
                             duration={10}
                             size={400}
-                            colorFrom='#064560'
-                            colorTo='#0FEF9E'
-                            boxShadow={{
-                                color: '#0FEF9E',
-                                blur: 95,
-                                spread: -60
-                            }}
                             parentId="recoveryPhraseStep3-parent"
                         />
                     </div>

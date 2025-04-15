@@ -72,13 +72,6 @@ const AddWallet = () => {
                     <BorderBeam
                         duration={4}
                         size={300}
-                        colorFrom='#064560'
-                        colorTo='#0FEF9E'
-                        boxShadow={{
-                            color: '#0FEF9E',
-                            blur: 95,
-                            spread: -60
-                        }}
                         parentId="ExistingWalletButton"
                         showOnHover={true}
                     />
