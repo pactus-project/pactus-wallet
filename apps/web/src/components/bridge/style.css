@@ -15,3 +15,62 @@
     font-weight: 500;
     line-height: normal;
 }
+
+.bridge-button {
+  /* Use existing button classes as a base, with specific overrides */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-xs);
+  width: 119px;
+  height: 38px;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  transition: background-color var(--transition-fast);
+}
+
+.bridge-button:hover {
+  background-color: var(--color-surface-light);
+}
+
+.bridge-button:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.bridge-button:active {
+  transform: translateY(1px);
+}
+
+.bridge-button__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bridge-button__text {
+  /* Ensure text can be properly scaled/localized */
+  white-space: nowrap;
+}
+
+/* Responsive adjustments */
+@media (max-width: var(--bp-mobile)) {
+  .bridge-button {
+    width: 100%;
+  }
+}
+
+/* Respect user preference for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .bridge-button {
+    transition: none;
+  }
+  
+  .bridge-button:active {
+    transform: none;
+  }
+}

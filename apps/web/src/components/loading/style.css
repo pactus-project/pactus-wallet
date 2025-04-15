@@ -1,0 +1,44 @@
+/* Loading component styles using BEM naming convention */
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: var(--z-index-modal);
+  background-color: var(--color-background);
+}
+
+.loading-animation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: var(--bp-mobile)) {
+  .loading-animation {
+    transform: scale(0.8);
+  }
+}
+
+/* Support for reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .loading-animation {
+    animation: pulse 1.5s ease-in-out infinite alternate;
+  }
+  
+  @keyframes pulse {
+    from {
+      opacity: 0.6;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+}
