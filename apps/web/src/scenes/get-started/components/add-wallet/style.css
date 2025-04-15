@@ -1,5 +1,3 @@
-/* Add wallet component styles using BEM naming convention */
-
 .add-wallet {
     display: flex;
     flex-direction: column;
@@ -100,7 +98,7 @@
 }
 
 /* Responsive adjustments */
-@media (max-width: var(--bp-tablet)) {
+@media (max-width: 768px) {
     .add-wallet__options {
         flex-direction: column;
     }
@@ -119,7 +117,7 @@
     }
 }
 
-@media (max-width: var(--bp-mobile)) {
+@media (max-width: 480px) {
     .add-wallet__option-button {
         height: auto;
         min-height: 159px;

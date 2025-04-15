@@ -124,7 +124,7 @@
 }
 
 /* Responsive adjustments */
-@media (max-width: var(--bp-tablet)) {
+@media (max-width:  768px) {
     .activity__content {
         width: 100%;
     }

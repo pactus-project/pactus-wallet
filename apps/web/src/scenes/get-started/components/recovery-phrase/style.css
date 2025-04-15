@@ -1,5 +1,3 @@
-/* Recovery phrase component styles using BEM naming convention */
-
 .recovery-phrase {
     display: flex;
     flex-direction: column;
@@ -109,18 +107,15 @@
 }
 
 .recovery-phrase__word--error {
-    border: 2px solid var(--color-error);
-    background-color: rgba(189, 15, 15, 0.1);
+    background-color: var(--color-error-light);
 }
 
 .recovery-phrase__word--success {
-    border: 2px solid var(--color-success);
-    background-color: rgba(15, 132, 11, 0.1);
+    background-color: var(--color-success-light);
 }
 
 .recovery-phrase__word-label {
-    padding: 0 var(--spacing-md);
-    margin-right: var(--spacing-xs);
+    padding: 0 var(--spacing-sm);
     user-select: none;
     font-weight: var(--font-weight-semibold);
 }
@@ -155,6 +150,14 @@
     color: var(--color-success);
 }
 
+.recovery-phrase__word--error .recovery-phrase__word-label {
+    color: var(--color-error);
+}
+
+.recovery-phrase__word--success .recovery-phrase__word-label {
+    color: var(--color-success);
+}
+
 .recovery-phrase__button {
     width: 100%;
     max-width: 1000px;
@@ -168,43 +171,43 @@
 }
 
 /* Responsive adjustments */
-@media (max-width: var(--bp-tablet)) {
+@media (max-width: 768px) {
     .recovery-phrase__title {
         font-size: var(--font-size-4xl);
     }
-    
+
     .recovery-phrase__seed-container {
         grid-template-columns: repeat(3, 1fr);
         padding: var(--spacing-md);
     }
-    
+
     .recovery-phrase__animation {
         height: 250px;
     }
-    
+
     .recovery-phrase__button {
         height: var(--button-primary-height-mobile);
     }
 }
 
-@media (max-width: var(--bp-mobile)) {
+@media (max-width:480px) {
     .recovery-phrase__title {
         font-size: var(--font-size-3xl);
     }
-    
+
     .recovery-phrase__description {
         font-size: var(--font-size-sm);
     }
-    
+
     .recovery-phrase__seed-container {
         grid-template-columns: repeat(2, 1fr);
         gap: var(--spacing-sm);
     }
-    
+
     .recovery-phrase__word {
         font-size: var(--font-size-sm);
     }
-    
+
     .recovery-phrase__animation {
         height: 200px;
     }
@@ -212,6 +215,7 @@
 
 /* Support for reduced motion preferences */
 @media (prefers-reduced-motion: reduce) {
+
     .recovery-phrase__word,
     .recovery-phrase__word-input,
     .recovery-phrase__select {

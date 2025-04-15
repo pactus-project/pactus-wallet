@@ -99,7 +99,7 @@
 }
 
 /* Responsive adjustments */
-@media (max-width: var(--bp-tablet)) {
+@media (max-width:  768px) {
     .transactions-history__cell {
         padding: var(--spacing-xs);
         font-size: 11px;
@@ -111,7 +111,7 @@
 }
 
 /* For very small screens, provide horizontal scrolling */
-@media (max-width: var(--bp-mobile)) {
+@media (max-width: 480px) {
     .transactions-history__table {
         min-width: 600px;
     }

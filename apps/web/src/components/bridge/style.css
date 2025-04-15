@@ -40,7 +40,7 @@
 }
 
 /* Responsive adjustments */
-@media (max-width: var(--bp-mobile)) {
+@media (max-width:480px) {
   .bridge-button {
     width: 100%;
   }

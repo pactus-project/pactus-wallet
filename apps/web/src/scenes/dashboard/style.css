@@ -137,7 +137,7 @@
 }
 
 /* Responsive adjustments */
-@media (max-width: var(--bp-tablet)) {
+@media (max-width:  768px) {
     .dashboard__content {
         width: 100%;
     }
@@ -161,7 +161,7 @@
 }
 
 /* For very small screens */
-@media (max-width: var(--bp-mobile)) {
+@media (max-width:480px) {
     .dashboard__stats {
         flex-direction: column;
         align-items: flex-start;

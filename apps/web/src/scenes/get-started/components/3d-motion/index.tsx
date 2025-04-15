@@ -16,8 +16,6 @@ const ThreeDMotion = () => {
     }, []);
     return (
         <div style={{ width: '400px', height: '400px', overflow: 'hidden', position: 'relative' }} >
-
-
             <Suspense>
                 {showSpline && (
                     <motion.div

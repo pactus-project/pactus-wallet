@@ -31,7 +31,9 @@
   
   /* Feedback colors */
   --color-error: #bd0f0f;
-  --color-success: #0f840b;
+  --color-error-light: #FFD7D7; /* Secondary error color */
+  --color-success: #0F840B;
+  --color-success-light: #C6FFBD; /* Secondary success color */
   --color-warning: #ca6534; /* Add warning color */
   --color-info: #0f65ef; /* Add info color */
   

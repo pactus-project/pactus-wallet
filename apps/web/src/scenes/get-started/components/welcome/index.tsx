@@ -6,6 +6,7 @@ import { openSourceIcon, secureIcon, simpleIcon } from '@/assets';
 import './style.css';
 import { useRouter } from 'next/navigation';
 import { useI18n } from '@/utils/i18n';
+import useSizeDetector from '@/utils/size-detector';
 
 const Welcome = () => {
   const navigate = useRouter().push;
@@ -32,20 +33,20 @@ const Welcome = () => {
         </>
       ),
     },
-    { 
-      title: t('simple'), 
-      icon: simpleIcon, 
-      description: t('simpleDescription') 
+    {
+      title: t('simple'),
+      icon: simpleIcon,
+      description: t('simpleDescription')
     },
-    { 
-      title: t('secure'), 
-      icon: secureIcon, 
-      description: t('secureDescription') 
+    {
+      title: t('secure'),
+      icon: secureIcon,
+      description: t('secureDescription')
     },
   ];
 
   const handleCheckboxToggle = () => setIsChecked(!isChecked);
-
+  const { isMobile, isTablet } = useSizeDetector();
   return (
     <section className="welcome">
       <div className="welcome__header">
@@ -61,9 +62,9 @@ const Welcome = () => {
         <div className="welcome__features">
           {features.map((feature, index) => (
             <div className="welcome__feature" key={`feature-${index}`}>
-              <Image 
-                src={feature.icon} 
-                alt="" 
+              <Image
+                src={feature.icon}
+                alt=""
                 className="welcome__feature-icon"
                 aria-hidden="true"
                 width={32}
@@ -76,24 +77,24 @@ const Welcome = () => {
             </div>
           ))}
         </div>
-        <div className="welcome__visualization">
+        {!isMobile && !isTablet ? <div className="welcome__visualization">
           <ThreeDMotion />
-        </div>
+        </div> : null}
       </div>
 
       <div className="welcome__footer">
         <div className="welcome__terms">
-          <input 
-            type="checkbox" 
+          <input
+            type="checkbox"
             id="terms-checkbox"
-            className="welcome__checkbox" 
-            checked={isChecked} 
+            className="welcome__checkbox"
+            checked={isChecked}
             onChange={handleCheckboxToggle}
             aria-labelledby="terms-text"
           />
-          <label 
+          <label
             id="terms-text"
-            htmlFor="terms-checkbox" 
+            htmlFor="terms-checkbox"
             className="welcome__terms-text"
             onClick={handleCheckboxToggle}
           >

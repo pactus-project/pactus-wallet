@@ -43,7 +43,7 @@
 }
 
 /* Responsive adjustments */
-@media (max-width: var(--bp-mobile)) {
+@media (max-width: 480px) {
   .send-button {
     width: 100%;
   }

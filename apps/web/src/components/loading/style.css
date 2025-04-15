@@ -21,7 +21,7 @@
 }
 
 /* Responsive adjustments */
-@media (max-width: var(--bp-mobile)) {
+@media (max-width: 480px) {
   .loading-animation {
     transform: scale(0.8);
   }

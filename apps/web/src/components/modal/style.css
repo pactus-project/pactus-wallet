@@ -178,7 +178,7 @@
 }
 
 /* Responsive adjustments */
-@media (max-width: var(--bp-mobile)) {
+@media (max-width:480px) {
   .modal-container {
     width: 95%;
   }

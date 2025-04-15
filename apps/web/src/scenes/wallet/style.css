@@ -154,7 +154,7 @@
 }
 
 /* Responsive styles */
-@media (max-width: var(--bp-tablet)){
+@media (max-width: 768px){
   .wallet {
     flex-direction: column;
   }
@@ -177,7 +177,7 @@
   }
 }
 
-@media (max-width: var(--bp-mobile)){
+@media (max-width: 480px){
   .wallet__balance-container {
     padding: var(--spacing-md);
   }
