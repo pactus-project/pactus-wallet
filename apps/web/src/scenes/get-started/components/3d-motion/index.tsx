@@ -1,9 +1,11 @@
 'use client'
-import React, { lazy, Suspense, useEffect, useState } from 'react'
+
+import React, { lazy, Suspense } from 'react'
 import { motion } from "framer-motion";
 const LazySpline = lazy(() => import("@splinetool/react-spline"));
 
 const ThreeDMotion = () => {
+
     return (
         <div style={{ width: '400px', height: '400px', overflow: 'hidden', position: 'relative' }} >
             <Suspense>
@@ -15,10 +17,8 @@ const ThreeDMotion = () => {
                 >
                     <LazySpline
                         scene="https://prod.spline.design/mZBrYNcnoESGlTUG/scene.splinecode"
-                        className="absolute inset-0 w-full h-full origin-top-left flex items-center justify-center"
                     />
                 </motion.div>
-
             </Suspense>
         </div>
     )
