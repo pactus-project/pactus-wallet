@@ -96,7 +96,6 @@ const Welcome = () => {
             id="terms-text"
             htmlFor="terms-checkbox"
             className="welcome__terms-text"
-            onClick={handleCheckboxToggle}
           >
             {t('iHaveReadAndAgreed')}{' '}
             <span className="welcome__terms-highlight">{t('termsAndConditions')}</span>.
