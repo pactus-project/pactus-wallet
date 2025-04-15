@@ -25,54 +25,68 @@ const Wallet = () => {
   };
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <div className="container-wallet">
+    <Suspense fallback={<div className="wallet__loading">Loading...</div>}>
+      <main className="wallet">
         <Sidebar />
-        <div className="content-wallet">
+        <div className="wallet__content">
           <Header title={`🤝 ${addressInfo?.label ?? ''}`} />
-          <div className="section1-wallet">
-            <div>
-              <div className="address-row">
-                <div className="qr-code-container">
-                  <QRCode value={addressInfo?.address ?? ''} size={214} level="H" />
+          
+          <section className="wallet__balance-card">
+            <div className="wallet__balance-container">
+              <div className="wallet__account-info">
+                <div className="wallet__qr-code">
+                  <QRCode 
+                    value={addressInfo?.address ?? ''} 
+                    size={214} 
+                    level="H"
+                    aria-label="QR code for wallet address"
+                  />
                 </div>
-                <div className="amountSection-wallet">
-                  <h1>Balance</h1>
-                  <div className="amount-row">
-                    <Image src={simpleLogo} alt="simple-logo" />
-                    <p>0</p>
-                    <span>PAC</span>
+                
+                <div className="wallet__details">
+                  <h2 className="wallet__balance-heading">Balance</h2>
+                  
+                  <div className="wallet__balance-amount">
+                    <Image src={simpleLogo} alt="Pactus logo" className="wallet__currency-icon" />
+                    <p className="wallet__balance-value">0</p>
+                    <span className="wallet__currency-code">PAC</span>
                   </div>
-                  <div>
-                    <span style={{ fontSize: '15px' }}>≈ 0 USD</span>
+                  
+                  <p className="wallet__balance-fiat">≈ 0 USD</p>
+
+                  <div className="wallet__address-container">
+                    <h3 className="wallet__address-label">Account Address:</h3>
+                    
+                    <div className="wallet__address-row">
+                      <span className="wallet__address-value text-truncate" id="wallet-address">
+                        {addressInfo?.address ?? ''}
+                      </span>
+                      <button 
+                        className="wallet__copy-button" 
+                        onClick={handleCopy}
+                        aria-label="Copy address to clipboard"
+                        title="Copy address to clipboard"
+                      >
+                        <Image
+                          src={copied ? successIcon : copyIcon}
+                          alt={copied ? "Copied successfully" : "Copy to clipboard"}
+                          width={25}
+                          height={25}
+                        />
+                      </button>
+                    </div>
                   </div>
 
-                  <div className="address-wallet">
-                    <div className="address-label">Account Address:</div>
-                  </div>
-
-                  <div className="address-row">
-                    <div className="address-value">{addressInfo?.address ?? ''}</div>
-                    <button title="copy address" onClick={() => handleCopy()}>
-                      <Image
-                        src={copied ? successIcon : copyIcon}
-                        alt="copy-icon"
-                        width={25}
-                        height={25}
-                      />
-                    </button>
-                  </div>
-
-                  <div className="amountCtas-wallet">
+                  <div className="wallet__actions">
                     <SendPac />
                     <BridgePac />
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+          </section>
         </div>
-      </div>
+      </main>
     </Suspense>
   );
 };

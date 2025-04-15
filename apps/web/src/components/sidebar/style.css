@@ -80,6 +80,7 @@
 .sidebar__add-button {
     justify-content: flex-start;
     width: calc(100% - 45px);
+    height: 38px;
     padding: var(--spacing-xs) var(--spacing-sm);
     gap: var(--spacing-xs);
 }
@@ -100,6 +101,7 @@
 .sidebar__nav-item {
     display: flex;
     align-items: center;
+    justify-content: flex-start;
     width: 100%;
     padding: var(--spacing-xs) var(--spacing-sm);
     gap: var(--spacing-sm);
@@ -150,6 +152,7 @@
 .sidebar__account-item {
     display: flex;
     align-items: center;
+    justify-content: flex-start;
     gap: var(--spacing-xs);
     border-radius: var(--radius-sm);
     padding: var(--spacing-xs);
