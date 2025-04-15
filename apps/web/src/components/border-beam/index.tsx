@@ -108,8 +108,8 @@ const BorderBeam: React.FC<BorderBeamProps> = ({
                 const parentRect = parentElement.getBoundingClientRect();
 
                 // Calculate position and constrain values
-                let x = Math.max(-10, Math.min(10, rect.left - parentRect.left));
-                let y = Math.max(-10, Math.min(10, rect.top - parentRect.top));
+                const x = Math.max(-10, Math.min(10, rect.left - parentRect.left));
+                const y = Math.max(-10, Math.min(10, rect.top - parentRect.top));
 
                 const blur = boxShadow.blur || 20;
                 const spread = boxShadow.spread || 0;
