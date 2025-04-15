@@ -124,7 +124,7 @@
 
 .master-password__checkbox-container {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     gap: var(--spacing-xs);
     cursor: pointer;
 }
@@ -139,6 +139,7 @@
     font-weight: var(--font-weight-regular);
     line-height: var(--line-height-loose);
     user-select: none;
+    text-wrap: nowrap;
     cursor: pointer;
 }
 
