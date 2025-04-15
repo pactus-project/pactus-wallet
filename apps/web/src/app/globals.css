@@ -1,36 +1,29 @@
+/* Import fonts with display swap for better performance */
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+/* Import style modules */
 @import './styles/variables.css';
+@import './styles/utilities.css';
 @import './styles/button.css';
-/*
-  Css Reset
-  1. Use a more-intuitive box-sizing model.
-*/
+
+/* ========================================
+   CSS RESET & BASE STYLES
+   ======================================== */
+
+/* 1. Use a more intuitive box-sizing model */
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
 
-/*
-  2. Remove default margin
-*/
+/* 2. Remove default margin and add smooth scrolling */
 * {
   margin: 0;
-  /* -webkit-user-select: none;  
-  -ms-user-select: none; 
-  user-select: none;   */
   scroll-behavior: smooth;
 }
 
-/*
-  Typographic tweaks!
-  3. Add accessible line-height
-  4. Improve text rendering
-*/
-
-/*
-  5. Improve media defaults
-*/
+/* 3. Improve media defaults */
 img,
 picture,
 video,
@@ -40,9 +33,7 @@ svg {
   max-width: 100%;
 }
 
-/*
-  6. Remove built-in form typography styles
-*/
+/* 4. Remove built-in form typography styles */
 input,
 button,
 textarea,
@@ -50,9 +41,7 @@ select {
   font: inherit;
 }
 
-/*
-  7. Avoid text overflows
-*/
+/* 5. Avoid text overflows */
 p,
 h1,
 h2,
@@ -61,20 +50,22 @@ h4,
 h5,
 h6 {
   overflow-wrap: break-word;
+  hyphens: auto;
 }
 
+/* 6. Better link styling */
 a {
   text-decoration: none;
+  color: inherit;
 }
 
-/*
-  8. Create a root stacking context
-*/
+/* 7. Create a root stacking context */
 #root,
 #__next {
   isolation: isolate;
 }
 
+/* 8. Button reset */
 button {
   cursor: pointer;
   border: none;
@@ -82,43 +73,102 @@ button {
   align-items: center;
   justify-content: center;
   background: none;
+  padding: 0;
 }
 
+/* ========================================
+   BODY & TYPOGRAPHY
+   ======================================== */
+
 body {
-  margin: 0;
-  font-family: 'Inter', 'Inria Serif', 'DM Serif Display', sans-serif;
+  font-family: var(--font-family-primary);
   font-optical-sizing: auto;
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  line-height: 1.5;
+  line-height: var(--line-height-normal);
   overflow-x: hidden;
-  background: #15191c;
-  color: #ebebeb;
-}
-
-::-webkit-scrollbar {
-  width: 7px;
-}
-
-::-webkit-scrollbar-track {
-  background-color: #ebebeb;
-  -webkit-border-radius: 10px;
-  border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb {
-  -webkit-border-radius: 10px;
-  border-radius: 10px;
-  background: #8d8d8d;
+  background: var(--color-background);
+  color: var(--color-text-secondary);
+  
+  /* Prevent layout shifts */
+  min-height: 100vh;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
-.errorMessage {
-  color: red;
-  font-size: 12px;
-  margin-top: 5px;
+/* ========================================
+   ACCESSIBILITY
+   ======================================== */
+
+/* Improved focus styles */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
 }
+
+/* Skip to content link for keyboard users */
+.skip-to-content {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--color-primary);
+  color: var(--color-text-primary);
+  padding: var(--spacing-sm);
+  z-index: 9999;
+  transition: top 0.2s;
+}
+
+.skip-to-content:focus {
+  top: 0;
+}
+
+/* Respect user preference for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ========================================
+   SCROLLBAR STYLING
+   ======================================== */
+
+/* Themed scrollbars */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: var(--color-surface-light);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: var(--color-border);
+  transition: background var(--transition-fast);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-tertiary);
+}
+
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) var(--color-surface-light);
+}
+
+/* ========================================
+   UTILITY CLASSES
+   ======================================== */
+

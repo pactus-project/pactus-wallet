@@ -1,17 +1,21 @@
-.cta-ReceivePac {
-    display: flex;
-    width: 119px;
-    height: 38px;
-    padding: 13px 7px;
-    justify-content: center;
-    align-items: center;
-    gap: 5px;
-    border-radius: 8px;
-    background: #15191C;
-    color: #FFF;
-    text-align: center;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: normal;
+/* We can keep component-specific styles here, but most styling 
+   now comes from our design system */
+
+.btn-receive {
+  width: 119px;
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  border-radius: var(--radius-md);
+  font-weight: var(--font-weight-medium);
+}
+
+.btn-receive:hover:not(:disabled) {
+  background-color: var(--color-surface-light);
+}
+
+/* Media query to make button responsive */
+@media (max-width: 480px) {
+  .btn-receive {
+    width: 100%;
+  }
 }
