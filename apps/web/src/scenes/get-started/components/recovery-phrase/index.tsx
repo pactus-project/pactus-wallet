@@ -1,3 +1,4 @@
+'use client';
 import { generateRecoverySeedLottie, writePaperLottie } from '@/assets'
 import React, { useState, useEffect } from 'react'
 import './style.css'
@@ -9,13 +10,14 @@ import { useWallet } from '@/wallet'
 import { useI18n } from '@/utils/i18n'
 
 const LottiePlayer = dynamic(() => import('react-lottie-player'), { ssr: false });
-const RecoveryPhrase = () => {
-    const [step, setStep] = useState(1);
-    const [wordCount, setWordCount] = useState(24);
+
+const RecoveryPhrase: React.FC = () => {
+    const [step, setStep] = useState<number>(1);
+    const [wordCount, setWordCount] = useState<number>(24);
     const [walletSeeds, setWalletSeeds] = useState<string[]>([]);
     const [validationIndexes, setValidationIndexes] = useState<number[]>([]);
-    const [userInputs, setUserInputs] = useState({});
-    const [inputErrors, setInputErrors] = useState({});
+    const [userInputs, setUserInputs] = useState<{[key: number]: string}>({});
+    const [inputErrors, setInputErrors] = useState<{[key: number]: string}>({});
     const navigate = useRouter().push;
     const { setMnemonic } = useWallet();
     const { t } = useI18n();
@@ -26,12 +28,12 @@ const RecoveryPhrase = () => {
     }, [wordCount]);
 
     // Function to generate a recovery phrase using BIP39
-    const generateRecoveryPhrase = async (count) => {
+    const generateRecoveryPhrase = async (count: number) => {
         const mnemonic = bip39.generateMnemonic((count === 12 ? 128 : 256));
         const words = mnemonic.split(' ');
         setWalletSeeds(words);
 
-        // Select 4 random indexes for validation
+        // Select random indexes for validation
         const indexes: number[] = [];
         const numValidationWords = count === 12 ? 4 : 8;
         while (indexes.length < numValidationWords) {
@@ -46,7 +48,7 @@ const RecoveryPhrase = () => {
     };
 
     // Handle user input changes
-    const handleInputChange = (index, value) => {
+    const handleInputChange = (index: number, value: string) => {
         setUserInputs({ ...userInputs, [index]: value });
 
         // Validate input and apply color styles
@@ -62,7 +64,7 @@ const RecoveryPhrase = () => {
 
     // Validate user inputs before proceeding
     const validateInputs = () => {
-        const errors = {};
+        const errors: {[key: number]: string} = {};
         let allInputsValid = true;
         validationIndexes.forEach((index) => {
             if (userInputs[index]?.trim() !== walletSeeds[index]) {
@@ -99,38 +101,73 @@ const RecoveryPhrase = () => {
     };
 
     return (
-        <div className='container-RecoveryPhrase'>
-            {step === 1 &&
-                <div className='hint-RecoveryPhrase'>
-                    <LottiePlayer
-                        animationData={writePaperLottie}
-                        loop={true}
-                        play
-                        style={{ height: '300px' }}
-                    />
-                    <h1>{t('writeDownRecoveryPhrase')}</h1>
-                    <p>{t('recoveryPhraseDescription')}</p>
+        <section className="recovery-phrase">
+            {step === 1 && (
+                <div className="recovery-phrase__step">
+                    <div className="recovery-phrase__animation">
+                        <LottiePlayer
+                            animationData={writePaperLottie}
+                            loop={true}
+                            play
+                            aria-hidden="true"
+                        />
+                    </div>
+                    <h1 className="recovery-phrase__title">{t('writeDownRecoveryPhrase')}</h1>
+                    <p className="recovery-phrase__description">{t('recoveryPhraseDescription')}</p>
 
-                    <button className='cta-RecoveryPhrase' onClick={() => setStep(2)}>{t('continue')}</button>
-                </div>}
+                    <button 
+                        className="btn btn-primary recovery-phrase__button"
+                        onClick={() => setStep(2)}
+                        type="button"
+                    >
+                        {t('continue')}
+                    </button>
+                </div>
+            )}
 
-            {step === 2 &&
-                <div className='hint-RecoveryPhrase' style={{ gap: '10px' }}>
-                    <LottiePlayer
-                        animationData={generateRecoverySeedLottie}
-                        loop={false}
-                        play
-                        style={{ height: '200px' }}
-                    />
-                    <h1>{t('recoveryPhrase')}</h1>
-                    <p>{t('writeDownWords', wordCount.toString())}</p>
-                    <select defaultValue={24} onChange={(e) => setWordCount(parseInt(e.target.value))}>
-                        <option value={12}>{t('twelveWords')}</option>
-                        <option value={24}>{t('twentyFourWords')}</option>
-                    </select>
-                    <div id='recoveryPhraseStep2-parent' className='seed-RecoveryPhrase'>
+            {step === 2 && (
+                <div className="recovery-phrase__step">
+                    <div className="recovery-phrase__animation">
+                        <LottiePlayer
+                            animationData={generateRecoverySeedLottie}
+                            loop={false}
+                            play
+                            aria-hidden="true"
+                        />
+                    </div>
+                    <h1 className="recovery-phrase__title">{t('recoveryPhrase')}</h1>
+                    <p className="recovery-phrase__description">
+                        {t('writeDownWords', wordCount.toString())}
+                    </p>
+                    
+                    <div className="recovery-phrase__select-container">
+                        <label htmlFor="word-count-select" className="recovery-phrase__select-label">
+                            {t('selectWordCount')}
+                        </label>
+                        <select 
+                            id="word-count-select"
+                            className="recovery-phrase__select"
+                            value={wordCount} 
+                            onChange={(e) => setWordCount(parseInt(e.target.value))}
+                        >
+                            <option value={12}>{t('twelveWords')}</option>
+                            <option value={24}>{t('twentyFourWords')}</option>
+                        </select>
+                    </div>
+                    
+                    <div id="recoveryPhraseStep2-parent" className="recovery-phrase__seed-container">
                         {walletSeeds.map((word, index) => (
-                            <span key={index}><label> {index + 1}.</label> {word}</span>
+                            <span 
+                                key={index} 
+                                className="recovery-phrase__word"
+                            >
+                                <label className="recovery-phrase__word-label">
+                                    {index + 1}.
+                                </label> 
+                                <span className="recovery-phrase__word-text">
+                                    {word}
+                                </span>
+                            </span>
                         ))}
                         <BorderBeam
                             duration={10}
@@ -143,41 +180,75 @@ const RecoveryPhrase = () => {
                                 spread: -60
                             }}
                             parentId="recoveryPhraseStep2-parent"
-
                         />
                     </div>
-                    <button className='cta-RecoveryPhrase' onClick={() => setStep(3)}>{t('continue')}</button>
+                    
+                    <button 
+                        className="btn btn-primary recovery-phrase__button"
+                        onClick={() => setStep(3)}
+                        type="button"
+                    >
+                        {t('continue')}
+                    </button>
                 </div>
-            }
+            )}
 
-            {step === 3 &&
-                <div className='hint-RecoveryPhrase' style={{ gap: '10px' }}>
-                    <LottiePlayer
-                        animationData={generateRecoverySeedLottie}
-                        loop={false}
-                        play
-                        style={{ height: '200px' }}
-                    />
-                    <h1>{t('confirmRecoveryPhrase')}</h1>
-                    <p>{t('enterMissingWords')}</p>
-                    <div id="recoveryPhraseStep3-parent" className='seed-RecoveryPhrase'>
+            {step === 3 && (
+                <div className="recovery-phrase__step">
+                    <div className="recovery-phrase__animation">
+                        <LottiePlayer
+                            animationData={generateRecoverySeedLottie}
+                            loop={false}
+                            play
+                            aria-hidden="true"
+                        />
+                    </div>
+                    <h1 className="recovery-phrase__title">{t('confirmRecoveryPhrase')}</h1>
+                    <p className="recovery-phrase__description">{t('enterMissingWords')}</p>
+                    
+                    <div 
+                        id="recoveryPhraseStep3-parent" 
+                        className="recovery-phrase__seed-container"
+                        role="group" 
+                        aria-label={t('confirmRecoveryPhrase')}
+                    >
                         {walletSeeds.map((word, index) => (
                             validationIndexes.includes(index) ? (
                                 <span
-                                    className={inputErrors[index] === 'error' ? 'error-seed-RecoveryPhrase'
-                                        : inputErrors[index] === 'success' ? 'success-seed-RecoveryPhrase' : ''}
-                                    style={{ padding: '0' }}
-                                    key={index}>
-                                    <label> {index + 1}.</label>
+                                    key={index}
+                                    className={`recovery-phrase__word recovery-phrase__word--input ${
+                                        inputErrors[index] === 'error' 
+                                            ? 'recovery-phrase__word--error' 
+                                            : inputErrors[index] === 'success' 
+                                                ? 'recovery-phrase__word--success' 
+                                                : ''
+                                    }`}
+                                >
+                                    <label 
+                                        htmlFor={`word-input-${index}`}
+                                        className="recovery-phrase__word-label"
+                                    >
+                                        {index + 1}.
+                                    </label>
                                     <input
-                                        key={index}
+                                        id={`word-input-${index}`}
                                         type="text"
+                                        className="recovery-phrase__word-input"
                                         value={userInputs[index] || ''}
                                         onChange={(e) => handleInputChange(index, e.target.value)}
+                                        aria-invalid={inputErrors[index] === 'error'}
+                                        autoComplete="off"
                                     />
                                 </span>
                             ) : (
-                                <span key={index}><label> {index + 1}.</label> {word}</span>
+                                <span key={index} className="recovery-phrase__word">
+                                    <label className="recovery-phrase__word-label">
+                                        {index + 1}.
+                                    </label>
+                                    <span className="recovery-phrase__word-text">
+                                        {word}
+                                    </span>
+                                </span>
                             )
                         ))}
                         <BorderBeam
@@ -191,13 +262,21 @@ const RecoveryPhrase = () => {
                                 spread: -60
                             }}
                             parentId="recoveryPhraseStep3-parent"
-
                         />
                     </div>
-                    <button className='cta-RecoveryPhrase' onClick={validateInputs} disabled={isConfirmButtonDisabled()}>{t('confirm')}</button>
+                    
+                    <button 
+                        className="btn btn-primary recovery-phrase__button"
+                        onClick={validateInputs} 
+                        disabled={isConfirmButtonDisabled()}
+                        type="button"
+                        aria-disabled={isConfirmButtonDisabled()}
+                    >
+                        {t('confirm')}
+                    </button>
                 </div>
-            }
-        </div>
+            )}
+        </section>
     );
 };
 

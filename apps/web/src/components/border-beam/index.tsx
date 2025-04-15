@@ -61,13 +61,17 @@ const BorderBeam: React.FC<BorderBeamProps> = ({
     size = 50,
     duration = 6,
     delay = 0,
-    colorFrom = "#ffaa40",
-    colorTo = "#9c40ff",
+    colorFrom = '#064560',
+    colorTo = '#0FEF9E',
+    boxShadow = {
+        color: '#0FEF9E',
+        blur: 95,
+        spread: -60
+    },
     className = "",
     style = {},
     reverse = false,
     initialOffset = 0,
-    boxShadow,
     parentId,
     showOnHover = false,
 }) => {
@@ -79,7 +83,7 @@ const BorderBeam: React.FC<BorderBeamProps> = ({
     // Effect for parent element styling and box shadow
     useEffect(() => {
         if (!parentId) return;
-        
+
         const parentElement = document.getElementById(parentId);
         if (!parentElement) return;
 
@@ -89,7 +93,7 @@ const BorderBeam: React.FC<BorderBeamProps> = ({
             position: 'relative',
             zIndex: '1'
         };
-        
+
         // Apply styles to parent element
         Object.entries(essentialStyles).forEach(([property, value]) => {
             parentElement.style.setProperty(property, value, 'important');
@@ -165,14 +169,14 @@ const BorderBeam: React.FC<BorderBeamProps> = ({
     const isVisible = showOnHover ? isHovered : true;
 
     return (
-        <div 
+        <div
             className="border-beam__container"
             style={{ display: isVisible ? "block" : "none" }}
             aria-hidden="true"
         >
             <style>{keyframes}</style>
-            <div 
-                ref={innerRef} 
+            <div
+                ref={innerRef}
                 className={`border-beam__element ${className}`}
                 style={{
                     width: size,

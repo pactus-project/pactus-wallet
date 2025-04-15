@@ -1,73 +1,149 @@
-.container-ChooseNameWallet {
+/* Wallet naming component styles using BEM naming convention */
+
+.wallet-naming {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 15px;
-}
-
-.container-ChooseNameWallet h1 {
-    color: #FFF;
-    font-size: 45px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 53.667px;
-    /* 119.259% */
-}
-
-.container-ChooseNameWallet>p {
-    color: #FFF;
-    text-align: center;
-    font-family: Inter;
-    font-size: 15px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 30px;
-    max-width: 900px;
-    /* 200% */
-}
-.cta-ChooseNameWallet {
-    display: flex;
     width: 100%;
-    padding: 0px 12.105px;
+    max-width: 900px;
+    margin: 0 auto;
+    gap: var(--spacing-md);
+}
+
+.wallet-naming__animation {
+    display: flex;
     justify-content: center;
     align-items: center;
-    gap: 4.035px;
-    border-radius: 4.035px;
-    background: var(--Ocean, linear-gradient(91deg, #0FEF9E -0.23%, #064560 105.78%));
-    box-shadow: 0px 0.303px 0.908px 0px rgba(0, 0, 0, 0.32), 0px 1.614px 3.631px 0px rgba(0, 0, 0, 0.28);
-    color: var(--Primitive-White, #FFF);
-    text-align: center;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 19.166px;
-    padding: 5px 0;
-
-    /* 136.899% */
+    width: 100%;
+    margin-bottom: var(--spacing-md);
 }
-.input-ChooseNameWallet {
+
+.wallet-naming__title {
+    color: var(--color-text-primary);
+    font-size: var(--font-size-5xl);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--line-height-tight);
+    margin-bottom: var(--spacing-xs);
+    text-align: center;
+}
+
+.wallet-naming__description {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-regular);
+    line-height: var(--line-height-loose);
+    text-align: center;
+    max-width: 900px;
+    margin-bottom: var(--spacing-md);
+}
+
+.wallet-naming__input-container {
     position: relative;
     width: 100%;
-    margin: 39px 0;
+    margin: var(--spacing-lg) 0;
 }
 
-.input-ChooseNameWallet input {
+.wallet-naming__input {
     width: 100%;
     height: 100%;
-    border-radius: 8px;
-    background: #1D2328;
+    border-radius: var(--radius-md);
+    background: var(--color-surface-medium);
     border: none;
     outline: none;
-    padding: 20px 44px  20px 15px;
-    color: #E1E1E1;
+    padding: 20px 15px;
+    color: var(--color-text-secondary);
     font-style: normal;
-    font-weight: 400;
-    line-height: 30px;
+    font-weight: var(--font-weight-regular);
+    line-height: var(--line-height-normal);
+    transition: box-shadow var(--transition-fast);
 }
-.emoji-ChooseNameWallet{
-    max-width: 900px;
-    margin-bottom: 29px;
+
+.wallet-naming__input:focus {
+    box-shadow: 0 0 0 2px var(--color-primary);
+}
+
+.emoji-picker {
+    margin: var(--spacing-md) 0;
     font-size: 25px;
     display: flex;
     flex-wrap: wrap;
+    max-height: 168px;
+    overflow-y: auto;
+    gap: var(--spacing-xs);
+    justify-content: center;
+}
+
+.emoji-picker__button {
+    cursor: pointer;
+    transition: transform var(--transition-fast);
+    padding: var(--spacing-xs);
+    border-radius: var(--radius-sm);
+}
+
+.emoji-picker__button:hover {
+    background-color: var(--color-surface-light);
+    transform: scale(1.1);
+}
+
+.emoji-picker__button:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+    background-color: var(--color-surface-light);
+}
+
+.wallet-naming__submit {
+    width: 100%;
+    padding: var(--spacing-sm) 0;
+    border-radius: var(--radius-sm);
+    background: var(--gradient-primary);
+    box-shadow: var(--shadow-button);
+    color: var(--color-text-primary);
+    text-align: center;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--line-height-normal);
+    margin-top: var(--spacing-md);
+}
+
+.wallet-naming__error {
+    color: var(--color-error);
+    font-size: var(--font-size-sm);
+    text-align: center;
+    margin-top: var(--spacing-sm);
+}
+
+/* Responsive adjustments */
+@media (max-width: var(--bp-tablet)) {
+    .wallet-naming__title {
+        font-size: var(--font-size-4xl);
+    }
+    
+    .wallet-naming__description {
+        font-size: var(--font-size-sm);
+    }
+}
+
+@media (max-width: var(--bp-mobile)) {
+    .wallet-naming__title {
+        font-size: var(--font-size-3xl);
+    }
+    
+    .emoji-picker {
+        max-height: 150px;
+    }
+}
+
+/* Support for reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    .emoji-picker__button {
+        transition: none;
+    }
+    
+    .emoji-picker__button:hover {
+        transform: none;
+    }
+    
+    .wallet-naming__input {
+        transition: none;
+    }
 }

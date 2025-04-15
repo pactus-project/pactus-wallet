@@ -7,7 +7,9 @@ import { useAccount, useRestoreWallet, useWallet } from '@/wallet';
 import { useRouter } from 'next/navigation';
 import Loading from '@/components/loading';
 import { useI18n } from '@/utils/i18n';
+
 const LottiePlayer = dynamic(() => import('react-lottie-player'), { ssr: false });
+
 const ChooseNameWallet = () => {
     const { setWalletName, walletName, password } = useWallet();
     const { restoreWallet, restorationError } = useRestoreWallet();
@@ -22,51 +24,85 @@ const ChooseNameWallet = () => {
             const wallet = await restoreWallet();
             await new Promise(resolve => setTimeout(resolve, 1000));
             if (wallet) {
-                await createAddress(t('account1'), password, wallet,);
+                await createAddress(t('account1'), password, wallet);
                 router.replace('/');
             } else {
                 setIsLoading(false);
             }
-
         } catch {
             setIsLoading(false);
         }
-    }
+    };
+
+    const handleEmojiSelect = (emoji: string) => {
+        setWalletName(current => current + emoji);
+    };
 
     return (
-        <div className="container-ChooseNameWallet">
+        <section className="wallet-naming">
             {isLoading && <Loading />}
-            <LottiePlayer
-                animationData={walletNameLottie}
-                loop={false}
-                play
-                style={{ height: '200px' }}
-            />
-            <h1>{t('nameYourWallet')}</h1>
-            <p>
-                {t('walletNameDescription')}
-            </p>
-            <div className="input-ChooseNameWallet">
-                <input
-                    type="text"
-                    placeholder={t('walletNamePlaceholder')}
-                    onChange={e => setWalletName(e.target.value)}
+            
+            <div className="wallet-naming__animation">
+                <LottiePlayer
+                    animationData={walletNameLottie}
+                    loop={false}
+                    play
+                    style={{ height: '200px' }}
+                    aria-hidden="true"
                 />
             </div>
-            <div className="emoji-ChooseNameWallet">
+            
+            <h1 className="wallet-naming__title">{t('nameYourWallet')}</h1>
+            
+            <p className="wallet-naming__description">
+                {t('walletNameDescription')}
+            </p>
+            
+            <div className="wallet-naming__input-container">
+                <label htmlFor="wallet-name" className="visually-hidden">
+                    {t('walletNamePlaceholder')}
+                </label>
+                <input
+                    id="wallet-name"
+                    type="text"
+                    className="wallet-naming__input"
+                    placeholder={t('walletNamePlaceholder')}
+                    onChange={e => setWalletName(e.target.value)}
+                    value={walletName}
+                    autoComplete="off"
+                />
+            </div>
+            
+            <div className="emoji-picker" role="group" aria-label={t('selectEmoji')}>
                 {emojis.map((emoji, index) => (
-                    <button key={`${index}-emoji`}>{emoji}</button>
+                    <button 
+                        key={`${index}-emoji`}
+                        type="button"
+                        onClick={() => handleEmojiSelect(emoji)}
+                        className="emoji-picker__button"
+                        aria-label={`${t('addEmoji')} ${emoji}`}
+                    >
+                        {emoji}
+                    </button>
                 ))}
             </div>
+            
             <button
-                className="cta-ChooseNameWallet"
-                disabled={walletName.length == 0}
-                onClick={() => { handleCreateWallet() }}
+                className="btn btn-primary wallet-naming__submit"
+                disabled={walletName.length === 0}
+                onClick={handleCreateWallet}
+                type="button"
+                aria-busy={isLoading}
             >
                 {t('finish')}
             </button>
-            {restorationError && <p style={{ color: '#FF6B6B' }}>{restorationError}</p>}
-        </div>
+            
+            {restorationError && (
+                <p className="wallet-naming__error" role="alert">
+                    {restorationError}
+                </p>
+            )}
+        </section>
     );
 };
 

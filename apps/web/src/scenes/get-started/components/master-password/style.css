@@ -1,107 +1,199 @@
-.container-MasterPassword {
+/* Master password component styles using BEM naming convention */
+
+.master-password {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 15px;
-}
-
-.container-MasterPassword h1 {
-    color: #FFF;
-    font-size: 45px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 53.667px;
-    /* 119.259% */
-}
-
-.container-MasterPassword>p {
-    color: #FFF;
-    text-align: center;
-    font-family: Inter;
-    font-size: 15px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 30px;
-    max-width: 800px;
-    /* 200% */
-}
-
-.cta-MasterPassword {
-    display: flex;
+    gap: var(--spacing-md);
     width: 100%;
-    padding: 0px 12.105px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.master-password__animation {
+    height: 250px;
+    width: 100%;
+    display: flex;
     justify-content: center;
     align-items: center;
-    gap: 4.035px;
-    border-radius: 4.035px;
-    background: var(--Ocean, linear-gradient(91deg, #0FEF9E -0.23%, #064560 105.78%));
-    box-shadow: 0px 0.303px 0.908px 0px rgba(0, 0, 0, 0.32), 0px 1.614px 3.631px 0px rgba(0, 0, 0, 0.28);
-    color: var(--Primitive-White, #FFF);
+    margin-bottom: var(--spacing-xs);
+}
+
+.master-password__title {
+    color: var(--color-text-primary);
+    font-size: var(--font-size-5xl);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--line-height-tight);
     text-align: center;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 19.166px;
-    padding: 5px 0;
-
-    /* 136.899% */
+    margin-bottom: var(--spacing-xs);
 }
 
-.cta-MasterPassword:disabled {
-    opacity: 0.5;
+.master-password__description {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-regular);
+    line-height: var(--line-height-loose);
+    text-align: center;
+    max-width: 800px;
+    margin-bottom: var(--spacing-md);
 }
 
-.input-MasterPassword {
-    position: relative;
-    width: 643px;
-    margin-bottom: 20px;
-}
-
-.input-MasterPassword input {
+.master-password__form {
     width: 100%;
-    height: 100%;
-    border-radius: 8px;
-    background: #1D2328;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
 
+.master-password__input-group {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.master-password__input-container {
+    position: relative;
+    width: 100%;
+}
+
+.master-password__input {
+    width: 100%;
+    border-radius: var(--radius-md);
+    background: var(--color-surface-medium);
+    border: 1px solid transparent;
     outline: none;
-    padding: 20px 44px 20px 15px;
-    color: #E1E1E1;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 30px;
+    padding: var(--spacing-md) var(--spacing-xl) var(--spacing-md) var(--spacing-md);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-regular);
+    line-height: var(--line-height-normal);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
-.input-MasterPassword button {
+.master-password__input:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 1px var(--color-primary);
+}
+
+.master-password__input--error {
+    border-color: var(--color-error);
+}
+
+.master-password__input--error:focus {
+    border-color: var(--color-error);
+    box-shadow: 0 0 0 1px var(--color-error);
+}
+
+.master-password__toggle-button {
     position: absolute;
+    right: var(--spacing-sm);
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
     z-index: 1;
-    right: 10px;
-    top: 20px;
+    padding: var(--spacing-xs);
+    border-radius: var(--radius-circle);
+    transition: background-color var(--transition-fast);
 }
 
-.gradient-MasterPassword {
-    background: linear-gradient(86deg, #0FEF9E 50.51%, #064560 105.09%);
+.master-password__toggle-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.master-password__toggle-button:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.master-password__error {
+    color: var(--color-error);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-regular);
+    margin-top: var(--spacing-xs);
+}
+
+.master-password__terms {
+    display: flex;
+    width: 100%;
+    margin-top: var(--spacing-sm);
+}
+
+.master-password__checkbox-container {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-xs);
+    cursor: pointer;
+}
+
+.master-password__checkbox {
+    margin-top: calc(var(--line-height-loose) * 0.5 - 7px);
+}
+
+.master-password__terms-text {
+    color: var(--color-text-primary);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-regular);
+    line-height: var(--line-height-loose);
+    user-select: none;
+    cursor: pointer;
+}
+
+.master-password__learn-more {
+    background: var(--gradient-primary);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    margin-left: var(--spacing-xs);
+    font-weight: var(--font-weight-medium);
 }
 
-.terms-MasterPassword {
-    display: flex;
-    align-items: center;
-    margin-right: auto;
-    gap: 5px;
-    margin-top: 26px;
-    color: #FFF;
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 30px;
-    cursor: pointer;
-    -moz-user-select: none;
-    -khtml-user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    /* 250% */
+.master-password__submit {
+    width: 100%;
+    padding: var(--spacing-sm) 0;
+    margin-top: var(--spacing-md);
+    height: var(--button-primary-height-desktop);
+}
+
+/* Responsive adjustments */
+@media (max-width: var(--bp-tablet)) {
+    .master-password__title {
+        font-size: var(--font-size-4xl);
+    }
+    
+    .master-password__animation {
+        height: 200px;
+    }
+    
+    .master-password__submit {
+        height: var(--button-primary-height-mobile);
+    }
+}
+
+@media (max-width: var(--bp-mobile)) {
+    .master-password__title {
+        font-size: var(--font-size-3xl);
+    }
+    
+    .master-password__description {
+        font-size: var(--font-size-sm);
+    }
+    
+    .master-password__animation {
+        height: 180px;
+    }
+}
+
+/* Support for reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    .master-password__input,
+    .master-password__toggle-button {
+        transition: none;
+    }
 }
 
