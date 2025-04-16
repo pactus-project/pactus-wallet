@@ -1,16 +1,17 @@
-import { WalletCore } from '@trustwallet/wallet-core';
-import { HDWallet } from '@trustwallet/wallet-core/dist/src/wallet-core';
+import {WalletCore} from '@trustwallet/wallet-core';
+import {HDWallet} from '@trustwallet/wallet-core/dist/src/wallet-core';
 import * as bip39 from 'bip39';
-import { MnemonicError, StorageError } from './error';
-import { Encrypter } from './encrypter/encrypter';
-import { encodeBech32WithType, generateUUID, sprintf } from './utils';
-import { StorageKey } from './storage-key';
-import { IStorage } from './storage/storage';
-import { NetworkType, WalletID, WalletInfo, Amount } from './types/wallet_info';
-import { KeyStore, MnemonicStrength, Vault } from './types/vault';
-import { AddressInfo, Ledger, Purposes } from './types/ledger';
+import {MnemonicError, StorageError} from './error';
+import {Encrypter} from './encrypter/encrypter';
+import {encodeBech32WithType, generateUUID, sprintf} from './utils';
+import {Amount} from './types/amount';
+import {StorageKey} from './storage-key';
+import {IStorage} from './storage/storage';
+import {NetworkType, WalletID, WalletInfo} from './types/wallet_info';
+import {KeyStore, MnemonicStrength, Vault} from './types/vault';
+import {AddressInfo, Ledger, Purposes} from './types/ledger';
 import * as grpc from '@grpc/grpc-js';
-import { blockchain, blockchainPb } from './grpc';
+import {blockchain, blockchainPb} from './grpc';
 
 /**
  * Pactus Wallet Implementation
@@ -92,7 +93,7 @@ export class Wallet {
     const info = new WalletInfo(type, name, walletID, Date.now(), network);
 
     const keyStoreObj: KeyStore = {
-      master_node: { seed: mnemonic },
+      master_node: {seed: mnemonic},
       imported_keys: [],
     };
 
@@ -339,20 +340,28 @@ export class Wallet {
           accountRequest,
           (err: Error | null, response: any) => {
             if (err) {
-              resolve('0');
+              resolve(Amount.zero());
               return;
             }
+
             const accountInfo = response.getAccount();
-            resolve(
+            const balanceStr =
               accountInfo && accountInfo.getBalance
                 ? accountInfo.getBalance()
-                : '0'
-            );
+                : '0';
+
+            try {
+              // Create Amount instance from the returned string
+              const amount = new Amount(balanceStr);
+              resolve(amount);
+            } catch (error) {
+              resolve(Amount.zero());
+            }
           }
         );
       });
     } catch (error) {
-      return '0';
+      return Amount.zero();
     }
   }
 

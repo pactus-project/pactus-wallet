@@ -340,44 +340,85 @@ describe('Pactus Wallet Tests', () => {
     it('should fetch balance for a specific address', async () => {
       // Arrange
       const address = wallet.getAddresses()[0].address;
-      const mockResponse = {
-        address: address,
-        balance: '1000000000',
-        blockHeight: '100',
+      const mockBalance = '1000000000';
+
+      // Mock an account object with getBalance method
+      const mockAccount = {
+        getBalance: jest.fn().mockReturnValue(mockBalance),
       };
 
+      // Mock a response object with getAccount method
+      const mockResponse = {
+        getAccount: jest.fn().mockReturnValue(mockAccount),
+      };
+
+      // Mock getAccount to call the callback with null error and our mock response
       mockGrpcClient.getAccount.mockImplementation(
-        (req: any, callback: any) => {
+        (request: any, callback: any) => {
+          // Verify the request is properly formatted
+          expect(request.getAddress()).toBe(address);
           callback(null, mockResponse);
         }
       );
+
       // Act
       const result = await wallet.getAddressBalance(address);
-      // Assert
-      expect(mockGrpcClient.getAccount).toHaveBeenCalledWith(
-        { address },
-        expect.any(Function)
-      );
-      expect(result).toEqual({
-        address: address,
-        balance: '1000000000',
-        blockHeight: '100',
-      });
+
+      expect(result.toString()).toEqual(mockBalance);
+      expect(result.toPac()).toEqual(1); // 1000000000 nanoPAC = 1 PAC
     });
 
-    it('should handle errors when fetching address balance', async () => {
+    it('should return zero Amount when server error occurs', async () => {
       // Arrange
       const address = wallet.getAddresses()[0].address;
       const mockError = new Error('Network error');
 
+      // Mock getAccount to call the callback with an error
       mockGrpcClient.getAccount.mockImplementation(
-        (req: any, callback: any) => {
+        (request: any, callback: any) => {
+          expect(request.getAddress()).toBe(address);
           callback(mockError, null);
         }
       );
 
-      // Act & Assert
-      await expect(wallet.getAddressBalance(address)).rejects.toThrow();
+      // Act
+      const result = await wallet.getAddressBalance(address);
+
+      // Assert
+      expect(mockGrpcClient.getAccount).toHaveBeenCalled();
+      expect(result.toString()).toEqual('0');
+      expect(result.toPac()).toEqual(0);
+    });
+
+    it('should return zero Amount when invalid balance is received', async () => {
+      // Arrange
+      const address = wallet.getAddresses()[0].address;
+
+      // Mock an account that returns an invalid balance
+      const mockAccount = {
+        getBalance: jest.fn().mockReturnValue('invalid_balance'),
+      };
+
+      // Mock a response that returns our mock account
+      const mockResponse = {
+        getAccount: jest.fn().mockReturnValue(mockAccount),
+      };
+
+      // Mock getAccount to call the callback with our invalid balance response
+      mockGrpcClient.getAccount.mockImplementation(
+        (request: any, callback: any) => {
+          expect(request.getAddress()).toBe(address);
+          callback(null, mockResponse);
+        }
+      );
+
+      // Act
+      const result = await wallet.getAddressBalance(address);
+
+      // Assert
+      expect(mockGrpcClient.getAccount).toHaveBeenCalled();
+      expect(mockResponse.getAccount).toHaveBeenCalled();
+      expect(result.toString()).toEqual('0');
     });
   });
 });
