@@ -6,6 +6,7 @@
  */
 
 import * as grpcJs from '@grpc/grpc-js';
+
 let pactusGrpc: any;
 
 try {

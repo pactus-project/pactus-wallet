@@ -1,5 +1,5 @@
 'use client';
-import { Wallet } from '@pactus-wallet/wallet';
+import type { Wallet } from '@pactus-wallet/wallet';
 import { useCallback, useState } from 'react';
 import { useWallet } from '@/wallet';
 

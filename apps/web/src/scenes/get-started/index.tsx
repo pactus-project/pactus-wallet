@@ -1,12 +1,13 @@
-"use client";
+'use client';
 import { useSearchParams } from 'next/navigation';
-import { useEffect, useState, Suspense, JSX } from 'react';
+import type { JSX } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import AddWallet from './components/add-wallet';
 import ImportWallet from './components/import-wallet';
 import MasterPassword from './components/master-password';
 import RecoveryPhrase from './components/recovery-phrase';
 import Welcome from './components/welcome';
-
+import { useI18n } from '@/utils/i18n';
 
 import './style.css';
 import ChooseNameWallet from './components/choose-name-wallet';
@@ -17,25 +18,30 @@ const GetStartedContent = () => {
     setStep(searchParams.get('step'));
   }, [searchParams]);
 
-  const stepsMap: Record<string, JSX.Element> = {
-    'welcome': <Welcome />,
-    'add-wallet': <AddWallet />,
-    'master-password': <MasterPassword />,
-    'import-wallet': <ImportWallet />,
-    'recovery-phrase': <RecoveryPhrase />,
-    'choose-name-wallet': <ChooseNameWallet />,
+  const components = {
+    addWallet: AddWallet,
+    masterPassword: MasterPassword,
+    importWallet: ImportWallet,
+    recoveryPhrase: RecoveryPhrase,
+    chooseNameWallet: ChooseNameWallet,
   };
 
-  return (
-    <div className='container-GetStarted'>
-      {stepsMap[step || 'welcome']}
-    </div>
-  );
+  const stepsMap: Record<string, JSX.Element> = {
+    welcome: <Welcome />,
+    'add-wallet': <components.addWallet />,
+    'master-password': <components.masterPassword />,
+    'import-wallet': <components.importWallet />,
+    'recovery-phrase': <components.recoveryPhrase />,
+    'choose-name-wallet': <components.chooseNameWallet />,
+  };
+
+  return <div className="container-GetStarted">{stepsMap[step || 'welcome']}</div>;
 };
 
 const GetStarted = () => {
+  const { t } = useI18n();
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<div>{t('loading')}</div>}>
       <GetStartedContent />
     </Suspense>
   );

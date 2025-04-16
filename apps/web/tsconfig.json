@@ -31,7 +31,7 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "types",
-    "./src/assets/custom.d.ts",
+    "src/assets/assets.d.ts",
     "../../packages/*/src/**/*"
   ],
   "exclude": ["node_modules"]

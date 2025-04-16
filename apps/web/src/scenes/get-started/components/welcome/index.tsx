@@ -1,46 +1,57 @@
-'use client'
+'use client';
 import Image from 'next/image';
 import React, { useState } from 'react';
 import ThreeDMotion from '../3d-motion';
 import { openSourceIcon, secureIcon, simpleIcon } from '@/assets';
 import './style.css';
 import { useRouter } from 'next/navigation';
+import { useI18n } from '@/utils/i18n';
 
 const Welcome = () => {
   const navigate = useRouter().push;
   const [isChecked, setIsChecked] = useState(false);
+  const { t } = useI18n();
 
   const data = [
     {
-      title: 'Open Source',
+      title: t('openSource'),
       icon: openSourceIcon,
       description: (
         <>
-          Pactus Wallet is fully open source, explore and contribute to our code{' '}
-          <a className='gradient-GetStarted' href="https://github.com/pactus-project/pactus-wallet" target="_blank">
+          {t('openSourceDescription')}{' '}
+          <a
+            className="gradient-GetStarted"
+            href="https://github.com/pactus-project/pactus-wallet"
+            target="_blank"
+          >
             here
-          </a>.
+          </a>
+          .
         </>
       ),
     },
-    { title: 'Simple', icon: simpleIcon, description: 'Pactus Wallet is designed for everyone, from beginners to advanced users.' },
-    { title: 'Secure', icon: secureIcon, description: 'Pactus Wallet is a fully static wallet. There is no server involved and all data including \n your private keys are stored in your browser.' },
+    { title: t('simple'), icon: simpleIcon, description: t('simpleDescription') },
+    { title: t('secure'), icon: secureIcon, description: t('secureDescription') },
   ];
 
   return (
     <>
-      <div className='titer-GetStarted'>
+      <div className="titer-GetStarted">
         <h1>
-          Hello!<br />
-          <span>Welcome to</span><span style={{ marginLeft: '5px' }} className='gradient-GetStarted'>Pactus Wallet</span>
+          {t('hello')}
+          <br />
+          <span>{t('welcomeTo')}</span>
+          <span style={{ marginLeft: '5px' }} className="gradient-GetStarted">
+            {t('pactusWallet')}
+          </span>
         </h1>
       </div>
 
-      <div className='section1-GetStarted'>
-        <div className='slogans-GetStarted'>
+      <div className="section1-GetStarted">
+        <div className="slogans-GetStarted">
           {data.map((item, i) => (
             <div key={`${i}-slogan`}>
-              <Image src={item.icon} alt='' />
+              <Image src={item.icon} alt="" />
               <div>
                 <h3>{item.title}</h3>
                 <p>{item.description}</p>
@@ -53,15 +64,16 @@ const Welcome = () => {
         </div>
       </div>
 
-      <div className='letsCta-GetStarted'>
+      <div className="letsCta-GetStarted">
         <div>
           <input type="checkbox" checked={isChecked} onChange={() => setIsChecked(!isChecked)} />
           <p onClick={() => setIsChecked(!isChecked)}>
-            I have read and agreed to the <span className='gradient-GetStarted'> Terms and Conditions</span>.
+            {t('iHaveReadAndAgreed')}{' '}
+            <span className="gradient-GetStarted"> {t('termsAndConditions')}</span>.
           </p>
         </div>
         <button onClick={() => navigate('/get-started?step=add-wallet')} disabled={!isChecked}>
-          Let’s Start
+          {t('letsStart')}
         </button>
       </div>
     </>

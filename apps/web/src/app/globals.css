@@ -117,3 +117,10 @@ code {
     monospace;
 }
 
+
+
+.errorMessage {
+  color: red;
+  font-size: 12px;
+  margin-top: 5px;
+}

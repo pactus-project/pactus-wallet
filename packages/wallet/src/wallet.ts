@@ -1,28 +1,32 @@
-import {WalletCore} from '@trustwallet/wallet-core';
-import {HDWallet} from '@trustwallet/wallet-core/dist/src/wallet-core';
 import * as bip39 from 'bip39';
-import {MnemonicError, StorageError} from './error';
-import {Encrypter} from './encrypter/encrypter';
-import {encodeBech32WithType, generateUUID, sprintf} from './utils';
-import {Amount} from './types/amount';
-import {StorageKey} from './storage-key';
-import {IStorage} from './storage/storage';
-import {NetworkType, WalletID, WalletInfo} from './types/wallet_info';
-import {KeyStore, MnemonicStrength, Vault} from './types/vault';
-import {AddressInfo, Ledger, Purposes} from './types/ledger';
+import { Encrypter } from './encrypter/encrypter';
+import { MnemonicError, StorageError } from './error';
+import { StorageKey } from './storage-key';
+import { AddressInfo, Ledger, Purposes } from './types/ledger';
+import { KeyStore, MnemonicStrength, MnemonicValues, Vault } from './types/vault';
+import { NetworkType, NetworkValues, WalletID, WalletInfo } from './types/wallet_info';
+import { encodeBech32WithType, generateUUID, sprintf } from './utils';
+import { IStorage } from './storage/storage';
+import { WalletCore } from '@trustwallet/wallet-core';
+import { HDWallet } from '@trustwallet/wallet-core/dist/src/wallet-core';
 import * as grpc from '@grpc/grpc-js';
-import {blockchain, blockchainPb} from './grpc';
-
+import { blockchain, blockchainPb } from './grpc';
+import { Amount } from './types/amount';
 /**
  * Pactus Wallet Implementation
  * Manages cryptographic operations using Trust Wallet Core
  */
 export class Wallet {
   private core: WalletCore;
+
   private storage: IStorage;
+
   private info: WalletInfo;
+
   private vault: Vault;
+
   private ledger: Ledger;
+
   /**
    * Creates a new Wallet instance.
    * Private constructor - use static factory methods instead
@@ -58,8 +62,8 @@ export class Wallet {
     core: WalletCore,
     storage: IStorage,
     password: string,
-    strength: MnemonicStrength = MnemonicStrength.Normal,
-    network: NetworkType = NetworkType.Mainnet,
+    strength: MnemonicStrength = MnemonicValues.NORMAL,
+    network: NetworkType = NetworkValues.MAINNET,
     name: string = 'My Wallet'
   ): Promise<Wallet> {
     const mnemonic = bip39.generateMnemonic(strength);
@@ -81,10 +85,10 @@ export class Wallet {
     storage: IStorage,
     mnemonic: string,
     password: string,
-    network: NetworkType = NetworkType.Mainnet,
+    network: NetworkType = NetworkValues.MAINNET,
     name: string = 'My Wallet'
   ): Promise<Wallet> {
-    if (bip39.validateMnemonic(mnemonic) == false) {
+    if (bip39.validateMnemonic(mnemonic) === false) {
       throw new MnemonicError();
     }
 
@@ -93,19 +97,21 @@ export class Wallet {
     const info = new WalletInfo(type, name, walletID, Date.now(), network);
 
     const keyStoreObj: KeyStore = {
-      master_node: {seed: mnemonic},
+      master_node: { seed: mnemonic },
       imported_keys: [],
     };
 
     let encrypter = Encrypter.noEncrypter();
     let keyStore = JSON.stringify(keyStoreObj);
+
     if (password !== '') {
       encrypter = Encrypter.defaultEncrypter();
       keyStore = await encrypter.encrypt(keyStore, password);
     }
+
     const vault = new Vault(encrypter, keyStore);
 
-    const coinType = network === NetworkType.Mainnet ? 21888 : 21777;
+    const coinType = network === NetworkValues.MAINNET ? 21888 : 21777;
     const purposes: Purposes = {
       purposeBIP44: {
         nextEd25519Index: 0,
@@ -127,29 +133,35 @@ export class Wallet {
   static load(core: WalletCore, storage: IStorage, id: WalletID): Wallet {
     const infoKey = StorageKey.walletInfoKey(id);
     const infoVal = storage.get(infoKey);
+
     if (infoVal === null) {
       throw new StorageError('Wallet Info does not exists');
     }
-    const info = WalletInfo.deserialize(infoVal!);
+
+    const info = WalletInfo.deserialize(infoVal as string);
 
     const vaultKey = StorageKey.walletVaultKey(id);
     const vaultVal = storage.get(vaultKey);
+
     if (vaultVal === null) {
       throw new StorageError('Vault does not exists');
     }
-    const vault = Vault.deserialize(vaultVal!);
+
+    const vault = Vault.deserialize(vaultVal as string);
 
     const ledgerKey = StorageKey.walletLedgerKey(id);
     const ledgerVal = storage.get(ledgerKey);
-    if (ledgerKey === null) {
+
+    if (ledgerVal === null) {
       throw new StorageError('Ledger does not exists');
     }
-    const ledger = Ledger.deserialize(ledgerVal!);
+
+    const ledger = Ledger.deserialize(ledgerVal as string);
 
     return new Wallet(core, storage, info, vault, ledger);
   }
 
-  static generateMnemonic(strength: MnemonicStrength): string {
+  static generateMnemonic(strength: MnemonicStrength = MnemonicValues.NORMAL): string {
     return bip39.generateMnemonic(strength);
   }
 
@@ -158,7 +170,8 @@ export class Wallet {
    * @returns Array of addresses with their metadata
    */
   getAddresses(): Array<AddressInfo> {
-    let infos = Array.from(this.ledger.addresses.values());
+    const infos = Array.from(this.ledger.addresses.values());
+
     infos.sort((r, l) => (r.path < l.path ? -1 : 1));
 
     return infos;
@@ -214,14 +227,8 @@ export class Wallet {
     );
 
     const hdWallet = await this.hdWallet(password);
-    const privateKey = hdWallet.getKey(
-      this.core.CoinType.pactus,
-      derivationPath
-    );
-    const address = this.core.CoinTypeExt.deriveAddress(
-      this.core.CoinType.pactus,
-      privateKey
-    );
+    const privateKey = hdWallet.getKey(this.core.CoinType.pactus, derivationPath);
+    const address = this.core.CoinTypeExt.deriveAddress(this.core.CoinType.pactus, privateKey);
 
     // Get public key
     const publicKey = privateKey.getPublicKeyEd25519();
@@ -229,8 +236,8 @@ export class Wallet {
     const publicKeyStr = encodeBech32WithType(prefix, publicKey.data(), 3);
 
     const addressInfo: AddressInfo = {
-      address: address,
-      label: label,
+      address,
+      label,
       path: derivationPath,
       publicKey: publicKeyStr,
     };
@@ -251,10 +258,7 @@ export class Wallet {
    * @throws An error if the password is incorrect
    */
   async getMnemonic(password: string): Promise<string> {
-    const keyStoreJSON = await this.vault.encrypter.decrypt(
-      this.vault.keyStore,
-      password
-    );
+    const keyStoreJSON = await this.vault.encrypter.decrypt(this.vault.keyStore, password);
     const keyStore = JSON.parse(keyStoreJSON) as KeyStore;
 
     return keyStore.master_node.seed;
@@ -265,7 +269,7 @@ export class Wallet {
    * @returns true if the wallet is created for Testnet, false otherwise
    */
   isTestnet(): boolean {
-    return this.info.network === NetworkType.Testnet;
+    return this.info.network === NetworkValues.TESTNET;
   }
 
   /**
@@ -295,24 +299,27 @@ export class Wallet {
 
   private saveLedger(): void {
     const ledgerKey = StorageKey.walletLedgerKey(this.info.uuid);
+
     this.storage.set(ledgerKey, this.ledger.serialize());
   }
 
   private saveInfo(): void {
     const infoKey = StorageKey.walletInfoKey(this.info.uuid);
+
     this.storage.set(infoKey, this.info.serialize());
   }
 
   private publicKeyPrefix(): string {
     switch (this.info.network) {
-      case NetworkType.Mainnet:
+      case NetworkValues.MAINNET:
         return 'public';
-      case NetworkType.Testnet:
+      case NetworkValues.TESTNET:
         return 'tpublic';
       default:
         throw new Error(`Unknown network type: ${this.info.network}`);
     }
   }
+
   /**
    * Get balance for a specific address
    * @param address The address to check balance for
@@ -333,32 +340,30 @@ export class Wallet {
       const client = this.getGrpcClient();
 
       const accountRequest = new blockchainPb.GetAccountRequest();
+
       accountRequest.setAddress(address);
 
-      return new Promise((resolve, reject) => {
-        client.getAccount(
-          accountRequest,
-          (err: Error | null, response: any) => {
-            if (err) {
-              resolve(Amount.zero());
-              return;
-            }
+      return new Promise(resolve => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        client.getAccount(accountRequest, (err: Error | null, response: any) => {
+          if (err) {
+            resolve(Amount.zero());
 
-            const accountInfo = response.getAccount();
-            const balanceStr =
-              accountInfo && accountInfo.getBalance
-                ? accountInfo.getBalance()
-                : '0';
-
-            try {
-              // Create Amount instance from the returned string
-              const amount = new Amount(balanceStr);
-              resolve(amount);
-            } catch (error) {
-              resolve(Amount.zero());
-            }
+            return;
           }
-        );
+
+          const accountInfo = response.getAccount();
+          const balanceStr = accountInfo && accountInfo.getBalance ? accountInfo.getBalance() : '0';
+
+          try {
+            // Create Amount instance from the returned string
+            const amount = new Amount(balanceStr);
+
+            resolve(amount);
+          } catch (error) {
+            resolve(Amount.zero());
+          }
+        });
       });
     } catch (error) {
       return Amount.zero();
@@ -370,8 +375,10 @@ export class Wallet {
    * @private
    * @returns A Blockchain gRPC client
    */
-  private getGrpcClient() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private getGrpcClient(): any {
     const endpoint = 'bootstrap1.pactus.org:50051';
+
     try {
       // Get the BlockchainClient constructor from pactus-grpc
       const BlockchainClient = blockchain.BlockchainClient;

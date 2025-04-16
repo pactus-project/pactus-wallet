@@ -1,4 +1,4 @@
-import { bech32, bech32m } from 'bech32';
+import { bech32m } from 'bech32';
 
 /**
  * Generate a simple UUID
@@ -7,6 +7,7 @@ import { bech32, bech32m } from 'bech32';
  */
 export function generateUUID(): string {
   const buffer = new Uint8Array(16);
+
   crypto.getRandomValues(buffer);
 
   buffer[6] = (buffer[6] & 0x0f) | 0x40;
@@ -14,12 +15,14 @@ export function generateUUID(): string {
 
   return Array.from(buffer, (byte, index) => {
     const hex = byte.toString(16).padStart(2, '0');
+
     return hex + ([4, 6, 8, 10].includes(index) ? '-' : '');
   })
     .join('')
     .slice(0, 36);
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function sprintf(format: string, ...args: any[]): string {
   return format.replace(/%s|%d/g, () => args.shift());
 }
@@ -41,12 +44,9 @@ export function getWordCount(phrase: string): number {
  * @param type - A numeric identifier **prepended** to the encoded words.
  * @returns The Bech32-encoded string.
  */
-export function encodeBech32WithType(
-  prefix: string,
-  data: Uint8Array,
-  type: number
-): string {
-  let words = bech32m.toWords(data);
+export function encodeBech32WithType(prefix: string, data: Uint8Array, type: number): string {
+  const words = bech32m.toWords(data);
+
   words.unshift(type);
 
   return bech32m.encode(prefix, words);

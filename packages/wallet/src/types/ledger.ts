@@ -21,7 +21,9 @@ export interface PurposeBIP44 {
  */
 export class Ledger {
   coinType: number; // Coin type: 21888 for Mainnet, 21777 for Testnet
+
   purposes: Purposes; // Contains Purpose for generating addresses
+
   addresses: Map<string, AddressInfo>;
 
   constructor(coinType: number, purposes: Purposes) {
@@ -50,7 +52,9 @@ export class Ledger {
   static deserialize(jsonString: string): Ledger {
     const json = JSON.parse(jsonString);
     const ledger = new Ledger(json.coinType, json.purposes);
+
     ledger.addresses = new Map(Object.entries(json.addresses));
+
     return ledger;
   }
 }

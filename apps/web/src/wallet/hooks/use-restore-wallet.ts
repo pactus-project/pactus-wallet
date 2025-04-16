@@ -1,7 +1,7 @@
 'use client';
 // useRestoreWallet.ts
 import { useState, useCallback } from 'react';
-import { NetworkType } from '@pactus-wallet/wallet';
+import type { NetworkType } from '@pactus-wallet/wallet';
 import { useWallet } from './use-wallet';
 import { WalletStatus } from '../types';
 

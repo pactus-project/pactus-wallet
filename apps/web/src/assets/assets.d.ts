@@ -1,19 +1,19 @@
-declare module "*.svg" {
+declare module '*.svg' {
   const content: ImageData;
   export default content;
 }
 
-declare module "*.png" {
+declare module '*.png' {
   const content: ImageData;
   export default content;
 }
 
-declare module "*.webp" {
+declare module '*.webp' {
   const content: ImageData;
   export default content;
 }
 
-declare module "*.avif" {
+declare module '*.avif' {
   const content: ImageData;
   export default content;
 }

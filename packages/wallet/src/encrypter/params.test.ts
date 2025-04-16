@@ -1,4 +1,3 @@
-import { Encrypter } from './encrypter';
 import { Params } from './params';
 
 describe('Encrypter Params', () => {
@@ -8,12 +7,12 @@ describe('Encrypter Params', () => {
     p.setNumber('k1', 0);
     p.setNumber('k2', 0xff);
     p.setNumber('k3', 0xffffffff);
-    p.setNumber('k4', 0xffffffffffffffff);
+    p.setNumber('k4', Number.MAX_SAFE_INTEGER);
 
     expect(p.getNumber('k1')).toBe(0);
     expect(p.getNumber('k2')).toBe(0xff);
     expect(p.getNumber('k3')).toBe(0xffffffff);
-    expect(p.getNumber('k4')).toBe(0xffffffffffffffff);
+    expect(p.getNumber('k4')).toBe(Number.MAX_SAFE_INTEGER);
   });
 
   it('should handle byte arrays', () => {

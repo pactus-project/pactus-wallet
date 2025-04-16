@@ -1,4 +1,4 @@
-import { WalletID } from './types/wallet_info';
+import type { WalletID } from './types/wallet_info';
 
 export class StorageKey {
   static walletListKey(): string {

@@ -71,6 +71,7 @@ export class Amount {
    */
   add(other: Amount): Amount {
     const sum = BigInt(this.value) + BigInt(other.value);
+
     return Amount.fromNanoPac(sum.toString());
   }
 
@@ -89,6 +90,7 @@ export class Amount {
     }
 
     const difference = value1 - value2;
+
     return Amount.fromNanoPac(difference.toString());
   }
 
@@ -132,6 +134,7 @@ export class Amount {
 
     // Convert PAC to nanoPAC with proper rounding
     const nanoPac = Math.round(pac * NANO_PAC_PER_PAC);
+
     return Amount.fromNanoPac(nanoPac);
   }
 

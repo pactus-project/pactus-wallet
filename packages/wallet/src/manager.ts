@@ -1,17 +1,20 @@
-import { WalletCore } from '@trustwallet/wallet-core';
-import { Wallet } from './wallet';
 import { StorageError } from './error';
-import { IStorage } from './storage/storage';
 import { StorageKey } from './storage-key';
-import { NetworkType, WalletID } from './types/wallet_info';
-import { MnemonicStrength } from './types/vault';
+import { MnemonicStrength, MnemonicValues } from './types/vault';
+import { NetworkType, NetworkValues, WalletID } from './types/wallet_info';
+import { Wallet } from './wallet';
+import { IStorage } from './storage/storage';
+import { WalletCore } from '@trustwallet/wallet-core';
+
 /**
  * WalletManager
  * Manages wallet instances and their persistence using storage
  */
 export class WalletManager {
   private core: WalletCore;
+
   private storage: IStorage;
+
   private walletIDs: WalletID[];
 
   /**
@@ -21,9 +24,7 @@ export class WalletManager {
    */
   constructor(core: WalletCore, storage: IStorage) {
     const walletListVal = storage.get(StorageKey.walletListKey());
-    const walletIDs = walletListVal
-      ? (JSON.parse(walletListVal) as WalletID[])
-      : [];
+    const walletIDs = walletListVal ? (JSON.parse(walletListVal) as WalletID[]) : [];
 
     this.core = core;
     this.storage = storage;
@@ -49,25 +50,18 @@ export class WalletManager {
   /**
    * Create a new wallet
    * @param password Password for wallet encryption
+   * @param name User-defined wallet name
    * @param strength Mnemonic strength (security level)
    * @param network Network type (mainnet/testnet)
-   * @param name User-defined wallet name
    * @returns The created wallet instance
    */
   async createWallet(
     password: string,
-    strength: MnemonicStrength = MnemonicStrength.Normal,
-    network: NetworkType = NetworkType.Mainnet,
-    name: string = 'My Wallet'
+    name: string = 'My Wallet',
+    strength: MnemonicStrength = MnemonicValues.NORMAL,
+    network: NetworkType = NetworkValues.MAINNET
   ): Promise<Wallet> {
-    const wallet = await Wallet.create(
-      this.core,
-      this.storage,
-      password,
-      strength,
-      network,
-      name
-    );
+    const wallet = await Wallet.create(this.core, this.storage, password, strength, network, name);
 
     this.updateList(wallet);
 
@@ -85,17 +79,11 @@ export class WalletManager {
   async restoreWallet(
     mnemonic: string,
     password: string,
-    network: NetworkType = NetworkType.Mainnet,
+    network: NetworkType = NetworkValues.MAINNET,
     name: string = 'My Wallet'
   ): Promise<Wallet> {
-    const wallet = await Wallet.restore(
-      this.core,
-      this.storage,
-      mnemonic,
-      password,
-      network,
-      name
-    );
+    const wallet = await Wallet.restore(this.core, this.storage, mnemonic, password, network, name);
+
     this.updateList(wallet);
 
     return wallet;
@@ -111,6 +99,7 @@ export class WalletManager {
     if (this.empty()) {
       return null;
     }
+
     return this.loadWallet(this.walletIDs[0]);
   }
 
@@ -130,13 +119,12 @@ export class WalletManager {
    */
   public updateList(wallet: Wallet): void {
     const id = wallet.getID();
+
     if (!this.hasWallet(id)) {
       this.walletIDs.push(id);
+
       try {
-        this.storage.set(
-          StorageKey.walletListKey(),
-          JSON.stringify(this.walletIDs)
-        );
+        this.storage.set(StorageKey.walletListKey(), JSON.stringify(this.walletIDs));
       } catch (error) {
         throw new StorageError(`Failed to update wallet list: ${error}`);
       }
@@ -150,14 +138,13 @@ export class WalletManager {
   deleteWallet(id: WalletID): boolean {
     if (this.hasWallet(id)) {
       this.walletIDs = this.walletIDs.filter(walletID => walletID !== id);
+
       try {
-        this.storage.set(
-          StorageKey.walletListKey(),
-          JSON.stringify(this.walletIDs)
-        );
+        this.storage.set(StorageKey.walletListKey(), JSON.stringify(this.walletIDs));
         this.storage.delete(StorageKey.walletInfoKey(id));
         this.storage.delete(StorageKey.walletLedgerKey(id));
         this.storage.delete(StorageKey.walletVaultKey(id));
+
         return true;
       } catch (error) {
         throw new StorageError(`Failed to delete wallet: ${error}`);
