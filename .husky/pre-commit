@@ -1,2 +1,0 @@
-# Run lint-staged using ESLint flat config format
-yarn lint-staged
