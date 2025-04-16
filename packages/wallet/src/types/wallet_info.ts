@@ -7,12 +7,8 @@ export enum NetworkType {
   Mainnet = 'mainnet',
   Testnet = 'testnet',
 }
-// Balance response interface
-export interface BalanceResponse {
-  address: string;
-  balance: string; // Using string for large numbers
-  blockHeight: number;
-}
+
+export type Amount = string; // Represents amount in nanoPAC
 
 /**
  * Wallet Information Model

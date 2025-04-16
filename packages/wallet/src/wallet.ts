@@ -6,15 +6,12 @@ import { Encrypter } from './encrypter/encrypter';
 import { encodeBech32WithType, generateUUID, sprintf } from './utils';
 import { StorageKey } from './storage-key';
 import { IStorage } from './storage/storage';
-import {
-  NetworkType,
-  WalletID,
-  WalletInfo,
-  BalanceResponse,
-} from './types/wallet_info';
+import { NetworkType, WalletID, WalletInfo, Amount } from './types/wallet_info';
 import { KeyStore, MnemonicStrength, Vault } from './types/vault';
 import { AddressInfo, Ledger, Purposes } from './types/ledger';
 import * as grpc from '@grpc/grpc-js';
+import { blockchain, blockchainPb } from './grpc';
+
 /**
  * Pactus Wallet Implementation
  * Manages cryptographic operations using Trust Wallet Core
@@ -318,58 +315,64 @@ export class Wallet {
   /**
    * Get balance for a specific address
    * @param address The address to check balance for
-   * @returns Promise with balance information
+   * @returns Promise with balance as Amount type
    */
-  async getAddressBalance(address: string): Promise<BalanceResponse> {
+  async getAddressBalance(address: string): Promise<Amount> {
+    return this.fetchAccount(address);
+  }
+
+  /**
+   * Fetch account information from the Pactus network
+   * @private
+   * @param address The wallet address
+   * @returns Promise with the account balance as Amount
+   */
+  private async fetchAccount(address: string): Promise<Amount> {
     try {
-      return await this.fetchBalanceFromNetwork(address);
+      const client = this.getGrpcClient();
+
+      const accountRequest = new blockchainPb.GetAccountRequest();
+      accountRequest.setAddress(address);
+
+      return new Promise((resolve, reject) => {
+        client.getAccount(
+          accountRequest,
+          (err: Error | null, response: any) => {
+            if (err) {
+              resolve('0');
+              return;
+            }
+            const accountInfo = response.getAccount();
+            resolve(
+              accountInfo && accountInfo.getBalance
+                ? accountInfo.getBalance()
+                : '0'
+            );
+          }
+        );
+      });
     } catch (error) {
-      throw new Error(`Failed to fetch balance: ${error}`);
+      return '0';
     }
   }
-  /**
-   * Fetch balance from the Pactus network
-   * @private
-   */
-  private async fetchBalanceFromNetwork(
-    address: string
-  ): Promise<BalanceResponse> {
-    // Use a singleton gRPC client or create one each time
-    const client = this.getGrpcClient();
-
-    return new Promise((resolve, reject) => {
-      try {
-        client.getAccount({ address }, (err: Error | null, response: any) => {
-          if (err) {
-            reject(err);
-            return;
-          }
-          resolve({
-            address: response.address,
-            balance: response.balance,
-            blockHeight: response.blockHeight,
-          });
-        });
-      } catch (error) {
-        reject(error);
-      }
-    });
-  }
 
   /**
-   * Get or create a gRPC client
+   * Get a gRPC blockchain client
    * @private
+   * @returns A Blockchain gRPC client
    */
-  private getGrpcClient(): any {
-    // Could be stored as a static property for reuse
+  private getGrpcClient() {
     const endpoint = 'bootstrap1.pactus.org:50051';
+    try {
+      // Get the BlockchainClient constructor from pactus-grpc
+      const BlockchainClient = blockchain.BlockchainClient;
 
-    // Create gRPC client (using dynamic require to avoid import issues)
-    // In a real implementation, you'd want to handle this better
-    const grpcClients = require('./grpc');
-    return new grpcClients.wallet.WalletServiceClient(
-      endpoint,
-      grpc.credentials.createInsecure()
-    );
+      // Create client using grpc.credentials from @grpc/grpc-js
+      return new BlockchainClient(endpoint, grpc.credentials.createInsecure());
+    } catch (error) {
+      throw new Error(
+        `Failed to create gRPC client: ${error instanceof Error ? error.message : String(error)}`
+      );
+    }
   }
 }
