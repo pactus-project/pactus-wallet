@@ -10,7 +10,6 @@ import { IStorage } from './storage/storage';
 import { WalletCore } from '@trustwallet/wallet-core';
 import { HDWallet } from '@trustwallet/wallet-core/dist/src/wallet-core';
 import { Amount } from './types/amount';
-import { Console } from 'console';
 
 // Import directly from the generated file
 /**
@@ -18,10 +17,15 @@ import { Console } from 'console';
  * Manages cryptographic operations using Trust Wallet Core
  */
 export class Wallet {
+
   private core: WalletCore;
+
   private storage: IStorage;
+
   private info: WalletInfo;
+
   private vault: Vault;
+
   private ledger: Ledger;
 
   /**
@@ -334,14 +338,14 @@ export class Wallet {
    */
   private async fetchAccount(address: string): Promise<Amount> {
     // https://docs.pactus.org/api/json-rpc/#pactusblockchainget_account-span-idpactusblockchainget_account-classrpc-badgespan
-    const method = "pactus.blockchain.get_account";
-    const params = { "address": address };
+    const method = 'pactus.blockchain.get_account';
+    const params = { address };
     const result = await this.tryFetchJsonRpcResult(method, params);
 
-    console.log(JSON.stringify(result));
-    return new Amount(result["account"].balance);
+    return new Amount(result['account'].balance);
   }
 
+  // eslint-disable @typescript-eslint/no-explicit-any
   private async tryFetchJsonRpcResult(method: string, params: any): Promise<any> {
     const maxAttempts = 1;
     let attempts = 0;
@@ -349,6 +353,7 @@ export class Wallet {
     while (attempts < maxAttempts) {
       try {
         const client = this.getRandomClient();
+
         return await fetchJsonRpcResult(client, method, params);
       } catch (err) {
         // TODO:  "Not Found" error? How to handle it
@@ -362,8 +367,6 @@ export class Wallet {
       }
     }
   }
-
-
 
   /**
    * Returns a weighted random JSON-RPC blockchain client endpoint.
@@ -391,6 +394,7 @@ export class Wallet {
     ];
 
     const randomIndex = Math.floor(Math.random() * endpoints.length);
+
     return endpoints[randomIndex];
   }
 

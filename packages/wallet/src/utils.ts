@@ -52,6 +52,7 @@ export function encodeBech32WithType(prefix: string, data: Uint8Array, type: num
   return bech32m.encode(prefix, words);
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function fetchJsonRpcResult(
   client: string,
   method: string,
@@ -67,7 +68,7 @@ export async function fetchJsonRpcResult(
   const response = await fetch(client, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
+      'CONTENT-TYPE': 'application/json',
     },
     body: JSON.stringify(payload),
   });
