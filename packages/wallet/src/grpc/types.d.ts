@@ -3,18 +3,23 @@ declare module '*.js' {
   export = content;
 }
 
-declare module './gen/js/blockchain_grpc_pb' {
-  export class BlockchainClient {
-    constructor(address: string, credentials: any);
-    getAccount(request: any, callback: (error: Error | null, response: any) => void): void;
-    getBlock(request: any, callback: (error: Error | null, response: any) => void): void;
-    getBlockchainInfo(request: any, callback: (error: Error | null, response: any) => void): void;
-    getValidator(request: any, callback: (error: Error | null, response: any) => void): void;
-    // Add other methods as needed
-  }
+declare module './gen/js-web/blockchain_grpc_web_pb' {
+  const proto: {
+    pactus: {
+      BlockchainClient: {
+        prototype: any;
+        new (hostname: string, credentials: any, options?: object): any;
+      };
+      BlockchainPromiseClient: {
+        prototype: any;
+        new (hostname: string, credentials: any, options?: object): any;
+      };
+    };
+  };
+  export = proto;
 }
 
-declare module './gen/js/blockchain_pb' {
+declare module './gen/js-web/blockchain_pb' {
   export class GetAccountRequest {
     setAddress(address: string): void;
   }
@@ -31,46 +36,46 @@ declare module './gen/js/blockchain_pb' {
   }
 }
 
-declare module './gen/js/wallet_grpc_pb' {
+declare module './gen/js-web/wallet_grpc_web_pb' {
   export class WalletClient {
     constructor(address: string, credentials: any);
     // Add methods as needed
   }
 }
 
-declare module './gen/js/wallet_pb' {
+declare module './gen/js-web/wallet_pb' {
   // Add classes as needed
 }
 
-declare module './gen/js/transaction_grpc_pb' {
+declare module './gen/js-web/transaction_grpc_web_pb' {
   export class TransactionClient {
     constructor(address: string, credentials: any);
     // Add methods as needed
   }
 }
 
-declare module './gen/js/transaction_pb' {
+declare module './gen/js-web/transaction_pb' {
   // Add classes as needed
 }
 
-declare module './gen/js/network_grpc_pb' {
+declare module './gen/js-web/network_grpc_web_pb' {
   export class NetworkClient {
     constructor(address: string, credentials: any);
     // Add methods as needed
   }
 }
 
-declare module './gen/js/network_pb' {
+declare module './gen/js-web/network_pb' {
   // Add classes as needed
 }
 
-declare module './gen/js/utils_grpc_pb' {
+declare module './gen/js-web/utils_grpc_web_pb' {
   export class UtilsClient {
     constructor(address: string, credentials: any);
     // Add methods as needed
   }
 }
 
-declare module './gen/js/utils_pb' {
+declare module './gen/js-web/utils_pb' {
   // Add classes as needed
 }
