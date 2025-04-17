@@ -10,10 +10,12 @@ import BridgePac from '@/components/bridge';
 import QRCode from 'react-qr-code';
 import { useAccount } from '@/wallet/hooks/use-account';
 import { useSearchParams } from 'next/navigation';
+import { useBalance } from '@/wallet/hooks/use-balance';
 
 const Wallet = () => {
   const [copied, setCopied] = useState(false);
   const { getAccountByAddress } = useAccount();
+  const { balance } = useBalance();
   const searchParams = useSearchParams();
   const address = searchParams.get('address');
   const addressInfo = address ? getAccountByAddress(address) : null;
@@ -40,11 +42,11 @@ const Wallet = () => {
                   <h1>Balance</h1>
                   <div className="amount-row">
                     <Image src={simpleLogo} alt="simple-logo" />
-                    <p>0</p>
+                    <p>{balance}</p>
                     <span>PAC</span>
                   </div>
                   <div>
-                    <span style={{ fontSize: '15px' }}>≈ 0 USD</span>
+                    <span style={{ fontSize: '15px' }}>≈ {balance}USD</span>
                   </div>
 
                   <div className="address-wallet">
