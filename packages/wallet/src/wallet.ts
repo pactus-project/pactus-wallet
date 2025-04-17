@@ -380,7 +380,7 @@ export class Wallet {
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private getGrpcClient(): any {
-    const endpoint = 'bootstrap1.pactus.org:50051';
+    const endpoint = 'https://bootstrap1.pactus.org:50051';
 
     try {
       const client = new BlockchainClient(
