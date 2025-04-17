@@ -68,10 +68,7 @@ export class Encrypter {
   }
 
   // Helper to perform Argon2id hashing with parameters from this.params
-  private async deriveKeyFromPassword(
-    password: string,
-    salt: Buffer,
-  ): Promise<Buffer> {
+  private async deriveKeyFromPassword(password: string, salt: Buffer): Promise<Buffer> {
     const iterations = this.params.getNumber(ParameterKey.iterations);
     const memory = this.params.getNumber(ParameterKey.memory);
     const parallelism = this.params.getNumber(ParameterKey.parallelism);
@@ -176,10 +173,7 @@ export class Encrypter {
     switch (funcs[2]) {
       case EncryptionMethod.macv1: {
         const mac = data.subarray(data.length - 4);
-        const calculatedMac = this.calcMACv1(
-          cipherKey.subarray(16, 32),
-          cipher,
-        );
+        const calculatedMac = this.calcMACv1(cipherKey.subarray(16, 32), cipher);
 
         if (!calculatedMac.equals(mac)) {
           throw new Error('Invalid password');
@@ -195,11 +189,7 @@ export class Encrypter {
     return msg;
   }
 
-  private aesCrypt(
-    message: Buffer,
-    initVec: Buffer,
-    cipherKey: Buffer,
-  ): Buffer {
+  private aesCrypt(message: Buffer, initVec: Buffer, cipherKey: Buffer): Buffer {
     const cipher = crypto.createCipheriv('aes-256-ctr', cipherKey, initVec);
     const encrypted = Buffer.concat([cipher.update(message), cipher.final()]);
 

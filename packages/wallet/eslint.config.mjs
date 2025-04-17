@@ -111,7 +111,7 @@ const sharedRules = {
 export default [
   js.configs.recommended,
   {
-    ignores: ['**/node_modules/**', '**/dist/**', '**/build/**', '**/*.d.ts'],
+    ignores: ['**/node_modules/**', '**/dist/**', '**/build/**', '**/*.d.ts', '**/scripts/**', '**/grpc/**'],
   },
 
   // JavaScript configuration
@@ -256,6 +256,15 @@ export default [
       ],
       '@typescript-eslint/no-non-null-assertion': 'error',
       '@typescript-eslint/no-namespace': 'error',
+    },
+  },
+
+  // GRPC files configuration
+  {
+    files: ['**/grpc/**/*.ts'],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/naming-convention': 'off',
     },
   },
 
