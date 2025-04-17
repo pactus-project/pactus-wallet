@@ -5,13 +5,11 @@ import { StorageKey } from './storage-key';
 import { AddressInfo, Ledger, Purposes } from './types/ledger';
 import { KeyStore, MnemonicStrength, MnemonicValues, Vault } from './types/vault';
 import { NetworkType, NetworkValues, WalletID, WalletInfo } from './types/wallet_info';
-import { encodeBech32WithType, generateUUID, sprintf } from './utils';
+import { encodeBech32WithType, fetchJsonRpcResult, generateUUID, sprintf } from './utils';
 import { IStorage } from './storage/storage';
 import { WalletCore } from '@trustwallet/wallet-core';
 import { HDWallet } from '@trustwallet/wallet-core/dist/src/wallet-core';
 import { Amount } from './types/amount';
-import { BlockchainClient } from 'pactus-grpc/blockchain_grpc_pb';
-import { GetAccountRequest } from 'pactus-grpc/blockchain_pb';
 
 // Import directly from the generated file
 /**
@@ -19,6 +17,7 @@ import { GetAccountRequest } from 'pactus-grpc/blockchain_pb';
  * Manages cryptographic operations using Trust Wallet Core
  */
 export class Wallet {
+
   private core: WalletCore;
 
   private storage: IStorage;
@@ -338,62 +337,65 @@ export class Wallet {
    * @returns Promise with the account balance as Amount
    */
   private async fetchAccount(address: string): Promise<Amount> {
-    try {
-      const client = this.getGrpcClient();
+    // https://docs.pactus.org/api/json-rpc/#pactusblockchainget_account-span-idpactusblockchainget_account-classrpc-badgespan
+    const method = 'pactus.blockchain.get_account';
+    const params = { address };
+    const result = await this.tryFetchJsonRpcResult(method, params);
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const accountRequest = new GetAccountRequest();
+    return new Amount(result['account'].balance);
+  }
 
-      accountRequest.setAddress(address);
+  // eslint-disable @typescript-eslint/no-explicit-any
+  private async tryFetchJsonRpcResult(method: string, params: any): Promise<any> {
+    const maxAttempts = 1;
+    let attempts = 0;
 
-      return new Promise(resolve => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        client.getAccount(accountRequest, (err: Error | null, response: any) => {
-          if (err) {
-            resolve(Amount.zero());
+    while (attempts < maxAttempts) {
+      try {
+        const client = this.getRandomClient();
 
-            return;
-          }
+        return await fetchJsonRpcResult(client, method, params);
+      } catch (err) {
+        // TODO:  "Not Found" error? How to handle it
 
-          const accountInfo = response.getAccount();
-          const balanceStr = accountInfo && accountInfo.getBalance ? accountInfo.getBalance() : '0';
+        attempts++;
+        console.error(`Attempt ${attempts} failed:`, err);
 
-          try {
-            // Create Amount instance from the returned string
-            const amount = new Amount(balanceStr);
-
-            resolve(amount);
-          } catch (error) {
-            resolve(Amount.zero());
-          }
-        });
-      });
-    } catch (error) {
-      return Amount.zero();
+        if (attempts === maxAttempts) {
+          throw new Error(`Failed to fetch JSON-RPC result after ${maxAttempts} attempts`);
+        }
+      }
     }
   }
 
   /**
-   * Get a gRPC blockchain client
+   * Returns a weighted random JSON-RPC blockchain client endpoint.
+   *
+   * The selection is based on the response time of each client.
+   * Endpoints with better response times have a higher chance of being selected.
+   *
+   * TODO: Extract the list of endpoints from persistent storage
+   *       (based on the type of wallet: Testnet or Mainnet).
+   *
+   * TODO: Allow users to modify the list of RPC clients (add/remove endpoints).
+   *
+   * TODO: Introduce dynamic weighting based on the response time of each client
+   *       to prefer faster and more reliable endpoints.
+   *
    * @private
-   * @returns A Blockchain gRPC client
+   * @returns A randomly selected RPC client endpoint from the available list.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private getGrpcClient(): any {
-    const endpoint = 'https://bootstrap1.pactus.org:50051';
+  private getRandomClient(): string {
+    const endpoints = [
+      // 'http://bootstrap1.pactus.org:8545',
+      'https://bootstrap2.pactus.org:8545',
+      // 'http://bootstrap3.pactus.org:8545',
+      // 'http://bootstrap4.pactus.org:8545',
+    ];
 
-    try {
-      const client = new BlockchainClient(
-        endpoint,
-        null,
-        {} // Empty options object
-      );
+    const randomIndex = Math.floor(Math.random() * endpoints.length);
 
-      return client;
-    } catch (error) {
-      throw new Error(
-        `Failed to create gRPC client: ${error instanceof Error ? error.message : String(error)}`
-      );
-    }
+    return endpoints[randomIndex];
   }
+
 }

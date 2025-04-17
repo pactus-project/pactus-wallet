@@ -20,7 +20,7 @@ const errorPreventionRules = {
   'no-duplicate-imports': 'error',
   'no-undef': 'error',
   'no-unused-vars': 'error',
-  
+
   'no-implicit-coercion': 'error',
   'no-negated-condition': 'error',
   'no-else-return': 'error',
@@ -31,7 +31,6 @@ const errorPreventionRules = {
   'prefer-template': 'error',
   'no-nested-ternary': 'error',
   'no-lonely-if': 'error',
-  'lines-between-class-members': ['error', 'always', { exceptAfterSingleLine: false }],
   'padding-line-between-statements': [
     'error',
     { blankLine: 'always', prev: '*', next: 'return' },
