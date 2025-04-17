@@ -25,6 +25,3 @@ jobs:
 
       - name: Building the Project
         run: yarn build:web
-
-      - name: Start the Project
-        run: yarn dev:web
