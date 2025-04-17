@@ -142,6 +142,36 @@
 }
 
 /* 
+ * TEXT COMPONENTS
+ */
+
+.text-heading {
+  font-size: var(--font-size-5xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  line-height: var(--line-height-tight);
+  margin-bottom: var(--spacing-md);
+  letter-spacing: -0.02em;
+}
+
+.text-title {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-normal);
+  margin-bottom: var(--spacing-sm);
+  letter-spacing: -0.01em;
+}
+
+.text-body {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-normal);
+  margin-bottom: var(--spacing-sm);
+}
+
+/* 
  * SPACING
  */
 

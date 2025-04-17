@@ -8,6 +8,7 @@ import dynamic from 'next/dynamic'
 import { validatePassword } from '@/utils/password-validator'
 import { useWallet } from '@/wallet'
 import { useI18n } from '@/utils/i18n'
+import Lottie from '@/components/lottie-player';
 
 const LottiePlayer = dynamic(() => import('react-lottie-player'), { ssr: false });
 
@@ -71,24 +72,21 @@ const MasterPassword = () => {
         navigate('/get-started?step=choose-name-wallet');
     }
 
-    const isFormValid = !errors.password && 
-                        !errors.confirm && 
-                        password.length > 0 && 
-                        confirmPassword.length > 0 && 
-                        isChecked;
+    const isFormValid = !errors.password &&
+        !errors.confirm &&
+        password.length > 0 &&
+        confirmPassword.length > 0 &&
+        isChecked;
 
     return (
         <section className="master-password">
-            <div className="master-password__animation">
-                <LottiePlayer
-                    animationData={masterPasswordLottie}
-                    className="master-password__animation"
-                    loop={false}
-                    play
-                    aria-hidden="true"
-                />
-            </div>
-            
+            <Lottie
+                animationData={masterPasswordLottie}
+                className="master-password__animation"
+                loop={false}
+                play
+                aria-hidden="true"
+            />
             <h1 className="master-password__title">{t('createMasterPassword')}</h1>
             <p className="master-password__description">{t('masterPasswordDescription')}</p>
 
@@ -108,8 +106,8 @@ const MasterPassword = () => {
                             aria-invalid={errors.password ? 'true' : 'false'}
                             aria-describedby={errors.password ? 'password-error' : undefined}
                         />
-                        <button 
-                            type="button" 
+                        <button
+                            type="button"
                             className="master-password__toggle-button"
                             onClick={() => togglePasswordVisibility('password')}
                             aria-label={showPassword.password ? t('hidePassword') : t('showPassword')}
@@ -145,8 +143,8 @@ const MasterPassword = () => {
                             aria-invalid={errors.confirm ? 'true' : 'false'}
                             aria-describedby={errors.confirm ? 'confirm-error' : undefined}
                         />
-                        <button 
-                            type="button" 
+                        <button
+                            type="button"
                             className="master-password__toggle-button"
                             onClick={() => togglePasswordVisibility('confirm')}
                             aria-label={showPassword.confirm ? t('hidePassword') : t('showPassword')}
@@ -169,12 +167,12 @@ const MasterPassword = () => {
 
                 <div className="master-password__terms">
                     <div className="master-password__checkbox-container">
-                        <input 
-                            type="checkbox" 
+                        <input
+                            type="checkbox"
                             id="terms-checkbox"
-                            className="master-password__checkbox" 
-                            checked={isChecked} 
-                            onChange={() => setIsChecked(!isChecked)} 
+                            className="master-password__checkbox"
+                            checked={isChecked}
+                            onChange={() => setIsChecked(!isChecked)}
                         />
                         <label htmlFor="terms-checkbox" className="master-password__terms-text">
                             {t('cannotRecoverPassword')}

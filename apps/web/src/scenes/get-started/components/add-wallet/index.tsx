@@ -7,38 +7,36 @@ import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 import BorderBeam from '@/components/border-beam'
 import { useI18n } from '@/utils/i18n'
+import Lottie from '@/components/lottie-player'
 
 const LottiePlayer = dynamic(() => import('react-lottie-player'), { ssr: false });
 
 const AddWallet = () => {
     const navigate = useRouter().push;
     const { t } = useI18n();
-    
+
     return (
         <section className="add-wallet">
-            <div className="add-wallet__animation">
-                <LottiePlayer
-                    animationData={addWalletLottie}
-                    loop={true}
-                    play
-                    className="add-wallet__animation"
-                    aria-hidden="true"
-                />
-            </div>
-            
+            <Lottie
+                animationData={addWalletLottie}
+                loop={true}
+                play
+                className="add-wallet__animation"
+                aria-hidden="true"
+            />
             <h1 className="add-wallet__title">{t('addWallet')}</h1>
             <p className="add-wallet__description">{t('addWalletDescription')}</p>
-            
+
             <div className="add-wallet__options">
-                <button 
-                    id="newWalletButton" 
+                <button
+                    id="newWalletButton"
                     className="add-wallet__option-button"
                     onClick={() => navigate('/get-started?step=recovery-phrase')}
                     type="button"
                 >
-                    <Image 
-                        src={newWalletIcon} 
-                        alt="" 
+                    <Image
+                        src={newWalletIcon}
+                        alt=""
                         className="add-wallet__option-icon"
                         aria-hidden="true"
                     />
@@ -53,16 +51,16 @@ const AddWallet = () => {
                         showOnHover={true}
                     />
                 </button>
-                
-                <button 
-                    id="ExistingWalletButton" 
+
+                <button
+                    id="ExistingWalletButton"
                     className="add-wallet__option-button"
                     onClick={() => navigate('/get-started?step=import-wallet')}
                     type="button"
                 >
-                    <Image 
-                        src={existingWalletIcon} 
-                        alt="" 
+                    <Image
+                        src={existingWalletIcon}
+                        alt=""
                         className="add-wallet__option-icon"
                         aria-hidden="true"
                     />

@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation'
 import * as bip39 from 'bip39';
 import { useI18n } from '@/utils/i18n';
 import BorderBeam from '@/components/border-beam';
-
+import Lottie from '@/components/lottie-player';
 const LottiePlayer = dynamic(() => import('react-lottie-player'), { ssr: false });
 
 const ImportWallet = () => {
@@ -38,16 +38,16 @@ const ImportWallet = () => {
         if (hasEmptyWords()) {
             return;
         }
-        
+
         // Validate the mnemonic using BIP39
         if (!validateMnemonic()) {
             setError(t('invalidSeedPhrase'));
             return;
         }
-        
+
         // Clear any previous errors
         setError('');
-        
+
         setMnemonic(words.join(' '));
         navigate('/get-started?step=master-password');
     };
@@ -98,24 +98,20 @@ const ImportWallet = () => {
 
     return (
         <section className="import-wallet">
-            <div className="import-wallet__animation">
-                <LottiePlayer
-                    animationData={importWalletLottie}
-                    loop={true}
-                    play
-                    className="import-wallet__animation"
-                    aria-hidden="true"
-                />
-            </div>
-
+            <Lottie
+                animationData={importWalletLottie}
+                loop={true}
+                play
+                className="import-wallet__animation"
+            />
             <h1 className="import-wallet__title">{t('importExistingWallet')}</h1>
             <p className="import-wallet__description">{t('importWalletDescription')}</p>
-            
+
             <div className="import-wallet__controls">
-                <select 
+                <select
                     id="word-count"
-                    className="import-wallet__select"
-                    value={wordCount} 
+                    className="import-wallet__select rounded-md border text-md mb-md"
+                    value={wordCount}
                     onChange={(e) => handleWordCountChange(parseInt(e.target.value))}
                     aria-label={t('selectWordCount')}
                 >
@@ -123,11 +119,11 @@ const ImportWallet = () => {
                     <option value={24}>{t('twentyFourWords')}</option>
                 </select>
             </div>
-            
+
             <div id="recovery-phrase-parent" className="import-wallet__seed-container">
                 <fieldset className="import-wallet__seed-fieldset">
                     <legend className="visually-hidden">{t('enterSeedPhrase')}</legend>
-                    
+
                     {Array.from({ length: wordCount }).map((_, index) => (
                         <div key={index} className="import-wallet__word-container">
                             <label className="import-wallet__word-label" htmlFor={`word-${index}`}>
@@ -135,7 +131,7 @@ const ImportWallet = () => {
                             </label>
                             <input
                                 id={`word-${index}`}
-                                type="text" 
+                                type="text"
                                 className="import-wallet__word-input"
                                 value={words[index]}
                                 data-index={index}
@@ -152,7 +148,7 @@ const ImportWallet = () => {
                         </div>
                     ))}
                 </fieldset>
-                
+
                 <BorderBeam
                     duration={4}
                     size={300}
@@ -160,13 +156,13 @@ const ImportWallet = () => {
                     showOnHover={true}
                 />
             </div>
-            
+
             {error && (
                 <p className="import-wallet__error" role="alert">
                     {error}
                 </p>
             )}
-            
+
             <button
                 type="button"
                 disabled={hasEmptyWords() || error.length > 0}

@@ -2,13 +2,13 @@
 import { emojis, walletNameLottie } from '@/assets';
 import React, { useState } from 'react';
 import './style.css';
-import dynamic from 'next/dynamic';
 import { useAccount, useRestoreWallet, useWallet } from '@/wallet';
 import { useRouter } from 'next/navigation';
 import Loading from '@/components/loading';
 import { useI18n } from '@/utils/i18n';
+import Lottie from '@/components/lottie-player';
 
-const LottiePlayer = dynamic(() => import('react-lottie-player'), { ssr: false });
+
 
 const ChooseNameWallet = () => {
     const { setWalletName, walletName, password } = useWallet();
@@ -41,24 +41,15 @@ const ChooseNameWallet = () => {
     return (
         <section className="wallet-naming">
             {isLoading && <Loading />}
-            
-            <div className="wallet-naming__animation">
-                <LottiePlayer
-                    animationData={walletNameLottie}
-                    loop={false}
-                    className="wallet-naming__animation"
-                    play
-                    style={{ height: '200px' }}
-                    aria-hidden="true"
-                />
-            </div>
-            
+
             <h1 className="wallet-naming__title">{t('nameYourWallet')}</h1>
-            
+            <Lottie
+                className='wallet-naming__animation'
+                animationData={walletNameLottie} />
             <p className="wallet-naming__description">
                 {t('walletNameDescription')}
             </p>
-            
+
             <div className="wallet-naming__input-container">
                 <label htmlFor="wallet-name" className="visually-hidden">
                     {t('walletNamePlaceholder')}
@@ -73,10 +64,10 @@ const ChooseNameWallet = () => {
                     autoComplete="off"
                 />
             </div>
-            
+
             <div className="emoji-picker" role="group" aria-label={t('selectEmoji')}>
                 {emojis.map((emoji, index) => (
-                    <button 
+                    <button
                         key={`${index}-emoji`}
                         type="button"
                         onClick={() => handleEmojiSelect(emoji)}
@@ -87,7 +78,7 @@ const ChooseNameWallet = () => {
                     </button>
                 ))}
             </div>
-            
+
             <button
                 className="btn btn-primary wallet-naming__submit"
                 disabled={walletName.length === 0}
@@ -97,7 +88,7 @@ const ChooseNameWallet = () => {
             >
                 {t('finish')}
             </button>
-            
+
             {restorationError && (
                 <p className="wallet-naming__error" role="alert">
                     {restorationError}

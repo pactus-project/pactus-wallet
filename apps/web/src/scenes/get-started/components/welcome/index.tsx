@@ -50,11 +50,11 @@ const Welcome = () => {
   return (
     <section className="welcome">
       <div className="welcome__header">
-        <h1 className="welcome__title">
+        <h1 className="text-heading">
           {t('hello')}
           <br />
-          <span className="welcome__subtitle">{t('welcomeTo')}</span>
-          <span className="welcome__brand">{t('pactusWallet')}</span>
+          <span className="text-xl text-secondary font-medium">{t('welcomeTo')}</span>{' '}
+          <span className="text-gradient font-semibold">{t('pactusWallet')}</span>
         </h1>
       </div>
 
