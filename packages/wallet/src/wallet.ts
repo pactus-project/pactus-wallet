@@ -10,8 +10,9 @@ import { IStorage } from './storage/storage';
 import { WalletCore } from '@trustwallet/wallet-core';
 import { HDWallet } from '@trustwallet/wallet-core/dist/src/wallet-core';
 import { Amount } from './types/amount';
-import { BlockchainClient } from './grpc/gen/js-web/blockchain_grpc_web_pb';
-import { blockchainPb } from './grpc/index';
+import { BlockchainClient } from 'pactus-grpc/blockchain_grpc_pb';
+import { GetAccountRequest } from 'pactus-grpc/blockchain_pb';
+
 // Import directly from the generated file
 /**
  * Pactus Wallet Implementation
@@ -341,7 +342,6 @@ export class Wallet {
       const client = this.getGrpcClient();
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const GetAccountRequest = (blockchainPb as any).GetAccountRequest;
       const accountRequest = new GetAccountRequest();
 
       accountRequest.setAddress(address);
