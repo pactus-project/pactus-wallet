@@ -1,13 +1,14 @@
-import type { Metadata } from "next";
-import "./globals.css";
-import { WalletProvider } from "@/wallet";
-import { I18nProvider } from "@/utils/i18n";
+import type { Metadata } from 'next';
+import './globals.css';
+import { WalletProvider } from '@/wallet';
+import { I18nProvider } from '@/utils/i18n';
 
 export const metadata: Metadata = {
-  title: "Pactus Wallet",
-  description: "Pactus Wallet is an open-source, client-based wallet for securely managing digital assets on the Pactus blockchain. Non-custodial, fast, and user-friendly.",
+  title: 'Pactus Wallet',
+  description:
+    'Pactus Wallet is an open-source, client-based wallet for securely managing digital assets on the Pactus blockchain. Non-custodial, fast, and user-friendly.',
   icons: {
-    icon: ["/favicon.ico?v=4"],
+    icon: ['/favicon.ico?v=4'],
   },
 };
 

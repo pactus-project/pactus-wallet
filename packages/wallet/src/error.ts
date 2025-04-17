@@ -160,9 +160,5 @@ export function formatError(error: unknown): {
   }
 
   // Handle non-Error instances
-  return createErrorResponse(
-    ErrorCode.UNKNOWN_ERROR,
-    'An unknown error occurred',
-    error
-  );
+  return createErrorResponse(ErrorCode.UNKNOWN_ERROR, 'An unknown error occurred', error);
 }

@@ -19,16 +19,12 @@ export const I18nProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       });
       return text;
     }
-    
+
     // Return the key if no translation found
     return key;
   };
 
-  return (
-    <I18nContext.Provider value={{ t }}>
-      {children}
-    </I18nContext.Provider>
-  );
+  return <I18nContext.Provider value={{ t }}>{children}</I18nContext.Provider>;
 };
 
 export const useI18n = () => {
@@ -37,4 +33,4 @@ export const useI18n = () => {
     throw new Error('useI18n must be used within an I18nProvider');
   }
   return context;
-}; 
+};

@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import Image from 'next/image';
 import React, { useState } from 'react';
 import ThreeDMotion from '../3d-motion';
@@ -19,9 +19,14 @@ const Welcome = () => {
       description: (
         <>
           {t('openSourceDescription')}{' '}
-          <a className='gradient-GetStarted' href="https://github.com/pactus-project/pactus-wallet" target="_blank">
+          <a
+            className="gradient-GetStarted"
+            href="https://github.com/pactus-project/pactus-wallet"
+            target="_blank"
+          >
             here
-          </a>.
+          </a>
+          .
         </>
       ),
     },
@@ -31,18 +36,22 @@ const Welcome = () => {
 
   return (
     <>
-      <div className='titer-GetStarted'>
+      <div className="titer-GetStarted">
         <h1>
-          {t('hello')}<br />
-          <span>{t('welcomeTo')}</span><span style={{ marginLeft: '5px' }} className='gradient-GetStarted'>{t('pactusWallet')}</span>
+          {t('hello')}
+          <br />
+          <span>{t('welcomeTo')}</span>
+          <span style={{ marginLeft: '5px' }} className="gradient-GetStarted">
+            {t('pactusWallet')}
+          </span>
         </h1>
       </div>
 
-      <div className='section1-GetStarted'>
-        <div className='slogans-GetStarted'>
+      <div className="section1-GetStarted">
+        <div className="slogans-GetStarted">
           {data.map((item, i) => (
             <div key={`${i}-slogan`}>
-              <Image src={item.icon} alt='' />
+              <Image src={item.icon} alt="" />
               <div>
                 <h3>{item.title}</h3>
                 <p>{item.description}</p>
@@ -55,11 +64,12 @@ const Welcome = () => {
         </div>
       </div>
 
-      <div className='letsCta-GetStarted'>
+      <div className="letsCta-GetStarted">
         <div>
           <input type="checkbox" checked={isChecked} onChange={() => setIsChecked(!isChecked)} />
           <p onClick={() => setIsChecked(!isChecked)}>
-            {t('iHaveReadAndAgreed')} <span className='gradient-GetStarted'> {t('termsAndConditions')}</span>.
+            {t('iHaveReadAndAgreed')}{' '}
+            <span className="gradient-GetStarted"> {t('termsAndConditions')}</span>.
           </p>
         </div>
         <button onClick={() => navigate('/get-started?step=add-wallet')} disabled={!isChecked}>

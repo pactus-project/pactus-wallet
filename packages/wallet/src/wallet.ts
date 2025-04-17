@@ -9,6 +9,9 @@ import { encodeBech32WithType, generateUUID, sprintf } from './utils';
 import { IStorage } from './storage/storage';
 import { WalletCore } from '@trustwallet/wallet-core';
 import { HDWallet } from '@trustwallet/wallet-core/dist/src/wallet-core';
+import { Amount } from './types/amount';
+import { credentials } from '@grpc/grpc-js';
+import { blockchain, blockchainPb } from './grpc/index';
 
 /**
  * Pactus Wallet Implementation
@@ -225,14 +228,8 @@ export class Wallet {
     );
 
     const hdWallet = await this.hdWallet(password);
-    const privateKey = hdWallet.getKey(
-      this.core.CoinType.pactus,
-      derivationPath
-    );
-    const address = this.core.CoinTypeExt.deriveAddress(
-      this.core.CoinType.pactus,
-      privateKey
-    );
+    const privateKey = hdWallet.getKey(this.core.CoinType.pactus, derivationPath);
+    const address = this.core.CoinTypeExt.deriveAddress(this.core.CoinType.pactus, privateKey);
 
     // Get public key
     const publicKey = privateKey.getPublicKeyEd25519();
@@ -262,10 +259,7 @@ export class Wallet {
    * @throws An error if the password is incorrect
    */
   async getMnemonic(password: string): Promise<string> {
-    const keyStoreJSON = await this.vault.encrypter.decrypt(
-      this.vault.keyStore,
-      password
-    );
+    const keyStoreJSON = await this.vault.encrypter.decrypt(this.vault.keyStore, password);
     const keyStore = JSON.parse(keyStoreJSON) as KeyStore;
 
     return keyStore.master_node.seed;
@@ -324,6 +318,81 @@ export class Wallet {
         return 'tpublic';
       default:
         throw new Error(`Unknown network type: ${this.info.network}`);
+    }
+  }
+
+  /**
+   * Get balance for a specific address
+   * @param address The address to check balance for
+   * @returns Promise with balance as Amount type
+   */
+  async getAddressBalance(address: string): Promise<Amount> {
+    return this.fetchAccount(address);
+  }
+
+  /**
+   * Fetch account information from the Pactus network
+   * @private
+   * @param address The wallet address
+   * @returns Promise with the account balance as Amount
+   */
+  private async fetchAccount(address: string): Promise<Amount> {
+    try {
+      const client = this.getGrpcClient();
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const GetAccountRequest = (blockchainPb as any).GetAccountRequest;
+      const accountRequest = new GetAccountRequest();
+
+      accountRequest.setAddress(address);
+
+      return new Promise(resolve => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        client.getAccount(accountRequest, (err: Error | null, response: any) => {
+          if (err) {
+            resolve(Amount.zero());
+
+            return;
+          }
+
+          const accountInfo = response.getAccount();
+          const balanceStr = accountInfo && accountInfo.getBalance ? accountInfo.getBalance() : '0';
+
+          try {
+            // Create Amount instance from the returned string
+            const amount = new Amount(balanceStr);
+
+            resolve(amount);
+          } catch (error) {
+            resolve(Amount.zero());
+          }
+        });
+      });
+    } catch (error) {
+      return Amount.zero();
+    }
+  }
+
+  /**
+   * Get a gRPC blockchain client
+   * @private
+   * @returns A Blockchain gRPC client
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private getGrpcClient(): any {
+    const endpoint = 'bootstrap1.pactus.org:50051';
+
+    try {
+      const client = new blockchain.BlockchainClient(
+        endpoint,
+        credentials.createInsecure() // Note: For production use, consider using secure credentials
+      );
+
+      return client;
+    } catch (error) {
+      throw new Error(
+        `Failed to create gRPC client: ${error instanceof Error ? error.message : String(error)}`
+      );
     }
   }
 }

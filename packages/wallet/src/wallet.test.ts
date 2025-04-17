@@ -108,18 +108,11 @@ describe('Pactus Wallet Tests', () => {
 
       expect(bip39.validateMnemonic(testMnemonic)).toBe(true);
 
-      const wallet = await Wallet.restore(
-        core,
-        storage,
-        testMnemonic,
-        password
-      );
+      const wallet = await Wallet.restore(core, storage, testMnemonic, password);
       expect(wallet.getMnemonic(password)).resolves.toBe(testMnemonic);
 
       const addrInfo1 = await wallet.createAddress('Address 1', password);
-      expect(addrInfo1.address).toBe(
-        'pc1rcx9x55nfme5juwdgxd2ksjdcmhvmvkrygmxpa3'
-      );
+      expect(addrInfo1.address).toBe('pc1rcx9x55nfme5juwdgxd2ksjdcmhvmvkrygmxpa3');
       expect(addrInfo1.publicKey).toBe(
         'public1rd5p573yq3j5wkvnasslqa7ne5vw87qcj5a0wlwxcj2t2xlaca9lstzm8u5'
       );
@@ -127,9 +120,7 @@ describe('Pactus Wallet Tests', () => {
       expect(addrInfo1.path).toBe("m/44'/21888'/3'/0'");
 
       const addrInfo2 = await wallet.createAddress('Address 2', password);
-      expect(addrInfo2.address).toBe(
-        'pc1r7aynw9urvh66ktr3fte2gskjjnxzruflkgde94'
-      );
+      expect(addrInfo2.address).toBe('pc1r7aynw9urvh66ktr3fte2gskjjnxzruflkgde94');
       expect(addrInfo2.publicKey).toBe(
         'public1r8jud8m6mfuyhwq6lupmuz0pq6uzhm9a6hkqfmc89jk7k6fr30e2sns7ghs'
       );
@@ -144,18 +135,11 @@ describe('Pactus Wallet Tests', () => {
 
       expect(bip39.validateMnemonic(testMnemonic)).toBe(true);
 
-      const wallet = await Wallet.restore(
-        core,
-        storage,
-        testMnemonic,
-        password
-      );
+      const wallet = await Wallet.restore(core, storage, testMnemonic, password);
       expect(wallet.getMnemonic(password)).resolves.toBe(testMnemonic);
 
       const addrInfo1 = await wallet.createAddress('Address 1', password);
-      expect(addrInfo1.address).toBe(
-        'pc1r8rel7ctk0p4cs49wlhdccvkk27rpllwhrv3g6z'
-      );
+      expect(addrInfo1.address).toBe('pc1r8rel7ctk0p4cs49wlhdccvkk27rpllwhrv3g6z');
       expect(addrInfo1.publicKey).toBe(
         'public1rs6yq6kf9hyll78qsfk338k06j96sv69j6dpn9rqats0urnqaj4fsfhxgza'
       );
@@ -163,9 +147,7 @@ describe('Pactus Wallet Tests', () => {
       expect(addrInfo1.path).toBe("m/44'/21888'/3'/0'");
 
       const addrInfo2 = await wallet.createAddress('Address 2', password);
-      expect(addrInfo2.address).toBe(
-        'pc1rssed2c3h6l9fm6gu4v7nmj5s33a388e8ygtgc4'
-      );
+      expect(addrInfo2.address).toBe('pc1rssed2c3h6l9fm6gu4v7nmj5s33a388e8ygtgc4');
       expect(addrInfo2.publicKey).toBe(
         'public1r503wn3q8hlf9hsq6f7v2vmke5mgphx3kvatasqtlzyfaadvuhy0s2tzq84'
       );
@@ -174,12 +156,11 @@ describe('Pactus Wallet Tests', () => {
     });
 
     it('should throw an error when restoring with an invalid mnemonic', () => {
-      const invalidMnemonic =
-        'invalid mnemonic phrase that will not work for restoration';
+      const invalidMnemonic = 'invalid mnemonic phrase that will not work for restoration';
 
-      expect(() =>
-        Wallet.restore(core, storage, invalidMnemonic, password)
-      ).rejects.toThrow(MnemonicError);
+      expect(() => Wallet.restore(core, storage, invalidMnemonic, password)).rejects.toThrow(
+        MnemonicError
+      );
     });
   });
 
@@ -238,9 +219,7 @@ describe('Pactus Wallet Tests', () => {
       const loadedWallet = Wallet.load(core, storage, wallet.getID());
 
       expect(loadedWallet.getAddresses()).toStrictEqual(wallet.getAddresses());
-      expect(loadedWallet.getWalletInfo()).toStrictEqual(
-        wallet.getWalletInfo()
-      );
+      expect(loadedWallet.getWalletInfo()).toStrictEqual(wallet.getWalletInfo());
     });
 
     it('should correctly load the wallet from test data', async () => {
@@ -269,9 +248,7 @@ describe('Pactus Wallet Tests', () => {
       expect(wallet.isEncrypted()).toBeTruthy();
       expect(wallet.getMnemonic(testPassword)).resolves.toBe(expectedMnemonic);
 
-      const addrInfo1 = wallet.getAddressInfo(
-        'pc1rcx9x55nfme5juwdgxd2ksjdcmhvmvkrygmxpa3'
-      );
+      const addrInfo1 = wallet.getAddressInfo('pc1rcx9x55nfme5juwdgxd2ksjdcmhvmvkrygmxpa3');
       expect(addrInfo1).toBeTruthy();
       expect(addrInfo1?.path).toBe("m/44'/21888'/3'/0'");
       expect(addrInfo1?.label).toBe('Account 1');
@@ -280,9 +257,7 @@ describe('Pactus Wallet Tests', () => {
       );
 
       const addrInfo2 = await wallet.createAddress('Address 2', testPassword);
-      expect(addrInfo2.address).toBe(
-        'pc1r7aynw9urvh66ktr3fte2gskjjnxzruflkgde94'
-      );
+      expect(addrInfo2.address).toBe('pc1r7aynw9urvh66ktr3fte2gskjjnxzruflkgde94');
     });
   });
 
@@ -317,6 +292,129 @@ describe('Pactus Wallet Tests', () => {
       expect(walletInfoJSON).toEqual(expectedWalletInfoJSON);
       expect(ledgerJSON).toEqual(expectedLedgerJSON);
       expect(vaultJSON).toEqual(expectedVaultJSON);
+    });
+  });
+
+  describe('Balance Operations', () => {
+    let wallet: Wallet;
+    let mockGrpcClient: any;
+
+    beforeEach(async () => {
+      // Setup wallet
+      wallet = await Wallet.create(core, storage, password);
+      await wallet.createAddress('Test Address', password);
+
+      // Mock the gRPC client
+      mockGrpcClient = {
+        getAccount: jest.fn(),
+      };
+
+      // Replace the real getGrpcClient method with one that returns our mock
+      jest.spyOn(wallet as any, 'getGrpcClient').mockReturnValue(mockGrpcClient);
+    });
+
+    afterEach(() => {
+      jest.restoreAllMocks();
+    });
+
+    it('should fetch balance for a specific address', async () => {
+      // Arrange
+      const address = wallet.getAddresses()[0].address;
+      const mockBalance = '1000000000';
+
+      // Mock an account object with getBalance method
+      const mockAccount = {
+        getBalance: jest.fn().mockReturnValue(mockBalance),
+      };
+
+      // Mock a response object with getAccount method
+      const mockResponse = {
+        getAccount: jest.fn().mockReturnValue(mockAccount),
+      };
+
+      // Mock getAccount to call the callback with null error and our mock response
+      mockGrpcClient.getAccount.mockImplementation((request: any, callback: any) => {
+        // Verify the request is properly formatted
+        expect(request.getAddress()).toBe(address);
+        callback(null, mockResponse);
+      });
+
+      // Act
+      const result = await wallet.getAddressBalance(address);
+
+      expect(result.toString()).toEqual(mockBalance);
+      expect(result.toPac()).toEqual(1); // 1000000000 nanoPAC = 1 PAC
+    });
+
+    it('should return zero Amount when server error occurs', async () => {
+      // Arrange
+      const address = wallet.getAddresses()[0].address;
+      const mockError = new Error('Network error');
+
+      // Mock getAccount to call the callback with an error
+      mockGrpcClient.getAccount.mockImplementation((request: any, callback: any) => {
+        expect(request.getAddress()).toBe(address);
+        callback(mockError, null);
+      });
+
+      // Act
+      const result = await wallet.getAddressBalance(address);
+
+      // Assert
+      expect(mockGrpcClient.getAccount).toHaveBeenCalled();
+      expect(result.toString()).toEqual('0');
+      expect(result.toPac()).toEqual(0);
+    });
+
+    it('should return zero Amount when invalid balance is received', async () => {
+      // Arrange
+      const address = wallet.getAddresses()[0].address;
+
+      // Mock an account that returns an invalid balance
+      const mockAccount = {
+        getBalance: jest.fn().mockReturnValue('invalid_balance'),
+      };
+
+      // Mock a response that returns our mock account
+      const mockResponse = {
+        getAccount: jest.fn().mockReturnValue(mockAccount),
+      };
+
+      // Mock getAccount to call the callback with our invalid balance response
+      mockGrpcClient.getAccount.mockImplementation((request: any, callback: any) => {
+        expect(request.getAddress()).toBe(address);
+        callback(null, mockResponse);
+      });
+
+      // Act
+      const result = await wallet.getAddressBalance(address);
+
+      // Assert
+      expect(mockGrpcClient.getAccount).toHaveBeenCalled();
+      expect(mockResponse.getAccount).toHaveBeenCalled();
+      expect(result.toString()).toEqual('0');
+    });
+
+    // This test uses a real address and will query the actual Pactus blockchain
+    // Skip this test by default as it depends on external services
+    it.skip('should fetch real balance from the Pactus blockchain', async () => {
+      // Restore the original getGrpcClient method to use real network
+      jest.restoreAllMocks();
+
+      // Define a known Pactus address to test with - this is a validator from the network
+      const knownAddress = 'pc1zus6ke5h34lsvgamz29hjgn3rpzypzz6a39pcv5';
+
+      // Act - call the real implementation
+      const result = await wallet.getAddressBalance(knownAddress);
+      // Assert - balance should be greater than zero
+      // This validator has a large stake, so balance should be significant
+      console.info(`Actual balance for ${knownAddress}: ${result.toPac()} PAC`);
+
+      // Basic test to ensure we got a valid response
+      expect(result.toPac()).toBeGreaterThan(0);
+
+      // The stake should be at least 1000 PAC for validators
+      expect(result.toPac()).toBeGreaterThanOrEqual(1000);
     });
   });
 });
