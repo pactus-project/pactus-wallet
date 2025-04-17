@@ -10,7 +10,6 @@ import Lottie from '@/components/lottie-player'
 const AddWallet = () => {
     const navigate = useRouter().push;
     const { t } = useI18n();
-
     return (
         <section className="add-wallet">
             <Lottie
