@@ -2,11 +2,12 @@
 const translations = {
   // Choose Name Wallet
   nameYourWallet: 'Name your Wallet',
-  walletNameDescription: 'Name your wallet to easily identify it using the Pactus wallet. These names are stored locally, and can only be seen by you.',
+  walletNameDescription:
+    'Name your wallet to easily identify it using the Pactus wallet. These names are stored locally, and can only be seen by you.',
   walletNamePlaceholder: 'Wallet name',
   finish: 'Finish',
   account1: 'Account 1',
-  
+
   // Common
   next: 'Next',
   back: 'Back',
@@ -19,21 +20,21 @@ const translations = {
   done: 'Done',
   loading: 'Loading...',
   continue: 'Continue',
-  
+
   // Authentication
   password: 'Password',
   confirmPassword: 'Confirm Password',
   enterPassword: 'Enter Password',
   createPassword: 'Create Password',
   forgotPassword: 'Forgot Password',
-  
+
   // Dashboard
   overview: 'Overview',
   activity: 'Activity',
   send: 'Send',
   receive: 'Receive',
   balance: 'Balance',
-  
+
   // Settings
   settings: 'Settings',
   security: 'Security',
@@ -41,13 +42,13 @@ const translations = {
   about: 'About',
   logout: 'Logout',
   exportWallet: 'Export Wallet',
-  
+
   // Wallet recovery
   recoverWallet: 'Recover Wallet',
   seedPhrase: 'Seed Phrase',
   enterSeedPhrase: 'Enter your seed phrase',
   keepSeedSafe: 'Keep your seed phrase in a safe place',
-  
+
   // Transactions
   transactionHistory: 'Transaction History',
   noTransactions: 'No transactions yet',
@@ -58,63 +59,72 @@ const translations = {
   confirmed: 'Confirmed',
   pending: 'Pending',
   failed: 'Failed',
-  
+
   // Error messages
   somethingWentWrong: 'Something went wrong',
   tryAgain: 'Please try again',
   invalidPassword: 'Invalid password',
   invalidSeedPhrase: 'Invalid seed phrase',
-  passwordRequirements: 'Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.',
+  passwordRequirements:
+    'Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.',
   passwordsDoNotMatch: 'Passwords do not match.',
-  
+
   // Success messages
   transactionSent: 'Transaction sent successfully',
   walletCreated: 'Wallet created successfully',
   walletRestored: 'Wallet restored successfully',
-  
+
   // Welcome Page
   hello: 'Hello!',
   welcomeTo: 'Welcome to',
   pactusWallet: 'Pactus Wallet',
   openSource: 'Open Source',
-  openSourceDescription: 'Pactus Wallet is fully open source, explore and contribute to our code here.',
+  openSourceDescription:
+    'Pactus Wallet is fully open source, explore and contribute to our code here.',
   simple: 'Simple',
   simpleDescription: 'Pactus Wallet is designed for everyone, from beginners to advanced users.',
   secure: 'Secure',
-  secureDescription: 'Pactus Wallet is a fully static wallet. There is no server involved and all data including your private keys are stored in your browser.',
+  secureDescription:
+    'Pactus Wallet is a fully static wallet. There is no server involved and all data including your private keys are stored in your browser.',
   termsAndConditions: 'Terms and Conditions',
   iHaveReadAndAgreed: 'I have read and agreed to the',
-  letsStart: 'Let\'s Start',
-  
+  letsStart: "Let's Start",
+
   // Add Wallet
   addWallet: 'Add Wallet',
-  addWalletDescription: 'Easily create a new wallet or import an existing one to manage your digital assets securely.',
+  addWalletDescription:
+    'Easily create a new wallet or import an existing one to manage your digital assets securely.',
   newWallet: 'New Wallet',
   newWalletDescription: 'Create a brand-new wallet and start your journey with Pactus securely.',
   existingWallet: 'Existing Wallet',
-  existingWalletDescription: 'Restore access to your wallet by securely entering your recovery phrase or importing a backup file.',
-  
+  existingWalletDescription:
+    'Restore access to your wallet by securely entering your recovery phrase or importing a backup file.',
+
   // Master Password
   createMasterPassword: 'Create Master Password',
-  masterPasswordDescription: 'Set a strong password to protect your wallet and keep your funds safe.',
+  masterPasswordDescription:
+    'Set a strong password to protect your wallet and keep your funds safe.',
   enterYourPassword: 'Enter your password',
   confirmYourPassword: 'Confirm your password',
   cannotRecoverPassword: 'I understand that Pactus cannot recover this password for me.',
   learnMore: 'Learn more',
-  
+
   // Recovery Phrase
   writeDownRecoveryPhrase: 'Write Down Your Recovery Phrase',
-  recoveryPhraseDescription: 'Your recovery phrase is the only way to restore access to your wallet if you lose your device. We strongly recommend writing it down on paper and keeping it in a safe place.',
+  recoveryPhraseDescription:
+    'Your recovery phrase is the only way to restore access to your wallet if you lose your device. We strongly recommend writing it down on paper and keeping it in a safe place.',
   recoveryPhrase: 'Recovery Phrase',
-  writeDownWords: 'Write down the following {0} words in the correct order and keep them in a safe place.',
+  writeDownWords:
+    'Write down the following {0} words in the correct order and keep them in a safe place.',
   twelveWords: '12 Words',
   twentyFourWords: '24 Words',
   confirmRecoveryPhrase: 'Confirm Recovery Phrase',
   enterMissingWords: 'Enter the missing words in the correct order to verify your backup.',
-  
+
   // Import Wallet
   importExistingWallet: 'Import Existing Wallet',
-  importWalletDescription: 'Restore access to your wallet by securely entering your 12 or 24-word recovery phrase.',
+  importWalletDescription:
+    'Restore access to your wallet by securely entering your 12 or 24-word recovery phrase.',
 };
 
-export default translations; 
+export default translations;

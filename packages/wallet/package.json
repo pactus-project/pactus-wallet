@@ -18,10 +18,12 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "@grpc/grpc-js": "^1.13.2",
     "@trustwallet/wallet-core": "^4.2.16",
     "argon2-browser": "^1.18.0",
     "bech32": "^2.0.0",
     "bip39": "^3.1.0",
+    "google-protobuf": "^3.21.4",
     "long": "^5.2.3"
   },
   "devDependencies": {

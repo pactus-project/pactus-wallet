@@ -67,10 +67,7 @@ export class WalletInfo {
     // Validate network value
     const network = json.network as string;
 
-    if (
-      network !== NetworkValues.MAINNET &&
-      network !== NetworkValues.TESTNET
-    ) {
+    if (network !== NetworkValues.MAINNET && network !== NetworkValues.TESTNET) {
       throw new Error(`Invalid network type: ${network}`);
     }
 

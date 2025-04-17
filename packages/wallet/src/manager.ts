@@ -24,9 +24,7 @@ export class WalletManager {
    */
   constructor(core: WalletCore, storage: IStorage) {
     const walletListVal = storage.get(StorageKey.walletListKey());
-    const walletIDs = walletListVal
-      ? (JSON.parse(walletListVal) as WalletID[])
-      : [];
+    const walletIDs = walletListVal ? (JSON.parse(walletListVal) as WalletID[]) : [];
 
     this.core = core;
     this.storage = storage;
@@ -63,14 +61,7 @@ export class WalletManager {
     strength: MnemonicStrength = MnemonicValues.NORMAL,
     network: NetworkType = NetworkValues.MAINNET
   ): Promise<Wallet> {
-    const wallet = await Wallet.create(
-      this.core,
-      this.storage,
-      password,
-      strength,
-      network,
-      name
-    );
+    const wallet = await Wallet.create(this.core, this.storage, password, strength, network, name);
 
     this.updateList(wallet);
 
@@ -91,14 +82,7 @@ export class WalletManager {
     network: NetworkType = NetworkValues.MAINNET,
     name: string = 'My Wallet'
   ): Promise<Wallet> {
-    const wallet = await Wallet.restore(
-      this.core,
-      this.storage,
-      mnemonic,
-      password,
-      network,
-      name
-    );
+    const wallet = await Wallet.restore(this.core, this.storage, mnemonic, password, network, name);
 
     this.updateList(wallet);
 
@@ -140,10 +124,7 @@ export class WalletManager {
       this.walletIDs.push(id);
 
       try {
-        this.storage.set(
-          StorageKey.walletListKey(),
-          JSON.stringify(this.walletIDs)
-        );
+        this.storage.set(StorageKey.walletListKey(), JSON.stringify(this.walletIDs));
       } catch (error) {
         throw new StorageError(`Failed to update wallet list: ${error}`);
       }
@@ -159,10 +140,7 @@ export class WalletManager {
       this.walletIDs = this.walletIDs.filter(walletID => walletID !== id);
 
       try {
-        this.storage.set(
-          StorageKey.walletListKey(),
-          JSON.stringify(this.walletIDs)
-        );
+        this.storage.set(StorageKey.walletListKey(), JSON.stringify(this.walletIDs));
         this.storage.delete(StorageKey.walletInfoKey(id));
         this.storage.delete(StorageKey.walletLedgerKey(id));
         this.storage.delete(StorageKey.walletVaultKey(id));

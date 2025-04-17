@@ -17,7 +17,7 @@ const timers = new Map<string, NodeJS.Timeout>();
 export function bip39EnglishSearch(
   query: string,
   delay: number,
-  callback: (results: string[]) => void,
+  callback: (results: string[]) => void
 ): void {
   bip39Search(query, delay, callback, BIP39_ENGLISH_WORDS);
 }
@@ -26,7 +26,7 @@ function bip39Search(
   query: string,
   delay: number,
   callback: (results: string[]) => void,
-  words: readonly string[],
+  words: readonly string[]
 ): void {
   const key = 'default';
 
@@ -50,14 +50,12 @@ function bip39Search(
       if (normalized.length >= 3 && startsWithMatches.length < 10) {
         const fuzzyMatches = words.filter(word => word.includes(normalized));
 
-        results = Array.from(
-          new Set([...startsWithMatches, ...fuzzyMatches]),
-        ).slice(0, 20);
+        results = Array.from(new Set([...startsWithMatches, ...fuzzyMatches])).slice(0, 20);
       } else {
         results = startsWithMatches.slice(0, 20);
       }
 
       callback(results);
-    }, delay),
+    }, delay)
   );
 }

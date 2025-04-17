@@ -44,11 +44,7 @@ export function getWordCount(phrase: string): number {
  * @param type - A numeric identifier **prepended** to the encoded words.
  * @returns The Bech32-encoded string.
  */
-export function encodeBech32WithType(
-  prefix: string,
-  data: Uint8Array,
-  type: number,
-): string {
+export function encodeBech32WithType(prefix: string, data: Uint8Array, type: number): string {
   const words = bech32m.toWords(data);
 
   words.unshift(type);

@@ -21,7 +21,7 @@ describe('bip39Search', () => {
 
     const expected = BIP39_ENGLISH_WORDS.filter(word => word.startsWith('ab')).slice(
       0,
-      20, // Fixed line breaks here
+      20 // Fixed line breaks here
     );
     expect(mockCallback).toHaveBeenCalledWith(expected);
   });
@@ -36,7 +36,7 @@ describe('bip39Search', () => {
     const fuzzy = BIP39_ENGLISH_WORDS.filter(w => w.includes('acc'));
     const expected = Array.from(new Set([...startsWith, ...fuzzy])).slice(
       0,
-      20, // Fixed line breaks here
+      20 // Fixed line breaks here
     );
 
     expect(mockCallback).toHaveBeenCalledWith(expected);
@@ -52,10 +52,7 @@ describe('bip39Search', () => {
 
     const startsWith = BIP39_ENGLISH_WORDS.filter(w => w.startsWith('abo'));
     const fuzzy = BIP39_ENGLISH_WORDS.filter(w => w.includes('abo'));
-    const expected = Array.from(new Set([...startsWith, ...fuzzy])).slice(
-      0,
-      20,
-    );
+    const expected = Array.from(new Set([...startsWith, ...fuzzy])).slice(0, 20);
 
     expect(mockCallback).toHaveBeenCalledTimes(1);
     expect(mockCallback).toHaveBeenCalledWith(expected);
