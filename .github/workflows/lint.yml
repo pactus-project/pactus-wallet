@@ -1,13 +1,11 @@
-name: Lint and Format Check (Typescript)
+name: Lint and Format Check
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
 
   pull_request:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
   linting:

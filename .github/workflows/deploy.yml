@@ -2,10 +2,8 @@ name: Deploy Web Wallet
 
 on:
   push:
-    branches:
-      - main
-    tags:
-      - "v*"
+    branches: [main]
+    tags: ["v*"]
 
 permissions:
   contents: write
@@ -48,7 +46,6 @@ jobs:
 
       - name: Build web app
         run: yarn build:web
-
 
       # Deploy the built project
       - name: Deploy
