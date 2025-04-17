@@ -4,14 +4,10 @@ import React, { useState, useEffect } from 'react'
 import './style.css'
 import { useRouter } from 'next/navigation'
 import * as bip39 from 'bip39';
-import dynamic from 'next/dynamic'
 import BorderBeam from '@/components/border-beam'
 import { useWallet } from '@/wallet'
 import { useI18n } from '@/utils/i18n'
 import Lottie from '@/components/lottie-player';
-
-const LottiePlayer = dynamic(() => import('react-lottie-player'), { ssr: false });
-
 const RecoveryPhrase: React.FC = () => {
     const [step, setStep] = useState<number>(1);
     const [wordCount, setWordCount] = useState<number>(24);

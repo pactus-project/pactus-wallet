@@ -1,7 +1,6 @@
 'use client';
 import { importWalletLottie } from '@/assets';
 import { useWallet } from '@/wallet';
-import dynamic from 'next/dynamic';
 import React, { useState } from 'react'
 import './style.css'
 import { useRouter } from 'next/navigation'
@@ -9,8 +8,6 @@ import * as bip39 from 'bip39';
 import { useI18n } from '@/utils/i18n';
 import BorderBeam from '@/components/border-beam';
 import Lottie from '@/components/lottie-player';
-const LottiePlayer = dynamic(() => import('react-lottie-player'), { ssr: false });
-
 const ImportWallet = () => {
     const [wordCount, setWordCount] = useState(24);
     const [words, setWords] = useState<string[]>(Array(wordCount).fill(''));

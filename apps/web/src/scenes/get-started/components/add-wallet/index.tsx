@@ -3,14 +3,10 @@ import { addWalletLottie, existingWalletIcon, newWalletIcon } from '@/assets'
 import Image from 'next/image'
 import React from 'react'
 import './style.css'
-import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 import BorderBeam from '@/components/border-beam'
 import { useI18n } from '@/utils/i18n'
 import Lottie from '@/components/lottie-player'
-
-const LottiePlayer = dynamic(() => import('react-lottie-player'), { ssr: false });
-
 const AddWallet = () => {
     const navigate = useRouter().push;
     const { t } = useI18n();

@@ -7,7 +7,6 @@ import './style.css';
 import { useRouter } from 'next/navigation';
 import { useI18n } from '@/utils/i18n';
 import useSizeDetector from '@/utils/size-detector';
-
 const Welcome = () => {
   const navigate = useRouter().push;
   const [isChecked, setIsChecked] = useState(false);

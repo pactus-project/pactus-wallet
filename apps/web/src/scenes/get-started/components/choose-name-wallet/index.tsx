@@ -7,9 +7,6 @@ import { useRouter } from 'next/navigation';
 import Loading from '@/components/loading';
 import { useI18n } from '@/utils/i18n';
 import Lottie from '@/components/lottie-player';
-
-
-
 const ChooseNameWallet = () => {
     const { setWalletName, walletName, password } = useWallet();
     const { restoreWallet, restorationError } = useRestoreWallet();

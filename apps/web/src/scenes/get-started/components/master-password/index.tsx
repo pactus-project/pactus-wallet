@@ -4,14 +4,10 @@ import Image from 'next/image'
 import React, { useState } from 'react'
 import './style.css'
 import { useRouter } from 'next/navigation'
-import dynamic from 'next/dynamic'
 import { validatePassword } from '@/utils/password-validator'
 import { useWallet } from '@/wallet'
 import { useI18n } from '@/utils/i18n'
 import Lottie from '@/components/lottie-player';
-
-const LottiePlayer = dynamic(() => import('react-lottie-player'), { ssr: false });
-
 const MasterPassword = () => {
     const navigate = useRouter().push;
     const [showPassword, setShowPassword] = useState<{ [key: string]: boolean }>({
