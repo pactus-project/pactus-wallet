@@ -1,73 +1,149 @@
-.container-addwallet {
+.add-wallet {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 15px;
+    gap: var(--spacing-md);
+    width: 100%;
 }
 
-.container-addwallet>h1 {
-    color: #FFF;
-    font-size: 45px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 53.667px;
-}
-
-.container-addwallet>p {
-    color: #FFF;
-    font-size: 15px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 30px;
-    margin-bottom: 50px;
-}
-
-.ctas-addwallet {
+.add-wallet__animation {
+    height: 400px;
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 20px;
 }
 
-.ctas-addwallet button {
+.add-wallet__title {
+    color: var(--color-text-primary);
+    font-size: var(--font-size-5xl);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--line-height-tight);
+    text-align: center;
+}
+
+.add-wallet__description {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-regular);
+    line-height: var(--line-height-loose);
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+    max-width: 600px;
+}
+
+.add-wallet__options {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--spacing-lg);
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.add-wallet__option-button {
     width: 532px;
     height: 159px;
-    border-radius: 8px;
-    background: #1D2328;
+    border-radius: var(--radius-md);
+    background: var(--color-surface-medium);
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px;
-    gap: 15px;
-    transition: all 0.5s linear;
-    box-shadow: -20px -26px 95px -48px rgb(0, 0, 0);
-
+    padding: var(--spacing-md);
+    gap: var(--spacing-md);
+    transition: transform var(--transition-fast);
+    position: relative;
+    overflow: hidden;
 }
 
-/* .ctas-addwallet button:hover {
-    box-shadow: -20px -26px 95px -48px rgba(39, 202, 63, 0.452);
-
-} */
-.ctas-addwallet button:disabled {
-    opacity: .5;
+.add-wallet__option-button:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
 }
 
-.ctas-addwallet button h3 {
-    color: #FFF;
-    font-size: 20px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 30px;
+.add-wallet__option-button:active {
+    transform: translateY(1px);
+}
+
+.add-wallet__option-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.add-wallet__option-icon {
+    flex-shrink: 0;
+}
+
+.add-wallet__option-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
     text-align: left;
-    /* 150% */
+    flex: 1;
 }
 
-.ctas-addwallet button p {
-    color: #FFF;
-    font-size: 13px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 30px;
-    text-align: left;
+.add-wallet__option-title {
+    color: var(--color-text-primary);
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--line-height-tight);
+}
+
+.add-wallet__option-description {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-regular);
+    line-height: var(--line-height-normal);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .add-wallet__options {
+        flex-direction: column;
+    }
+    
+    .add-wallet__option-button {
+        width: 100%;
+        max-width: 532px;
+    }
+    
+    .add-wallet__title {
+        font-size: var(--font-size-4xl);
+    }
+    
+    .add-wallet__animation {
+        height: 300px;
+    }
+}
+
+@media (max-width: 480px) {
+    .add-wallet__option-button {
+        height: auto;
+        min-height: 159px;
+        padding: var(--spacing-sm);
+    }
+    
+    .add-wallet__title {
+        font-size: var(--font-size-3xl);
+    }
+    
+    .add-wallet__description {
+        font-size: var(--font-size-sm);
+    }
+    
+    .add-wallet__animation {
+        height: 250px;
+    }
+}
+
+/* Support for reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    .add-wallet__option-button {
+        transition: none;
+    }
+    
+    .add-wallet__option-button:active {
+        transform: none;
+    }
 }

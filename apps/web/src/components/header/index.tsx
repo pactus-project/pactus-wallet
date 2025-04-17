@@ -1,10 +1,10 @@
-import React from 'react'
-import './style.css'
+import React from 'react';
+import './style.css';
 import Image from 'next/image';
 import { logoutIcon } from '@/assets';
 import { useWallet } from '@/wallet';
 
-const Header = ({ title }: { title: string; }) => {
+const Header: React.FC<{ title: string }> = ({ title }) => {
   const { setWallet } = useWallet();
 
   const handleLogout = () => {
@@ -14,11 +14,26 @@ const Header = ({ title }: { title: string; }) => {
   };
 
   return (
-    <header className='headerContainer' >
-      <h1>{title}</h1>
-      <button onClick={handleLogout}><Image src={logoutIcon} width={32} height={32} alt='logout-icon' /></button>
+    <header className="header">
+      <div className="header__content">
+        <h1 className="header__title">{title}</h1>
+        <button 
+          type="button"
+          className="btn btn-icon header__logout-button" 
+          onClick={handleLogout}
+          aria-label="Log out of wallet"
+        >
+          <Image 
+            src={logoutIcon} 
+            width={32} 
+            height={32} 
+            alt="" 
+            aria-hidden="true"
+          />
+        </button>
+      </div>
     </header>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;

@@ -1,115 +1,202 @@
-.titer-GetStarted {
-    width: 100%;
-    max-width: 1000px;
+.welcome {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  gap: var(--spacing-xl);
 }
 
-.container-GetStarted h1 {
-    color: #FFF;
-    font-family: Inter;
-    font-size: 45px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 53.667px;
-    /* 119.259% */
+/* Header section */
+.welcome__header {
+  width: 100%;
 }
 
-.container-GetStarted h1 span {
-    font-weight: 500;
-    font-size: 30px;
+.welcome__title {
+  color: var(--color-text-primary);
+  font-size: var(--font-size-5xl);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
 }
 
-.gradient-GetStarted {
-    background: linear-gradient(86deg, #0FEF9E 50.51%, #064560 105.09%);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+.welcome__subtitle {
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-3xl);
 }
 
-.section1-GetStarted {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.welcome__brand {
+  margin-left: var(--spacing-xs);
+  background: var(--gradient-primary);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-.slogans-GetStarted {
-    display: flex;
+/* Content section */
+.welcome__content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  gap: var(--spacing-xl);
+}
+
+.welcome__features {
+  display: flex;
+  flex-direction: column;
+  max-width: 600px;
+  gap: var(--spacing-md);
+}
+
+.welcome__feature {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-md);
+}
+
+.welcome__feature-icon {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+}
+
+.welcome__feature-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.welcome__feature-title {
+  color: var(--color-text-primary);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-tight);
+}
+
+.welcome__feature-description {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-loose);
+}
+
+.welcome__link {
+  background: var(--gradient-primary);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: opacity var(--transition-fast);
+}
+
+.welcome__link:hover {
+  opacity: 0.8;
+}
+
+.welcome__link:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  opacity: 0.8;
+}
+
+.welcome__visualization {
+  flex-shrink: 0;
+  width: 40%;
+}
+
+/* Footer section */
+.welcome__footer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-lg);
+}
+
+.welcome__terms {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.welcome__checkbox {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: var(--color-primary);
+}
+
+.welcome__terms-text {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-normal);
+  cursor: pointer;
+  user-select: none;
+}
+
+.welcome__terms-highlight {
+  background: var(--gradient-primary);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.welcome__cta-button {
+  width: auto;
+  max-width: 600px;
+  height: var(--button-primary-height-desktop);
+  margin-top: var(--spacing-xs);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+
+  .welcome__content {
     flex-direction: column;
-    max-width: 600px;
-    gap: 15px;
-}
-
-.slogans-GetStarted>div {
-    display: flex;
-    gap: 8px;
-}
-
-.slogans-GetStarted>div h3 {
-    color: #FFF;
-    font-size: 18px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 30px;
-}
-
-.slogans-GetStarted>div p {
-    color: #FFF;
-    font-size: 15px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 30px;
-}
-
-
-
-.letsCta-GetStarted {
-    display: flex;
-    flex-direction: column;
+  }
+  
+  .welcome__visualization {
     width: 100%;
-    max-width: 1000px;
-    gap: 15px;
+    order: -1;
+    margin-bottom: var(--spacing-md);
+  }
+  
+  .welcome__title {
+    font-size: var(--font-size-4xl);
+  }
+  
+  .welcome__cta-button {
+    width: 100%;
+    max-width: 100%;
+    height: var(--button-primary-height-mobile);
+  }
 }
 
-.letsCta-GetStarted>button {
-    display: flex;
-    width: 682px;
-    padding: 0px 12.105px;
-    justify-content: center;
-    align-items: center;
-    gap: 4.035px;
-    border-radius: 4.035px;
-    background: var(--Ocean, linear-gradient(91deg, #0FEF9E -0.23%, #064560 105.78%));
-    box-shadow: 0px 0.303px 0.908px 0px rgba(0, 0, 0, 0.32), 0px 1.614px 3.631px 0px rgba(0, 0, 0, 0.28);
-    color: var(--Primitive-White, #FFF);
-    text-align: center;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 19.166px;
-    padding: 5px 0;
-    /* 136.899% */
+@media (max-width:480px) {
+  .welcome__title {
+    font-size: var(--font-size-3xl);
+  }
+  
+  .welcome__subtitle {
+    font-size: var(--font-size-xl);
+  }
+  
+  .welcome__feature {
+    gap: var(--spacing-sm);
+  }
+  
+  .welcome__feature-title {
+    font-size: var(--font-size-md);
+  }
+  
+  .welcome__feature-description {
+    font-size: var(--font-size-sm);
+  }
 }
 
-.letsCta-GetStarted>button:disabled {
-    opacity: 0.5;
-}
-
-.letsCta-GetStarted>div {
-    display: flex;
-    gap: 5px;
-    align-items: center;
-}
-
-.letsCta-GetStarted p {
-    color: #FFF;
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 30px;
-    cursor: pointer;
-    -moz-user-select: none;
-    -khtml-user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    /* 250% */
+/* Support for reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .welcome__link {
+    transition: none;
+  }
 }

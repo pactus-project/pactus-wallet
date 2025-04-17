@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useId } from 'react';
 import './style.css';
 
 interface ModalProps {
@@ -19,11 +19,23 @@ const Modal: React.FC<ModalProps> = ({
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
-
+  const titleId = useId();
+  
+  // Handle modal visibility
   useEffect(() => {
     if (isOpen) {
       setIsVisible(true);
       document.body.style.overflow = 'hidden';
+      
+      // Focus trap setup - focus first focusable element
+      setTimeout(() => {
+        const focusableElements = modalRef.current?.querySelectorAll(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        if (focusableElements && focusableElements.length > 0) {
+          (focusableElements[0] as HTMLElement).focus();
+        }
+      }, 50);
     } else {
       setTimeout(() => {
         setIsVisible(false);
@@ -63,19 +75,28 @@ const Modal: React.FC<ModalProps> = ({
     <div 
       className={`modal-overlay ${isOpen ? 'show' : 'hide'}`} 
       onClick={handleOutsideClick}
+      role="presentation"
     >
       <div 
         className={`modal-container ${isOpen ? 'show' : 'hide'}`} 
         ref={modalRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
       >
-        <div className="modal-header">
-          <h2>{title}</h2>
+        <header className="modal-header">
+          <h2 id={titleId} className="modal-title">{title}</h2>
           {showCloseButton && (
-            <button className="modal-close-button" onClick={onClose}>
-              ✕
+            <button 
+              className="modal-close-button" 
+              onClick={onClose}
+              aria-label="Close modal"
+              type="button"
+            >
+              <span aria-hidden="true">✕</span>
             </button>
           )}
-        </div>
+        </header>
         <div className="modal-content">
           {children}
         </div>
@@ -84,4 +105,4 @@ const Modal: React.FC<ModalProps> = ({
   );
 };
 
-export default Modal; 
+export default Modal;

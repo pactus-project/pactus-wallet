@@ -1,0 +1,128 @@
+/* ========================================
+   BUTTONS
+   ======================================== */
+
+:root {
+  --button-primary-width-desktop: 682px;
+  --button-primary-width-mobile: 366px;
+  --button-primary-height-desktop: 48px;
+  --button-primary-height-mobile: 50px;
+  --button-primary-padding: 0px 12.105px;
+  --button-primary-gap: 4.035px;
+  --button-primary-radius: 4.035px;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  padding: 0;
+}
+
+/* Button base style */
+.btn {
+  /* Base styling */
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: var(--spacing-sm) var(--spacing-md);
+  gap: var(--spacing-xs);
+  border-radius: var(--radius-sm);
+  font-weight: var(--font-weight-semibold);
+  transition: opacity var(--transition-fast);
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Button variants */
+.btn-primary {
+  background: var(--gradient-primary);
+  color: var(--color-text-primary);
+  box-shadow: var(--shadow-button);
+}
+
+.btn-primary:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.btn-secondary {
+  background: transparent;
+  border: 1px solid var(--color-primary);
+  color: var(--color-primary);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: rgba(15, 239, 158, 0.1);
+}
+
+.btn-tertiary {
+  background: var(--color-surface-light);
+  color: var(--color-text-primary);
+}
+
+/* Button sizes */
+.btn-xs {
+  height: 32px;
+  font-size: var(--font-size-xs);
+  padding: calc(var(--spacing-xs) / 2) var(--spacing-sm);
+}
+
+.btn-sm {
+  height: 38px;
+  font-size: var(--font-size-sm);
+}
+
+.btn-md {
+  height: 48px;
+  font-size: var(--font-size-md);
+}
+
+.btn-lg {
+  height: 56px;
+  font-size: var(--font-size-lg);
+}
+
+/* Icon button */
+.btn-icon {
+  width: var(--spacing-xl);
+  height: var(--spacing-xl);
+  padding: 0;
+  border-radius: var(--radius-circle);
+}
+
+/* Action buttons */
+.btn-send {
+  background: var(--gradient-primary);
+  color: var(--color-text-primary);
+}
+
+.btn-receive {
+  background: var(--color-surface-light);
+  color: var(--color-text-primary);
+}
+
+.btn-bridge {
+  background: var(--color-surface-light);
+  color: var(--color-text-primary);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .btn {
+    width: 100%;
+  }
+
+  .btn-md {
+    height: 50px;
+  }
+}

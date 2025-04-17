@@ -1,28 +1,59 @@
-.headerContainer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    padding: 20px 15px;
-    border-bottom: 1px solid #1D2328;
+/* Header component styles using BEM naming convention */
+
+.header {
+  width: 100%;
+  border-bottom: 1px solid var(--color-surface-medium);
 }
 
-.exportWallet-header {
-    display: inline-flex;
-    padding: 8px;
-    justify-content: center;
-    align-items: center;
-    gap: 4px;
-    border-radius: 4px;
-    background: linear-gradient(87deg, #0FEF9E -81.83%, #064560 120.82%);
-    box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.15);
-    color: #FFF;
-    text-align: center;
-    font-size: 15px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: normal;
-    margin-left: auto;
-    margin-right: 15px;
+.header__content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: var(--spacing-md) var(--spacing-sm);
+}
 
+.header__title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.header__logout-button {
+  background: transparent;
+  border-radius: var(--radius-circle);
+  transition: background-color var(--transition-fast);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header__logout-button:hover {
+  background-color: var(--color-surface-light);
+}
+
+.header__logout-button:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .header__content {
+    padding: var(--spacing-sm);
+  }
+  
+  .header__title {
+    font-size: var(--font-size-lg);
+  }
+}
+
+/* Support for reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .header__logout-button {
+    transition: none;
+  }
 }

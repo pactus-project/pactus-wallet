@@ -48,7 +48,6 @@ export function useBalance() {
   // Auto-fetch balance when wallet changes
   useEffect(() => {
     if (wallet) {
-      console.log('wallet', wallet);
       fetchBalance();
     }
   }, [wallet, fetchBalance]);
