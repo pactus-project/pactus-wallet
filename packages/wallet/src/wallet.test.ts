@@ -394,5 +394,27 @@ describe('Pactus Wallet Tests', () => {
       expect(mockResponse.getAccount).toHaveBeenCalled();
       expect(result.toString()).toEqual('0');
     });
+
+    // This test uses a real address and will query the actual Pactus blockchain
+    // Skip this test by default as it depends on external services
+    it.skip('should fetch real balance from the Pactus blockchain', async () => {
+      // Restore the original getGrpcClient method to use real network
+      jest.restoreAllMocks();
+
+      // Define a known Pactus address to test with - this is a validator from the network
+      const knownAddress = 'pc1zus6ke5h34lsvgamz29hjgn3rpzypzz6a39pcv5';
+
+      // Act - call the real implementation
+      const result = await wallet.getAddressBalance(knownAddress);
+      // Assert - balance should be greater than zero
+      // This validator has a large stake, so balance should be significant
+      console.info(`Actual balance for ${knownAddress}: ${result.toPac()} PAC`);
+
+      // Basic test to ensure we got a valid response
+      expect(result.toPac()).toBeGreaterThan(0);
+
+      // The stake should be at least 1000 PAC for validators
+      expect(result.toPac()).toBeGreaterThanOrEqual(1000);
+    });
   });
 });

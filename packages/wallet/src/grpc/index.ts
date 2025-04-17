@@ -1,45 +1,40 @@
 /**
- * gRPC module compatibility layer
+ * gRPC module exports
  *
- * This file provides access to the gRPC clients from the pactus-grpc package.
- * It includes fallback behavior for environments where gRPC might not be supported.
+ * This file provides access to the gRPC clients from the downloaded proto files.
  */
 
 import * as grpcJs from '@grpc/grpc-js';
 
-let pactusGrpc: any;
+// Import all the generated JS files
+import * as blockchain_grpc_pb from './gen/js/blockchain_grpc_pb';
+import * as blockchain_pb from './gen/js/blockchain_pb';
 
-try {
-  // Import the pactus-grpc package
-  pactusGrpc = require('pactus-grpc');
-} catch (e) {
-  pactusGrpc = {
-    wallet_grpc_pb: { WalletClient: class {} },
-    blockchain_grpc_pb: { BlockchainClient: class {} },
-    transaction_grpc_pb: { TransactionClient: class {} },
-    network_grpc_pb: { NetworkClient: class {} },
-    utils_grpc_pb: { UtilsClient: class {} },
-    wallet_pb: {},
-    blockchain_pb: {},
-    transaction_pb: {},
-    network_pb: {},
-    utils_pb: {},
-  };
-}
+import * as wallet_grpc_pb from './gen/js/wallet_grpc_pb';
+import * as wallet_pb from './gen/js/wallet_pb';
 
-// Export the components with the same structure as before
-export const wallet = pactusGrpc.wallet_grpc_pb;
-export const blockchain = pactusGrpc.blockchain_grpc_pb;
-export const transaction = pactusGrpc.transaction_grpc_pb;
-export const network = pactusGrpc.network_grpc_pb;
-export const utils = pactusGrpc.utils_grpc_pb;
+import * as transaction_grpc_pb from './gen/js/transaction_grpc_pb';
+import * as transaction_pb from './gen/js/transaction_pb';
+
+import * as network_grpc_pb from './gen/js/network_grpc_pb';
+import * as network_pb from './gen/js/network_pb';
+
+import * as utils_grpc_pb from './gen/js/utils_grpc_pb';
+import * as utils_pb from './gen/js/utils_pb';
+
+// Export the gRPC service clients
+export const wallet = wallet_grpc_pb;
+export const blockchain = blockchain_grpc_pb;
+export const transaction = transaction_grpc_pb;
+export const network = network_grpc_pb;
+export const utils = utils_grpc_pb;
 
 // Export the message classes
-export const walletPb = pactusGrpc.wallet_pb;
-export const blockchainPb = pactusGrpc.blockchain_pb;
-export const transactionPb = pactusGrpc.transaction_pb;
-export const networkPb = pactusGrpc.network_pb;
-export const utilsPb = pactusGrpc.utils_pb;
+export const walletPb = wallet_pb;
+export const blockchainPb = blockchain_pb;
+export const transactionPb = transaction_pb;
+export const networkPb = network_pb;
+export const utilsPb = utils_pb;
 
 // Export the grpc module directly for convenience
 export const grpc = grpcJs;

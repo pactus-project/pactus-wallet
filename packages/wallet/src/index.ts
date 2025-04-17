@@ -13,6 +13,7 @@ export * from './wallet';
 export * from './storage/storage';
 export * from './manager';
 export * from './error';
+export * from './grpc';
 
 /**
  * Initialize the wallet SDK with a custom storage implementation

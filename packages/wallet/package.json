@@ -24,8 +24,7 @@
     "bech32": "^2.0.0",
     "bip39": "^3.1.0",
     "google-protobuf": "^3.21.4",
-    "long": "^5.2.3",
-    "pactus-grpc": "^1.7.3"
+    "long": "^5.2.3"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.0.0",

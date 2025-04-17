@@ -9,9 +9,10 @@ import { encodeBech32WithType, generateUUID, sprintf } from './utils';
 import { IStorage } from './storage/storage';
 import { WalletCore } from '@trustwallet/wallet-core';
 import { HDWallet } from '@trustwallet/wallet-core/dist/src/wallet-core';
-import * as grpc from '@grpc/grpc-js';
-import { blockchain, blockchainPb } from './grpc';
 import { Amount } from './types/amount';
+import { credentials } from '@grpc/grpc-js';
+import { blockchain, blockchainPb } from './grpc/index';
+
 /**
  * Pactus Wallet Implementation
  * Manages cryptographic operations using Trust Wallet Core
@@ -339,7 +340,9 @@ export class Wallet {
     try {
       const client = this.getGrpcClient();
 
-      const accountRequest = new blockchainPb.GetAccountRequest();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const GetAccountRequest = (blockchainPb as any).GetAccountRequest;
+      const accountRequest = new GetAccountRequest();
 
       accountRequest.setAddress(address);
 
@@ -380,11 +383,12 @@ export class Wallet {
     const endpoint = 'bootstrap1.pactus.org:50051';
 
     try {
-      // Get the BlockchainClient constructor from pactus-grpc
-      const BlockchainClient = blockchain.BlockchainClient;
+      const client = new blockchain.BlockchainClient(
+        endpoint,
+        credentials.createInsecure() // Note: For production use, consider using secure credentials
+      );
 
-      // Create client using grpc.credentials from @grpc/grpc-js
-      return new BlockchainClient(endpoint, grpc.credentials.createInsecure());
+      return client;
     } catch (error) {
       throw new Error(
         `Failed to create gRPC client: ${error instanceof Error ? error.message : String(error)}`
