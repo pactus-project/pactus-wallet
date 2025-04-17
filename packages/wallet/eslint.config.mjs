@@ -111,7 +111,7 @@ const sharedRules = {
 export default [
   js.configs.recommended,
   {
-    ignores: ['**/node_modules/**', '**/dist/**', '**/build/**', '**/*.d.ts'],
+    ignores: ['**/node_modules/**', '**/dist/**', '**/build/**', '**/*.d.ts', '**/scripts/**', '**/grpc/**'],
   },
 
   // JavaScript configuration
