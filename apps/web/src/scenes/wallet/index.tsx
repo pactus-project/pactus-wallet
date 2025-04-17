@@ -18,7 +18,7 @@ const Wallet = () => {
   const searchParams = useSearchParams();
   const address = searchParams.get('address');
   const addressInfo = address ? getAccountByAddress(address) : null;
-  const { balance } = useBalance();
+  const { balance } = useBalance(addressInfo?.address);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(addressInfo?.address ?? '');
