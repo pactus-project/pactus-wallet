@@ -3,7 +3,7 @@ import React from 'react'
 const LottiePlayer = dynamic(() => import('react-lottie-player'), { ssr: false });
 
 interface LottieProps {
-  animationData: any;
+  animationData: object | { default: object; };
   loop?: boolean;
   className: string;
   play?: boolean;
