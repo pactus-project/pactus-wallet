@@ -10,9 +10,9 @@ import { IStorage } from './storage/storage';
 import { WalletCore } from '@trustwallet/wallet-core';
 import { HDWallet } from '@trustwallet/wallet-core/dist/src/wallet-core';
 import { Amount } from './types/amount';
-import { credentials } from '@grpc/grpc-js';
-import { blockchain, blockchainPb } from './grpc/index';
-
+import { BlockchainClient } from './grpc/gen/js-web/blockchain_grpc_web_pb';
+import { blockchainPb } from './grpc/index';
+// Import directly from the generated file
 /**
  * Pactus Wallet Implementation
  * Manages cryptographic operations using Trust Wallet Core
@@ -383,9 +383,10 @@ export class Wallet {
     const endpoint = 'bootstrap1.pactus.org:50051';
 
     try {
-      const client = new blockchain.BlockchainClient(
+      const client = new BlockchainClient(
         endpoint,
-        credentials.createInsecure() // Note: For production use, consider using secure credentials
+        null,
+        {} // Empty options object
       );
 
       return client;
