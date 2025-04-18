@@ -17,7 +17,6 @@ import { Amount } from './types/amount';
  * Manages cryptographic operations using Trust Wallet Core
  */
 export class Wallet {
-
   private core: WalletCore;
 
   private storage: IStorage;
@@ -266,6 +265,32 @@ export class Wallet {
   }
 
   /**
+   * Get the private key for a specific address
+   * @param address The address to fetch the private key for
+   * @param password The wallet's decryption password
+   * @returns The private key in hex format
+   * @throws Error if the address is not found or decryption fails
+   */
+  async getPrivateKey(address: string, password: string): Promise<string> {
+    // 1. Get the address info (includes derivation path)
+    const addressInfo = this.ledger.addresses.get(address);
+
+    if (!addressInfo) {
+      throw new Error('Address not found in the wallet');
+    }
+
+    // 2. Decrypt the mnemonic and create HDWallet
+    const mnemonic = await this.getMnemonic(password);
+    const hdWallet = this.core.HDWallet.createWithMnemonic(mnemonic, '');
+
+    // 3. Derive the private key using the path from AddressInfo
+    const privateKey = hdWallet.getKey(this.core.CoinType.pactus, addressInfo.path);
+
+    // 4. Return the private key in hex format
+    return Buffer.from(privateKey.data()).toString('hex');
+  }
+
+  /**
    * Check if the wallet is created for Testnet
    * @returns true if the wallet is created for Testnet, false otherwise
    */
@@ -331,8 +356,7 @@ export class Wallet {
   }
 
   /**
-   * Fetch account information from the Pactus network
-   * @private
+   * Fetches account information for a given address
    * @param address The wallet address
    * @returns Promise with the account balance as Amount
    */
@@ -397,5 +421,4 @@ export class Wallet {
 
     return endpoints[randomIndex];
   }
-
 }

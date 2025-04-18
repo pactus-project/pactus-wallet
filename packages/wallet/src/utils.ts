@@ -52,31 +52,43 @@ export function encodeBech32WithType(prefix: string, data: Uint8Array, type: num
   return bech32m.encode(prefix, words);
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function fetchJsonRpcResult(
   client: string,
   method: string,
-  params: any[] = []
-): Promise<any> {
+  params: Record<string, unknown> = {},
+  authToken?: string
+): Promise<unknown> {
+  // Ensure params is always present, even if empty
   const payload = {
     jsonrpc: '2.0',
     method,
-    params,
+    params, // This should be an object, not an array per the docs
     id: Date.now(),
   };
 
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+  };
+
+  // Handle basic authentication if provided
+  if (authToken) {
+    headers['Authorization'] = `Basic ${authToken}`;
+  }
+
   const response = await fetch(client, {
     method: 'POST',
-    headers: {
-      'CONTENT-TYPE': 'application/json',
-    },
+    headers,
     body: JSON.stringify(payload),
   });
+
+  if (!response.ok) {
+    throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
+  }
 
   const data = await response.json();
 
   if (data.error) {
-    throw new Error(`JSON-RPC Error: ${data.error.message}`);
+    throw new Error(`JSON-RPC Error: ${data.error.message || JSON.stringify(data.error)}`);
   }
 
   return data.result;

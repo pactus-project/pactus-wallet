@@ -15,7 +15,7 @@ const GetStartedContent = () => {
   const searchParams = useSearchParams();
   const [step, setStep] = useState<string | null>(null);
   useEffect(() => {
-    setStep(searchParams.get('step'));
+    setStep(searchParams?.get('step') ?? null);
   }, [searchParams]);
 
   const components = {
