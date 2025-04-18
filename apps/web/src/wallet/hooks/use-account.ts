@@ -92,7 +92,8 @@ export function useAccount() {
       try {
         await targetWallet.getMnemonic(password);
         const addressInfo = targetWallet.getAddressInfo(address);
-        const privateKeyHex = await targetWallet.getPrivateKey(address, password);
+        if (!addressInfo?.path) throw new Error('Address information not found');
+        const privateKeyHex = await targetWallet.getPrivateKey(addressInfo.path, password);
         return { ...addressInfo, privateKeyHex } as AddressInfo;
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : 'Failed to get address info';
