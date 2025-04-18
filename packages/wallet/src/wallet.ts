@@ -17,7 +17,6 @@ import { Amount } from './types/amount';
  * Manages cryptographic operations using Trust Wallet Core
  */
 export class Wallet {
-
   private core: WalletCore;
 
   private storage: IStorage;
@@ -266,6 +265,22 @@ export class Wallet {
   }
 
   /**
+   * Get the private key for a specific address
+   * @param addresPath The path to the address
+   * @param password The wallet's decryption password
+   * @returns The private key in hex format
+   * @throws Error if the address is not found or decryption fails
+   */
+  async getPrivateKey(addressPath: string, password: string): Promise<string> {
+    const mnemonic = await this.getMnemonic(password);
+    const hdWallet = this.core.HDWallet.createWithMnemonic(mnemonic, '');
+
+    const privateKey = hdWallet.getKey(this.core.CoinType.pactus, addressPath);
+
+    return Buffer.from(privateKey.data()).toString('hex');
+  }
+
+  /**
    * Check if the wallet is created for Testnet
    * @returns true if the wallet is created for Testnet, false otherwise
    */
@@ -331,8 +346,7 @@ export class Wallet {
   }
 
   /**
-   * Fetch account information from the Pactus network
-   * @private
+   * Fetches account information for a given address
    * @param address The wallet address
    * @returns Promise with the account balance as Amount
    */
@@ -345,7 +359,7 @@ export class Wallet {
     return new Amount(result['account'].balance);
   }
 
-  // eslint-disable @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, consistent-return
   private async tryFetchJsonRpcResult(method: string, params: any): Promise<any> {
     const maxAttempts = 1;
     let attempts = 0;
@@ -397,5 +411,4 @@ export class Wallet {
 
     return endpoints[randomIndex];
   }
-
 }

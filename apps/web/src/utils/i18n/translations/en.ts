@@ -79,8 +79,7 @@ const translations = {
   welcomeTo: 'Welcome to',
   pactusWallet: 'Pactus Wallet',
   openSource: 'Open Source',
-  openSourceDescription:
-    'Pactus Wallet is fully open source, explore and contribute to our code here.',
+  openSourceDescription: 'Pactus Wallet is fully open source, explore and contribute to our code',
   simple: 'Simple',
   simpleDescription: 'Pactus Wallet is designed for everyone, from beginners to advanced users.',
   secure: 'Secure',

@@ -111,14 +111,16 @@
   color: var(--color-text-primary);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
-  max-width: 300px;
+  max-width: 350px;
 }
 
 /* Copy button */
 .wallet__copy-button {
   padding: var(--spacing-xs);
   border-radius: var(--radius-circle);
-  transition: background-color var(--transition-fast), transform var(--transition-fast);
+  transition:
+    background-color var(--transition-fast),
+    transform var(--transition-fast);
 }
 
 .wallet__copy-button:hover {
@@ -154,39 +156,49 @@
 }
 
 /* Responsive styles */
-@media (max-width: 768px){
+@media (max-width: 768px) {
   .wallet {
     flex-direction: column;
   }
-  
+
   .wallet__content {
     width: 100%;
     margin-left: 0;
   }
-  
+
   .wallet__account-info {
     flex-direction: column;
   }
-  
+
   .wallet__qr-code {
     margin-bottom: var(--spacing-lg);
   }
-  
+
   .wallet__actions {
     flex-direction: column;
   }
 }
 
-@media (max-width: 480px){
+@media (max-width: 480px) {
   .wallet__balance-container {
     padding: var(--spacing-md);
   }
-  
+
   .wallet__balance-value {
     font-size: var(--font-size-3xl);
   }
-  
+
   .wallet__address-value {
     max-width: 200px;
   }
+}
+
+.wallet__show-private-key {
+  margin-left: auto;
+  padding: 8px 16px;
+}
+.balance-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }

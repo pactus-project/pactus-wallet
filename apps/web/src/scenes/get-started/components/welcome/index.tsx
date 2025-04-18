@@ -35,12 +35,12 @@ const Welcome = () => {
     {
       title: t('simple'),
       icon: simpleIcon,
-      description: t('simpleDescription')
+      description: t('simpleDescription'),
     },
     {
       title: t('secure'),
       icon: secureIcon,
-      description: t('secureDescription')
+      description: t('secureDescription'),
     },
   ];
 
@@ -76,9 +76,11 @@ const Welcome = () => {
             </div>
           ))}
         </div>
-        {!isMobile && !isTablet ? <div className="welcome__visualization">
-          <ThreeDMotion />
-        </div> : null}
+        {!isMobile && !isTablet ? (
+          <div className="welcome__visualization">
+            <ThreeDMotion />
+          </div>
+        ) : null}
       </div>
 
       <div className="welcome__footer">
@@ -91,11 +93,7 @@ const Welcome = () => {
             onChange={handleCheckboxToggle}
             aria-labelledby="terms-text"
           />
-          <label
-            id="terms-text"
-            htmlFor="terms-checkbox"
-            className="welcome__terms-text"
-          >
+          <label id="terms-text" htmlFor="terms-checkbox" className="welcome__terms-text">
             {t('iHaveReadAndAgreed')}{' '}
             <span className="welcome__terms-highlight">{t('termsAndConditions')}</span>.
           </label>

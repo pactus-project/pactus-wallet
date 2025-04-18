@@ -51,11 +51,12 @@ export function encodeBech32WithType(prefix: string, data: Uint8Array, type: num
   return bech32m.encode(prefix, words);
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function fetchJsonRpcResult(
   client: string,
   method: string,
-  params: any[] = []
+  // @ts-ignore - JSON-RPC params can vary
+  params: any[] = [] // eslint-disable-line @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): Promise<any> {
   const payload = {
     jsonrpc: '2.0',
@@ -67,6 +68,7 @@ export async function fetchJsonRpcResult(
   const response = await fetch(client, {
     method: 'POST',
     headers: {
+      // eslint-disable-next-line @typescript-eslint/naming-convention
       'CONTENT-TYPE': 'application/json',
     },
     body: JSON.stringify(payload),
