@@ -99,13 +99,6 @@
   font-weight: bold;
 }
 
-/* Target the modal container */
-.modal {
-  width: 800px; /* Adjust this value as needed (e.g., 500px, 700px, etc.) */
-  max-width: 100%; /* Ensures the modal doesn't exceed the viewport on small screens */
-}
-
-/* Optional: Adjust the content padding if needed */
 .address-info-display {
   padding: 10px;
 }
