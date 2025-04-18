@@ -8,12 +8,11 @@ import { copyIcon, showPasswordIcon, simpleLogo, successIcon } from '@/assets';
 import SendPac from '@/components/send';
 import BridgePac from '@/components/bridge';
 import QRCode from 'react-qr-code';
-import { useAccount } from '@/wallet/hooks/use-account';
+import { useAccount, AddressInfo } from '@/wallet/hooks/use-account';
 import { useSearchParams } from 'next/navigation';
 import { useBalance } from '@/wallet/hooks/use-balance';
 import ShowPrivateKeyModal from '@/components/password-modal';
 import PrivateKeyDisplayModal from '@/components/address-infom-modal';
-import { AddressInfo } from '@pactus-wallet/wallet/dist/types/ledger';
 
 const Wallet = () => {
   const [copied, setCopied] = useState(false);
@@ -76,10 +75,12 @@ const Wallet = () => {
                 </div>
 
                 <div className="wallet__details">
-                  <h2 className="wallet__balance-heading">Balance</h2>
-                  <button className="wallet__show-private-key" onClick={handleShowPrivateKey}>
-                    <Image src={showPasswordIcon} alt="" width={24} height={24} />
-                  </button>
+                  <div className="balance-container">
+                    <h2 className="wallet__balance-heading">Balance</h2>
+                    <button className="wallet__show-private-key" onClick={handleShowPrivateKey}>
+                      <Image src={showPasswordIcon} alt="" width={24} height={24} />
+                    </button>
+                  </div>
 
                   <div className="wallet__balance-amount">
                     <Image src={simpleLogo} alt="Pactus logo" className="wallet__currency-icon" />

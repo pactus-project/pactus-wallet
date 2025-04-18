@@ -35,13 +35,8 @@ const Dashboard = () => {
                 </div>
 
                 <div className="dashboard__balance-amount">
-                  <Image
-                    src={simpleLogo}
-                    alt="PAC token logo"
-                    width={24}
-                    height={24}
-                    className="dashboard__balance-icon"
-                  />
+                  <Image src={simpleLogo} alt="Pactus logo" className="wallet__currency-icon" />
+
                   <p className="dashboard__balance-value">{balance}</p>
                   <span className="dashboard__balance-currency">PAC</span>
                 </div>

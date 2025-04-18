@@ -193,15 +193,12 @@
   }
 }
 
-.wallet__balance-heading {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  padding-right: 8px;
-}
-
 .wallet__show-private-key {
   margin-left: auto;
   padding: 8px 16px;
+}
+.balance-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }

@@ -2,7 +2,13 @@
 import type { Wallet } from '@pactus-wallet/wallet';
 import { useCallback, useState } from 'react';
 import { useWallet } from '@/wallet';
-
+export interface AddressInfo {
+  address: string;
+  publicKey: string;
+  label: string;
+  path: string;
+  privateKeyHex: string;
+}
 export function useAccount() {
   const { wallet } = useWallet();
   const [error, setError] = useState<string | null>(null);
@@ -87,7 +93,7 @@ export function useAccount() {
         await targetWallet.getMnemonic(password);
         const addressInfo = targetWallet.getAddressInfo(address);
         const privateKeyHex = await targetWallet.getPrivateKey(address, password);
-        return { ...addressInfo, privateKeyHex };
+        return { ...addressInfo, privateKeyHex } as AddressInfo;
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : 'Failed to get address info';
         setError(errorMessage);

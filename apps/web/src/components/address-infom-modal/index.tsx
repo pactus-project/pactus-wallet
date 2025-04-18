@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import Modal from '../modal';
 import './style.css';
-import { AddressInfo } from '@pactus-wallet/wallet/dist/types/ledger';
+import { AddressInfo } from '@/wallet/hooks/use-account';
 import { copyIcon } from '@/assets'; // Add this import
 import Image from 'next/image';
 interface AddressInfoModalProps {
