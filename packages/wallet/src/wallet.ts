@@ -369,7 +369,7 @@ export class Wallet {
     return new Amount(result['account'].balance);
   }
 
-  // eslint-disable @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, consistent-return
   private async tryFetchJsonRpcResult(method: string, params: any): Promise<any> {
     const maxAttempts = 1;
     let attempts = 0;

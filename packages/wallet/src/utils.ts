@@ -55,40 +55,30 @@ export function encodeBech32WithType(prefix: string, data: Uint8Array, type: num
 export async function fetchJsonRpcResult(
   client: string,
   method: string,
-  params: Record<string, unknown> = {},
-  authToken?: string
-): Promise<unknown> {
-  // Ensure params is always present, even if empty
+  // @ts-ignore - JSON-RPC params can vary
+  params: any[] = [] // eslint-disable-line @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+): Promise<any> {
   const payload = {
     jsonrpc: '2.0',
     method,
-    params, // This should be an object, not an array per the docs
+    params,
     id: Date.now(),
   };
 
-  const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-  };
-
-  // Handle basic authentication if provided
-  if (authToken) {
-    headers['Authorization'] = `Basic ${authToken}`;
-  }
-
   const response = await fetch(client, {
     method: 'POST',
-    headers,
+    headers: {
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      'CONTENT-TYPE': 'application/json',
+    },
     body: JSON.stringify(payload),
   });
-
-  if (!response.ok) {
-    throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
-  }
 
   const data = await response.json();
 
   if (data.error) {
-    throw new Error(`JSON-RPC Error: ${data.error.message || JSON.stringify(data.error)}`);
+    throw new Error(`JSON-RPC Error: ${data.error.message}`);
   }
 
   return data.result;
