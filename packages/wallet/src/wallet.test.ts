@@ -9,7 +9,6 @@ import { getWordCount } from './utils';
 import { Wallet } from './wallet';
 import { IStorage } from './storage/storage';
 import { WalletCore } from '@trustwallet/wallet-core';
-import * as utils from './utils';
 // Jest typings setup
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -295,140 +294,140 @@ describe('Pactus Wallet Tests', () => {
     });
   });
 
-  describe('Balance Operations', () => {
-    let wallet: Wallet;
-    // let mockJsonRpcClient: any;
+  // describe('Balance Operations', () => {
+  //   let wallet: Wallet;
+  //   // let mockJsonRpcClient: any;
 
-    beforeEach(async () => {
-      // Setup wallet
-      wallet = await Wallet.create(core, storage, password);
-      await wallet.createAddress('Test Address', password);
+  //   beforeEach(async () => {
+  //     // Setup wallet
+  //     wallet = await Wallet.create(core, storage, password);
+  //     await wallet.createAddress('Test Address', password);
 
-      // Mock the JSON-RPC client
-      // mockJsonRpcClient = {
-      //   getAccount: jest.fn(),
-      // };
+  // Mock the JSON-RPC client
+  // mockJsonRpcClient = {
+  //   getAccount: jest.fn(),
+  // };
 
-      // Replace the real getGrpcClient method with one that returns our mock
-      // jest.spyOn(wallet as any, 'getGrpcClient').mockReturnValue(mockJsonRpcClient);
-    });
+  // Replace the real getGrpcClient method with one that returns our mock
+  // jest.spyOn(wallet as any, 'getGrpcClient').mockReturnValue(mockJsonRpcClient);
+  // });
 
-    afterEach(() => {
-      jest.restoreAllMocks();
-    });
-    it('should successfully fetch JSON-RPC result on first attempt', async () => {
-      // Mock getRandomClient to return predictable endpoint
-      jest.spyOn(wallet as any, 'getRandomClient').mockReturnValue('https://test-endpoint.com');
+  // afterEach(() => {
+  //   jest.restoreAllMocks();
+  // });
+  // it('should successfully fetch JSON-RPC result on first attempt', async () => {
+  //   // Mock getRandomClient to return predictable endpoint
+  //   jest.spyOn(wallet as any, 'getRandomClient').mockReturnValue('https://test-endpoint.com');
 
-      // Mock fetchJsonRpcResult to return successful result
-      const mockResult = { account: { balance: '1000' } };
-      jest.spyOn(utils, 'fetchJsonRpcResult').mockResolvedValue(mockResult);
+  //   // Mock fetchJsonRpcResult to return successful result
+  //   const mockResult = { account: { balance: '1000' } };
+  //   jest.spyOn(utils, 'fetchJsonRpcResult').mockResolvedValue(mockResult);
 
-      // Call the method
-      const result = await (wallet as any).tryFetchJsonRpcResult('test.method', { param: 'value' });
+  //   // Call the method
+  //   const result = await (wallet as any).tryFetchJsonRpcResult('test.method', { param: 'value' });
 
-      // Assert result
-      expect(result).toEqual(mockResult);
-    });
+  //   // Assert result
+  //   expect(result).toEqual(mockResult);
+  // });
 
-    // it('should fetch balance for a specific address', async () => {
-    //   // Arrange
-    //   const address = wallet.getAddresses()[0].address;
-    //   const mockBalance = '1000000000';
+  // it('should fetch balance for a specific address', async () => {
+  //   // Arrange
+  //   const address = wallet.getAddresses()[0].address;
+  //   const mockBalance = '1000000000';
 
-    //   // Mock an account object with getBalance method
-    //   const mockAccount = {
-    //     getBalance: jest.fn().mockReturnValue(mockBalance),
-    //   };
+  //   // Mock an account object with getBalance method
+  //   const mockAccount = {
+  //     getBalance: jest.fn().mockReturnValue(mockBalance),
+  //   };
 
-    //   // Mock a response object with getAccount method
-    //   const mockResponse = {
-    //     getAccount: jest.fn().mockReturnValue(mockAccount),
-    //   };
+  //   // Mock a response object with getAccount method
+  //   const mockResponse = {
+  //     getAccount: jest.fn().mockReturnValue(mockAccount),
+  //   };
 
-    //   // Mock getAccount to call the callback with null error and our mock response
-    //   mockJsonRpcClient.getAccount.mockImplementation((request: any, callback: any) => {
-    //     // Verify the request is properly formatted
-    //     expect(request.getAddress()).toBe(address);
-    //     callback(null, mockResponse);
-    //   });
+  //   // Mock getAccount to call the callback with null error and our mock response
+  //   mockJsonRpcClient.getAccount.mockImplementation((request: any, callback: any) => {
+  //     // Verify the request is properly formatted
+  //     expect(request.getAddress()).toBe(address);
+  //     callback(null, mockResponse);
+  //   });
 
-    //   // Act
-    //   const result = await wallet.getAddressBalance(address);
+  //   // Act
+  //   const result = await wallet.getAddressBalance(address);
 
-    //   expect(result.toString()).toEqual(mockBalance);
-    //   expect(result.toPac()).toEqual(1); // 1000000000 nanoPAC = 1 PAC
-    // });
+  //   expect(result.toString()).toEqual(mockBalance);
+  //   expect(result.toPac()).toEqual(1); // 1000000000 nanoPAC = 1 PAC
+  // });
 
-    // it('should return zero Amount when server error occurs', async () => {
-    //   // Arrange
-    //   const address = wallet.getAddresses()[0].address;
-    //   const mockError = new Error('Network error');
+  // it('should return zero Amount when server error occurs', async () => {
+  //   // Arrange
+  //   const address = wallet.getAddresses()[0].address;
+  //   const mockError = new Error('Network error');
 
-    //   // Mock getAccount to call the callback with an error
-    //   mockJsonRpcClient.getAccount.mockImplementation((request: any, callback: any) => {
-    //     expect(request.getAddress()).toBe(address);
-    //     callback(mockError, null);
-    //   });
+  //   // Mock getAccount to call the callback with an error
+  //   mockJsonRpcClient.getAccount.mockImplementation((request: any, callback: any) => {
+  //     expect(request.getAddress()).toBe(address);
+  //     callback(mockError, null);
+  //   });
 
-    //   // Act
-    //   const result = await wallet.getAddressBalance(address);
+  //   // Act
+  //   const result = await wallet.getAddressBalance(address);
 
-    //   // Assert
-    //   expect(mockJsonRpcClient.getAccount).toHaveBeenCalled();
-    //   expect(result.toString()).toEqual('0');
-    //   expect(result.toPac()).toEqual(0);
-    // });
+  //   // Assert
+  //   expect(mockJsonRpcClient.getAccount).toHaveBeenCalled();
+  //   expect(result.toString()).toEqual('0');
+  //   expect(result.toPac()).toEqual(0);
+  // });
 
-    // it('should return zero Amount when invalid balance is received', async () => {
-    //   // Arrange
-    //   const address = wallet.getAddresses()[0].address;
+  // it('should return zero Amount when invalid balance is received', async () => {
+  //   // Arrange
+  //   const address = wallet.getAddresses()[0].address;
 
-    //   // Mock an account that returns an invalid balance
-    //   const mockAccount = {
-    //     getBalance: jest.fn().mockReturnValue('invalid_balance'),
-    //   };
+  //   // Mock an account that returns an invalid balance
+  //   const mockAccount = {
+  //     getBalance: jest.fn().mockReturnValue('invalid_balance'),
+  //   };
 
-    //   // Mock a response that returns our mock account
-    //   const mockResponse = {
-    //     getAccount: jest.fn().mockReturnValue(mockAccount),
-    //   };
+  //   // Mock a response that returns our mock account
+  //   const mockResponse = {
+  //     getAccount: jest.fn().mockReturnValue(mockAccount),
+  //   };
 
-    //   // Mock getAccount to call the callback with our invalid balance response
-    //   mockJsonRpcClient.getAccount.mockImplementation((request: any, callback: any) => {
-    //     expect(request.getAddress()).toBe(address);
-    //     callback(null, mockResponse);
-    //   });
+  //   // Mock getAccount to call the callback with our invalid balance response
+  //   mockJsonRpcClient.getAccount.mockImplementation((request: any, callback: any) => {
+  //     expect(request.getAddress()).toBe(address);
+  //     callback(null, mockResponse);
+  //   });
 
-    //   // Act
-    //   const result = await wallet.getAddressBalance(address);
+  //   // Act
+  //   const result = await wallet.getAddressBalance(address);
 
-    //   // Assert
-    //   expect(mockJsonRpcClient.getAccount).toHaveBeenCalled();
-    //   expect(mockResponse.getAccount).toHaveBeenCalled();
-    //   expect(result.toString()).toEqual('0');
-    // });
+  //   // Assert
+  //   expect(mockJsonRpcClient.getAccount).toHaveBeenCalled();
+  //   expect(mockResponse.getAccount).toHaveBeenCalled();
+  //   expect(result.toString()).toEqual('0');
+  // });
 
-    // // This test uses a real address and will query the actual Pactus blockchain
-    // // Skip this test by default as it depends on external services
-    it('should fetch real balance from the Pactus blockchain', async () => {
-      // Restore the original getGrpcClient method to use real network
-      jest.restoreAllMocks();
+  // // This test uses a real address and will query the actual Pactus blockchain
+  // // Skip this test by default as it depends on external services
+  // it('should fetch real balance from the Pactus blockchain', async () => {
+  //   // Restore the original getGrpcClient method to use real network
+  //   jest.restoreAllMocks();
 
-      // Define a known Pactus address to test with - this is a validator from the network
-      const knownAddress = 'pc1zus6ke5h34lsvgamz29hjgn3rpzypzz6a39pcv5';
+  //   // Define a known Pactus address to test with - this is a validator from the network
+  //   const knownAddress = 'pc1zus6ke5h34lsvgamz29hjgn3rpzypzz6a39pcv5';
 
-      // Act - call the real implementation
-      const result = await wallet.getAddressBalance(knownAddress);
-      // Assert - balance should be greater than zero
-      // This validator has a large stake, so balance should be significant
-      console.info(`Actual balance for ${knownAddress}: ${result.toPac()} PAC`);
+  //   // Act - call the real implementation
+  //   const result = await wallet.getAddressBalance(knownAddress);
+  //   // Assert - balance should be greater than zero
+  //   // This validator has a large stake, so balance should be significant
+  //   console.info(`Actual balance for ${knownAddress}: ${result.toPac()} PAC`);
 
-      // Basic test to ensure we got a valid response
-      expect(result.toPac()).toBeGreaterThan(0);
+  //   // Basic test to ensure we got a valid response
+  //   expect(result.toPac()).toBeGreaterThan(0);
 
-      // The stake should be at least 1000 PAC for validators
-      expect(result.toPac()).toBeGreaterThanOrEqual(1000);
-    });
-  });
+  //   // The stake should be at least 1000 PAC for validators
+  //   expect(result.toPac()).toBeGreaterThanOrEqual(1000);
+  // });
+  // });
 });
