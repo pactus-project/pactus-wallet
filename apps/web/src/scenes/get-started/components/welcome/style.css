@@ -18,7 +18,9 @@
   font-weight: var(--font-weight-semibold);
   line-height: var(--line-height-tight);
 }
-
+.welcome__title  span{
+  text-wrap: nowrap;
+}
 .welcome__subtitle {
   font-weight: var(--font-weight-medium);
   font-size: var(--font-size-3xl);
@@ -132,6 +134,7 @@
   line-height: var(--line-height-normal);
   cursor: pointer;
   user-select: none;
+  text-wrap: nowrap;
 }
 
 .welcome__terms-highlight {
@@ -162,7 +165,7 @@
   }
   
   .welcome__title {
-    font-size: var(--font-size-4xl);
+    font-size: var(--font-size-xl);
   }
   
   .welcome__cta-button {
@@ -174,7 +177,7 @@
 
 @media (max-width:480px) {
   .welcome__title {
-    font-size: var(--font-size-3xl);
+    font-size: var(--font-size-2xl);
   }
   
   .welcome__subtitle {
