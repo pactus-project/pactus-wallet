@@ -228,10 +228,22 @@ export class Wallet {
 
     const hdWallet = await this.hdWallet(password);
     const privateKey = hdWallet.getKey(this.core.CoinType.pactus, derivationPath);
-    const address = this.core.CoinTypeExt.deriveAddress(this.core.CoinType.pactus, privateKey);
 
     // Get public key
     const publicKey = privateKey.getPublicKeyEd25519();
+
+    // Select the appropriate derivation based on network type
+    const derivation = this.isTestnet()
+      ? this.core.Derivation.pactusTestnet
+      : this.core.Derivation.pactusMainnet;
+
+    // Create the address using AnyAddress for both networks
+    const address = this.core.AnyAddress.createWithPublicKeyDerivation(
+      publicKey,
+      this.core.CoinType.pactus,
+      derivation
+    ).description();
+
     const prefix = this.publicKeyPrefix();
     const publicKeyStr = encodeBech32WithType(prefix, publicKey.data(), 3);
 

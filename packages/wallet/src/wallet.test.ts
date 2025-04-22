@@ -255,15 +255,11 @@ describe('Pactus Wallet Tests', () => {
       const addrInfo1 = await wallet.createAddress('Address 1', password);
       const addrInfo2 = await wallet.createAddress('Address 2', password);
 
-      // Note: Currently checking that the addresses are valid rather than their prefix
-      // When PR trustwallet/wallet-core#4330 is fully integrated, testnet addresses
-      // will start with 'tpc1' instead of 'pc1'
-      expect(addrInfo1.address).toBeTruthy();
-      expect(addrInfo2.address).toBeTruthy();
+      expect(addrInfo1.address.startsWith('tpc1')).toBe(true);
+      expect(addrInfo2.address.startsWith('tpc1')).toBe(true);
       expect(addrInfo1.address).not.toBe(addrInfo2.address);
       expect(wallet.isTestnet()).toBeTruthy();
 
-      // Verify the path uses testnet coin type (21777)
       expect(addrInfo1.path).toContain('21777');
       expect(addrInfo2.path).toContain('21777');
     });
@@ -347,7 +343,7 @@ describe('Pactus Wallet Tests', () => {
       const walletInfoJSON = `{"name":"${walletName}","type":1,"uuid":"${walletID}","creationTime":1743405082209,"network":"testnet"}`;
       // For testnet, coinType is 21777 instead of 21888
       const ledgerJSON =
-        '{"addresses":{"pc1rcx9x55nfme5juwdgxd2ksjdcmhvmvkrygmxpa3":{"address":"pc1rcx9x55nfme5juwdgxd2ksjdcmhvmvkrygmxpa3","label":"Account 1","path":"m/44\'/21777\'/3\'/0\'","publicKey":"public1rd5p573yq3j5wkvnasslqa7ne5vw87qcj5a0wlwxcj2t2xlaca9lstzm8u5"}},"coinType":21777,"purposes":{"purposeBIP44":{"nextEd25519Index":1}}}';
+        '{"addresses":{"tpc1r35xwz99uw2qrhz9wmdanaqcsge2nzsfegvv555":{"address":"tpc1r35xwz99uw2qrhz9wmdanaqcsge2nzsfegvv555","label":"Account 1","path":"m/44\'/21777\'/3\'/0\'","publicKey":"tpublic1rpduuzct4tdvmtgmreknjx86zv6sdvk4udf47whc3nqxcq0phuf7sycm6l9"}},"coinType":21777,"purposes":{"purposeBIP44":{"nextEd25519Index":1}}}';
       const vaultJSON =
         '{"encrypter":{"method":"ARGON2ID-AES_256_CTR-MACV1","params":{"iterations":"1","memory":"8","parallelism":"1"}},"keyStore":"aLEdVCpZOJmZZz067JTxWivw/41sWooR+E2iM46WYjskjFTE3VviPzc9SQ6gba5g+8CWWcw1q1YT9x1XAg/QAt2Rd7zR2FKL+ACwCbmZ/H+lLPDBt3nlvOkD2qkxi2rjjLpbAtf2UjKrW2b3+/KxSJGuG5GPIqPvPonqHhSWrF1j0nnKqm+btD1gaeJ5IRLchi27BNorMR4qvETMeV7YjkvZlrEFdNffqpWee+o4+bnr33MwysXm4hZU1c4/zzMIODAyxsMRgbrfTDfdQ19c0yjYmDGAPDpAqNAvMmDL07nGKR2f"}';
 
@@ -372,12 +368,12 @@ describe('Pactus Wallet Tests', () => {
       expect(wallet.isEncrypted()).toBeTruthy();
       expect(wallet.getMnemonic(testPassword)).resolves.toBe(expectedMnemonic);
 
-      const addrInfo1 = wallet.getAddressInfo('pc1rcx9x55nfme5juwdgxd2ksjdcmhvmvkrygmxpa3');
+      const addrInfo1 = wallet.getAddressInfo('tpc1r35xwz99uw2qrhz9wmdanaqcsge2nzsfegvv555');
       expect(addrInfo1).toBeTruthy();
       expect(addrInfo1?.path).toBe("m/44'/21777'/3'/0'");
       expect(addrInfo1?.label).toBe('Account 1');
       expect(addrInfo1?.publicKey).toBe(
-        'public1rd5p573yq3j5wkvnasslqa7ne5vw87qcj5a0wlwxcj2t2xlaca9lstzm8u5'
+        'tpublic1rpduuzct4tdvmtgmreknjx86zv6sdvk4udf47whc3nqxcq0phuf7sycm6l9'
       );
 
       // New address should use testnet coin type
@@ -453,7 +449,6 @@ describe('Pactus Wallet Tests', () => {
       // Network should be "testnet"
       const expectedWalletInfoJSON = `{"type":1,"name":"My Testnet Wallet","uuid":"${walletID}","creationTime":${walletTime},"network":"testnet"}`;
 
-      // For testnet addresses, coinType is 21777 instead of 21888
       expect(walletInfoJSON).toEqual(expectedWalletInfoJSON);
       expect(JSON.parse(ledgerJSON).coinType).toBe(21777);
 
@@ -469,6 +464,35 @@ describe('Pactus Wallet Tests', () => {
       // Vault should be the same format as mainnet
       expect(JSON.parse(vaultJSON).encrypter.method).toBe('');
       expect(JSON.parse(vaultJSON).keyStore).toContain(mnemonic);
+    });
+  });
+
+  describe('Testnet Address Generation', () => {
+    it('should generate testnet addresses with the correct prefix and format', async () => {
+      const testMnemonic =
+        'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon cactus';
+      const passphrase = '';
+
+      const wallet = await Wallet.restore(
+        core,
+        storage,
+        testMnemonic,
+        passphrase,
+        NetworkValues.TESTNET
+      );
+
+      const addrInfo1 = await wallet.createAddress('Address 1', passphrase);
+      const addrInfo2 = await wallet.createAddress('Address 2', passphrase);
+      expect(addrInfo1.address.startsWith('tpc1')).toBe(true);
+      expect(addrInfo2.address.startsWith('tpc1')).toBe(true);
+
+      expect(addrInfo1.address).toBe('tpc1r35xwz99uw2qrhz9wmdanaqcsge2nzsfegvv555');
+      expect(addrInfo2.address).toBe('tpc1r34xj32k004j8v35fx6uqw4yaka54g6jdr58tvk');
+
+      expect(wallet.isTestnet()).toBe(true);
+
+      expect(addrInfo1.path).toBe("m/44'/21777'/3'/0'");
+      expect(addrInfo2.path).toBe("m/44'/21777'/3'/1'");
     });
   });
 
