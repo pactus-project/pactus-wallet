@@ -107,7 +107,13 @@ describe('Pactus Wallet Tests', () => {
 
       expect(bip39.validateMnemonic(testMnemonic)).toBe(true);
 
-      const wallet = await Wallet.restore(core, storage, testMnemonic, password);
+      const wallet = await Wallet.restore(
+        core,
+        storage,
+        testMnemonic,
+        password,
+        NetworkValues.MAINNET
+      );
       expect(wallet.getMnemonic(password)).resolves.toBe(testMnemonic);
 
       const addrInfo1 = await wallet.createAddress('Address 1', password);
@@ -125,6 +131,67 @@ describe('Pactus Wallet Tests', () => {
       );
       expect(addrInfo2.label).toBe('Address 2');
       expect(addrInfo2.path).toBe("m/44'/21888'/3'/1'");
+    });
+
+    it('should restore a testnet wallet with deterministic addresses from standard 12-word mnemonic', async () => {
+      const testMnemonic =
+        'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon cactus';
+
+      expect(bip39.validateMnemonic(testMnemonic)).toBe(true);
+
+      const wallet = await Wallet.restore(
+        core,
+        storage,
+        testMnemonic,
+        password,
+        NetworkValues.TESTNET
+      );
+      expect(wallet.getMnemonic(password)).resolves.toBe(testMnemonic);
+      expect(wallet.isTestnet()).toBeTruthy();
+
+      const addrInfo1 = await wallet.createAddress('Address 1', password);
+      expect(addrInfo1.address).toBeTruthy();
+      expect(addrInfo1.label).toBe('Address 1');
+      expect(addrInfo1.path).toBe("m/44'/21777'/3'/0'");
+
+      const addrInfo2 = await wallet.createAddress('Address 2', password);
+      expect(addrInfo2.address).toBeTruthy();
+      expect(addrInfo2.label).toBe('Address 2');
+      expect(addrInfo2.path).toBe("m/44'/21777'/3'/1'");
+
+      // Make sure addresses are different
+      expect(addrInfo1.address).not.toBe(addrInfo2.address);
+    });
+
+    it('should restore a testnet wallet with deterministic addresses from standard 24-word mnemonic', async () => {
+      const testMnemonic =
+        'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon ' +
+        'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon art';
+
+      expect(bip39.validateMnemonic(testMnemonic)).toBe(true);
+
+      const wallet = await Wallet.restore(
+        core,
+        storage,
+        testMnemonic,
+        password,
+        NetworkValues.TESTNET
+      );
+      expect(wallet.getMnemonic(password)).resolves.toBe(testMnemonic);
+      expect(wallet.isTestnet()).toBeTruthy();
+
+      const addrInfo1 = await wallet.createAddress('Address 1', password);
+      expect(addrInfo1.address).toBeTruthy();
+      expect(addrInfo1.label).toBe('Address 1');
+      expect(addrInfo1.path).toBe("m/44'/21777'/3'/0'");
+
+      const addrInfo2 = await wallet.createAddress('Address 2', password);
+      expect(addrInfo2.address).toBeTruthy();
+      expect(addrInfo2.label).toBe('Address 2');
+      expect(addrInfo2.path).toBe("m/44'/21777'/3'/1'");
+
+      // Make sure addresses are different
+      expect(addrInfo1.address).not.toBe(addrInfo2.address);
     });
 
     it('should restore a wallet with deterministic addresses from standard 24-word mnemonic', async () => {
@@ -177,15 +244,28 @@ describe('Pactus Wallet Tests', () => {
     });
 
     it('should create unique Testnet addresses in correct format', async () => {
-      /*
-       * const wallet =await Wallet.create(core, password, MnemonicStrengthOption.Normal, NetworkTypeOption.Testnet, 'Test Wallet');
-       * const addrInfo1 = await wallet.createAddress('Address 1', password);
-       * const addrInfo2 = await wallet.createAddress('Address 2', password);
-       * expect(addrInfo1.address.startsWith('tpc1')).toBe(true);
-       * expect(addrInfo2.address.startsWith('tpc1')).toBe(true);
-       * expect(addrInfo1.address).not.toBe(addrInfo2.address);
-       * expect(wallet.isTestnet).toBeTruthy();
-       */
+      const wallet = await Wallet.create(
+        core,
+        storage,
+        password,
+        MnemonicValues.NORMAL,
+        NetworkValues.TESTNET,
+        'Test Wallet'
+      );
+      const addrInfo1 = await wallet.createAddress('Address 1', password);
+      const addrInfo2 = await wallet.createAddress('Address 2', password);
+
+      // Note: Currently checking that the addresses are valid rather than their prefix
+      // When PR trustwallet/wallet-core#4330 is fully integrated, testnet addresses
+      // will start with 'tpc1' instead of 'pc1'
+      expect(addrInfo1.address).toBeTruthy();
+      expect(addrInfo2.address).toBeTruthy();
+      expect(addrInfo1.address).not.toBe(addrInfo2.address);
+      expect(wallet.isTestnet()).toBeTruthy();
+
+      // Verify the path uses testnet coin type (21777)
+      expect(addrInfo1.path).toContain('21777');
+      expect(addrInfo2.path).toContain('21777');
     });
 
     it('should store address with label, path, and public key', async () => {
@@ -258,6 +338,53 @@ describe('Pactus Wallet Tests', () => {
       const addrInfo2 = await wallet.createAddress('Address 2', testPassword);
       expect(addrInfo2.address).toBe('pc1r7aynw9urvh66ktr3fte2gskjjnxzruflkgde94');
     });
+
+    it('should correctly load a testnet wallet from test data', async () => {
+      const walletID = '5678';
+      const walletName = 'Test Testnet Wallet';
+      const testPassword = 'password';
+
+      const walletInfoJSON = `{"name":"${walletName}","type":1,"uuid":"${walletID}","creationTime":1743405082209,"network":"testnet"}`;
+      // For testnet, coinType is 21777 instead of 21888
+      const ledgerJSON =
+        '{"addresses":{"pc1rcx9x55nfme5juwdgxd2ksjdcmhvmvkrygmxpa3":{"address":"pc1rcx9x55nfme5juwdgxd2ksjdcmhvmvkrygmxpa3","label":"Account 1","path":"m/44\'/21777\'/3\'/0\'","publicKey":"public1rd5p573yq3j5wkvnasslqa7ne5vw87qcj5a0wlwxcj2t2xlaca9lstzm8u5"}},"coinType":21777,"purposes":{"purposeBIP44":{"nextEd25519Index":1}}}';
+      const vaultJSON =
+        '{"encrypter":{"method":"ARGON2ID-AES_256_CTR-MACV1","params":{"iterations":"1","memory":"8","parallelism":"1"}},"keyStore":"aLEdVCpZOJmZZz067JTxWivw/41sWooR+E2iM46WYjskjFTE3VviPzc9SQ6gba5g+8CWWcw1q1YT9x1XAg/QAt2Rd7zR2FKL+ACwCbmZ/H+lLPDBt3nlvOkD2qkxi2rjjLpbAtf2UjKrW2b3+/KxSJGuG5GPIqPvPonqHhSWrF1j0nnKqm+btD1gaeJ5IRLchi27BNorMR4qvETMeV7YjkvZlrEFdNffqpWee+o4+bnr33MwysXm4hZU1c4/zzMIODAyxsMRgbrfTDfdQ19c0yjYmDGAPDpAqNAvMmDL07nGKR2f"}';
+
+      storage.set(StorageKey.walletInfoKey(walletID), walletInfoJSON);
+      storage.set(StorageKey.walletLedgerKey(walletID), ledgerJSON);
+      storage.set(StorageKey.walletVaultKey(walletID), vaultJSON);
+
+      // Verify the keys were set correctly
+      expect(storage.get(StorageKey.walletInfoKey(walletID))).not.toBeNull();
+      expect(storage.get(StorageKey.walletLedgerKey(walletID))).not.toBeNull();
+      expect(storage.get(StorageKey.walletVaultKey(walletID))).not.toBeNull();
+
+      const wallet = Wallet.load(core, storage, walletID);
+
+      const expectedMnemonic =
+        'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon cactus';
+
+      expect(wallet.getID()).toBe(walletID);
+      expect(wallet.getName()).toBe(walletName);
+      expect(wallet.getNetworkType()).toBe(NetworkValues.TESTNET);
+      expect(wallet.isTestnet()).toBeTruthy();
+      expect(wallet.isEncrypted()).toBeTruthy();
+      expect(wallet.getMnemonic(testPassword)).resolves.toBe(expectedMnemonic);
+
+      const addrInfo1 = wallet.getAddressInfo('pc1rcx9x55nfme5juwdgxd2ksjdcmhvmvkrygmxpa3');
+      expect(addrInfo1).toBeTruthy();
+      expect(addrInfo1?.path).toBe("m/44'/21777'/3'/0'");
+      expect(addrInfo1?.label).toBe('Account 1');
+      expect(addrInfo1?.publicKey).toBe(
+        'public1rd5p573yq3j5wkvnasslqa7ne5vw87qcj5a0wlwxcj2t2xlaca9lstzm8u5'
+      );
+
+      // New address should use testnet coin type
+      const addrInfo2 = await wallet.createAddress('Address 2', testPassword);
+      expect(addrInfo2.address).toBeTruthy();
+      expect(addrInfo2.path).toBe("m/44'/21777'/3'/1'");
+    });
   });
 
   describe('Save Wallet', () => {
@@ -291,6 +418,57 @@ describe('Pactus Wallet Tests', () => {
       expect(walletInfoJSON).toEqual(expectedWalletInfoJSON);
       expect(ledgerJSON).toEqual(expectedLedgerJSON);
       expect(vaultJSON).toEqual(expectedVaultJSON);
+    });
+
+    it('should correctly save testnet wallet data in JSON format', async () => {
+      const noPassword = '';
+      const mnemonic =
+        'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon cactus';
+      const wallet = await Wallet.restore(
+        core,
+        storage,
+        mnemonic,
+        noPassword,
+        NetworkValues.TESTNET,
+        'My Testnet Wallet'
+      );
+
+      await wallet.createAddress('Account 1', password);
+
+      const walletID = wallet.getID();
+      const walletTime = wallet.getWalletInfo().creationTime;
+      const walletInfoJSON = storage.get(StorageKey.walletInfoKey(walletID));
+      const ledgerJSON = storage.get(StorageKey.walletLedgerKey(walletID));
+      const vaultJSON = storage.get(StorageKey.walletVaultKey(walletID));
+
+      expect(walletInfoJSON).not.toBeNull();
+      expect(ledgerJSON).not.toBeNull();
+      expect(vaultJSON).not.toBeNull();
+
+      if (!walletInfoJSON || !ledgerJSON || !vaultJSON) {
+        fail('Storage values should not be null');
+        return;
+      }
+
+      // Network should be "testnet"
+      const expectedWalletInfoJSON = `{"type":1,"name":"My Testnet Wallet","uuid":"${walletID}","creationTime":${walletTime},"network":"testnet"}`;
+
+      // For testnet addresses, coinType is 21777 instead of 21888
+      expect(walletInfoJSON).toEqual(expectedWalletInfoJSON);
+      expect(JSON.parse(ledgerJSON).coinType).toBe(21777);
+
+      // Verify address format
+      const addresses = Object.keys(JSON.parse(ledgerJSON).addresses);
+      expect(addresses.length).toBe(1);
+      expect(addresses[0]).toBeTruthy();
+
+      // Check that derivation path uses the correct coin type
+      const addressInfo = JSON.parse(ledgerJSON).addresses[addresses[0]];
+      expect(addressInfo.path).toContain('21777');
+
+      // Vault should be the same format as mainnet
+      expect(JSON.parse(vaultJSON).encrypter.method).toBe('');
+      expect(JSON.parse(vaultJSON).keyStore).toContain(mnemonic);
     });
   });
 
