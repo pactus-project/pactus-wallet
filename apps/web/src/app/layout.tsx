@@ -1,53 +1,28 @@
-import type { Metadata } from 'next';
-import './globals.css';
-import { WalletProvider } from '@/wallet';
-import { I18nProvider } from '@/utils/i18n';
-import Script from 'next/script';
-import { GA_MEASUREMENT_ID } from '@/utils/google-analytics';
-import PageTracker from '@/components/PageTracker';
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "../assets/styles/globals.css";
+import { WalletProvider } from "@/wallet";
+import { I18nProvider } from "@/utils/i18n";
+
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+});
 
 export const metadata: Metadata = {
-  title: 'Pactus Wallet',
-  description:
-    'Pactus Wallet is an open-source, client-based wallet for securely managing digital assets on the Pactus blockchain. Non-custodial, fast, and user-friendly.',
+  title: "Pactus Wallet",
+  description: "Pactus Wallet is an open-source, client-based wallet for securely managing digital assets on the Pactus blockchain. Non-custodial, fast, and user-friendly.",
   icons: {
-    icon: ['/favicon.ico?v=4'],
+    icon: ["/favicon.ico?v=4"],
   },
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <head>
-        {/* Google Analytics scripts */}
-        {GA_MEASUREMENT_ID && (
-          <>
-            <Script
-              src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
-              strategy="afterInteractive"
-            />
-            <Script id="google-analytics" strategy="afterInteractive">
-              {`
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-                gtag('config', '${GA_MEASUREMENT_ID}');
-              `}
-            </Script>
-          </>
-        )}
-      </head>
+    <html lang="en" className={inter.className}>
       <body>
         <I18nProvider>
-          <WalletProvider>
-            {children}
-            {/* Page Tracker Component */}
-            {GA_MEASUREMENT_ID && <PageTracker />}
-          </WalletProvider>
+          <WalletProvider>{children}</WalletProvider>
         </I18nProvider>
       </body>
     </html>

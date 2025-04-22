@@ -5,11 +5,13 @@ import { StorageKey } from './storage-key';
 import { AddressInfo, Ledger, Purposes } from './types/ledger';
 import { KeyStore, MnemonicStrength, MnemonicValues, Vault } from './types/vault';
 import { NetworkType, NetworkValues, WalletID, WalletInfo } from './types/wallet_info';
-import { encodeBech32WithType, generateUUID, sprintf } from './utils';
+import { encodeBech32WithType, fetchJsonRpcResult, generateUUID, sprintf } from './utils';
 import { IStorage } from './storage/storage';
 import { WalletCore } from '@trustwallet/wallet-core';
 import { HDWallet } from '@trustwallet/wallet-core/dist/src/wallet-core';
+import { Amount } from './types/amount';
 
+// Import directly from the generated file
 /**
  * Pactus Wallet Implementation
  * Manages cryptographic operations using Trust Wallet Core
@@ -225,14 +227,8 @@ export class Wallet {
     );
 
     const hdWallet = await this.hdWallet(password);
-    const privateKey = hdWallet.getKey(
-      this.core.CoinType.pactus,
-      derivationPath
-    );
-    const address = this.core.CoinTypeExt.deriveAddress(
-      this.core.CoinType.pactus,
-      privateKey
-    );
+    const privateKey = hdWallet.getKey(this.core.CoinType.pactus, derivationPath);
+    const address = this.core.CoinTypeExt.deriveAddress(this.core.CoinType.pactus, privateKey);
 
     // Get public key
     const publicKey = privateKey.getPublicKeyEd25519();
@@ -262,13 +258,26 @@ export class Wallet {
    * @throws An error if the password is incorrect
    */
   async getMnemonic(password: string): Promise<string> {
-    const keyStoreJSON = await this.vault.encrypter.decrypt(
-      this.vault.keyStore,
-      password
-    );
+    const keyStoreJSON = await this.vault.encrypter.decrypt(this.vault.keyStore, password);
     const keyStore = JSON.parse(keyStoreJSON) as KeyStore;
 
     return keyStore.master_node.seed;
+  }
+
+  /**
+   * Get the private key for a specific address
+   * @param addresPath The path to the address
+   * @param password The wallet's decryption password
+   * @returns The private key in hex format
+   * @throws Error if the address is not found or decryption fails
+   */
+  async getPrivateKey(addressPath: string, password: string): Promise<string> {
+    const mnemonic = await this.getMnemonic(password);
+    const hdWallet = this.core.HDWallet.createWithMnemonic(mnemonic, '');
+
+    const privateKey = hdWallet.getKey(this.core.CoinType.pactus, addressPath);
+
+    return Buffer.from(privateKey.data()).toString('hex');
   }
 
   /**
@@ -325,5 +334,81 @@ export class Wallet {
       default:
         throw new Error(`Unknown network type: ${this.info.network}`);
     }
+  }
+
+  /**
+   * Get balance for a specific address
+   * @param address The address to check balance for
+   * @returns Promise with balance as Amount type
+   */
+  async getAddressBalance(address: string): Promise<Amount> {
+    return this.fetchAccount(address);
+  }
+
+  /**
+   * Fetches account information for a given address
+   * @param address The wallet address
+   * @returns Promise with the account balance as Amount
+   */
+  private async fetchAccount(address: string): Promise<Amount> {
+    // https://docs.pactus.org/api/json-rpc/#pactusblockchainget_account-span-idpactusblockchainget_account-classrpc-badgespan
+    const method = 'pactus.blockchain.get_account';
+    const params = { address };
+    const result = await this.tryFetchJsonRpcResult(method, params);
+
+    return new Amount(result['account'].balance);
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, consistent-return
+  private async tryFetchJsonRpcResult(method: string, params: any): Promise<any> {
+    const maxAttempts = 1;
+    let attempts = 0;
+
+    while (attempts < maxAttempts) {
+      try {
+        const client = this.getRandomClient();
+
+        return await fetchJsonRpcResult(client, method, params);
+      } catch (err) {
+        // TODO:  "Not Found" error? How to handle it
+
+        attempts++;
+        console.error(`Attempt ${attempts} failed:`, err);
+
+        if (attempts === maxAttempts) {
+          throw new Error(`Failed to fetch JSON-RPC result after ${maxAttempts} attempts`);
+        }
+      }
+    }
+  }
+
+  /**
+   * Returns a weighted random JSON-RPC blockchain client endpoint.
+   *
+   * The selection is based on the response time of each client.
+   * Endpoints with better response times have a higher chance of being selected.
+   *
+   * TODO: Extract the list of endpoints from persistent storage
+   *       (based on the type of wallet: Testnet or Mainnet).
+   *
+   * TODO: Allow users to modify the list of RPC clients (add/remove endpoints).
+   *
+   * TODO: Introduce dynamic weighting based on the response time of each client
+   *       to prefer faster and more reliable endpoints.
+   *
+   * @private
+   * @returns A randomly selected RPC client endpoint from the available list.
+   */
+  private getRandomClient(): string {
+    const endpoints = [
+      // 'http://bootstrap1.pactus.org:8545',
+      'https://bootstrap2.pactus.org:8545',
+      // 'http://bootstrap3.pactus.org:8545',
+      // 'http://bootstrap4.pactus.org:8545',
+    ];
+
+    const randomIndex = Math.floor(Math.random() * endpoints.length);
+
+    return endpoints[randomIndex];
   }
 }

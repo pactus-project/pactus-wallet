@@ -7,7 +7,6 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "prepare": "husky",
     "build": "yarn workspaces run build",
     "build:web": "yarn workspace web build",
     "dev:web": "yarn workspace web dev",
@@ -15,8 +14,7 @@
     "lint": "yarn workspaces run lint",
     "lint:report": "yarn workspaces run lint:report",
     "fix": "yarn workspaces run fix",
-    "type-check": "yarn workspaces run type-check",
-    "lint-staged": "lint-staged"
+    "type-check": "yarn workspaces run type-check"
   },
   "dependencies": {
     "typescript": "~5.5.3"
@@ -35,28 +33,14 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-unused-imports": "^3.0.0",
     "globals": "^16.0.0",
-    "husky": "^9.1.7",
-    "lint-staged": "^15.2.2",
     "prettier": "^3.5.3",
+    "ts-protoc-gen": "^0.15.0",
     "typescript-eslint": "^7.1.0"
   },
   "workspaces": {
     "packages": [
       "packages/*",
       "apps/*"
-    ]
-  },
-  "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
-      "prettier --write"
-    ],
-    "packages/*/src/**/*.{js,jsx,ts,tsx}": [
-      "eslint --config packages/wallet/eslint.config.mjs --fix",
-      "prettier --write"
-    ],
-    "apps/*/src/**/*.{js,jsx,ts,tsx}": [
-      "eslint --config apps/web/eslint.config.mjs --fix",
-      "prettier --write"
     ]
   }
 }

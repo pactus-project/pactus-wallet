@@ -1,17 +1,61 @@
-.cta-sendPac {
-    display: flex;
-    width: 127px;
-    height: 38px;
-    padding: 13px 7px;
-    justify-content: center;
-    align-items: center;
-    gap: 5px;
-    border-radius: 8px;
-    background: var(--Ocean, linear-gradient(91deg, #0FEF9E -0.23%, #064560 105.78%));
-    color: #FFF;
-    text-align: center;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: normal;
+/* Send component styles using BEM naming convention */
+
+.send-button {
+  /* Use existing button classes as a base, with specific overrides */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-xs);
+  width: 127px;
+  height: 38px;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-md);
+  background: var(--gradient-primary);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
+  box-shadow: var(--shadow-button);
+}
+
+.send-button:hover {
+  opacity: 0.9;
+}
+
+.send-button:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.send-button:active {
+  transform: translateY(1px);
+}
+
+.send-button__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.send-button__text {
+  /* Ensure text can be properly scaled/localized */
+  white-space: nowrap;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .send-button {
+    width: 100%;
+  }
+}
+
+/* Respect user preference for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .send-button {
+    transition: none;
+  }
+  
+  .send-button:active {
+    transform: none;
+  }
 }

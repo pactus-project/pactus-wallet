@@ -12,39 +12,39 @@ import { useI18n } from '@/utils/i18n';
 import './style.css';
 import ChooseNameWallet from './components/choose-name-wallet';
 const GetStartedContent = () => {
-    const searchParams = useSearchParams();
-    const [step, setStep] = useState<string | null>(null);
-    useEffect(() => {
-        setStep(searchParams.get('step'));
-    }, [searchParams]);
+  const searchParams = useSearchParams();
+  const [step, setStep] = useState<string | null>(null);
+  useEffect(() => {
+    setStep(searchParams?.get('step') ?? null);
+  }, [searchParams]);
 
-    const components = {
-        addWallet: AddWallet,
-        masterPassword: MasterPassword,
-        importWallet: ImportWallet,
-        recoveryPhrase: RecoveryPhrase,
-        chooseNameWallet: ChooseNameWallet
-    };
+  const components = {
+    addWallet: AddWallet,
+    masterPassword: MasterPassword,
+    importWallet: ImportWallet,
+    recoveryPhrase: RecoveryPhrase,
+    chooseNameWallet: ChooseNameWallet,
+  };
 
-    const stepsMap: Record<string, JSX.Element> = {
-        welcome: <Welcome />,
-        'add-wallet': <components.addWallet />,
-        'master-password': <components.masterPassword />,
-        'import-wallet': <components.importWallet />,
-        'recovery-phrase': <components.recoveryPhrase />,
-        'choose-name-wallet': <components.chooseNameWallet />
-    };
+  const stepsMap: Record<string, JSX.Element> = {
+    welcome: <Welcome />,
+    'add-wallet': <components.addWallet />,
+    'master-password': <components.masterPassword />,
+    'import-wallet': <components.importWallet />,
+    'recovery-phrase': <components.recoveryPhrase />,
+    'choose-name-wallet': <components.chooseNameWallet />,
+  };
 
-    return <div className="container-GetStarted">{stepsMap[step || 'welcome']}</div>;
+  return <div className="container-GetStarted">{stepsMap[step || 'welcome']}</div>;
 };
 
 const GetStarted = () => {
-    const { t } = useI18n();
-    return (
-        <Suspense fallback={<div>{t('loading')}</div>}>
-            <GetStartedContent />
-        </Suspense>
-    );
+  const { t } = useI18n();
+  return (
+    <Suspense fallback={<div>{t('loading')}</div>}>
+      <GetStartedContent />
+    </Suspense>
+  );
 };
 
 export default GetStarted;

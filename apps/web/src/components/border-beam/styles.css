@@ -1,0 +1,26 @@
+.border-beam__container {
+  /* Base container styles */
+  pointer-events: none;
+  position: absolute;
+  inset: 0; /* Shorthand for top, right, bottom, left = 0 */
+  border-radius: inherit;
+  border: 1px solid transparent;
+  mask-clip: padding-box, border-box;
+  mask-composite: intersect;
+  mask-image: linear-gradient(transparent, transparent), linear-gradient(#000, #000);
+}
+
+.border-beam__element {
+  /* Base element styles */
+  position: absolute;
+  /* Width, height, animation, and other dynamic properties are set inline */
+}
+
+/* Media query for reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .border-beam__element {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

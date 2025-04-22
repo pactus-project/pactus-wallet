@@ -180,9 +180,7 @@ describe('WalletManager Tests', () => {
       });
 
       // Attempt to load should throw StorageError
-      expect(() => walletManager.loadWallet(wallet.getID())).toThrow(
-        StorageError
-      );
+      expect(() => walletManager.loadWallet(wallet.getID())).toThrow(StorageError);
     });
 
     it('should handle storage errors when deleting', async () => {
@@ -197,9 +195,7 @@ describe('WalletManager Tests', () => {
       });
 
       // Attempt to delete should throw StorageError
-      expect(() => walletManager.deleteWallet(wallet.getID())).toThrow(
-        StorageError
-      );
+      expect(() => walletManager.deleteWallet(wallet.getID())).toThrow(StorageError);
     });
   });
 });

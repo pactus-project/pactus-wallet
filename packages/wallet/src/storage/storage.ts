@@ -5,7 +5,6 @@ export * from './memory-storage';
  * Interface for a generic storage system.
  */
 export interface IStorage {
-
   /**
    * Retrieves a value from storage.
    * @param key - The key to look up.
