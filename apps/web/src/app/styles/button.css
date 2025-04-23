@@ -1,0 +1,94 @@
+/* ========================================
+   BUTTONS
+   ======================================== */
+
+/* Button variables */
+:root {
+  --button-primary-width-desktop: 682px;
+  --button-primary-width-mobile: 366px;
+  --button-primary-height-desktop: 48px;
+  --button-primary-height-mobile: 50px;
+  --button-primary-padding: 0px 12.105px;
+  --button-primary-gap: 4.035px;
+  --button-primary-radius: 4.035px;
+}
+
+/* Button base style */
+.btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: var(--button-primary-height-desktop);
+  padding: var(--button-primary-padding);
+  gap: var(--button-primary-gap);
+  flex-shrink: 0;
+  border: none;
+  outline: none;
+  border-radius: var(--button-primary-radius);
+  font-weight: var(--font-weight-semibold);
+  transition: opacity 0.2s ease;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Primary button style */
+.btn-primary {
+  width: var(--button-primary-width-desktop);
+  background: var(--gradient-primary);
+  box-shadow: var(--button-shadow);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+}
+
+/* Secondary button style */
+.btn-secondary {
+  width: var(--button-primary-width-desktop);
+  background: transparent;
+  border: 1px solid var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* Small variant */
+.btn-sm {
+  height: calc(var(--button-primary-height-desktop) * 0.75);
+  font-size: var(--font-size-xs);
+  padding: calc(var(--button-primary-padding) * 0.75);
+}
+
+/* Large variant */
+.btn-lg {
+  height: calc(var(--button-primary-height-desktop) * 1.25);
+  font-size: var(--font-size-md);
+}
+
+/* Icon button */
+.btn-icon {
+  width: var(--button-primary-height-desktop);
+  height: var(--button-primary-height-desktop);
+  border-radius: 50%;
+  padding: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .btn-primary {
+    width: min(90%, var(--button-primary-width-desktop));
+  }
+}
+
+@media (max-width: 768px) {
+  .btn-primary {
+    width: var(--button-primary-width-mobile);
+    height: var(--button-primary-height-mobile);
+  }
+}
+
+@media (max-width: 480px) {
+  .btn-primary {
+    width: 100%;
+    max-width: calc(100% - (var(--spacing-md) * 2));
+  }
+}
