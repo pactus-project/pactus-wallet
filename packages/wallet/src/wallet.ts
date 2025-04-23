@@ -10,6 +10,7 @@ import { IStorage } from './storage/storage';
 import { WalletCore } from '@trustwallet/wallet-core';
 import { HDWallet } from '@trustwallet/wallet-core/dist/src/wallet-core';
 import { Amount } from './types/amount';
+import { TransactionType, TransferTransaction } from './types/transaction';
 
 // Import directly from the generated file
 /**
@@ -392,6 +393,131 @@ export class Wallet {
         }
       }
     }
+  }
+
+  async sendTransfer(
+    fromAddress: string,
+    toAddress: string,
+    amount: Amount,
+    fee: Amount = Amount.fromPac(0.01),
+    memo: string = '',
+    password?: string
+  ): Promise<{ txHash: string }> {
+    // Validate addresses
+    if (!this.validateAddress(fromAddress) || !this.validateAddress(toAddress)) {
+      throw new Error('Invalid address format');
+    }
+
+    // Verify sender address belongs to this wallet
+    const addressInfo = await this.getAddressInfo(fromAddress);
+
+    if (!addressInfo) {
+      throw new Error('Sender address not found in wallet');
+    }
+
+    // Check sender balance
+    const balance = await this.getAddressBalance(fromAddress);
+
+    // Fee calculation - either use provided fee or calculate
+    const calculatedFee = fee || (await this.calculateFee(amount, 'transfer'));
+
+    if (balance.lessThan(amount.add(calculatedFee))) {
+      throw new Error('Insufficient balance');
+    }
+
+    // Create and sign transaction
+    const tx: TransferTransaction = {
+      sender: fromAddress,
+      recipient: toAddress,
+      amount,
+      fee: calculatedFee,
+      memo,
+    };
+
+    const signedTx = await this.signTransaction(tx, password ?? '');
+
+    // Broadcast transaction
+    const txHash = await this.broadcastTransaction(signedTx);
+
+    return { txHash };
+  }
+
+  // Helper methods (should be implemented)
+  private validateAddress(address: string): boolean {
+    return /^pc1[a-z0-9]+$/.test(address);
+  }
+
+  private async calculateFee(amount: Amount, _type: string): Promise<Amount> {
+    const method = 'pactus.transaction.calculate_fee';
+    const params = {
+      amount: amount.toString(), // Convert to NanoPAC units
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      payload_type: TransactionType.TRANSFER_PAYLOAD, // Hardcoded for transfer transactions
+    };
+
+    const result = await this.tryFetchJsonRpcResult(method, params);
+
+    return Amount.fromNanoPac(result.fee);
+  }
+
+  private async signTransaction(tx: TransferTransaction, password: string): Promise<string> {
+    if (!password) {
+      throw new Error('Password is required for signing');
+    }
+
+    // 1. Verify sender address belongs to this wallet
+    const addressInfo = this.getAddressInfo(tx.sender);
+
+    if (!addressInfo) {
+      throw new Error('Sender address not found in wallet');
+    }
+
+    // 2. Get raw unsigned transaction from Pactus node
+    const rawTx = await this.getRawTransferTransaction(tx);
+
+    // 3. Sign the raw transaction via Pactus JSON-RPC
+    const method = 'pactus.wallet.sign_raw_transaction';
+    const params = {
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      wallet_name: this.info.name,
+      password,
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      raw_transaction: rawTx,
+    };
+
+    try {
+      const result = await this.tryFetchJsonRpcResult(method, params);
+
+      return result.signed_transaction;
+    } catch (error) {
+      throw new Error(`Failed to sign transaction: ${(error as Error).message}`);
+    }
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private async getRawTransferTransaction(tx: TransferTransaction): Promise<any> {
+    const method = 'pactus.transaction.get_raw_transfer_transaction';
+    const params = {
+      sender: tx.sender,
+      recipient: tx.recipient,
+      amount: tx.amount.toString(), // NanoPAC units
+      fee: tx.fee.toString(),
+      memo: tx.memo,
+    };
+
+    return this.tryFetchJsonRpcResult(method, params);
+  }
+
+  private async broadcastTransaction(signedTx: string): Promise<string> {
+    const method = 'pactus.transaction.broadcast_transaction';
+    const params = {
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      signed_transaction: JSON.parse(signedTx),
+    };
+
+    const result = await this.tryFetchJsonRpcResult(method, params);
+
+    return result.tx_hash;
   }
 
   /**
