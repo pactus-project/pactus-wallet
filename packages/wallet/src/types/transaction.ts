@@ -2,7 +2,7 @@ import { Amount } from './amount';
 
 export interface TransferTransaction {
   sender: string;
-  recipient: string;
+  receiver: string;
   amount: Amount;
   fee: Amount;
   memo?: string;

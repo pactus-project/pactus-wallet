@@ -1,6 +1,6 @@
 import * as bip39 from 'bip39';
 import { Encrypter } from './encrypter/encrypter';
-import { MnemonicError, StorageError } from './error';
+import { MnemonicError, StorageError, NetworkError } from './error';
 import { StorageKey } from './storage-key';
 import { AddressInfo, Ledger, Purposes } from './types/ledger';
 import { KeyStore, MnemonicStrength, MnemonicValues, Vault } from './types/vault';
@@ -12,7 +12,23 @@ import { HDWallet } from '@trustwallet/wallet-core/dist/src/wallet-core';
 import { Amount } from './types/amount';
 import { TransactionType, TransferTransaction } from './types/transaction';
 
-// Import directly from the generated file
+// Configuration for RPC endpoints
+const RPC_ENDPOINTS = {
+  [NetworkValues.MAINNET]: ['https://bootstrap2.pactus.org:8545'],
+  [NetworkValues.TESTNET]: [
+    'http://testnet1.pactus.org:8545',
+    'http://testnet2.pactus.org:8545',
+    'http://testnet3.pactus.org:8545',
+    'http://testnet4.pactus.org:8545',
+  ],
+};
+
+// Wallet configuration constants
+const WALLET_CONFIG = {
+  DEFAULT_FEE: 0.01, // PAC
+  MAX_RPC_ATTEMPTS: 3,
+};
+
 /**
  * Pactus Wallet Implementation
  * Manages cryptographic operations using Trust Wallet Core
@@ -372,82 +388,86 @@ export class Wallet {
     return new Amount(result['account'].balance);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any, consistent-return
-  private async tryFetchJsonRpcResult(method: string, params: any): Promise<any> {
-    const maxAttempts = 1;
-    let attempts = 0;
+  private async tryFetchJsonRpcResult(
+    method: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    params: any,
+    maxAttempts = WALLET_CONFIG.MAX_RPC_ATTEMPTS
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ): Promise<any> {
+    let lastError: Error | null = null;
 
-    while (attempts < maxAttempts) {
+    for (let attempts = 0; attempts < maxAttempts; attempts++) {
       try {
         const client = this.getRandomClient();
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const result = await fetchJsonRpcResult(client, method, params as any);
 
-        return await fetchJsonRpcResult(client, method, params);
+        return result;
       } catch (err) {
-        // TODO:  "Not Found" error? How to handle it
+        lastError = err as Error;
 
-        attempts++;
-        console.error(`Attempt ${attempts} failed:`, err);
-
-        if (attempts === maxAttempts) {
-          throw new Error(`Failed to fetch JSON-RPC result after ${maxAttempts} attempts`);
+        // Exponential backoff
+        if (attempts < maxAttempts - 1) {
+          await new Promise(resolve => setTimeout(resolve, 500 * (attempts + 1)));
         }
       }
     }
+
+    throw new NetworkError(
+      `Failed to fetch JSON-RPC result after ${maxAttempts} attempts: ${lastError?.message}`
+    );
   }
 
+  /**
+   * Send transfer transaction with comprehensive error handling
+   */
   async sendTransfer(
     fromAddress: string,
     toAddress: string,
     amount: Amount,
-    fee: Amount = Amount.fromPac(0.01),
-    memo: string = '',
-    password?: string
+    options: {
+      fee?: Amount;
+      memo?: string;
+      password?: string;
+    } = {}
   ): Promise<{ txHash: string }> {
-    // Validate addresses
-    if (!this.validateAddress(fromAddress) || !this.validateAddress(toAddress)) {
-      throw new Error('Invalid address format');
-    }
+    const { fee = Amount.fromPac(WALLET_CONFIG.DEFAULT_FEE), memo = '', password = '' } = options;
 
-    // Verify sender address belongs to this wallet
+    // Validate sender address
     const addressInfo = await this.getAddressInfo(fromAddress);
 
     if (!addressInfo) {
-      throw new Error('Sender address not found in wallet');
+      throw new Error(`Sender address ${fromAddress} not found in wallet`);
     }
 
-    // Check sender balance
+    // Check balance
     const balance = await this.getAddressBalance(fromAddress);
+    const calculatedFee = fee || (await this.calculateFee(amount));
+    const totalAmount = amount.add(calculatedFee);
 
-    // Fee calculation - either use provided fee or calculate
-    const calculatedFee = fee || (await this.calculateFee(amount, 'transfer'));
-
-    if (balance.lessThan(amount.add(calculatedFee))) {
-      throw new Error('Insufficient balance');
+    if (balance.lessThan(totalAmount)) {
+      throw new Error(
+        `Insufficient balance: ${balance.toPac()} PAC (needed: ${totalAmount.toPac()} PAC)`
+      );
     }
 
-    // Create and sign transaction
+    // Prepare and sign transaction
     const tx: TransferTransaction = {
       sender: fromAddress,
-      recipient: toAddress,
+      receiver: toAddress,
       amount,
       fee: calculatedFee,
       memo,
     };
 
-    const signedTx = await this.signTransaction(tx, password ?? '');
-
-    // Broadcast transaction
+    const signedTx = await this.signTransaction(tx, password);
     const txHash = await this.broadcastTransaction(signedTx);
 
     return { txHash };
   }
 
-  // Helper methods (should be implemented)
-  private validateAddress(address: string): boolean {
-    return /^pc1[a-z0-9]+$/.test(address);
-  }
-
-  private async calculateFee(amount: Amount, _type: string): Promise<Amount> {
+  async calculateFee(amount: Amount): Promise<Amount> {
     const method = 'pactus.transaction.calculate_fee';
     const params = {
       amount: amount.toString(), // Convert to NanoPAC units
@@ -460,22 +480,18 @@ export class Wallet {
     return Amount.fromNanoPac(result.fee);
   }
 
-  private async signTransaction(tx: TransferTransaction, password: string): Promise<string> {
+  async signTransaction(tx: TransferTransaction, password: string): Promise<string> {
     if (!password) {
       throw new Error('Password is required for signing');
     }
 
-    // 1. Verify sender address belongs to this wallet
     const addressInfo = this.getAddressInfo(tx.sender);
 
     if (!addressInfo) {
       throw new Error('Sender address not found in wallet');
     }
 
-    // 2. Get raw unsigned transaction from Pactus node
     const rawTx = await this.getRawTransferTransaction(tx);
-
-    // 3. Sign the raw transaction via Pactus JSON-RPC
     const method = 'pactus.wallet.sign_raw_transaction';
     const params = {
       // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -495,11 +511,11 @@ export class Wallet {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private async getRawTransferTransaction(tx: TransferTransaction): Promise<any> {
+  async getRawTransferTransaction(tx: TransferTransaction): Promise<any> {
     const method = 'pactus.transaction.get_raw_transfer_transaction';
     const params = {
       sender: tx.sender,
-      recipient: tx.recipient,
+      receiver: tx.receiver,
       amount: tx.amount.toString(), // NanoPAC units
       fee: tx.fee.toString(),
       memo: tx.memo,
@@ -521,32 +537,16 @@ export class Wallet {
   }
 
   /**
-   * Returns a weighted random JSON-RPC blockchain client endpoint.
-   *
-   * The selection is based on the response time of each client.
-   * Endpoints with better response times have a higher chance of being selected.
-   *
-   * TODO: Extract the list of endpoints from persistent storage
-   *       (based on the type of wallet: Testnet or Mainnet).
-   *
-   * TODO: Allow users to modify the list of RPC clients (add/remove endpoints).
-   *
-   * TODO: Introduce dynamic weighting based on the response time of each client
-   *       to prefer faster and more reliable endpoints.
-   *
+   * Get a random RPC client endpoint based on network type
    * @private
-   * @returns A randomly selected RPC client endpoint from the available list.
    */
   private getRandomClient(): string {
-    const endpoints = [
-      // 'http://bootstrap1.pactus.org:8545',
-      'https://bootstrap2.pactus.org:8545',
-      // 'http://bootstrap3.pactus.org:8545',
-      // 'http://bootstrap4.pactus.org:8545',
-    ];
+    const endpoints = RPC_ENDPOINTS[this.info.network];
 
-    const randomIndex = Math.floor(Math.random() * endpoints.length);
+    if (!endpoints || endpoints.length === 0) {
+      throw new NetworkError('No RPC endpoints available for the current network');
+    }
 
-    return endpoints[randomIndex];
+    return endpoints[Math.floor(Math.random() * endpoints.length)];
   }
 }
