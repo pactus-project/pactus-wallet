@@ -26,9 +26,11 @@ jobs:
           if [[ "${{ github.ref }}" == refs/tags/* ]]; then
             echo "🔥 Using production environment"
             echo "CNAME=wallet.pactus.org" >> $GITHUB_ENV
+            echo "NEXT_PUBLIC_GA_ID=${{ secrets.NEXT_PUBLIC_GA_PRODUCTION_ID }}" >> $GITHUB_ENV
           else
             echo "🧪 Using staging environment"
             echo "CNAME=wallet-beta.pactus.org" >> $GITHUB_ENV
+            echo "NEXT_PUBLIC_GA_ID=${{ secrets.NEXT_PUBLIC_GA_BETA_ID }}" >> $GITHUB_ENV
           fi
 
       - name: Set up Node.js
