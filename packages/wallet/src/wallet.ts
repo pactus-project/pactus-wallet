@@ -10,7 +10,7 @@ import { IStorage } from './storage/storage';
 import { WalletCore } from '@trustwallet/wallet-core';
 import { HDWallet } from '@trustwallet/wallet-core/dist/src/wallet-core';
 import { Amount } from './types/amount';
-import { TransactionType, TransferTransaction } from './types/transaction';
+import { TransactionDetailsType, TransactionType, TransferTransaction } from './types/transaction';
 
 // Configuration for RPC endpoints
 const RPC_ENDPOINTS = {
@@ -467,7 +467,7 @@ export class Wallet {
     return { txHash };
   }
 
-  async calculateFee(amount: Amount): Promise<Amount> {
+  private async calculateFee(amount: Amount): Promise<Amount> {
     const method = 'pactus.transaction.calculate_fee';
     const params = {
       amount: amount.toString(), // Convert to NanoPAC units
@@ -480,7 +480,7 @@ export class Wallet {
     return Amount.fromNanoPac(result.fee);
   }
 
-  async signTransaction(tx: TransferTransaction, password: string): Promise<string> {
+  private async signTransaction(tx: TransferTransaction, password: string): Promise<string> {
     if (!password) {
       throw new Error('Password is required for signing');
     }
@@ -511,7 +511,7 @@ export class Wallet {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async getRawTransferTransaction(tx: TransferTransaction): Promise<any> {
+  private async getRawTransferTransaction(tx: TransferTransaction): Promise<any> {
     const method = 'pactus.transaction.get_raw_transfer_transaction';
     const params = {
       sender: tx.sender,
@@ -534,6 +534,17 @@ export class Wallet {
     const result = await this.tryFetchJsonRpcResult(method, params);
 
     return result.tx_hash;
+  }
+
+  async getTransaction(txHash: string): Promise<string> {
+    const method = 'pactus.transaction.get_transaction';
+    const params = {
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      tx_hash: txHash,
+      verbosity: TransactionDetailsType.TRANSACTION_DATA,
+    };
+
+    return this.tryFetchJsonRpcResult(method, params);
   }
 
   /**

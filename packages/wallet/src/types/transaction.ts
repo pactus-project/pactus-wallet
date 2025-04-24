@@ -16,3 +16,7 @@ export const TransactionType = {
   UNBOND_PAYLOAD: 4,
   WITHDRAW_PAYLOAD: 5,
 };
+export const TransactionDetailsType = {
+  TRANSACTION_DATA: 0,
+  TRANSACTION_INFO: 1,
+};
