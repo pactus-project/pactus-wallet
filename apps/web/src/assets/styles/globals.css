@@ -2,6 +2,7 @@
 @import './variables.css';
 @import './utilities.css';
 @import './button.css';
+@import './tailwind.css';
 
 /* ========================================
    CSS RESET & BASE STYLES
