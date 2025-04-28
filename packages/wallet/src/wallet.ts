@@ -10,17 +10,18 @@ import { IStorage } from './storage/storage';
 import { WalletCore } from '@trustwallet/wallet-core';
 import { HDWallet } from '@trustwallet/wallet-core/dist/src/wallet-core';
 import { Amount } from './types/amount';
-import { TransactionDetailsType, TransactionType, TransferTransaction } from './types/transaction';
+import {
+  CalculateFee,
+  RawTransferTransaction,
+  TransactionDetailsType,
+  TransactionType,
+  TransferTransaction,
+} from './types/transaction';
 
 // Configuration for RPC endpoints
 const RPC_ENDPOINTS = {
   [NetworkValues.MAINNET]: ['https://bootstrap2.pactus.org:8545'],
-  [NetworkValues.TESTNET]: [
-    'http://testnet1.pactus.org:8545',
-    'http://testnet2.pactus.org:8545',
-    'http://testnet3.pactus.org:8545',
-    'http://testnet4.pactus.org:8545',
-  ],
+  [NetworkValues.TESTNET]: ['https://testnet1.pactus.org/jsonrpc'],
 };
 
 // Wallet configuration constants
@@ -426,14 +427,10 @@ export class Wallet {
     fromAddress: string,
     toAddress: string,
     amount: Amount,
-    options: {
-      fee?: Amount;
-      memo?: string;
-      password?: string;
-    } = {}
+    fee?: Amount,
+    memo?: string,
+    password?: string
   ): Promise<{ txHash: string }> {
-    const { fee = Amount.fromPac(WALLET_CONFIG.DEFAULT_FEE), memo = '', password = '' } = options;
-
     // Validate sender address
     const addressInfo = await this.getAddressInfo(fromAddress);
 
@@ -443,7 +440,8 @@ export class Wallet {
 
     // Check balance
     const balance = await this.getAddressBalance(fromAddress);
-    const calculatedFee = fee || (await this.calculateFee(amount));
+    const feeInfo = await this.calculateFee(amount);
+    const calculatedFee = fee ?? feeInfo.fee;
     const totalAmount = amount.add(calculatedFee);
 
     if (balance.lessThan(totalAmount)) {
@@ -452,88 +450,97 @@ export class Wallet {
       );
     }
 
-    // Prepare and sign transaction
+    // Build raw transaction
     const tx: TransferTransaction = {
       sender: fromAddress,
       receiver: toAddress,
-      amount,
-      fee: calculatedFee,
-      memo,
+      amount: feeInfo.amount,
+      fee: feeInfo.fee,
+      memo: memo ?? '', // Ensure memo is always a string
     };
+    const rawTxHex = await this.getRawTransferTransaction(tx);
 
-    const signedTx = await this.signTransaction(tx, password);
-    const txHash = await this.broadcastTransaction(signedTx);
+    // Sign transaction
+    const { signedRawTxHex } = await this.signTransaction(rawTxHex.raw_transaction, password ?? '');
+
+    // Broadcast transaction
+    const txHash = await this.broadcastTransaction(signedRawTxHex);
 
     return { txHash };
   }
 
-  private async calculateFee(amount: Amount): Promise<Amount> {
+  /**
+   * Calculate transaction fee based on amount
+   */
+  async calculateFee(amount: Amount): Promise<CalculateFee> {
     const method = 'pactus.transaction.calculate_fee';
     const params = {
-      amount: amount.toString(), // Convert to NanoPAC units
+      amount: amount.toString(), // NanoPAC units
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      payload_type: TransactionType.TRANSFER_PAYLOAD, // Hardcoded for transfer transactions
+      payload_type: TransactionType.TRANSFER_PAYLOAD,
     };
-
     const result = await this.tryFetchJsonRpcResult(method, params);
 
-    return Amount.fromNanoPac(result.fee);
-  }
-
-  private async signTransaction(tx: TransferTransaction, password: string): Promise<string> {
-    if (!password) {
-      throw new Error('Password is required for signing');
-    }
-
-    const addressInfo = this.getAddressInfo(tx.sender);
-
-    if (!addressInfo) {
-      throw new Error('Sender address not found in wallet');
-    }
-
-    const rawTx = await this.getRawTransferTransaction(tx);
-    const method = 'pactus.wallet.sign_raw_transaction';
-    const params = {
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      wallet_name: this.info.name,
-      password,
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      raw_transaction: rawTx,
+    return {
+      amount: Amount.fromNanoPac(result.amount),
+      fee: Amount.fromNanoPac(result.fee),
     };
-
-    try {
-      const result = await this.tryFetchJsonRpcResult(method, params);
-
-      return result.signed_transaction;
-    } catch (error) {
-      throw new Error(`Failed to sign transaction: ${(error as Error).message}`);
-    }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private async getRawTransferTransaction(tx: TransferTransaction): Promise<any> {
+  /**
+   * Get raw transfer transaction hex
+   */
+  private async getRawTransferTransaction(
+    tx: TransferTransaction
+  ): Promise<RawTransferTransaction> {
     const method = 'pactus.transaction.get_raw_transfer_transaction';
-    const params = {
-      sender: tx.sender,
-      receiver: tx.receiver,
-      amount: tx.amount.toString(), // NanoPAC units
-      fee: tx.fee.toString(),
-      memo: tx.memo,
-    };
 
-    return this.tryFetchJsonRpcResult(method, params);
+    const result = await this.tryFetchJsonRpcResult(method, tx);
+
+    return {
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      raw_transaction: result.raw_transaction,
+      id: result.id,
+    };
   }
 
-  private async broadcastTransaction(signedTx: string): Promise<string> {
+  /**
+   * Sign the raw transaction
+   */
+  async signTransaction(
+    rawTxHex: string,
+    password: string = ''
+  ): Promise<{ signedRawTxHex: string }> {
+    const rawTxBytes = Buffer.from(rawTxHex, 'hex');
+
+    if (rawTxBytes.length === 0) {
+      throw new Error('Empty transaction buffer');
+    }
+
+    const hdWallet = await this.hdWallet(password);
+    const derivationPath = this.isTestnet() ? "m/44'/21777'/3'/0'" : "m/44'/21888'/3'/0'";
+    const privateKey = hdWallet.getKey(this.core.CoinType.pactus, derivationPath);
+
+    const signatureBytes = privateKey.sign(rawTxBytes, this.core.Curve.ed25519);
+    const publicKeyBytes = privateKey.getPublicKeyEd25519().data();
+
+    const signedTxBytes = Buffer.concat([rawTxBytes, signatureBytes, Buffer.from(publicKeyBytes)]);
+
+    return { signedRawTxHex: signedTxBytes.toString('hex') };
+  }
+
+  /**
+   * Broadcast the signed transaction to the network
+   */
+  async broadcastTransaction(signedRawTxHex: string): Promise<string> {
     const method = 'pactus.transaction.broadcast_transaction';
     const params = {
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      signed_transaction: JSON.parse(signedTx),
+      signed_raw_transaction: signedRawTxHex,
     };
-
     const result = await this.tryFetchJsonRpcResult(method, params);
 
-    return result.tx_hash;
+    return result.id;
   }
 
   async getTransaction(txHash: string): Promise<string> {

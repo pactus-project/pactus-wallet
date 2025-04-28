@@ -20,3 +20,13 @@ export const TransactionDetailsType = {
   TRANSACTION_DATA: 0,
   TRANSACTION_INFO: 1,
 };
+export interface CalculateFee {
+  amount: Amount;
+  fee: Amount;
+}
+
+export interface RawTransferTransaction {
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  raw_transaction: string;
+  id: string;
+}
