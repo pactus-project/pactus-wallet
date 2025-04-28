@@ -1,3 +1,8 @@
+/* Tailwind css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* Import style modules */
 @import './variables.css';
 @import './utilities.css';
@@ -88,7 +93,7 @@ body {
   overflow-x: hidden;
   background: var(--color-background);
   color: var(--color-text-secondary);
-  
+
   /* Prevent layout shifts */
   min-height: 100vh;
 }
@@ -125,6 +130,7 @@ code {
 
 /* Respect user preference for reduced motion */
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {

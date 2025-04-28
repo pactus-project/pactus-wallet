@@ -137,8 +137,36 @@ module.exports = {
       },
       border: {
         primary: '1px solid primary',
-      }
+      },
     },
   },
+  safelist: [
+    // Colors
+    {
+      pattern:
+        /(bg|text|border|divide|ring|stroke|fill)-(primary|primary-dark|primary-light|background|surface|surface-light|surface-medium|text-primary|text-secondary|text-tertiary|text-disabled|error|error-light|success|success-light|warning|info|border|border-light|divider)/,
+    },
+    // Font Sizes
+    {
+      pattern: /text-(xs|sm|base|md|lg|xl|2xl|3xl|4xl|5xl)/,
+    },
+    // Spacings
+    {
+      pattern: /(p|pt|pb|pl|pr|px|py|m|mt|mb|ml|mr|mx|my)-(xs|sm|md|lg|xl|2xl|3xl)/,
+    },
+    // Border Radius
+    {
+      pattern: /rounded-(sm|md|lg|xl|pill|circle)/,
+    },
+    // Shadows
+    {
+      pattern: /shadow-(sm|md|lg|button|inset)/,
+    },
+    // Z-Index
+    {
+      pattern: /z-(dropdown|sticky|fixed|modal-backdrop|modal|popover|tooltip)/,
+    },
+    // Others nếu cần thêm
+  ],
   plugins: [TailwindTyporaphy],
 };
