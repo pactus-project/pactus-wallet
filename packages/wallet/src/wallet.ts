@@ -461,7 +461,11 @@ export class Wallet {
     const rawTxHex = await this.getRawTransferTransaction(tx);
 
     // Sign transaction
-    const { signedRawTxHex } = await this.signTransaction(rawTxHex.raw_transaction, password ?? '');
+    const { signedRawTxHex } = await this.signTransaction(
+      rawTxHex.raw_transaction,
+      addressInfo.path,
+      password ?? ''
+    );
 
     // Broadcast transaction
     const txHash = await this.broadcastTransaction(signedRawTxHex);
@@ -509,6 +513,7 @@ export class Wallet {
    */
   async signTransaction(
     rawTxHex: string,
+    addressPath: string = '',
     password: string = ''
   ): Promise<{ signedRawTxHex: string }> {
     const rawTxBytes = Buffer.from(rawTxHex, 'hex');
@@ -518,7 +523,7 @@ export class Wallet {
     }
 
     const hdWallet = await this.hdWallet(password);
-    const derivationPath = this.isTestnet() ? "m/44'/21777'/3'/0'" : "m/44'/21888'/3'/0'";
+    const derivationPath = addressPath;
     const privateKey = hdWallet.getKey(this.core.CoinType.pactus, derivationPath);
 
     const signatureBytes = privateKey.sign(rawTxBytes, this.core.Curve.ed25519);
