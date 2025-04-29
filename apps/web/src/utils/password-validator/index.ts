@@ -1,13 +1,13 @@
-export const validatePassword = (password: string): boolean => {
-    // Core validation rules
-    const rules = {
-        minLength: password.length >= 8,
-        hasUpperCase: /[A-Z]/.test(password),
-        hasLowerCase: /[a-z]/.test(password),
-        hasNumber: /\d/.test(password),
-        hasSpecialChar: /[~!@#$%^&*()_\-+=]/.test(password)
-    };
+import { getPasswordValidationDetails } from '../password-utils';
 
-    // All rules must pass
-    return Object.values(rules).every(rule => rule === true);
-}
+/**
+ * Validates if a password meets all security requirements
+ * @param password - The password to validate
+ * @returns True if the password meets all requirements
+ */
+export const validatePassword = (password: string): boolean => {
+  const validationDetails = getPasswordValidationDetails(password);
+
+  // All rules must pass
+  return Object.values(validationDetails).every(rule => rule === true);
+};
