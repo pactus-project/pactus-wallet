@@ -384,9 +384,19 @@ export class Wallet {
     // https://docs.pactus.org/api/json-rpc/#pactusblockchainget_account-span-idpactusblockchainget_account-classrpc-badgespan
     const method = 'pactus.blockchain.get_account';
     const params = { address };
-    const result = await this.tryFetchJsonRpcResult(method, params);
 
-    return new Amount(result['account'].balance);
+    try {
+      const result = await this.tryFetchJsonRpcResult(method, params);
+
+      return new Amount(result['account'].balance);
+    } catch (error) {
+      // If the account is not found, it means the balance is zero
+      if (error instanceof NetworkError && error.message.includes('Not Found')) {
+        return Amount.zero();
+      }
+
+      throw error;
+    }
   }
 
   private async tryFetchJsonRpcResult(
@@ -446,7 +456,7 @@ export class Wallet {
 
     if (balance.lessThan(totalAmount)) {
       throw new Error(
-        `Insufficient balance: ${balance.toPac()} PAC (needed: ${totalAmount.toPac()} PAC)`
+        `Insufficient balance: ${balance.formatIncludeUnit()} (needed: ${totalAmount.formatIncludeUnit()})`
       );
     }
 
@@ -526,7 +536,7 @@ export class Wallet {
     const derivationPath = addressPath;
     const privateKey = hdWallet.getKey(this.core.CoinType.pactus, derivationPath);
 
-    const signatureBytes = privateKey.sign(rawTxBytes, this.core.Curve.ed25519);
+    const signatureBytes = privateKey.sign(Uint8Array.from(rawTxBytes), this.core.Curve.ed25519);
     const publicKeyBytes = privateKey.getPublicKeyEd25519().data();
 
     const signedTxBytes = Buffer.concat([rawTxBytes, signatureBytes, Buffer.from(publicKeyBytes)]);
