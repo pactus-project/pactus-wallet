@@ -11,10 +11,8 @@ import { WalletCore } from '@trustwallet/wallet-core';
 import { HDWallet } from '@trustwallet/wallet-core/dist/src/wallet-core';
 import { Amount } from './types/amount';
 import {
-  CalculateFee,
   RawTransferTransaction,
   TransactionDetailsType,
-  TransactionType,
   TransferTransaction,
 } from './types/transaction';
 
@@ -26,7 +24,7 @@ const RPC_ENDPOINTS = {
 
 // Wallet configuration constants
 const WALLET_CONFIG = {
-  DEFAULT_FEE: 0.01, // PAC
+  DEFAULT_FEE: 0.01, // PAC - Fixed fee as requested
   MAX_RPC_ATTEMPTS: 3,
 };
 
@@ -450,8 +448,9 @@ export class Wallet {
 
     // Check balance
     const balance = await this.getAddressBalance(fromAddress);
-    const feeInfo = await this.calculateFee(amount);
-    const calculatedFee = fee ?? feeInfo.fee;
+
+    const fixedFee = Amount.fromPac(WALLET_CONFIG.DEFAULT_FEE);
+    const calculatedFee = fee ?? fixedFee;
     const totalAmount = amount.add(calculatedFee);
 
     if (balance.lessThan(totalAmount)) {
@@ -464,8 +463,8 @@ export class Wallet {
     const tx: TransferTransaction = {
       sender: fromAddress,
       receiver: toAddress,
-      amount: feeInfo.amount,
-      fee: feeInfo.fee,
+      amount,
+      fee: calculatedFee,
       memo: memo ?? '', // Ensure memo is always a string
     };
     const rawTxHex = await this.getRawTransferTransaction(tx);
@@ -481,24 +480,6 @@ export class Wallet {
     const txHash = await this.broadcastTransaction(signedRawTxHex);
 
     return { txHash };
-  }
-
-  /**
-   * Calculate transaction fee based on amount
-   */
-  async calculateFee(amount: Amount): Promise<CalculateFee> {
-    const method = 'pactus.transaction.calculate_fee';
-    const params = {
-      amount: amount.toString(), // NanoPAC units
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      payload_type: TransactionType.TRANSFER_PAYLOAD,
-    };
-    const result = await this.tryFetchJsonRpcResult(method, params);
-
-    return {
-      amount: Amount.fromNanoPac(result.amount),
-      fee: Amount.fromNanoPac(result.fee),
-    };
   }
 
   /**
