@@ -4,7 +4,7 @@ import React from 'react';
 import '../assets/styles/globals.css';
 
 const meta: Meta = {
-  title: 'Design System/Tailwind Theme',
+  title: 'Design System/Theme Tokens',
   tags: ['autodocs'],
 };
 

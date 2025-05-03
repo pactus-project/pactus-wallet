@@ -2,10 +2,10 @@ import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta = {
-    title: 'Design Tokens/Text & Utility',
-    parameters: {
-        layout: 'centered',
-    },
+  title: 'Design System/Utility Classes',
+  parameters: {
+    layout: 'centered',
+  },
 };
 
 export default meta;

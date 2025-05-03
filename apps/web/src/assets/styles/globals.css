@@ -1,8 +1,8 @@
 /* Import style modules */
+@import './tailwind.css';
 @import './variables.css';
 @import './utilities.css';
 @import './button.css';
-@import './tailwind.css';
 
 /* ========================================
    CSS RESET & BASE STYLES
@@ -125,7 +125,6 @@ code {
 
 /* Respect user preference for reduced motion */
 @media (prefers-reduced-motion: reduce) {
-
   *,
   *::before,
   *::after {

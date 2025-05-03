@@ -4,7 +4,7 @@ import Modal, { ModalProps } from '@/components/modal';
 import { useState } from 'react';
 
 const meta: Meta<typeof Modal> = {
-  title: 'Components/Modal',
+  title: 'Design System/Components/Modal',
   component: Modal,
   tags: ['autodocs'],
 };
@@ -27,7 +27,7 @@ const ModalStoryWrapper = (args: ModalProps) => {
 };
 
 export const Default: Story = {
-  render: (args) => <ModalStoryWrapper {...args} />,
+  render: args => <ModalStoryWrapper {...args} />,
   args: {
     title: 'Default Modal',
     showCloseButton: true,
@@ -35,7 +35,7 @@ export const Default: Story = {
 };
 
 export const WithoutCloseButton: Story = {
-  render: (args) => <ModalStoryWrapper {...args} />,
+  render: args => <ModalStoryWrapper {...args} />,
   args: {
     title: 'No Close Button Modal',
     showCloseButton: false,
