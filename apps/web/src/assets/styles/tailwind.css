@@ -1,0 +1,54 @@
+/* Tailwind css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.errorMessage {
+    @apply text-error text-xs mt-xs;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+.text-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.text-gradient {
+    @apply bg-gradient-primary bg-clip-text text-transparent;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/*========================================TEXT COMPONENTS ========================================*/
+.text-heading {
+    @apply text-5xl font-semibold text-text-primary leading-tight mb-md tracking-[-0.02em];
+}
+
+.text-title {
+    @apply text-xl font-semibold text-text-secondary leading-normal mb-sm tracking-[-0.01em];
+}
+
+.text-body {
+    @apply text-md font-regular text-text-secondary leading-normal mb-sm;
+}
+
+/*========================================BORDERS ========================================*/
+.border-base {
+    @apply border border-border;
+}
+
+.border-light {
+    @apply border border-border-light;
+}

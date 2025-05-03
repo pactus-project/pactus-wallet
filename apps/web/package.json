@@ -63,10 +63,10 @@
         "postcss": "^8.5.3",
         "prettier": "^3.2.5",
         "storybook": "8.6.12",
+        "tailwindcss": "^3.4.1",
         "ts-jest": "^29.2.6",
         "typescript": "~5.5.3",
         "typescript-eslint": "^8.29.1",
-        "vitest": "^3.0.2",
-        "tailwindcss": "^3.4.1"
+        "vitest": "^3.0.2"
     }
 }
