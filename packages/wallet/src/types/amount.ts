@@ -52,7 +52,21 @@ export class Amount {
    * @returns Formatted PAC amount string
    */
   format(decimals: number = 9): string {
-    return this.toPac().toFixed(decimals);
+    const formatted = this.toPac().toFixed(decimals);
+
+    return formatted;
+  }
+
+  /**
+   * Format amount for display with proper decimal places
+   * @param decimals Number of decimal places to display (default: 9)
+   * @param includeUnit Whether to include the PAC unit in the output (default: false)
+   * @returns Formatted PAC amount string
+   */
+  formatIncludeUnit(decimals: number = 9): string {
+    const formatted = this.toPac().toFixed(decimals);
+
+    return `${formatted} PAC`;
   }
 
   /**
