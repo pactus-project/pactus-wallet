@@ -61,3 +61,5 @@ package-lock.json
 # yarn.lock
 
 *.tsbuildinfo
+
+*storybook.log
