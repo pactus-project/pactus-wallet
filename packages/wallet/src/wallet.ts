@@ -1,6 +1,6 @@
 import * as bip39 from 'bip39';
 import { Encrypter } from './encrypter/encrypter';
-import { MnemonicError, StorageError } from './error';
+import { MnemonicError, StorageError, NetworkError } from './error';
 import { StorageKey } from './storage-key';
 import { AddressInfo, Ledger, Purposes } from './types/ledger';
 import { KeyStore, MnemonicStrength, MnemonicValues, Vault } from './types/vault';
@@ -10,8 +10,24 @@ import { IStorage } from './storage/storage';
 import { WalletCore } from '@trustwallet/wallet-core';
 import { HDWallet } from '@trustwallet/wallet-core/dist/src/wallet-core';
 import { Amount } from './types/amount';
+import {
+  RawTransferTransaction,
+  TransactionDetailsType,
+  TransferTransaction,
+} from './types/transaction';
 
-// Import directly from the generated file
+// Configuration for RPC endpoints
+const RPC_ENDPOINTS = {
+  [NetworkValues.MAINNET]: ['https://bootstrap2.pactus.org:8545'],
+  [NetworkValues.TESTNET]: ['https://testnet1.pactus.org/jsonrpc'],
+};
+
+// Wallet configuration constants
+const WALLET_CONFIG = {
+  DEFAULT_FEE: 0.01, // PAC - Fixed fee as requested
+  MAX_RPC_ATTEMPTS: 3,
+};
+
 /**
  * Pactus Wallet Implementation
  * Manages cryptographic operations using Trust Wallet Core
@@ -366,61 +382,185 @@ export class Wallet {
     // https://docs.pactus.org/api/json-rpc/#pactusblockchainget_account-span-idpactusblockchainget_account-classrpc-badgespan
     const method = 'pactus.blockchain.get_account';
     const params = { address };
-    const result = await this.tryFetchJsonRpcResult(method, params);
 
-    return new Amount(result['account'].balance);
-  }
+    try {
+      const result = await this.tryFetchJsonRpcResult(method, params);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any, consistent-return
-  private async tryFetchJsonRpcResult(method: string, params: any): Promise<any> {
-    const maxAttempts = 1;
-    let attempts = 0;
-
-    while (attempts < maxAttempts) {
-      try {
-        const client = this.getRandomClient();
-
-        return await fetchJsonRpcResult(client, method, params);
-      } catch (err) {
-        // TODO:  "Not Found" error? How to handle it
-
-        attempts++;
-        console.error(`Attempt ${attempts} failed:`, err);
-
-        if (attempts === maxAttempts) {
-          throw new Error(`Failed to fetch JSON-RPC result after ${maxAttempts} attempts`);
-        }
+      return new Amount(result['account'].balance);
+    } catch (error) {
+      // If the account is not found, it means the balance is zero
+      if (error instanceof NetworkError && error.message.includes('Not Found')) {
+        return Amount.zero();
       }
+
+      throw error;
     }
   }
 
+  private async tryFetchJsonRpcResult(
+    method: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    params: any,
+    maxAttempts = WALLET_CONFIG.MAX_RPC_ATTEMPTS
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ): Promise<any> {
+    let lastError: Error | null = null;
+
+    for (let attempts = 0; attempts < maxAttempts; attempts++) {
+      try {
+        const client = this.getRandomClient();
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const result = await fetchJsonRpcResult(client, method, params as any);
+
+        return result;
+      } catch (err) {
+        lastError = err as Error;
+
+        // Exponential backoff
+        if (attempts < maxAttempts - 1) {
+          await new Promise(resolve => setTimeout(resolve, 500 * (attempts + 1)));
+        }
+      }
+    }
+
+    throw new NetworkError(
+      `Failed to fetch JSON-RPC result after ${maxAttempts} attempts: ${lastError?.message}`
+    );
+  }
+
   /**
-   * Returns a weighted random JSON-RPC blockchain client endpoint.
-   *
-   * The selection is based on the response time of each client.
-   * Endpoints with better response times have a higher chance of being selected.
-   *
-   * TODO: Extract the list of endpoints from persistent storage
-   *       (based on the type of wallet: Testnet or Mainnet).
-   *
-   * TODO: Allow users to modify the list of RPC clients (add/remove endpoints).
-   *
-   * TODO: Introduce dynamic weighting based on the response time of each client
-   *       to prefer faster and more reliable endpoints.
-   *
+   * Send transfer transaction with comprehensive error handling
+   */
+  async sendTransfer(
+    fromAddress: string,
+    toAddress: string,
+    amount: Amount,
+    fee?: Amount,
+    memo?: string,
+    password?: string
+  ): Promise<{ txHash: string }> {
+    // Validate sender address
+    const addressInfo = await this.getAddressInfo(fromAddress);
+
+    if (!addressInfo) {
+      throw new Error(`Sender address ${fromAddress} not found in wallet`);
+    }
+
+    // Check balance
+    const balance = await this.getAddressBalance(fromAddress);
+
+    const fixedFee = Amount.fromPac(WALLET_CONFIG.DEFAULT_FEE);
+    const calculatedFee = fee ?? fixedFee;
+    const totalAmount = amount.add(calculatedFee);
+
+    if (balance.lessThan(totalAmount)) {
+      throw new Error(
+        `Insufficient balance: ${balance.formatIncludeUnit()} (needed: ${totalAmount.formatIncludeUnit()})`
+      );
+    }
+
+    // Build raw transaction
+    const tx: TransferTransaction = {
+      sender: fromAddress,
+      receiver: toAddress,
+      amount,
+      fee: calculatedFee,
+      memo: memo ?? '', // Ensure memo is always a string
+    };
+    const rawTxHex = await this.getRawTransferTransaction(tx);
+
+    // Sign transaction
+    const { signedRawTxHex } = await this.signTransaction(
+      rawTxHex.raw_transaction,
+      addressInfo.path,
+      password ?? ''
+    );
+
+    // Broadcast transaction
+    const txHash = await this.broadcastTransaction(signedRawTxHex);
+
+    return { txHash };
+  }
+
+  /**
+   * Get raw transfer transaction hex
+   */
+  private async getRawTransferTransaction(
+    tx: TransferTransaction
+  ): Promise<RawTransferTransaction> {
+    const method = 'pactus.transaction.get_raw_transfer_transaction';
+
+    const result = await this.tryFetchJsonRpcResult(method, tx);
+
+    return {
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      raw_transaction: result.raw_transaction,
+      id: result.id,
+    };
+  }
+
+  /**
+   * Sign the raw transaction
+   */
+  async signTransaction(
+    rawTxHex: string,
+    addressPath: string = '',
+    password: string = ''
+  ): Promise<{ signedRawTxHex: string }> {
+    const rawTxBytes = Buffer.from(rawTxHex, 'hex');
+
+    if (rawTxBytes.length === 0) {
+      throw new Error('Empty transaction buffer');
+    }
+
+    const hdWallet = await this.hdWallet(password);
+    const derivationPath = addressPath;
+    const privateKey = hdWallet.getKey(this.core.CoinType.pactus, derivationPath);
+
+    const signatureBytes = privateKey.sign(Uint8Array.from(rawTxBytes), this.core.Curve.ed25519);
+    const publicKeyBytes = privateKey.getPublicKeyEd25519().data();
+
+    const signedTxBytes = Buffer.concat([rawTxBytes, signatureBytes, Buffer.from(publicKeyBytes)]);
+
+    return { signedRawTxHex: signedTxBytes.toString('hex') };
+  }
+
+  /**
+   * Broadcast the signed transaction to the network
+   */
+  async broadcastTransaction(signedRawTxHex: string): Promise<string> {
+    const method = 'pactus.transaction.broadcast_transaction';
+    const params = {
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      signed_raw_transaction: signedRawTxHex,
+    };
+    const result = await this.tryFetchJsonRpcResult(method, params);
+
+    return result.id;
+  }
+
+  async getTransaction(txHash: string): Promise<string> {
+    const method = 'pactus.transaction.get_transaction';
+    const params = {
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      tx_hash: txHash,
+      verbosity: TransactionDetailsType.TRANSACTION_DATA,
+    };
+
+    return this.tryFetchJsonRpcResult(method, params);
+  }
+
+  /**
+   * Get a random RPC client endpoint based on network type
    * @private
-   * @returns A randomly selected RPC client endpoint from the available list.
    */
   private getRandomClient(): string {
-    const endpoints = [
-      // 'http://bootstrap1.pactus.org:8545',
-      'https://bootstrap2.pactus.org:8545',
-      // 'http://bootstrap3.pactus.org:8545',
-      // 'http://bootstrap4.pactus.org:8545',
-    ];
+    const endpoints = RPC_ENDPOINTS[this.info.network];
 
-    const randomIndex = Math.floor(Math.random() * endpoints.length);
+    if (!endpoints || endpoints.length === 0) {
+      throw new NetworkError('No RPC endpoints available for the current network');
+    }
 
-    return endpoints[randomIndex];
+    return endpoints[Math.floor(Math.random() * endpoints.length)];
   }
 }
