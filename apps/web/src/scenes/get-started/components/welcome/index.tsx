@@ -3,10 +3,10 @@ import Image from 'next/image';
 import React, { useState } from 'react';
 import ThreeDMotion from '../3d-motion';
 import { openSourceIcon, secureIcon, simpleIcon } from '@/assets';
-import './style.css';
 import { useRouter } from 'next/navigation';
 import { useI18n } from '@/utils/i18n';
 import useSizeDetector from '@/utils/size-detector';
+
 const Welcome = () => {
   const navigate = useRouter().push;
   const [isChecked, setIsChecked] = useState(false);
@@ -20,7 +20,7 @@ const Welcome = () => {
         <>
           {t('openSourceDescription')}{' '}
           <a
-            className="welcome__link"
+            className="bg-gradient-primary bg-clip-text text-transparent transition-opacity duration-fast [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 focus-visible:opacity-80 [@media(prefers-reduced-motion:reduce)]:transition-none"
             href="https://github.com/pactus-project/pactus-wallet"
             target="_blank"
             rel="noopener noreferrer"
@@ -47,57 +47,57 @@ const Welcome = () => {
   const handleCheckboxToggle = () => setIsChecked(!isChecked);
   const { isMobile, isTablet } = useSizeDetector();
   return (
-    <section className="welcome">
-      <div className="welcome__header">
-        <h1 className="text-heading welcome__title">
+    <section className="flex flex-col w-full max-w-[1000px] mx-auto gap-xl">
+      <div className="w-full">
+        <h1 className="text-heading tablet:!text-5xl font-semibold text-text-primary leading-tight mobile:!text-xl !text-2xl">
           {t('welcomeTo')}&nbsp;
-          <span className="text-gradient font-semibold">{t('pactusWallet')}</span>
+          <span className="text-gradient font-semibold [text-wrap:nowrap]">{t('pactusWallet')}</span>
         </h1>
       </div>
 
-      <div className="welcome__content">
-        <div className="welcome__features">
+      <div className="flex justify-between items-center w-full gap-xl">
+        <div className="flex flex-col max-w-[600px] gap-md">
           {features.map((feature, index) => (
-            <div className="welcome__feature" key={`feature-${index}`}>
+            <div className="flex items-start gap-md" key={`feature-${index}`}>
               <Image
                 src={feature.icon}
                 alt=""
-                className="welcome__feature-icon"
+                className="w-[32px] h-[32px] shrink-0"
                 aria-hidden="true"
                 width={32}
                 height={32}
               />
-              <div className="welcome__feature-content">
-                <h3 className="welcome__feature-title">{feature.title}</h3>
-                <p className="welcome__feature-description">{feature.description}</p>
+              <div className="flex flex-col gap-xs">
+                <h3 className="text-text-primary tablet:!text-xl font-medium !leading-tight text-lg">{feature.title}</h3>
+                <p className="text-text-secondary mobile:!text-md font-regular !leading-loose text-sm">{feature.description}</p>
               </div>
             </div>
           ))}
         </div>
         {!isMobile && !isTablet ? (
-          <div className="welcome__visualization">
+          <div className="shrink-0 w-[40%]">
             <ThreeDMotion />
           </div>
         ) : null}
       </div>
 
-      <div className="welcome__footer">
-        <div className="welcome__terms">
+      <div className="flex flex-col w-full gap-md mt-lg">
+        <div className="flex items-center gap-sm">
           <input
             type="checkbox"
             id="terms-checkbox"
-            className="welcome__checkbox"
+            className="w-[16px] h-[16px] cursor-pointer [accent-color:theme('colors.primary')]"
             checked={isChecked}
             onChange={handleCheckboxToggle}
             aria-labelledby="terms-text"
           />
-          <label id="terms-text" htmlFor="terms-checkbox" className="welcome__terms-text">
+          <label id="terms-text" htmlFor="terms-checkbox" className="text-text-secondary text-sm font-regular leading-normal cursor-pointer select-none [text-wrap:nowrap]">
             {t('iHaveReadAndAgreed')}{' '}
-            <span className="welcome__terms-highlight">{t('termsAndConditions')}</span>.
+            <span className="bg-gradient-primary bg-clip-text text-transparent [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">{t('termsAndConditions')}</span>.
           </label>
         </div>
         <button
-          className="btn btn-primary welcome__cta-button"
+          className="btn btn-primary tablet:w-auto tablet:max-w-[600px] mt-xs tablet:h-button-desktop w-full max-w-full h-button-mobile"
           onClick={() => navigate('/get-started?step=add-wallet')}
           disabled={!isChecked}
           aria-disabled={!isChecked}
