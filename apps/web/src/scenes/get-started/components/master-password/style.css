@@ -1,198 +1,188 @@
 .master-password {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--spacing-md);
-    width: 100%;
-    max-width: 800px;
-    margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-md);
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
 .master-password__animation {
-    height: 250px;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: var(--spacing-xs);
+  height: 250px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: var(--spacing-xs);
 }
 
 .master-password__title {
-    color: var(--color-text-primary);
-    font-size: var(--font-size-5xl);
-    font-weight: var(--font-weight-semibold);
-    line-height: var(--line-height-tight);
-    text-align: center;
-    margin-bottom: var(--spacing-xs);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-5xl);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
+  text-align: center;
+  margin-bottom: var(--spacing-xs);
 }
 
 .master-password__description {
-    color: var(--color-text-secondary);
-    font-size: var(--font-size-md);
-    font-weight: var(--font-weight-regular);
-    line-height: var(--line-height-loose);
-    text-align: center;
-    max-width: 800px;
-    margin-bottom: var(--spacing-md);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-loose);
+  text-align: center;
+  max-width: 800px;
+  margin-bottom: var(--spacing-md);
 }
 
 .master-password__form {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-lg);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
 }
 
 .master-password__input-group {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-xs);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
 }
 
 .master-password__input-container {
-    position: relative;
-    width: 100%;
+  position: relative;
+  width: 100%;
 }
 
 .master-password__input {
-    width: 100%;
-    border-radius: var(--radius-md);
-    background: var(--color-surface-medium);
-    border: 1px solid transparent;
-    outline: none;
-    padding: var(--spacing-md) var(--spacing-xl) var(--spacing-md) var(--spacing-md);
-    color: var(--color-text-secondary);
-    font-size: var(--font-size-md);
-    font-weight: var(--font-weight-regular);
-    line-height: var(--line-height-normal);
-    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  width: 100%;
+  border-radius: var(--radius-md);
+  background: var(--color-surface-medium);
+  border: 1px solid transparent;
+  outline: none;
+  padding: var(--spacing-md) var(--spacing-xl) var(--spacing-md) var(--spacing-md);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-normal);
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
 }
 
 .master-password__input:focus {
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 1px var(--color-primary);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 1px var(--color-primary);
 }
 
 .master-password__input--error {
-    border-color: var(--color-error);
+  border-color: var(--color-error);
 }
 
 .master-password__input--error:focus {
-    border-color: var(--color-error);
-    box-shadow: 0 0 0 1px var(--color-error);
+  border-color: var(--color-error);
+  box-shadow: 0 0 0 1px var(--color-error);
 }
 
 .master-password__toggle-button {
-    position: absolute;
-    right: var(--spacing-sm);
-    top: 50%;
-    transform: translateY(-50%);
-    background: transparent;
-    border: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    z-index: 1;
-    padding: var(--spacing-xs);
-    border-radius: var(--radius-circle);
-    transition: background-color var(--transition-fast);
+  position: absolute;
+  right: var(--spacing-sm);
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 1;
+  padding: var(--spacing-xs);
+  border-radius: var(--radius-circle);
+  transition: background-color var(--transition-fast);
 }
 
 .master-password__toggle-button:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .master-password__toggle-button:focus-visible {
-    outline: 2px solid var(--color-primary);
-    outline-offset: 2px;
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
 }
 
 .master-password__error {
-    color: var(--color-error);
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-regular);
-    margin-top: var(--spacing-xs);
+  color: var(--color-error);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-regular);
+  margin-top: var(--spacing-xs);
 }
 
 .master-password__terms {
-    display: flex;
-    width: 100%;
-    margin-top: var(--spacing-sm);
+  display: flex;
+  width: 100%;
+  margin-top: var(--spacing-sm);
 }
 
 .master-password__checkbox-container {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-xs);
-    cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  cursor: pointer;
 }
 
 .master-password__checkbox {
-    margin-top: calc(var(--line-height-loose) * 0.5 - 7px);
+  margin-top: calc(var(--line-height-loose) * 0.5 - 7px);
 }
 
 .master-password__terms-text {
-    color: var(--color-text-primary);
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-regular);
-    line-height: var(--line-height-loose);
-    user-select: none;
-    text-wrap: nowrap;
-    cursor: pointer;
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-loose);
+  user-select: none;
+  text-wrap: nowrap;
+  cursor: pointer;
 }
 
 .master-password__learn-more {
-    background: var(--gradient-primary);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin-left: var(--spacing-xs);
-    font-weight: var(--font-weight-medium);
-}
-
-.master-password__submit {
-    width: 100%;
-    padding: var(--spacing-sm) 0;
-    margin-top: var(--spacing-md);
-    height: var(--button-primary-height-desktop);
+  background: var(--gradient-primary);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-left: var(--spacing-xs);
+  font-weight: var(--font-weight-medium);
 }
 
 /* Responsive adjustments */
-@media (max-width:768px) {
-    .master-password__title {
-        font-size: var(--font-size-4xl);
-    }
-    
-    .master-password__animation {
-        height: 200px;
-    }
-    
-    .master-password__submit {
-        height: var(--button-primary-height-mobile);
-    }
+@media (max-width: 768px) {
+  .master-password__title {
+    font-size: var(--font-size-4xl);
+  }
+
+  .master-password__animation {
+    height: 200px;
+  }
 }
 
 @media (max-width: 480px) {
-    .master-password__title {
-        font-size: var(--font-size-3xl);
-    }
-    
-    .master-password__description {
-        font-size: var(--font-size-sm);
-    }
-    
-    .master-password__animation {
-        height: 180px;
-    }
+  .master-password__title {
+    font-size: var(--font-size-3xl);
+  }
+
+  .master-password__description {
+    font-size: var(--font-size-sm);
+  }
+
+  .master-password__animation {
+    height: 180px;
+  }
 }
 
 /* Support for reduced motion preferences */
 @media (prefers-reduced-motion: reduce) {
-    .master-password__input,
-    .master-password__toggle-button {
-        transition: none;
-    }
+  .master-password__input,
+  .master-password__toggle-button {
+    transition: none;
+  }
 }
-

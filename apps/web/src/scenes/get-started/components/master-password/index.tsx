@@ -8,6 +8,8 @@ import { useAccount, useRestoreWallet, useWallet } from '@/wallet';
 import { useI18n } from '@/utils/i18n';
 import Lottie from '@/components/lottie-player';
 import { useRouter } from 'next/navigation';
+import Button from '@/components/Button';
+
 const MasterPassword = () => {
   const [showPassword, setShowPassword] = useState<{ [key: string]: boolean }>({
     password: false,
@@ -21,8 +23,7 @@ const MasterPassword = () => {
     confirm: '',
   });
   const [isChecked, setIsChecked] = useState(false);
-  const { setPassword: setMasterPassword } = useWallet();
-  const { setWalletName } = useWallet();
+  const { setWalletName, setPassword: setWalletPassword } = useWallet();
   const { restoreWallet, restorationError } = useRestoreWallet();
   const [isLoading, setIsLoading] = useState(false);
   const { createAddress } = useAccount();
@@ -70,7 +71,12 @@ const MasterPassword = () => {
   const handleCreateWallet = async () => {
     try {
       setIsLoading(true);
-      const wallet = await restoreWallet();
+
+      // Update the password in the wallet context before restoring
+      setWalletPassword(password);
+
+      // Now call restoreWallet with the password as an explicit parameter
+      const wallet = await restoreWallet(undefined, password);
 
       if (wallet) {
         await createAddress(t('account1'), password, wallet);
@@ -84,12 +90,11 @@ const MasterPassword = () => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isFormValid) return;
 
-    setMasterPassword(password);
-    setWalletName(defaultWalletName);
+    await setWalletName(defaultWalletName);
     handleCreateWallet();
   };
 
@@ -186,12 +191,6 @@ const MasterPassword = () => {
             </p>
           )}
         </div>
-        {restorationError && (
-          <p className="master-password__error" role="alert">
-            {restorationError}
-          </p>
-        )}
-
         <div className="master-password__terms">
           <div className="master-password__checkbox-container">
             <input
@@ -207,17 +206,23 @@ const MasterPassword = () => {
             </label>
           </div>
         </div>
+        {restorationError && (
+          <p className="master-password__error" role="alert">
+            {restorationError}
+          </p>
+        )}
 
-        <button
-          type="button"
-          className="btn btn-primary master-password__submit"
+        <Button
+          variant="primary"
+          fullWidth
+          className="mt-4"
           disabled={!isFormValid}
           onClick={handleSubmit}
-          aria-disabled={!isFormValid}
-          aria-busy={isLoading}
+          isLoading={isLoading}
+          type="button"
         >
           {t('continue')}
-        </button>
+        </Button>
       </form>
     </section>
   );
