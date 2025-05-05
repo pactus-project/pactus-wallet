@@ -26,7 +26,8 @@
         "react-lottie-player": "^2.1.0",
         "react-qr-code": "^2.0.15",
         "sharp": "^0.33.5",
-        "clsx": "^2.1.1"
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^2.5.3"
     },
     "devDependencies": {
         "@chromatic-com/storybook": "3",

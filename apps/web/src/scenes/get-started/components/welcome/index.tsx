@@ -49,9 +49,9 @@ const Welcome = () => {
   return (
     <section className="flex flex-col w-full max-w-[1000px] mx-auto gap-xl">
       <div className="w-full">
-        <h1 className="text-heading tablet:!text-5xl font-semibold text-text-primary leading-tight mobile:!text-xl !text-2xl">
+        <h1 className="text-heading tablet:!text-4xl !font-normal text-text-primary leading-tight !text-3xl">
           {t('welcomeTo')}&nbsp;
-          <span className="text-gradient font-semibold [text-wrap:nowrap]">{t('pactusWallet')}</span>
+          <span className="block text-gradient !font-semibold [text-wrap:nowrap] text-[40px] tablet:text-[51px]">{t('pactusWallet')}</span>
         </h1>
       </div>
 
@@ -69,13 +69,13 @@ const Welcome = () => {
               />
               <div className="flex flex-col gap-xs">
                 <h3 className="text-text-primary tablet:!text-xl font-medium !leading-tight text-lg">{feature.title}</h3>
-                <p className="text-text-secondary mobile:!text-md font-regular !leading-loose text-sm">{feature.description}</p>
+                <p className="text-text-secondary tablet:!text-md font-regular !leading-loose text-xs">{feature.description}</p>
               </div>
             </div>
           ))}
         </div>
         {!isMobile && !isTablet ? (
-          <div className="shrink-0 w-[40%]">
+          <div className="shrink-0">
             <ThreeDMotion />
           </div>
         ) : null}
@@ -91,13 +91,13 @@ const Welcome = () => {
             onChange={handleCheckboxToggle}
             aria-labelledby="terms-text"
           />
-          <label id="terms-text" htmlFor="terms-checkbox" className="text-text-secondary text-sm font-regular leading-normal cursor-pointer select-none [text-wrap:nowrap]">
+          <label id="terms-text" htmlFor="terms-checkbox" className="text-text-secondary text-xs font-regular leading-normal cursor-pointer select-none">
             {t('iHaveReadAndAgreed')}{' '}
-            <span className="bg-gradient-primary bg-clip-text text-transparent [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">{t('termsAndConditions')}</span>.
+            <span className="bg-gradient-primary bg-clip-text text-transparent [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] [text-wrap:nowrap]">{t('termsAndConditions')}</span>.
           </label>
         </div>
         <button
-          className="btn btn-primary tablet:w-auto tablet:max-w-[600px] mt-xs tablet:h-button-desktop w-full max-w-full h-button-mobile"
+          className="btn btn-primary tablet:w-auto tablet:max-w-[600px] mt-xs h-button-desktop w-full max-w-full"
           onClick={() => navigate('/get-started?step=add-wallet')}
           disabled={!isChecked}
           aria-disabled={!isChecked}

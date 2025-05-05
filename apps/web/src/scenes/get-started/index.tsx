@@ -9,7 +9,6 @@ import RecoveryPhrase from './components/recovery-phrase';
 import Welcome from './components/welcome';
 import { useI18n } from '@/utils/i18n';
 
-import './style.css';
 const GetStartedContent = () => {
   const searchParams = useSearchParams();
   const [step, setStep] = useState<string | null>(null);
@@ -32,7 +31,7 @@ const GetStartedContent = () => {
     'recovery-phrase': <components.recoveryPhrase />,
   };
 
-  return <div className="container-GetStarted">{stepsMap[step || 'welcome']}</div>;
+  return <div className="px-9 flex flex-col min-h-[100dvh] w-screen items-center justify-center py-[50px]">{stepsMap[step || 'welcome']}</div>;
 };
 
 const GetStarted = () => {

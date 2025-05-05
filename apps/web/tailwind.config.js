@@ -137,8 +137,7 @@ module.exports = {
         '5xl': ['2.8125rem'], // 45px
       },
       height: {
-        'button-desktop': '48px',
-        'button-mobile': '50px',
+        'button': '48px',
       }
     },
   },
