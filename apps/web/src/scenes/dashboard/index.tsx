@@ -1,5 +1,5 @@
 'use client';
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import './style.css';
 import Header from '@/components/header';
 import Sidebar from '@/components/sidebar';
@@ -10,8 +10,22 @@ import SendPac from '@/components/send';
 import ReceivePac from '@/components/receive';
 import BridgePac from '@/components/bridge';
 import { useBalance } from '@/wallet/hooks/use-balance';
+import { useAccount } from '@/wallet/hooks/use-account';
+
 const Dashboard = () => {
-  const { balance } = useBalance();
+  const { balance, fetchBalance, isLoading } = useBalance();
+  const { getAccountList } = useAccount();
+  const accounts = getAccountList();
+
+  useEffect(() => {
+    // Fetch balance initially
+    fetchBalance();
+  }, [fetchBalance]);
+
+  const handleRefresh = () => {
+    fetchBalance();
+  };
+
   return (
     <Suspense
       fallback={
@@ -31,7 +45,7 @@ const Dashboard = () => {
               <div className="dashboard__balance-section">
                 <div className="dashboard__balance-header">
                   <h2 className="dashboard__balance-title">Total Balance</h2>
-                  <RefetchBalance />
+                  <RefetchBalance onRefresh={handleRefresh} isLoading={isLoading} />
                 </div>
 
                 <div className="dashboard__balance-amount">
@@ -61,7 +75,7 @@ const Dashboard = () => {
                   <hr className="dashboard__stat-indicator" />
                   <p className="dashboard__stat-title">Total Accounts</p>
                 </div>
-                <span className="dashboard__stat-value">0</span>
+                <span className="dashboard__stat-value">{accounts.length}</span>
               </div>
 
               <div className="dashboard__stat-item">

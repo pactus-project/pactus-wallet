@@ -22,11 +22,20 @@ export function useBalance(address?: string) {
       }
 
       try {
-        const addressToCheck = specificAddress || address;
+        // If no address is provided, get the first address from the wallet
+        let addressToCheck = specificAddress || address;
+
         if (!addressToCheck) {
-          throw new Error('No address provided');
+          const addresses = targetWallet.getAddresses();
+          if (addresses.length === 0) {
+            setBalance(0);
+            setIsLoading(false);
+            return 0;
+          }
+          addressToCheck = addresses[0].address;
         }
 
+        // Fetch balance for the address
         const balance = await targetWallet.getAddressBalance(addressToCheck);
         const balanceValue = balance.toPac();
 
@@ -45,10 +54,10 @@ export function useBalance(address?: string) {
 
   // Auto-fetch balance when wallet or address changes
   useEffect(() => {
-    if (wallet && address) {
+    if (wallet) {
       fetchBalance();
     }
-  }, [wallet, address, fetchBalance]);
+  }, [wallet, fetchBalance]);
 
   return {
     balance,

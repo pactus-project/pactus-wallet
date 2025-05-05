@@ -3,12 +3,13 @@ import { Button } from '../components/Button';
 import React from 'react';
 
 const meta: Meta<typeof Button> = {
-  title: 'Components/Button',
+  title: 'Design System/Components/Button',
   component: Button,
   parameters: {
     layout: 'centered',
   },
   tags: ['autodocs'],
+
   argTypes: {
     variant: {
       control: { type: 'select' },
