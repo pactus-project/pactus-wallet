@@ -3,7 +3,7 @@ import PasswordInput from '../components/common/Form/PasswordInput';
 import { useState } from 'react';
 
 const meta: Meta<typeof PasswordInput> = {
-  title: 'Design System/Form/PasswordInput',
+  title: 'Design System/Components/PasswordInput',
   component: PasswordInput,
   parameters: {
     layout: 'centered',
@@ -18,7 +18,6 @@ const meta: Meta<typeof PasswordInput> = {
 export default meta;
 type Story = StoryObj<typeof PasswordInput>;
 
-// Controlled component wrapper for the stories
 const ControlledPasswordInput = (args: React.ComponentProps<typeof PasswordInput>) => {
   const [value, setValue] = useState(args.value || '');
   return (
@@ -69,6 +68,5 @@ export const Required: Story = {
   render: args => <ControlledPasswordInput {...args} />,
   args: {
     placeholder: 'Enter your password',
-    required: true,
   },
 };
