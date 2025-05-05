@@ -10,7 +10,6 @@ import Welcome from './components/welcome';
 import { useI18n } from '@/utils/i18n';
 
 import './style.css';
-import ChooseNameWallet from './components/choose-name-wallet';
 const GetStartedContent = () => {
   const searchParams = useSearchParams();
   const [step, setStep] = useState<string | null>(null);
@@ -23,7 +22,6 @@ const GetStartedContent = () => {
     masterPassword: MasterPassword,
     importWallet: ImportWallet,
     recoveryPhrase: RecoveryPhrase,
-    chooseNameWallet: ChooseNameWallet,
   };
 
   const stepsMap: Record<string, JSX.Element> = {
@@ -32,7 +30,6 @@ const GetStartedContent = () => {
     'master-password': <components.masterPassword />,
     'import-wallet': <components.importWallet />,
     'recovery-phrase': <components.recoveryPhrase />,
-    'choose-name-wallet': <components.chooseNameWallet />,
   };
 
   return <div className="container-GetStarted">{stepsMap[step || 'welcome']}</div>;
