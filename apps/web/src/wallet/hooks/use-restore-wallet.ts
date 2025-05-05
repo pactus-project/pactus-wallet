@@ -6,8 +6,16 @@ import { useWallet } from './use-wallet';
 import { WalletStatus } from '../types';
 
 export function useRestoreWallet() {
-  const { setWallet, setWalletStatus, mnemonic, password, networkType, walletName, walletManager } =
-    useWallet();
+  const {
+    setWallet,
+    setWalletStatus,
+    mnemonic,
+    password,
+    networkType,
+    walletName,
+    walletManager,
+    setPassword: setWalletPassword,
+  } = useWallet();
   const [isRestoring, setIsRestoring] = useState(false);
   const [restorationError, setRestorationError] = useState<string | null>(null);
 
@@ -16,7 +24,7 @@ export function useRestoreWallet() {
       providedMnemonic?: string,
       providedPassword?: string,
       providedNetworkType?: NetworkType,
-      providedName?: string
+      providedName: string = 'My Wallet'
     ) => {
       setIsRestoring(true);
       setRestorationError(null);
@@ -32,6 +40,10 @@ export function useRestoreWallet() {
 
         if (!walletManager) {
           throw new Error('Wallet manager is not available');
+        }
+
+        if (providedPassword) {
+          setWalletPassword(providedPassword);
         }
 
         const restoredWallet = await walletManager.restoreWallet(
@@ -50,11 +62,21 @@ export function useRestoreWallet() {
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
         setRestorationError(`Failed to restore wallet: ${errorMessage}`);
+        throw err; // Re-throw so the caller can handle it
       } finally {
         setIsRestoring(false);
       }
     },
-    [mnemonic, password, networkType, walletName, setWallet, setWalletStatus, walletManager]
+    [
+      mnemonic,
+      password,
+      networkType,
+      walletName,
+      setWallet,
+      setWalletStatus,
+      walletManager,
+      setWalletPassword,
+    ]
   );
 
   return { restoreWallet, isRestoring, restorationError };
