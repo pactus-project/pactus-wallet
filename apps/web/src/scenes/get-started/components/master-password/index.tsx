@@ -9,6 +9,7 @@ import { useI18n } from '@/utils/i18n';
 import Lottie from '@/components/lottie-player';
 import { useRouter } from 'next/navigation';
 import Button from '@/components/Button';
+import Checkbox from '@/components/Checkbox';
 
 const MasterPassword = () => {
   const [showPassword, setShowPassword] = useState<{ [key: string]: boolean }>({
@@ -72,10 +73,8 @@ const MasterPassword = () => {
     try {
       setIsLoading(true);
 
-      // Update the password in the wallet context before restoring
       setWalletPassword(password);
 
-      // Now call restoreWallet with the password as an explicit parameter
       const wallet = await restoreWallet(undefined, password);
 
       if (wallet) {
@@ -192,19 +191,18 @@ const MasterPassword = () => {
           )}
         </div>
         <div className="master-password__terms">
-          <div className="master-password__checkbox-container">
-            <input
-              type="checkbox"
-              id="terms-checkbox"
-              className="master-password__checkbox"
-              checked={isChecked}
-              onChange={() => setIsChecked(!isChecked)}
-            />
-            <label htmlFor="terms-checkbox" className="master-password__terms-text">
-              {t('cannotRecoverPassword')}
-              <span className="master-password__learn-more">{t('learnMore')}</span>
-            </label>
-          </div>
+          <Checkbox
+            id="terms-checkbox"
+            label={t('cannotRecoverPassword')}
+            checked={isChecked}
+            onChange={() => setIsChecked(!isChecked)}
+            description={
+              <span className="bg-gradient-primary bg-clip-text text-transparent font-medium ml-1 cursor-pointer whitespace-nowrap">
+                {t('learnMore')}
+              </span>
+            }
+            size="small"
+          />
         </div>
         {restorationError && (
           <p className="master-password__error" role="alert">
