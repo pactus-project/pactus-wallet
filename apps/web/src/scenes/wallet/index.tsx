@@ -1,5 +1,5 @@
 'use client';
-import React, { Suspense, useState } from 'react';
+import React, { Suspense, useContext, useEffect, useState } from 'react';
 import './style.css';
 import Image from 'next/image';
 import { copyIcon, showPasswordIcon, simpleLogo, successIcon } from '@/assets';
@@ -11,8 +11,10 @@ import { useSearchParams } from 'next/navigation';
 import { useBalance } from '@/wallet/hooks/use-balance';
 import ShowPrivateKeyModal from '@/components/password-modal';
 import PrivateKeyDisplayModal from '@/components/address-infom-modal';
+import { WalletContext } from '@/wallet';
 
 const Wallet = () => {
+  const { setHeaderTitle } = useContext(WalletContext);
   const [copied, setCopied] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [showPrivateKeyModal, setShowPrivateKeyModal] = useState(false);
@@ -52,6 +54,10 @@ const Wallet = () => {
     setAddressInfo(addressInfo);
     setShowPrivateKeyModal(true);
   };
+
+  useEffect(() => {
+    setHeaderTitle(`🤝 ${addressData?.label ?? ''}`);
+  });
 
   return (
     <Suspense fallback={<div className="wallet__loading">Loading...</div>}>
