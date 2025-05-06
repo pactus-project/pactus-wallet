@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAccount } from '@/wallet/hooks/use-account';
 import FormMemoInput from '@/components/common/FormMemoInput';
 import FormTextInput from '@/components/common/FormTextInput';
-import TextButton from '@/components/common/TextButton';
 import FormSelectInput from '@/components/common/FormSelectInput';
-import SubmitButton from '@/components/common/SubmitButton';
 import FormPasswordInput from '@/components/common/FormPasswordInput';
+import { useI18n } from '@/utils/i18n';
+import { useBalance } from '@/wallet/hooks/use-balance';
+import Button from '@/components/Button';
+import GradientText from '@/components/common/GradientText';
 
 export interface SendFormValues {
   fromAccount?: string;
@@ -29,6 +31,7 @@ const SendForm: React.FC<SendFormProps> = ({
 }) => {
   const { getAccountList } = useAccount();
   const accounts = getAccountList();
+  const { t } = useI18n();
 
   // Form state
   const [fromAccount, setFromAccount] = useState(
@@ -36,22 +39,37 @@ const SendForm: React.FC<SendFormProps> = ({
   );
   const [receiver, setReceiver] = useState(initialValues.receiver || '');
   const [amount, setAmount] = useState(initialValues.amount || '');
-  const [fee, setFee] = useState(initialValues.fee || '0.001');
+  const [fee, setFee] = useState(initialValues.fee || '0.01');
   const [memo, setMemo] = useState(initialValues.memo || '');
   const [password, setPassword] = useState(initialValues.password || '');
 
-  // Handle max amount click
+  // Initialize balance hook with the selected account
+  const { balance, fetchBalance, isLoading } = useBalance(fromAccount);
+
+  // Fetch balance when account changes
+  useEffect(() => {
+    if (fromAccount) {
+      fetchBalance(null, fromAccount);
+    }
+  }, [fromAccount, fetchBalance]);
+
   const handleMaxAmount = () => {
-    // In a real implementation, you would calculate the maximum available amount
-    // For now, just set a sample value
-    setAmount('1.02445');
+    // Check if we have a balance and a valid fee
+    if (balance && !isLoading) {
+      // Ensure fee is a valid number
+      const feeValue = parseFloat(fee) || 0.01;
+
+      // Calculate max amount (balance - fee)
+      const maxAmount = Math.max(0, balance - feeValue);
+
+      // Format to 5 decimal places and set amount
+      setAmount(maxAmount.toFixed(5));
+    }
   };
 
   // Handle auto fee
   const handleAutoFee = () => {
-    // In a real implementation, you would calculate the recommended fee
-    // For now, just set the default value
-    setFee('0.001');
+    setFee('0.01');
   };
 
   // Handle form submission
@@ -71,23 +89,10 @@ const SendForm: React.FC<SendFormProps> = ({
     value: account.address,
     label: (
       <span>
-        <span className="mr-2">👨</span> Account 1
+        <span className="mr-2">👨</span> {t('account1')}
       </span>
     ),
   }));
-
-  // Prepare receiver options
-  const receiverOptions = [
-    ...accounts.map(account => ({
-      value: account.address,
-      label: (
-        <span>
-          {account.address.substring(0, 10)}...
-          {account.address.substring(account.address.length - 10)}
-        </span>
-      ),
-    })),
-  ];
 
   return (
     <div className="flex flex-col gap-5 w-full px-2">
@@ -98,18 +103,17 @@ const SendForm: React.FC<SendFormProps> = ({
         value={fromAccount}
         onChange={e => setFromAccount(e.target.value)}
         options={accountOptions}
-        label="From"
+        label={t('from')}
       />
 
       {/* Receiver */}
-      <FormSelectInput
+      <FormTextInput
         id="receiver"
         name="receiver"
         value={receiver}
         onChange={e => setReceiver(e.target.value)}
-        options={receiverOptions}
-        placeholder="Select or enter an address"
-        label="Receiver"
+        placeholder={t('selectOrEnterAddress')}
+        label={t('receiver')}
       />
 
       {/* Amount */}
@@ -119,8 +123,18 @@ const SendForm: React.FC<SendFormProps> = ({
         value={amount}
         onChange={e => setAmount(e.target.value)}
         placeholder="0.00"
-        label="Amount (℗)"
-        rightElement={<TextButton onClick={handleMaxAmount}>Max</TextButton>}
+        label={`${t('amount')} (℗)`}
+        rightElement={
+          <Button
+            variant="text"
+            size="small"
+            onClick={handleMaxAmount}
+            disabled={isLoading || !balance}
+            className="px-2 py-1 min-w-[40px] bg-transparent hover:bg-transparent"
+          >
+            <GradientText>{t('max')}</GradientText>
+          </Button>
+        }
       />
 
       {/* Network Fee */}
@@ -130,8 +144,17 @@ const SendForm: React.FC<SendFormProps> = ({
         value={fee}
         onChange={e => setFee(e.target.value)}
         placeholder="0.001"
-        label="Network fee (℗)"
-        rightElement={<TextButton onClick={handleAutoFee}>Auto</TextButton>}
+        label={`${t('fee')} (℗)`}
+        rightElement={
+          <Button
+            variant="text"
+            size="small"
+            onClick={handleAutoFee}
+            className="px-2 py-1 min-w-[40px] bg-transparent hover:bg-transparent"
+          >
+            <GradientText>{t('auto')}</GradientText>
+          </Button>
+        }
       />
 
       {/* Memo */}
@@ -147,20 +170,24 @@ const SendForm: React.FC<SendFormProps> = ({
         id="password"
         value={password}
         onChange={e => setPassword(e.target.value)}
-        placeholder="Enter your password"
-        label="Password"
+        placeholder={t('enterYourPassword')}
+        label={t('password')}
         touched={false}
         error=""
       />
 
       {/* Submit Button */}
       <div className="flex justify-end mt-3">
-        <SubmitButton
+        <Button
+          variant="primary"
+          size="small"
           onClick={handleSubmit}
           disabled={!fromAccount || !receiver || !amount || !password}
+          type="button"
+          className="w-[86px] h-[38px]"
         >
           {submitButtonText}
-        </SubmitButton>
+        </Button>
       </div>
     </div>
   );

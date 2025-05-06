@@ -59,6 +59,11 @@ const translations = {
   confirmed: 'Confirmed',
   pending: 'Pending',
   failed: 'Failed',
+  from: 'From',
+  receiver: 'Receiver',
+  max: 'Max',
+  auto: 'Auto',
+  selectOrEnterAddress: 'Select or enter an address',
 
   // Error messages
   somethingWentWrong: 'Something went wrong',

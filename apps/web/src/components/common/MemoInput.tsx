@@ -1,4 +1,5 @@
 import React from 'react';
+import GradientText from './GradientText';
 
 interface MemoInputProps {
   value: string;
@@ -50,9 +51,9 @@ const MemoInput: React.FC<MemoInputProps> = ({
           disabled={disabled}
           required={required}
         />
-        <span className="absolute right-3 bottom-3 text-xs text-text-tertiary">
+        <GradientText className="absolute right-3 bottom-3">
           {value.length}/{maxLength}
-        </span>
+        </GradientText>
       </div>
     </div>
   );
