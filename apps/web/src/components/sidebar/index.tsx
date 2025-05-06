@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './style.css';
 import Image from 'next/image';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
@@ -53,6 +53,10 @@ const Sidebar = () => {
     }
     return true;
   };
+
+  useEffect(() => {
+    console.log("render");
+  }, [])
 
   return (
     <aside className="sidebar">

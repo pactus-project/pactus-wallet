@@ -6,6 +6,9 @@ import { I18nProvider } from '@/utils/i18n';
 import Script from 'next/script';
 import { GA_MEASUREMENT_ID } from '@/utils/google-analytics';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
+import { Suspense } from 'react';
+import Sidebar from '@/components/sidebar';
+import Header from '@/components/header';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -52,7 +55,22 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <I18nProvider>
           <WalletProvider>
             {!isDev && GA_MEASUREMENT_ID && <GoogleAnalytics />}
-            {children}
+            <Suspense
+              fallback={
+                <div className="flex justify-center items-center w-full h-screen text-lg" aria-label="Loading dashboard">
+                  <span className="visually-hidden">Loading dashboard content</span>
+                  Loading...
+                </div>
+              }
+            >
+              <main className="flex w-full min-h-[100dvh]">
+                <Sidebar />
+                <div className="flex-1 flex flex-col ml-[219px]">
+                  <Header />
+                  {children}
+                </div>
+              </main>
+            </Suspense>
           </WalletProvider>
         </I18nProvider>
       </body>
