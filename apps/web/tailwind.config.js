@@ -92,10 +92,10 @@ module.exports = {
         tooltip: '700',
       },
       screens: {
-        mobile: '480px',
-        tablet: '768px',
-        desktop: '1024px',
-        'large-desktop': '1440px',
+        mobile: '481px',
+        tablet: '769px',
+        desktop: '1025px',
+        'large-desktop': '1441px',
       },
       typography: theme => ({
         DEFAULT: {
@@ -137,7 +137,7 @@ module.exports = {
         '5xl': ['2.8125rem'], // 45px
       },
       height: {
-        'button': '48px',
+        button: '48px',
       }
     },
   },
