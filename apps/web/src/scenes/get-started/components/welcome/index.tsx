@@ -9,6 +9,8 @@ import useSizeDetector from '@/utils/size-detector';
 import Checkbox from '@/components/Checkbox';
 import Button from '@/components/Button';
 import { PATHS } from '@/constants/paths';
+import Title from '@/components/common/title';
+import Description from '@/components/common/description';
 
 const Welcome = () => {
   const { push } = useRouter();
@@ -71,8 +73,8 @@ const Welcome = () => {
                 height={32}
               />
               <div className="flex flex-col gap-xs">
-                <h3 className="text-text-primary tablet:!text-xl font-medium !leading-tight text-lg">{feature.title}</h3>
-                <p className="text-text-secondary tablet:!text-md font-regular !leading-loose text-xs">{feature.description}</p>
+                <Title content={feature.title} />
+                <Description content={feature.description} />
               </div>
             </div>
           ))}
