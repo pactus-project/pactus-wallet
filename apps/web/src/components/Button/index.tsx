@@ -1,5 +1,5 @@
 import React from 'react';
-import clsx from 'clsx';
+import cn from '@/utils/cn';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'outlined' | 'text';
 export type ButtonSize = 'small' | 'medium' | 'large';
@@ -82,7 +82,7 @@ export const Button = ({
     <button
       type={type}
       disabled={disabled || isLoading}
-      className={clsx(
+      className={cn(
         baseClasses,
         sizeClasses[size],
         variantClasses[variant],
