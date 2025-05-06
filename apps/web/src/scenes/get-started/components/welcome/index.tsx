@@ -49,7 +49,6 @@ const Welcome = () => {
     },
   ];
 
-  const handleCheckboxToggle = () => setIsChecked(!isChecked);
   const { isMobile, isTablet } = useSizeDetector();
   return (
     <section className="flex flex-col w-full max-w-[1000px] mx-auto gap-xl">
