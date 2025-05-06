@@ -196,6 +196,8 @@ const MasterPassword = () => {
             label={t('cannotRecoverPassword')}
             checked={isChecked}
             onChange={() => setIsChecked(!isChecked)}
+            labelClassName="text-text-secondary text-xs font-regular leading-normal cursor-pointer select-none"
+            checkBoxClassName="w-[16px] h-[16px] cursor-pointer [accent-color:theme('colors.primary')]"
             description={
               <span className="bg-gradient-primary bg-clip-text text-transparent font-medium ml-1 cursor-pointer whitespace-nowrap">
                 {t('learnMore')}

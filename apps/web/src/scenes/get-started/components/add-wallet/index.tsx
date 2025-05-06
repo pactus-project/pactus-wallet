@@ -7,6 +7,8 @@ import { useRouter } from 'next/navigation'
 import BorderBeam from '@/components/border-beam'
 import { useI18n } from '@/utils/i18n'
 import Lottie from '@/components/lottie-player'
+import Title from '@/components/common/title'
+import Description from '@/components/common/description'
 const AddWallet = () => {
     const navigate = useRouter().push;
     const { t } = useI18n();
@@ -36,8 +38,8 @@ const AddWallet = () => {
                         aria-hidden="true"
                     />
                     <div className="add-wallet__option-content">
-                        <h3 className="add-wallet__option-title">{t('newWallet')}</h3>
-                        <p className="add-wallet__option-description">{t('newWalletDescription')}</p>
+                        <Title content={t('newWallet')} />
+                        <Description content={t('newWalletDescription')} />
                     </div>
                     <BorderBeam
                         duration={4}
@@ -60,8 +62,8 @@ const AddWallet = () => {
                         aria-hidden="true"
                     />
                     <div className="add-wallet__option-content">
-                        <h3 className="add-wallet__option-title">{t('existingWallet')}</h3>
-                        <p className="add-wallet__option-description">{t('existingWalletDescription')}</p>
+                        <Title content={t('existingWallet')} />
+                        <Description content={t('existingWalletDescription')} />
                     </div>
                     <BorderBeam
                         duration={4}

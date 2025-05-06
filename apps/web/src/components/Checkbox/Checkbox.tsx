@@ -1,5 +1,5 @@
 import React, { forwardRef, ReactNode } from 'react';
-import clsx from 'clsx';
+import cn from '@/utils/cn';
 
 export interface CheckboxProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type' | 'size'> {
@@ -28,6 +28,10 @@ export interface CheckboxProps
    */
   descriptionClassName?: string;
   /**
+   * Custom class name for the checkbox
+   */
+  checkBoxClassName?: string;
+  /**
    * Size of the checkbox (small, medium, large)
    */
   size?: 'small' | 'medium' | 'large';
@@ -46,6 +50,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
       className,
       labelClassName,
       descriptionClassName,
+      checkBoxClassName,
       size = 'medium',
       indeterminate = false,
       disabled = false,
@@ -79,19 +84,20 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
     };
 
     return (
-      <div className={clsx('flex flex-col', className)}>
+      <div className={cn('flex flex-col', className)}>
         <div className="flex items-start cursor-pointer">
           <div className="flex-shrink-0 mt-0.5">
             <input
               id={uniqueId}
               ref={ref}
               type="checkbox"
-              className={clsx(
+              className={cn(
                 sizeClasses[size],
                 'rounded border-gray-300 text-primary-500 focus:ring-primary-500',
                 'cursor-pointer transition-colors',
                 disabled && 'opacity-50 cursor-not-allowed',
-                error && 'border-red-500'
+                error && 'border-red-500',
+                checkBoxClassName,
               )}
               checked={checked}
               onChange={onChange}
@@ -108,7 +114,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
             <div className="ml-2 text-left flex-grow">
               <label
                 htmlFor={uniqueId}
-                className={clsx(
+                className={cn(
                   labelSizeClasses[size],
                   'text-text-primary font-normal select-none cursor-pointer inline-flex flex-wrap items-center',
                   disabled && 'opacity-50 cursor-not-allowed',
@@ -125,7 +131,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
               {typeof description === 'string' && (
                 <div
                   id={`${uniqueId}-description`}
-                  className={clsx(
+                  className={cn(
                     'text-gray-500 mt-1',
                     {
                       'text-sm': size === 'medium' || size === 'small',
