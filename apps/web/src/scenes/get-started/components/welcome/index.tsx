@@ -87,32 +87,30 @@ const Welcome = () => {
         ) : null}
       </div>
 
-      <div className="flex flex-col w-full gap-md mt-lg">
-        <Checkbox
-          id="terms-checkbox"
-          label={t('iHaveReadAndAgreed')}
-          checked={isChecked}
-          onChange={() => setIsChecked(!isChecked)}
-          checkBoxClassName="w-[16px] h-[16px] cursor-pointer [accent-color:theme('colors.primary')]"
-          labelClassName="text-text-secondary text-xs font-regular leading-normal cursor-pointer select-none"
-          description={
-            <span className="bg-gradient-primary bg-clip-text text-transparent font-medium ml-1 cursor-pointer whitespace-nowrap">
-              {t('termsAndConditions')}
-              {'.'}
-            </span>
-          }
-          size="small"
-        />
-        <div className="w-full max-w-full flex">
-          <Button
-            onClick={() => push(PATHS.ADD_WALLET)}
-            disabled={!isChecked}
-            className="btn btn-primary tablet:w-auto tablet:max-w-[600px] mt-xs h-button-desktop w-full max-w-full tablet:!flex-1"
-          >
-            {t('letsStart')}
-          </Button>
-          <div className="h-button-desktop w-[400px] hidden tablet:!block"></div>
-        </div>
+      <Checkbox
+        id="terms-checkbox"
+        label={t('iHaveReadAndAgreed')}
+        checked={isChecked}
+        onChange={() => setIsChecked(!isChecked)}
+        checkBoxClassName="w-[16px] h-[16px] cursor-pointer [accent-color:theme('colors.primary')]"
+        labelClassName="text-text-secondary text-xs font-regular leading-normal cursor-pointer select-none"
+        description={
+          <span className="bg-gradient-primary bg-clip-text text-transparent font-medium ml-1 cursor-pointer whitespace-nowrap">
+            {t('termsAndConditions')}
+            {'.'}
+          </span>
+        }
+        size="small"
+      />
+      <div className="w-full max-w-full flex">
+        <Button
+          onClick={() => push(PATHS.ADD_WALLET)}
+          disabled={!isChecked}
+          className="btn btn-primary mt-xs h-button-desktop w-full max-w-full tablet:!min-w-[300px] tablet:!flex-grow-0"
+        >
+          {t('letsStart')}
+        </Button>
+        <div className="h-button-desktop w-[400px] hidden tablet:!block"></div>
       </div>
     </section>
   );
