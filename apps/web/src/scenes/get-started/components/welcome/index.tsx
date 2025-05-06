@@ -56,7 +56,9 @@ const Welcome = () => {
       <div className="w-full">
         <h1 className="text-heading tablet:!text-4xl !font-normal text-text-primary leading-tight !text-3xl">
           <div>{t('welcomeTo')}</div>
-          <span className="text-gradient !font-semibold [text-wrap:nowrap] text-[40px] tablet:text-[51px]">{t('pactusWallet')}</span>
+          <span className="text-gradient !font-semibold [text-wrap:nowrap] text-[40px] tablet:text-[51px]">
+            {t('pactusWallet')}
+          </span>
         </h1>
       </div>
 
@@ -87,18 +89,30 @@ const Welcome = () => {
       </div>
 
       <div className="flex flex-col w-full gap-md mt-lg">
-        <div className="flex items-center gap-sm">
-          <Checkbox onChange={handleCheckboxToggle} checked={isChecked} id='terms-checkbox' checkBoxClassName="w-[16px] h-[16px] cursor-pointer [accent-color:theme('colors.primary')]" />
-          <label id="terms-text" htmlFor="terms-checkbox" className="text-text-secondary text-xs font-regular leading-normal cursor-pointer select-none">
-            {t('iHaveReadAndAgreed')}{' '}
-            <span className="bg-gradient-primary bg-clip-text text-transparent [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] [text-wrap:nowrap]">{t('termsAndConditions')}</span>.
-          </label>
-        </div>
-        <div className='w-full max-w-full flex'>
-          <Button onClick={() => push(PATHS.ADD_WALLET)} disabled={!isChecked} className="btn btn-primary tablet:w-auto tablet:max-w-[600px] mt-xs h-button-desktop w-full max-w-full tablet:!flex-1">
+        <Checkbox
+          id="terms-checkbox"
+          label={t('iHaveReadAndAgreed')}
+          checked={isChecked}
+          onChange={() => setIsChecked(!isChecked)}
+          checkBoxClassName="w-[16px] h-[16px] cursor-pointer [accent-color:theme('colors.primary')]"
+          labelClassName="text-text-secondary text-xs font-regular leading-normal cursor-pointer select-none"
+          description={
+            <span className="bg-gradient-primary bg-clip-text text-transparent font-medium ml-1 cursor-pointer whitespace-nowrap">
+              {t('termsAndConditions')}
+              {'.'}
+            </span>
+          }
+          size="small"
+        />
+        <div className="w-full max-w-full flex">
+          <Button
+            onClick={() => push(PATHS.ADD_WALLET)}
+            disabled={!isChecked}
+            className="btn btn-primary tablet:w-auto tablet:max-w-[600px] mt-xs h-button-desktop w-full max-w-full tablet:!flex-1"
+          >
             {t('letsStart')}
           </Button>
-          <div className='h-button-desktop w-[400px] hidden tablet:!block'></div>
+          <div className="h-button-desktop w-[400px] hidden tablet:!block"></div>
         </div>
       </div>
     </section>
