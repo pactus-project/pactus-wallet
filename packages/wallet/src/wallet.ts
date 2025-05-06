@@ -355,12 +355,12 @@ export class Wallet {
 
   private publicKeyPrefix(): string {
     switch (this.info.network) {
-      case NetworkValues.MAINNET:
-        return 'public';
-      case NetworkValues.TESTNET:
-        return 'tpublic';
-      default:
-        throw new Error(`Unknown network type: ${this.info.network}`);
+    case NetworkValues.MAINNET:
+      return 'public';
+    case NetworkValues.TESTNET:
+      return 'tpublic';
+    default:
+      throw new Error(`Unknown network type: ${this.info.network}`);
     }
   }
 

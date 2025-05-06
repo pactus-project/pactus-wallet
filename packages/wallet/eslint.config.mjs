@@ -155,7 +155,8 @@ export default [
       ...sharedRules,
 
       // TypeScript-specific indentation (overrides the shared one)
-      '@typescript-eslint/indent': ['error', 2],
+      // '@typescript-eslint/indent': ['error', 2],
+      indent: ['error', 2],
 
       // TypeScript specific
       '@typescript-eslint/explicit-function-return-type': [
