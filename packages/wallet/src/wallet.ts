@@ -490,8 +490,15 @@ export class Wallet {
   ): Promise<RawTransferTransaction> {
     const method = 'pactus.transaction.get_raw_transfer_transaction';
 
-    const result = await this.tryFetchJsonRpcResult(method, tx);
+    const txParams = {
+      sender: tx.sender,
+      receiver: tx.receiver,
+      amount: Number(tx.amount.toString()), // Convert to number
+      fee: Number(tx.fee.toString()), // Convert to number
+      memo: tx.memo || '',
+    };
 
+    const result = await this.tryFetchJsonRpcResult(method, txParams);
     return {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       raw_transaction: result.raw_transaction,
