@@ -1,5 +1,5 @@
 'use client';
-import React, { Suspense, useEffect, useContext } from 'react';
+import React, { useEffect, useContext } from 'react';
 import './style.css';
 import RefetchBalance from '@/components/refetch';
 import Image from 'next/image';

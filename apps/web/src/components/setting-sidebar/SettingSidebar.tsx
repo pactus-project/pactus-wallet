@@ -1,4 +1,4 @@
-import { settingGeneralIcon, nodeManagerIcon, walletManagerIcon } from '@/assets';
+import { settingGeneralIcon, walletManagerIcon } from '@/assets';
 import { PATHS } from '@/constants/paths';
 import cn from '@/utils/cn';
 import Image from 'next/image';
@@ -21,11 +21,11 @@ const sidebarData: SidebarItem[] = [
     title: 'Wallet Manager',
     path: PATHS.WALLET_MANAGER,
   },
-  {
-    iconUrl: nodeManagerIcon,
-    title: 'Node Manager',
-    path: PATHS.NODE_MANAGER,
-  },
+  // {
+  //   iconUrl: nodeManagerIcon,
+  //   title: 'Node Manager',
+  //   path: PATHS.NODE_MANAGER,
+  // },
 ];
 
 interface ItemProps {
