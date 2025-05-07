@@ -37,10 +37,7 @@ const SendModal: React.FC<SendModalProps> = ({ isOpen, onClose, initialValues = 
         memo: values.memo,
         password: values.password,
       });
-
       setSuccessMessage(t('transactionSent'));
-
-      // Close modal after successful transaction
       setTimeout(() => {
         onClose();
       }, 2000);

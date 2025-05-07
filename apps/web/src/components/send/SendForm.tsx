@@ -9,6 +9,7 @@ import { useBalance } from '@/wallet/hooks/use-balance';
 import Button from '@/components/Button';
 import GradientText from '@/components/common/GradientText';
 import { validatePassword } from '@/utils/password-validator';
+import { useSendTransaction } from '@/wallet/hooks/use-send-transaction';
 
 export interface SendFormValues {
   fromAccount?: string;
@@ -21,18 +22,21 @@ export interface SendFormValues {
 
 interface SendFormProps {
   initialValues?: SendFormValues;
-  onSubmit: (values: SendFormValues) => void;
+  onSubmit?: (values: SendFormValues) => void;
+  onPreviewTransaction?: (values: SendFormValues, signedRawTxHex: string) => void;
   submitButtonText?: string;
 }
 
 const SendForm: React.FC<SendFormProps> = ({
   initialValues = {},
   onSubmit,
+  onPreviewTransaction,
   submitButtonText = 'Next',
 }) => {
   const { getAccountList } = useAccount();
   const accounts = getAccountList();
   const { t } = useI18n();
+  const { getSignTransferTransaction } = useSendTransaction();
 
   // Form state
   const [fromAccount, setFromAccount] = useState(
@@ -80,15 +84,38 @@ const SendForm: React.FC<SendFormProps> = ({
   };
 
   // Handle form submission
-  const handleSubmit = () => {
-    onSubmit({
-      fromAccount,
-      receiver,
-      amount,
-      fee,
-      memo,
-      password,
-    });
+  const handleSubmit = async () => {
+    try {
+      // Get signed transaction
+      const result = await getSignTransferTransaction({
+        fromAddress: fromAccount,
+        toAddress: receiver,
+        amount,
+        fee,
+        memo,
+        password,
+      });
+
+      const values = {
+        fromAccount,
+        receiver,
+        amount,
+        fee,
+        memo,
+        password,
+      };
+
+      // If onPreviewTransaction is provided, call it with the signed transaction
+      if (onPreviewTransaction) {
+        onPreviewTransaction(values, result.signedRawTxHex);
+      }
+      // Otherwise, call the legacy onSubmit
+      else if (onSubmit) {
+        onSubmit(values);
+      }
+    } catch (error) {
+      console.error('Error signing transaction:', error);
+    }
   };
 
   // Prepare account options for selects

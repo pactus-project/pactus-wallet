@@ -77,8 +77,38 @@ export function useSendTransaction() {
     [wallet]
   );
 
+  const broadcastTransaction = useCallback(
+    async (signedRawTxHex: string): Promise<string> => {
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        if (!wallet) {
+          throw new Error('Wallet is not available');
+        }
+
+        if (!signedRawTxHex) {
+          throw new Error('Missing signed transaction data');
+        }
+
+        // Broadcast the transaction
+        const broadcastTxHash = await wallet.broadcastTransaction(signedRawTxHex);
+        setTxHash(broadcastTxHash);
+        return broadcastTxHash;
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : 'Failed to broadcast transaction';
+        setError(errorMessage);
+        throw err;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [wallet]
+  );
+
   return {
     getSignTransferTransaction,
+    broadcastTransaction,
     isLoading,
     error,
     txHash,
