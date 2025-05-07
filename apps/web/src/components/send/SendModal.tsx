@@ -12,7 +12,7 @@ interface SendModalProps {
 
 const SendModal: React.FC<SendModalProps> = ({ isOpen, onClose, initialValues = {} }) => {
   const { t } = useI18n();
-  const { sendTransaction, isLoading, error, txHash } = useSendTransaction();
+  const { getSignTransferTransaction, isLoading, error, txHash } = useSendTransaction();
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const handleSubmit = async (values: SendFormValues) => {
@@ -29,7 +29,7 @@ const SendModal: React.FC<SendModalProps> = ({ isOpen, onClose, initialValues = 
     setSuccessMessage(null);
 
     try {
-      await sendTransaction({
+      await getSignTransferTransaction({
         fromAddress: values.fromAccount,
         toAddress: values.receiver,
         amount: values.amount,

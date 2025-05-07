@@ -12,8 +12,8 @@ interface SendTransactionParams {
   password: string;
 }
 
-interface SendTransactionResult {
-  txHash: string;
+interface GetSignTransferTransaction {
+  signedRawTxHex: string;
 }
 
 export function useSendTransaction() {
@@ -22,7 +22,7 @@ export function useSendTransaction() {
   const [error, setError] = useState<string | null>(null);
   const [txHash, setTxHash] = useState<string | null>(null);
 
-  const sendTransaction = useCallback(
+  const getSignTransferTransaction = useCallback(
     async ({
       fromAddress,
       toAddress,
@@ -30,7 +30,7 @@ export function useSendTransaction() {
       fee,
       memo = '',
       password,
-    }: SendTransactionParams): Promise<SendTransactionResult> => {
+    }: SendTransactionParams): Promise<GetSignTransferTransaction> => {
       setIsLoading(true);
       setError(null);
       setTxHash(null);
@@ -44,7 +44,6 @@ export function useSendTransaction() {
           throw new Error('Missing required transaction parameters');
         }
 
-        // Convert string amounts to Amount objects
         const amountValue = Amount.fromString(amount);
         const feeValue = Amount.fromString(fee);
 
@@ -55,7 +54,7 @@ export function useSendTransaction() {
         console.log('memo', memo);
         console.log('password', password);
         // Call wallet.sendTransfer with the Amount objects
-        const result = await wallet.sendTransfer(
+        const result = await wallet.getSignTransferTransaction(
           fromAddress,
           toAddress,
           amountValue,
@@ -65,7 +64,7 @@ export function useSendTransaction() {
         );
         console.log('result', result);
 
-        setTxHash(result.txHash);
+        setTxHash(result.signedRawTxHex);
         return result;
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : 'Failed to send transaction';
@@ -79,7 +78,7 @@ export function useSendTransaction() {
   );
 
   return {
-    sendTransaction,
+    getSignTransferTransaction,
     isLoading,
     error,
     txHash,

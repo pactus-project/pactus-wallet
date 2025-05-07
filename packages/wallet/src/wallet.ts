@@ -431,14 +431,14 @@ export class Wallet {
   /**
    * Send transfer transaction with comprehensive error handling
    */
-  async sendTransfer(
+  async getSignTransferTransaction(
     fromAddress: string,
     toAddress: string,
     amount: Amount,
     fee?: Amount,
     memo?: string,
     password?: string
-  ): Promise<{ txHash: string }> {
+  ): Promise<{ signedRawTxHex: string }> {
     // Validate sender address
     const addressInfo = await this.getAddressInfo(fromAddress);
 
@@ -477,9 +477,7 @@ export class Wallet {
     );
 
     // Broadcast transaction
-    const txHash = await this.broadcastTransaction(signedRawTxHex);
-
-    return { txHash };
+    return { signedRawTxHex };
   }
 
   /**
