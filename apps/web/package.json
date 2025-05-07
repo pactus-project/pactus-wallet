@@ -18,6 +18,8 @@
         "@pactus-wallet/wallet": "*",
         "@splinetool/react-spline": "^4.0.0",
         "@splinetool/runtime": "^1.9.72",
+        "@tanstack/react-table": "^8.21.3",
+        "clsx": "^2.1.1",
         "copy-webpack-plugin": "^13.0.0",
         "framer-motion": "^12.4.10",
         "next": "15.2.4",
@@ -26,7 +28,6 @@
         "react-lottie-player": "^2.1.0",
         "react-qr-code": "^2.0.15",
         "sharp": "^0.33.5",
-        "clsx": "^2.1.1",
         "tailwind-merge": "^2.5.3"
     },
     "devDependencies": {
