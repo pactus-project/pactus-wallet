@@ -67,7 +67,7 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
         autoComplete={autoComplete}
         aria-describedby={ariaDescribedby}
         aria-invalid={ariaInvalid || (error && !customErrorDisplay ? 'true' : 'false')}
-        className={`w-full rounded-md bg-surface text-text-primary border ${borderClass} focus:outline-none pr-12 
+        className={`w-full rounded-md bg-background text-text-primary border ${borderClass} focus:outline-none pr-12 
           ${sizeClasses[size]}
           ${disabled ? 'opacity-60 cursor-not-allowed' : ''} 
           ${className}`}

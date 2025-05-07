@@ -33,7 +33,7 @@ const MemoInput: React.FC<MemoInputProps> = ({
   return (
     <div className="flex flex-col gap-2">
       {!hideLabel && (
-        <label htmlFor={id} className="text-sm font-medium text-text-primary">
+        <label htmlFor={id} className="text-sm font-medium text-text-quaternary">
           {label}
         </label>
       )}
@@ -45,7 +45,7 @@ const MemoInput: React.FC<MemoInputProps> = ({
           value={value}
           onChange={onChange}
           onBlur={onBlur}
-          className={`w-full p-3 rounded-md bg-surface text-text-primary text-sm border border-border focus:outline-none focus:border-primary ${className}`}
+          className={`w-full p-3 rounded-md bg-background text-text-primary text-sm border border-border focus:outline-none focus:border-primary ${className}`}
           placeholder={placeholder}
           maxLength={maxLength}
           disabled={disabled}

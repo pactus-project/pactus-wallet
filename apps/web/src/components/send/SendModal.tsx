@@ -29,8 +29,6 @@ const SendModal: React.FC<SendModalProps> = ({ isOpen, onClose, initialValues = 
     setSuccessMessage(null);
 
     try {
-      // Use the useSendTransaction hook to send the transaction
-      console.log('sendTransaction', sendTransaction);
       await sendTransaction({
         fromAddress: values.fromAccount,
         toAddress: values.receiver,

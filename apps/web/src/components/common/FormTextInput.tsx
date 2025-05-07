@@ -9,6 +9,7 @@ interface FormTextInputProps {
   id?: string;
   name?: string;
   className?: string;
+  labelClassName?: string;
   disabled?: boolean;
   required?: boolean;
   error?: string;
@@ -28,6 +29,7 @@ const FormTextInput: React.FC<FormTextInputProps> = ({
   id,
   name,
   className = '',
+  labelClassName = '',
   disabled = false,
   required = false,
   error,
@@ -51,6 +53,7 @@ const FormTextInput: React.FC<FormTextInputProps> = ({
         id={id}
         name={name}
         className={inputClassName}
+        labelClassName={labelClassName}
         disabled={disabled}
         required={required}
         onBlur={onBlur}

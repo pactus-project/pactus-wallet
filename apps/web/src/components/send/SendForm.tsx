@@ -8,6 +8,7 @@ import { useI18n } from '@/utils/i18n';
 import { useBalance } from '@/wallet/hooks/use-balance';
 import Button from '@/components/Button';
 import GradientText from '@/components/common/GradientText';
+import { validatePassword } from '@/utils/password-validator';
 
 export interface SendFormValues {
   fromAccount?: string;
@@ -42,6 +43,8 @@ const SendForm: React.FC<SendFormProps> = ({
   const [fee, setFee] = useState(initialValues.fee || '0.01');
   const [memo, setMemo] = useState(initialValues.memo || '');
   const [password, setPassword] = useState(initialValues.password || '');
+  const [passwordError, setPasswordError] = useState('');
+  const [passwordTouched, setPasswordTouched] = useState(false);
 
   // Initialize balance hook with the selected account
   const { balance, fetchBalance, isLoading } = useBalance(fromAccount);
@@ -54,15 +57,9 @@ const SendForm: React.FC<SendFormProps> = ({
   }, [fromAccount, fetchBalance]);
 
   const handleMaxAmount = () => {
-    // Check if we have a balance and a valid fee
     if (balance && !isLoading) {
-      // Ensure fee is a valid number
       const feeValue = parseFloat(fee) || 0.01;
-
-      // Calculate max amount (balance - fee)
       const maxAmount = Math.max(0, balance - feeValue);
-
-      // Format to 5 decimal places and set amount
       setAmount(maxAmount.toFixed(5));
     }
   };
@@ -70,6 +67,19 @@ const SendForm: React.FC<SendFormProps> = ({
   // Handle auto fee
   const handleAutoFee = () => {
     setFee('0.01');
+  };
+
+  // Handle password change
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newPassword = e.target.value;
+    setPassword(newPassword);
+    setPasswordTouched(true);
+
+    if (newPassword && !validatePassword(newPassword)) {
+      setPasswordError(t('passwordRequirements'));
+    } else {
+      setPasswordError('');
+    }
   };
 
   // Handle form submission
@@ -87,12 +97,18 @@ const SendForm: React.FC<SendFormProps> = ({
   // Prepare account options for selects
   const accountOptions = accounts.map(account => ({
     value: account.address,
-    label: (
-      <span>
-        <span className="mr-2">👨</span> {t('account1')}
-      </span>
-    ),
+    label: `🤝 ${t('account1')}`,
   }));
+
+  // Check if form is valid
+  const isFormValid =
+    fromAccount &&
+    receiver &&
+    amount &&
+    fee &&
+    password &&
+    fromAccount !== receiver &&
+    validatePassword(password);
 
   return (
     <div className="flex flex-col gap-5 w-full px-2">
@@ -169,11 +185,11 @@ const SendForm: React.FC<SendFormProps> = ({
       <FormPasswordInput
         id="password"
         value={password}
-        onChange={e => setPassword(e.target.value)}
+        onChange={handlePasswordChange}
         placeholder={t('enterYourPassword')}
         label={t('password')}
-        touched={false}
-        error=""
+        touched={passwordTouched}
+        error={passwordError}
       />
 
       {/* Submit Button */}
@@ -182,7 +198,7 @@ const SendForm: React.FC<SendFormProps> = ({
           variant="primary"
           size="small"
           onClick={handleSubmit}
-          disabled={!fromAccount || !receiver || !amount || !password}
+          disabled={!isFormValid}
           type="button"
           className="w-[86px] h-[38px]"
         >

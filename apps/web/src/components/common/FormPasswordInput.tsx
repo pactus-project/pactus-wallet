@@ -38,7 +38,7 @@ const FormPasswordInput: React.FC<FormPasswordInputProps> = ({
   return (
     <div className="flex flex-col gap-1">
       {!hideLabel && (
-        <label htmlFor={id} className="text-sm font-medium text-text-primary">
+        <label htmlFor={id} className="text-sm font-medium text-text-quaternary">
           {label}
         </label>
       )}

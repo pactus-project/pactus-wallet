@@ -8,6 +8,7 @@ export interface ModalProps {
   title: string;
   children: React.ReactNode;
   showCloseButton?: boolean;
+  className?: string;
 }
 
 const Modal: React.FC<ModalProps> = ({
@@ -16,6 +17,7 @@ const Modal: React.FC<ModalProps> = ({
   title,
   children,
   showCloseButton = true,
+  className = '',
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
@@ -78,7 +80,7 @@ const Modal: React.FC<ModalProps> = ({
       role="presentation"
     >
       <div
-        className={`modal-container ${isOpen ? 'show' : 'hide'}`}
+        className={`modal-container bg-surface-medium rounded-md ${isOpen ? 'show' : 'hide'} ${className}`}
         ref={modalRef}
         role="dialog"
         aria-modal="true"

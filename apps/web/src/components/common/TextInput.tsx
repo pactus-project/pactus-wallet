@@ -8,6 +8,7 @@ interface TextInputProps {
   id?: string;
   name?: string;
   className?: string;
+  labelClassName?: string;
   disabled?: boolean;
   required?: boolean;
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
@@ -25,6 +26,7 @@ const TextInput: React.FC<TextInputProps> = ({
   id,
   name,
   className = '',
+  labelClassName = '',
   disabled = false,
   required = false,
   onBlur,
@@ -36,7 +38,10 @@ const TextInput: React.FC<TextInputProps> = ({
   return (
     <div className="flex flex-col gap-2">
       {!hideLabel && label && (
-        <label htmlFor={id} className="text-sm font-medium text-text-primary">
+        <label
+          htmlFor={id}
+          className={`text-sm font-medium text-text-quaternary ${labelClassName}`}
+        >
           {label}
         </label>
       )}
@@ -48,7 +53,7 @@ const TextInput: React.FC<TextInputProps> = ({
           value={value}
           onChange={onChange}
           onBlur={onBlur}
-          className={`w-full p-3 rounded-md bg-surface text-text-primary text-sm border border-border focus:outline-none focus:border-primary ${
+          className={`w-full p-3 rounded-md bg-background text-text-primary text-sm border border-border focus:outline-none focus:border-primary ${
             rightElement ? 'pr-16' : ''
           } ${className}`}
           placeholder={placeholder}

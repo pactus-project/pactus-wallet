@@ -14,6 +14,7 @@ interface FormSelectInputProps {
   id?: string;
   name?: string;
   className?: string;
+  labelClassName?: string;
   disabled?: boolean;
   required?: boolean;
   error?: string;
@@ -31,6 +32,7 @@ const FormSelectInput: React.FC<FormSelectInputProps> = ({
   id,
   name,
   className = '',
+  labelClassName = '',
   disabled = false,
   required = false,
   error,
@@ -52,6 +54,7 @@ const FormSelectInput: React.FC<FormSelectInputProps> = ({
         id={id}
         name={name}
         className={inputClassName}
+        labelClassName={labelClassName}
         disabled={disabled}
         required={required}
         onBlur={onBlur}
