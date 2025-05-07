@@ -52,7 +52,7 @@ const AddressDropdown: React.FC<AddressDropdownProps> = ({
   };
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-3">
       {!hideLabel && label && (
         <label
           htmlFor={id}

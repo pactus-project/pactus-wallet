@@ -78,7 +78,7 @@ const Wallet = () => {
                   <div className="balance-container">
                     <h2 className="wallet__balance-heading">Balance</h2>
                     <button className="wallet__show-private-key" onClick={handleShowPrivateKey}>
-                      <Image src={showPasswordIcon} alt="" width={24} height={24} />
+                      <Image src={showPasswordIcon} alt="Show private key" width={24} height={24} />
                     </button>
                   </div>
 

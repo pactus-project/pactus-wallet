@@ -36,7 +36,7 @@ const FormPasswordInput: React.FC<FormPasswordInputProps> = ({
   const inputClassName = showError ? `${className} border-error` : className;
 
   return (
-    <div className="flex flex-col gap-1">
+    <div className="flex flex-col gap-3">
       {!hideLabel && (
         <label htmlFor={id} className="text-sm font-medium text-text-quaternary">
           {label}

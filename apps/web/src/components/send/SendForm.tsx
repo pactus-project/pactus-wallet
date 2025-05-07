@@ -45,11 +45,8 @@ const SendForm: React.FC<SendFormProps> = ({
   const [password, setPassword] = useState(initialValues.password || '');
   const [passwordError, setPasswordError] = useState('');
   const [passwordTouched, setPasswordTouched] = useState(false);
-
-  // Initialize balance hook with the selected account
   const { balance, fetchBalance, isLoading } = useBalance(fromAccount);
 
-  // Fetch balance when account changes
   useEffect(() => {
     if (fromAccount) {
       fetchBalance(null, fromAccount);
@@ -139,7 +136,8 @@ const SendForm: React.FC<SendFormProps> = ({
         value={amount}
         onChange={e => setAmount(e.target.value)}
         placeholder="0.00"
-        label={`${t('amount')} (℗)`}
+        label={`${t('amount')}`}
+        showLogo={true}
         rightElement={
           <Button
             variant="text"
@@ -160,7 +158,8 @@ const SendForm: React.FC<SendFormProps> = ({
         value={fee}
         onChange={e => setFee(e.target.value)}
         placeholder="0.001"
-        label={`${t('fee')} (℗)`}
+        label={`${t('fee')}`}
+        showLogo={true}
         rightElement={
           <Button
             variant="text"

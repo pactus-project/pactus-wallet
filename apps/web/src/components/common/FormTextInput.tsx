@@ -19,6 +19,7 @@ interface FormTextInputProps {
   hideLabel?: boolean;
   rightElement?: React.ReactNode;
   autoComplete?: string;
+  showLogo?: boolean;
 }
 
 const FormTextInput: React.FC<FormTextInputProps> = ({
@@ -39,6 +40,7 @@ const FormTextInput: React.FC<FormTextInputProps> = ({
   hideLabel = false,
   rightElement,
   autoComplete,
+  showLogo = false,
 }) => {
   const showError = touched && error;
   const inputClassName = showError ? `${className} border-error` : className;
@@ -61,6 +63,7 @@ const FormTextInput: React.FC<FormTextInputProps> = ({
         hideLabel={hideLabel}
         rightElement={rightElement}
         autoComplete={autoComplete}
+        showLogo={showLogo}
       />
       {showError && <div className="text-xs text-error mt-1 pl-1">{error}</div>}
     </div>

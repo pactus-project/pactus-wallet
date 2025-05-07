@@ -1,6 +1,7 @@
 import React from 'react';
 import GradientText from './GradientText';
-
+import { simpleLogo } from '../../assets/images/branding';
+import Image from 'next/image';
 interface MemoInputProps {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -14,6 +15,8 @@ interface MemoInputProps {
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   label?: string;
   hideLabel?: boolean;
+  showLogo?: boolean;
+  labelClassName?: string;
 }
 
 const MemoInput: React.FC<MemoInputProps> = ({
@@ -29,13 +32,28 @@ const MemoInput: React.FC<MemoInputProps> = ({
   onBlur,
   label = 'Memo',
   hideLabel = false,
+  showLogo = false,
+  labelClassName = '',
 }) => {
   return (
-    <div className="flex flex-col gap-2">
-      {!hideLabel && (
-        <label htmlFor={id} className="text-sm font-medium text-text-quaternary">
-          {label}
-        </label>
+    <div className="flex flex-col gap-3">
+      {!hideLabel && label && (
+        <div className="flex items-center gap-1">
+          <label
+            htmlFor={id}
+            className={`text-sm font-medium text-text-quaternary ${labelClassName}`}
+          >
+            {label}
+          </label>
+          {showLogo && (
+            <div className="flex items-center">
+              <span className="text-sm font-medium text-text-quaternary">
+                (
+                <Image src={simpleLogo} alt="Pactus logo" className="w-5 h-5 inline-block" />)
+              </span>
+            </div>
+          )}
+        </div>
       )}
       <div className="relative">
         <input
