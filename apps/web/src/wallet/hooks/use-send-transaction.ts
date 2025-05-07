@@ -81,7 +81,6 @@ export function useSendTransaction() {
         if (!signedRawTxHex) {
           throw new Error('Missing signed transaction data');
         }
-        console.log('signedRawTxHex broadcastTransaction', signedRawTxHex);
         const broadcastTxHash = await wallet.broadcastTransaction(signedRawTxHex);
         setTxHash(broadcastTxHash);
         return broadcastTxHash;
