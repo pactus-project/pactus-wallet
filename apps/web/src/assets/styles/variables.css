@@ -11,32 +11,32 @@
    * Feedback: Status and messaging
    * Neutral: Borders, dividers, etc.
    */
-  
+
   /* Brand colors */
   --color-primary: #0fef9e;
   --color-primary-dark: #064560;
   --color-primary-light: #4fffc0; /* Add a lighter shade */
-  
+
   /* Background colors */
   --color-background: #15191c;
   --color-surface: #101010;
   --color-surface-light: #242424;
   --color-surface-medium: #1d2328; /* Add the often used #1D2328 */
-  
+
   /* Text colors */
   --color-text-primary: #ffffff;
   --color-text-secondary: #e1e1e1;
   --color-text-tertiary: #858699;
   --color-text-disabled: #6e6e6e;
-  
+
   /* Feedback colors */
   --color-error: #bd0f0f;
-  --color-error-light: #FFD7D7; /* Secondary error color */
-  --color-success: #0F840B;
-  --color-success-light: #C6FFBD; /* Secondary success color */
+  --color-error-light: #ffd7d7; /* Secondary error color */
+  --color-success: #0f840b;
+  --color-success-light: #c6ffbd; /* Secondary success color */
   --color-warning: #ca6534; /* Add warning color */
   --color-info: #0f65ef; /* Add info color */
-  
+
   /* Neutral colors */
   --color-border: #3e3e3e;
   --color-border-light: #414144;
@@ -47,7 +47,7 @@
    * Scale, weights, and line heights
    */
   --font-family-primary: 'Inter', sans-serif;
-  
+
   /* Font sizes - base 16px */
   --font-size-base: 1rem;
   --font-size-xs: 0.75rem; /* 12px */
@@ -108,22 +108,31 @@
   --shadow-sm: 0px 1px 2px rgba(0, 0, 0, 0.05);
   --shadow-md: 0px 2px 4px rgba(0, 0, 0, 0.1);
   --shadow-lg: 0px 4px 8px rgba(0, 0, 0, 0.15);
-  --shadow-button: 0px 0.303px 0.908px 0px rgba(0, 0, 0, 0.32), 0px 1.614px 3.631px 0px rgba(0, 0, 0, 0.28);
-  --shadow-inset: 0px 0px 3px 2px #272B33 inset;
+  --shadow-button:
+    0px 0.303px 0.908px 0px rgba(0, 0, 0, 0.32), 0px 1.614px 3.631px 0px rgba(0, 0, 0, 0.28);
+  --shadow-inset: 0px 0px 3px 2px #272b33 inset;
 
   /* 
    * GRADIENTS
    */
-  --gradient-primary: linear-gradient(91deg, var(--color-primary) -0.23%, var(--color-primary-dark) 105.78%);
-  --gradient-hover: linear-gradient(91deg, var(--color-primary-light) -0.23%, var(--color-primary) 105.78%);
-  
+  --gradient-primary: linear-gradient(
+    91deg,
+    var(--color-primary) -0.23%,
+    var(--color-primary-dark) 105.78%
+  );
+  --gradient-hover: linear-gradient(
+    91deg,
+    var(--color-primary-light) -0.23%,
+    var(--color-primary) 105.78%
+  );
+
   /* 
    * TRANSITIONS
    */
   --transition-fast: 0.2s ease;
   --transition-normal: 0.3s ease;
   --transition-slow: 0.5s ease;
-  
+
   /* 
    * Z-INDEX LAYERS
    */

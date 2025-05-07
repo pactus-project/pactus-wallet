@@ -21,6 +21,7 @@ module.exports = {
         'text-primary': '#ffffff',
         'text-secondary': '#e1e1e1',
         'text-tertiary': '#858699',
+        'text-quaternary': '#D2D3E0',
         'text-disabled': '#6e6e6e',
         error: '#bd0f0f',
         'error-light': '#FFD7D7',

@@ -14,6 +14,7 @@ interface AddressDropdownProps {
   id?: string;
   name?: string;
   className?: string;
+  labelClassName?: string;
   disabled?: boolean;
   required?: boolean;
   onBlur?: (e: React.FocusEvent<HTMLSelectElement>) => void;
@@ -33,6 +34,7 @@ const AddressDropdown: React.FC<AddressDropdownProps> = ({
   id = 'address-dropdown',
   name = 'address',
   className = '',
+  labelClassName = '',
   disabled = false,
   required = false,
   onBlur,
@@ -50,9 +52,12 @@ const AddressDropdown: React.FC<AddressDropdownProps> = ({
   };
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-3">
       {!hideLabel && label && (
-        <label htmlFor={id} className="text-sm font-medium text-text-primary">
+        <label
+          htmlFor={id}
+          className={`text-sm font-medium text-text-quaternary ${labelClassName}`}
+        >
           {label}
         </label>
       )}
@@ -63,12 +68,12 @@ const AddressDropdown: React.FC<AddressDropdownProps> = ({
           value={value}
           onChange={onChange}
           onBlur={onBlur}
-          className={`w-full p-3 rounded-md bg-[#1c1c1c] text-white text-sm border border-[#333333] focus:outline-none focus:border-primary appearance-none ${className}`}
+          className={`w-full p-3 rounded-md bg-background text-text-primary text-sm border border-border focus:outline-none focus:border-primary appearance-none hover:bg-background focus:bg-background ${className}`}
           disabled={disabled}
           required={required}
         >
           {placeholder && (
-            <option value="" disabled className="text-gray-500">
+            <option value="" disabled className="text-quaternary">
               {placeholder}
             </option>
           )}
@@ -76,7 +81,7 @@ const AddressDropdown: React.FC<AddressDropdownProps> = ({
             <option
               key={option.address}
               value={option.address}
-              className="bg-[#1c1c1c] text-white py-2"
+              className="bg-background text-text-primary py-2"
             >
               {option.name
                 ? `${option.name} (${formatAddress(option.address)})`

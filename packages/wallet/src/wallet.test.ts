@@ -512,8 +512,8 @@ describe('Pactus Wallet Tests', () => {
       // Create an address to get its path
       const addrInfo = await wallet.createAddress('Test Address', password);
 
-      // Test transaction raw hex (this would be a properly formed transaction)
-      const rawTxHex = '010000000000000001000000000000000100000000000000';
+      // Test transaction raw hex with correct flag byte (0x02 for unsigned)
+      const rawTxHex = '020000000000000001000000000000000100000000000000';
 
       // Sign the transaction
       const { signedRawTxHex } = await wallet.signTransaction(rawTxHex, addrInfo.path, password);
@@ -522,8 +522,9 @@ describe('Pactus Wallet Tests', () => {
       expect(signedRawTxHex).toBeTruthy();
       expect(signedRawTxHex.length).toBeGreaterThan(rawTxHex.length);
 
-      // The signed transaction should start with the original transaction data
-      expect(signedRawTxHex.startsWith(rawTxHex)).toBe(true);
+      // The signed transaction should start with 0x00 (signed flag) followed by the transaction data without the flag byte
+      expect(signedRawTxHex.startsWith('00')).toBe(true);
+      expect(signedRawTxHex.substring(2, rawTxHex.length)).toBe(rawTxHex.substring(2));
     });
 
     it('should throw an error for empty raw transaction', async () => {
