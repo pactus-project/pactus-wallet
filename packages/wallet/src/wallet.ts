@@ -355,12 +355,12 @@ export class Wallet {
 
   private publicKeyPrefix(): string {
     switch (this.info.network) {
-    case NetworkValues.MAINNET:
-      return 'public';
-    case NetworkValues.TESTNET:
-      return 'tpublic';
-    default:
-      throw new Error(`Unknown network type: ${this.info.network}`);
+      case NetworkValues.MAINNET:
+        return 'public';
+      case NetworkValues.TESTNET:
+        return 'tpublic';
+      default:
+        throw new Error(`Unknown network type: ${this.info.network}`);
     }
   }
 
@@ -524,10 +524,31 @@ export class Wallet {
     const derivationPath = addressPath;
     const privateKey = hdWallet.getKey(this.core.CoinType.pactus, derivationPath);
 
-    const signatureBytes = privateKey.sign(Uint8Array.from(rawTxBytes), this.core.Curve.ed25519);
+    // First byte of rawTxBytes should be the flags byte (0x00 for unsigned, 0x02 for signed)
+    // Make sure we're working with an unsigned transaction
+    if (rawTxBytes[0] !== 0x02) {
+      console.warn('Warning: Raw transaction does not have the expected flag byte');
+    }
+
+    // Get the bytes to sign (remove the first byte which is the flags)
+    const bytesToSign = rawTxBytes.subarray(1);
+
+    // Sign the transaction
+    const signatureBytes = privateKey.sign(Uint8Array.from(bytesToSign), this.core.Curve.ed25519);
+
+    // Get the public key bytes
     const publicKeyBytes = privateKey.getPublicKeyEd25519().data();
 
-    const signedTxBytes = Buffer.concat([rawTxBytes, signatureBytes, Buffer.from(publicKeyBytes)]);
+    // Create a new buffer with flags byte set to 0x00 (signed)
+    const signedTxHeader = Buffer.from([0x00]);
+
+    // Concatenate: [flags=0x00] + original tx without flags + signature + public key
+    const signedTxBytes = Buffer.concat([
+      signedTxHeader,
+      bytesToSign,
+      Buffer.from(signatureBytes),
+      Buffer.from(publicKeyBytes),
+    ]);
 
     return { signedRawTxHex: signedTxBytes.toString('hex') };
   }
