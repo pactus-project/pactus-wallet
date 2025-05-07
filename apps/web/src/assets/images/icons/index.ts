@@ -25,6 +25,7 @@ import documentCopyIcon from './document-copy.svg';
 import settingGeneralIcon from './setting-general-icon.svg';
 import walletManagerIcon from './wallet-manager-icon.svg';
 import nodeManagerIcon from './node-manager-icon.svg';
+import trashIcon from './trash-icon.svg';
 
 export {
     copyIcon,
@@ -54,4 +55,5 @@ export {
     settingGeneralIcon,
     walletManagerIcon,
     nodeManagerIcon,
+    trashIcon,
 };
