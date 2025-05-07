@@ -499,6 +499,7 @@ export class Wallet {
     };
 
     const result = await this.tryFetchJsonRpcResult(method, txParams);
+
     return {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       raw_transaction: result.raw_transaction,
