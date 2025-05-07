@@ -63,7 +63,7 @@ const SendPreviewModal: React.FC<SendPreviewModalProps> = ({
           const value = info.getValue();
           if (info.row.original.field === 'Signature') {
             return (
-              <div className="break-all text-xs bg-background-secondary p-2 rounded text-text-tertiary font-medium">
+              <div className="break-all text-xs bg-background-secondary p-1 rounded text-text-tertiary font-medium">
                 {value}
               </div>
             );
@@ -140,15 +140,36 @@ const SendPreviewModal: React.FC<SendPreviewModalProps> = ({
 
         <div className="flex justify-end gap-2 mt-4">
           {isSending ? (
-            <div className="flex items-center gap-2 text-primary">
-              <span>Sending{countdown > 0 ? ` in ${countdown}s...` : '...'}</span>
-              <span className="animate-spin inline-block w-4 h-4 border-2 border-primary border-t-transparent rounded-full" />
+            <div className="flex items-center justify-end w-full gap-2">
+              <div className="flex items-center gap-2 text-primary">
+                <span>Sending...</span>
+                <div className="relative">
+                  <div className="w-6 h-6 rounded-full relative">
+                    <div
+                      className="absolute inset-0 rounded-full bg-gradient-to-r from-[#0FA870] to-[#064560] animate-spin"
+                      style={{ clipPath: 'inset(0 0 8% 0)' }}
+                    ></div>
+                    {/* White center */}
+                    <div className="absolute inset-[2px] bg-white rounded-full"></div>
+                    {countdown > 0 && (
+                      <span className="absolute inset-0 flex items-center justify-center text-xs font-medium text-primary">
+                        {countdown}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <Button
+                variant="secondary"
+                size="small"
+                className="w-[86px] h-[38px] bg-gradient-to-r from-[#EF0F0F] to-[#890909] text-white border-0"
+                onClick={onClose}
+              >
+                Cancel
+              </Button>
             </div>
           ) : (
             <>
-              <Button variant="secondary" onClick={onClose}>
-                Cancel
-              </Button>
               <Button
                 variant="primary"
                 size="small"

@@ -47,13 +47,6 @@ export function useSendTransaction() {
         const amountValue = Amount.fromString(amount);
         const feeValue = Amount.fromString(fee);
 
-        console.log('amountValue', amountValue);
-        console.log('feeValue', feeValue);
-        console.log('fromAddress', fromAddress);
-        console.log('toAddress', toAddress);
-        console.log('memo', memo);
-        console.log('password', password);
-        // Call wallet.sendTransfer with the Amount objects
         const result = await wallet.getSignTransferTransaction(
           fromAddress,
           toAddress,
@@ -62,7 +55,6 @@ export function useSendTransaction() {
           memo,
           password
         );
-        console.log('result', result);
 
         setTxHash(result.signedRawTxHex);
         return result;
@@ -81,7 +73,6 @@ export function useSendTransaction() {
     async (signedRawTxHex: string): Promise<string> => {
       setIsLoading(true);
       setError(null);
-
       try {
         if (!wallet) {
           throw new Error('Wallet is not available');
@@ -90,8 +81,7 @@ export function useSendTransaction() {
         if (!signedRawTxHex) {
           throw new Error('Missing signed transaction data');
         }
-
-        // Broadcast the transaction
+        console.log('signedRawTxHex broadcastTransaction', signedRawTxHex);
         const broadcastTxHash = await wallet.broadcastTransaction(signedRawTxHex);
         setTxHash(broadcastTxHash);
         return broadcastTxHash;

@@ -64,6 +64,8 @@ const translations = {
   max: 'Max',
   auto: 'Auto',
   selectOrEnterAddress: 'Select or enter an address',
+  transactionSent: 'Transaction Sent',
+  transactionHash: 'Transaction Hash',
 
   // Error messages
   somethingWentWrong: 'Something went wrong',
@@ -75,7 +77,6 @@ const translations = {
   passwordsDoNotMatch: 'Passwords do not match.',
 
   // Success messages
-  transactionSent: 'Transaction sent successfully',
   walletCreated: 'Wallet created successfully',
   walletRestored: 'Wallet restored successfully',
 

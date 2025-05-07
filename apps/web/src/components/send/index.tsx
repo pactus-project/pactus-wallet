@@ -6,11 +6,13 @@ import Button from '@/components/Button';
 import Modal from '@/components/modal';
 import SendForm, { SendFormValues } from './SendForm';
 import SendPreviewModal from './SendPreviewModal';
+import SuccessTransferModal from './SuccessTransferModal';
 import { useSendTransaction } from '@/wallet/hooks/use-send-transaction';
 
 const SendPac: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const { t } = useI18n();
   const { error, broadcastTransaction } = useSendTransaction();
   const [formValues, setFormValues] = useState<SendFormValues>({});
@@ -18,6 +20,7 @@ const SendPac: React.FC = () => {
   const [isSending, setIsSending] = useState(false);
   const [countdown, setCountdown] = useState(0);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [txHash, setTxHash] = useState('');
   const countdownIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleOpenModal = () => {
@@ -27,14 +30,13 @@ const SendPac: React.FC = () => {
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
+    setIsSuccessModalOpen(false);
   };
 
   const handleFormSubmit = (values: SendFormValues, signedRawTxHex: string) => {
-    // Store form values and signed transaction hex
     setFormValues(values);
+    console.log('signedRawTxHex', signedRawTxHex);
     setSignedTxHex(signedRawTxHex);
-
-    // Close the form modal and open the preview modal
     setIsModalOpen(false);
     setIsPreviewModalOpen(true);
   };
@@ -57,31 +59,18 @@ const SendPac: React.FC = () => {
       });
     }, 1000);
 
-    // Broadcast the transaction immediately
     try {
-      const txHash = await broadcastTransaction(signedTxHex);
-      console.log('Transaction broadcast successful, hash:', txHash);
-
-      // Stop the countdown on success
+      const broadcastedTxHash = await broadcastTransaction(signedTxHex);
       if (countdownIntervalRef.current) {
         clearInterval(countdownIntervalRef.current);
         countdownIntervalRef.current = null;
       }
-
-      setSuccessMessage(t('transactionSent'));
-
-      // Close the preview modal after successful broadcast
-      setTimeout(() => {
-        setIsPreviewModalOpen(false);
-        setIsSending(false);
-        // Reopen the main modal to show success message
-        setIsModalOpen(true);
-      }, 1000);
+      setTxHash(broadcastedTxHash);
+      setIsPreviewModalOpen(false);
+      setIsSending(false);
+      setIsSuccessModalOpen(true);
     } catch (error) {
       console.error('Error broadcasting transaction:', error);
-
-      // Let the countdown continue in case of error
-      // When countdown finishes, it will close the modal
     }
   };
 
@@ -140,6 +129,15 @@ const SendPac: React.FC = () => {
         title={t('previewTransaction') || 'Preview Transaction'}
         isSending={isSending}
         countdown={countdown}
+      />
+
+      {/* Success Transfer Modal */}
+      <SuccessTransferModal
+        isOpen={isSuccessModalOpen}
+        onClose={handleCloseModal}
+        txHash={txHash}
+        amount={formValues.amount || ''}
+        recipient={formValues.receiver || ''}
       />
     </>
   );
