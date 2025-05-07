@@ -64,8 +64,10 @@ const translations = {
   max: 'Max',
   auto: 'Auto',
   selectOrEnterAddress: 'Select or enter an address',
-  transactionSent: 'Transaction Sent',
+  transactionSent: 'Sent',
   transactionHash: 'Transaction Hash',
+  networkFee: 'Network Fee',
+  previewTransaction: 'Send Preview',
 
   // Error messages
   somethingWentWrong: 'Something went wrong',

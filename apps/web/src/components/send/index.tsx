@@ -35,7 +35,6 @@ const SendPac: React.FC = () => {
 
   const handleFormSubmit = (values: SendFormValues, signedRawTxHex: string) => {
     setFormValues(values);
-    console.log('signedRawTxHex', signedRawTxHex);
     setSignedTxHex(signedRawTxHex);
     setIsModalOpen(false);
     setIsPreviewModalOpen(true);
@@ -44,33 +43,33 @@ const SendPac: React.FC = () => {
   const handleConfirmTransaction = async () => {
     setIsSending(true);
     setCountdown(10);
-
-    // Start countdown
-    countdownIntervalRef.current = setInterval(() => {
-      setCountdown(prev => {
-        if (prev <= 1) {
-          if (countdownIntervalRef.current) {
-            clearInterval(countdownIntervalRef.current);
-            countdownIntervalRef.current = null;
-          }
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-
+    // Clear the sending countdown
+    if (countdownIntervalRef.current) {
+      clearInterval(countdownIntervalRef.current);
+      countdownIntervalRef.current = null;
+    }
     try {
       const broadcastedTxHash = await broadcastTransaction(signedTxHex);
-      if (countdownIntervalRef.current) {
-        clearInterval(countdownIntervalRef.current);
-        countdownIntervalRef.current = null;
-      }
       setTxHash(broadcastedTxHash);
-      setIsPreviewModalOpen(false);
-      setIsSending(false);
-      setIsSuccessModalOpen(true);
+
+      countdownIntervalRef.current = setInterval(() => {
+        setCountdown(prev => {
+          if (prev <= 1) {
+            if (countdownIntervalRef.current) {
+              clearInterval(countdownIntervalRef.current);
+              countdownIntervalRef.current = null;
+            }
+            setIsPreviewModalOpen(false);
+            setIsSending(false);
+            setIsSuccessModalOpen(true);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
     } catch (error) {
       console.error('Error broadcasting transaction:', error);
+      setIsSending(false);
     }
   };
 

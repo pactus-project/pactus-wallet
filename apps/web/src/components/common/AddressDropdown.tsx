@@ -73,7 +73,7 @@ const AddressDropdown: React.FC<AddressDropdownProps> = ({
           required={required}
         >
           {placeholder && (
-            <option value="" disabled className="text-text-quaternary">
+            <option value="" disabled className="text-quaternary">
               {placeholder}
             </option>
           )}

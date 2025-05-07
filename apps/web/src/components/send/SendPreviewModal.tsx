@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect, useState } from 'react';
 import Modal from '@/components/modal';
 import Button from '@/components/Button';
 import {
@@ -40,10 +40,28 @@ const SendPreviewModal: React.FC<SendPreviewModalProps> = ({
   signature,
   onConfirm,
   onClose,
-  title = 'Send Preview',
+  title = 'Sending',
   isSending = false,
   countdown = 0,
 }) => {
+  // Circle animation properties
+  const circleRadius = 12;
+  const circleCircumference = 2 * Math.PI * circleRadius;
+  const [circleProgress, setCircleProgress] = useState(0);
+
+  // Update circle progress when countdown changes
+  useEffect(() => {
+    if (countdown > 0) {
+      // Calculate progress percentage (from 0 to 100)
+      // Assuming initial countdown is 10
+      const progress = ((10 - countdown) / 10) * 100;
+      setCircleProgress(progress);
+    }
+  }, [countdown]);
+
+  // Calculate stroke-dashoffset based on progress
+  const strokeDashoffset = circleCircumference - (circleProgress / 100) * circleCircumference;
+
   // Create column helper
   const columnHelper = createColumnHelper<TransactionDetail>();
 
@@ -63,7 +81,7 @@ const SendPreviewModal: React.FC<SendPreviewModalProps> = ({
           const value = info.getValue();
           if (info.row.original.field === 'Signature') {
             return (
-              <div className="break-all text-xs bg-background-secondary p-1 rounded text-text-tertiary font-medium">
+              <div className="break-all text-xs bg-background-secondary p-1 rounded text-tertiary font-medium">
                 {value}
               </div>
             );
@@ -73,16 +91,12 @@ const SendPreviewModal: React.FC<SendPreviewModalProps> = ({
           ) {
             return (
               <div className="flex items-center gap-2">
-                <span className="break-all text-text-tertiary text-[12px] font-medium">
-                  {value}
-                </span>
+                <span className="break-all text-tertiary text-[12px] font-medium">{value}</span>
                 <Image src={simpleLogo} alt="Pactus logo" className="w-3 h-3 inline-block" />
               </div>
             );
           }
-          return (
-            <span className="break-all text-text-tertiary text-[12px] font-medium">{value}</span>
-          );
+          return <span className="break-all text-tertiary text-[12px] font-medium">{value}</span>;
         },
       }),
     ],
@@ -142,21 +156,45 @@ const SendPreviewModal: React.FC<SendPreviewModalProps> = ({
           {isSending ? (
             <div className="flex items-center justify-end w-full gap-2">
               <div className="flex items-center gap-2 text-primary">
-                <span>Sending...</span>
                 <div className="relative">
-                  <div className="w-6 h-6 rounded-full relative">
-                    <div
-                      className="absolute inset-0 rounded-full bg-gradient-to-r from-[#0FA870] to-[#064560] animate-spin"
-                      style={{ clipPath: 'inset(0 0 8% 0)' }}
-                    ></div>
-                    {/* White center */}
-                    <div className="absolute inset-[2px] bg-white rounded-full"></div>
-                    {countdown > 0 && (
-                      <span className="absolute inset-0 flex items-center justify-center text-xs font-medium text-primary">
-                        {countdown}
-                      </span>
-                    )}
-                  </div>
+                  {/* SVG Countdown Circle */}
+                  <svg width="30" height="30" viewBox="0 0 30 30">
+                    {/* Background circle */}
+                    <circle
+                      cx="15"
+                      cy="15"
+                      r={circleRadius}
+                      fill="transparent"
+                      stroke="#2D3748"
+                      strokeWidth="2"
+                    />
+                    {/* Progress circle */}
+                    <circle
+                      cx="15"
+                      cy="15"
+                      r={circleRadius}
+                      fill="transparent"
+                      stroke="#0FA870"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeDasharray={circleCircumference}
+                      strokeDashoffset={strokeDashoffset}
+                      transform="rotate(-90 15 15)"
+                      className="transition-all duration-300 ease-linear"
+                    />
+                    {/* Countdown text */}
+                    <text
+                      x="15"
+                      y="16"
+                      textAnchor="middle"
+                      dominantBaseline="middle"
+                      fill="white"
+                      fontSize="10"
+                      fontWeight="bold"
+                    >
+                      {countdown}
+                    </text>
+                  </svg>
                 </div>
               </div>
               <Button

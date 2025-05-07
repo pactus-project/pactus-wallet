@@ -39,10 +39,7 @@ const SelectInput: React.FC<SelectInputProps> = ({
   return (
     <div className="flex flex-col gap-3">
       {!hideLabel && label && (
-        <label
-          htmlFor={id}
-          className={`text-sm font-medium text-text-quaternary ${labelClassName}`}
-        >
+        <label htmlFor={id} className={`text-sm font-medium text-quaternary ${labelClassName}`}>
           {label}
         </label>
       )}
@@ -58,7 +55,7 @@ const SelectInput: React.FC<SelectInputProps> = ({
           required={required}
         >
           {placeholder && (
-            <option value="" disabled className="text-text-quaternary">
+            <option value="" disabled className="text-quaternary">
               {placeholder}
             </option>
           )}

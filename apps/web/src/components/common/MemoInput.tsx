@@ -39,15 +39,12 @@ const MemoInput: React.FC<MemoInputProps> = ({
     <div className="flex flex-col gap-3">
       {!hideLabel && label && (
         <div className="flex items-center gap-1">
-          <label
-            htmlFor={id}
-            className={`text-sm font-medium text-text-quaternary ${labelClassName}`}
-          >
+          <label htmlFor={id} className={`text-sm font-medium text-quaternary ${labelClassName}`}>
             {label}
           </label>
           {showLogo && (
             <div className="flex items-center">
-              <span className="text-sm font-medium text-text-quaternary">
+              <span className="text-sm font-medium text-quaternary">
                 (
                 <Image src={simpleLogo} alt="Pactus logo" className="w-5 h-5 inline-block" />)
               </span>

@@ -43,10 +43,7 @@ const TextInput: React.FC<TextInputProps> = ({
     <div className="flex flex-col gap-3">
       {!hideLabel && label && (
         <div className="flex items-center gap-1">
-          <label
-            htmlFor={id}
-            className={`text-sm font-medium text-text-quaternary ${labelClassName}`}
-          >
+          <label htmlFor={id} className={`text-sm font-medium text-quaternary ${labelClassName}`}>
             {label}
           </label>
           {showLogo && (
