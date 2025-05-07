@@ -142,15 +142,15 @@ export class Encrypter {
     let passwordHash: Buffer;
 
     switch (funcs[0]) {
-      case EncryptionMethod.argon2id: {
-        const salt = data.subarray(0, 16);
+    case EncryptionMethod.argon2id: {
+      const salt = data.subarray(0, 16);
 
-        passwordHash = await this.deriveKeyFromPassword(password, salt);
-        break;
-      }
+      passwordHash = await this.deriveKeyFromPassword(password, salt);
+      break;
+    }
 
-      default:
-        throw new Error('Method not supported');
+    default:
+      throw new Error('Method not supported');
     }
 
     // Encrypter method
@@ -160,30 +160,30 @@ export class Encrypter {
     let msg: string;
 
     switch (funcs[1]) {
-      case EncryptionMethod.aes256ctr: {
-        msg = this.aesCrypt(cipher, iv, cipherKey).toString();
-        break;
-      }
+    case EncryptionMethod.aes256ctr: {
+      msg = this.aesCrypt(cipher, iv, cipherKey).toString();
+      break;
+    }
 
-      default:
-        throw new Error('Method not supported');
+    default:
+      throw new Error('Method not supported');
     }
 
     // MAC method
     switch (funcs[2]) {
-      case EncryptionMethod.macv1: {
-        const mac = data.subarray(data.length - 4);
-        const calculatedMac = this.calcMACv1(cipherKey.subarray(16, 32), cipher);
+    case EncryptionMethod.macv1: {
+      const mac = data.subarray(data.length - 4);
+      const calculatedMac = this.calcMACv1(cipherKey.subarray(16, 32), cipher);
 
-        if (!calculatedMac.equals(mac)) {
-          throw new Error('Invalid password');
-        }
-
-        break;
+      if (!calculatedMac.equals(mac)) {
+        throw new Error('Invalid password');
       }
 
-      default:
-        throw new Error('Method not supported');
+      break;
+    }
+
+    default:
+      throw new Error('Method not supported');
     }
 
     return msg;
