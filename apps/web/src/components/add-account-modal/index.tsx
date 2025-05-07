@@ -106,6 +106,7 @@ const AddAccountModal: React.FC<AddAccountModalProps> = ({ isOpen, onClose }) =>
               onClick={togglePasswordVisibility}
               aria-label={showPassword ? "Hide password" : "Show password"}
             >
+              {}
               <Image
                 src={showPassword ? hidePasswordIcon : showPasswordIcon}
                 alt=""

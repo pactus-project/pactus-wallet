@@ -24,7 +24,7 @@ function MainLayout({ children }) {
           <Sidebar />
           <div className="flex-1 flex flex-col ml-[219px]">
             <Header />
-            {children}
+              {children}
           </div>
         </main>
       </Suspense>

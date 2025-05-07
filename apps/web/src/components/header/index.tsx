@@ -16,16 +16,16 @@ const Header: React.FC = () => {
   };
 
   return (
-    <header className="header">
-      <div className="header__content">
-        <h1 className="header__title">{headerTitle}</h1>
+    <header className="w-full border-b-[1px] border-surface-medium">
+      <div className="h-14 flex justify-between items-center w-full pl-7 pr-4">
+        <h1 className="text-sm text-[#D2D3E0] font-semibold">{headerTitle}</h1>
         <button
           type="button"
           className="btn btn-icon header__logout-button"
           onClick={handleLogout}
           aria-label="Log out of wallet"
         >
-          <Image src={logoutIcon} width={32} height={32} alt="" aria-hidden="true" />
+          <Image src={logoutIcon} width={20} height={20} alt="" aria-hidden="true" />
         </button>
       </div>
     </header>

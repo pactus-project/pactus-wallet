@@ -19,6 +19,7 @@ import BorderBeam from '../border-beam';
 import { useWallet } from '@/wallet';
 import { useAccount } from '@/wallet/hooks/use-account';
 import AddAccountModal from '../add-account-modal';
+import { PATHS } from '@/constants/paths';
 
 // External links
 const REPOSITORY_URL = 'https://github.com/pactus-project/pactus-wallet/issues/new/choose';
@@ -91,9 +92,9 @@ const Sidebar = () => {
       <nav className="sidebar__nav">
         <button
           type="button"
-          className={`sidebar__nav-item ${isActiveRoute('/') ? 'sidebar__nav-item--active' : ''}`}
-          onClick={() => navigate('/')}
-          aria-current={isActiveRoute('/') ? 'page' : undefined}
+          className={`sidebar__nav-item ${isActiveRoute(PATHS.HOME) ? 'sidebar__nav-item--active' : ''}`}
+          onClick={() => navigate(PATHS.HOME)}
+          aria-current={isActiveRoute(PATHS.HOME) ? 'page' : undefined}
         >
           <Image src={overviewIcon} alt="" aria-hidden="true" />
           <span className="sidebar__nav-label">Overview</span>
@@ -125,8 +126,9 @@ const Sidebar = () => {
       <div className="sidebar__footer">
         <button
           type="button"
-          className={`sidebar__nav-item ${isActiveRoute('/settings') ? 'sidebar__nav-item--active' : ''}`}
-          aria-current={isActiveRoute('/settings') ? 'page' : undefined}
+          onClick={() => navigate(PATHS.SETTING_GENERAL)}
+          className={`sidebar__nav-item ${[PATHS.SETTING_GENERAL, PATHS.WALLET_MANAGER, PATHS.NODE_MANAGER].includes(pathname) ? 'sidebar__nav-item--active' : ''}`}
+          aria-current={isActiveRoute(PATHS.SETTING_GENERAL) ? 'page' : undefined}
         >
           <Image src={settingsIcon} alt="" aria-hidden="true" />
           <span className="sidebar__nav-label">Settings</span>

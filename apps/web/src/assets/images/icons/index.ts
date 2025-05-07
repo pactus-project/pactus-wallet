@@ -22,6 +22,10 @@ import downloadIcon from './download-icon.svg';
 import successDownloadIcon from './success-download-icon.svg';
 import successIcon from './success-icon.svg';
 import documentCopyIcon from './document-copy.svg';
+import settingGeneralIcon from './setting-general-icon.svg';
+import walletManagerIcon from './wallet-manager-icon.svg';
+import nodeManagerIcon from './node-manager-icon.svg';
+
 export {
     copyIcon,
     hidePasswordIcon,
@@ -46,5 +50,8 @@ export {
     downloadIcon,
     successDownloadIcon,
     successIcon,
-    documentCopyIcon
+    documentCopyIcon,
+    settingGeneralIcon,
+    walletManagerIcon,
+    nodeManagerIcon,
 };
