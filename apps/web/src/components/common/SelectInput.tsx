@@ -13,6 +13,7 @@ interface SelectInputProps {
   id?: string;
   name?: string;
   className?: string;
+  labelClassName?: string;
   disabled?: boolean;
   required?: boolean;
   onBlur?: (e: React.FocusEvent<HTMLSelectElement>) => void;
@@ -28,6 +29,7 @@ const SelectInput: React.FC<SelectInputProps> = ({
   id,
   name,
   className = '',
+  labelClassName = '',
   disabled = false,
   required = false,
   onBlur,
@@ -35,9 +37,9 @@ const SelectInput: React.FC<SelectInputProps> = ({
   hideLabel = false,
 }) => {
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-3">
       {!hideLabel && label && (
-        <label htmlFor={id} className="text-sm font-medium text-text-primary">
+        <label htmlFor={id} className={`text-sm font-medium text-quaternary ${labelClassName}`}>
           {label}
         </label>
       )}
@@ -48,12 +50,12 @@ const SelectInput: React.FC<SelectInputProps> = ({
           value={value}
           onChange={onChange}
           onBlur={onBlur}
-          className={`w-full p-3 rounded-md bg-[#1c1c1c] text-white text-sm border border-[#333333] focus:outline-none focus:border-primary appearance-none ${className}`}
+          className={`w-full p-3 rounded-md bg-background text-tertiary text-sm border border-border focus:outline-none focus:border-primary appearance-none hover:bg-background focus:bg-background ${className}`}
           disabled={disabled}
           required={required}
         >
           {placeholder && (
-            <option value="" disabled className="text-gray-500">
+            <option value="" disabled className="text-disabled">
               {placeholder}
             </option>
           )}
@@ -61,7 +63,7 @@ const SelectInput: React.FC<SelectInputProps> = ({
             <option
               key={`${option.value}-${index}`}
               value={option.value}
-              className="bg-[#1c1c1c] text-white"
+              className="bg-background text-quaternary"
             >
               {option.label}
             </option>

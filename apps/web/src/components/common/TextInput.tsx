@@ -1,4 +1,6 @@
 import React from 'react';
+import Image from 'next/image';
+import { simpleLogo } from '../../assets/images/branding';
 
 interface TextInputProps {
   value: string;
@@ -8,11 +10,13 @@ interface TextInputProps {
   id?: string;
   name?: string;
   className?: string;
+  labelClassName?: string;
   disabled?: boolean;
   required?: boolean;
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   label?: string;
   hideLabel?: boolean;
+  showLogo?: boolean;
   rightElement?: React.ReactNode;
   autoComplete?: string;
 }
@@ -25,6 +29,7 @@ const TextInput: React.FC<TextInputProps> = ({
   id,
   name,
   className = '',
+  labelClassName = '',
   disabled = false,
   required = false,
   onBlur,
@@ -32,13 +37,24 @@ const TextInput: React.FC<TextInputProps> = ({
   hideLabel = false,
   rightElement,
   autoComplete,
+  showLogo = false,
 }) => {
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-3">
       {!hideLabel && label && (
-        <label htmlFor={id} className="text-sm font-medium text-text-primary">
-          {label}
-        </label>
+        <div className="flex items-center gap-1">
+          <label htmlFor={id} className={`text-sm font-medium text-quaternary ${labelClassName}`}>
+            {label}
+          </label>
+          {showLogo && (
+            <div className="flex items-center">
+              <span className="text-sm font-medium text-quaternary">
+                (
+                <Image src={simpleLogo} alt="Pactus logo" className="w-5 h-5 inline-block" />)
+              </span>
+            </div>
+          )}
+        </div>
       )}
       <div className="relative">
         <input
@@ -48,7 +64,7 @@ const TextInput: React.FC<TextInputProps> = ({
           value={value}
           onChange={onChange}
           onBlur={onBlur}
-          className={`w-full p-3 rounded-md bg-surface text-text-primary text-sm border border-border focus:outline-none focus:border-primary ${
+          className={`w-full p-3 rounded-md bg-background text-text-primary text-sm border border-border focus:outline-none focus:border-primary ${
             rightElement ? 'pr-16' : ''
           } ${className}`}
           placeholder={placeholder}

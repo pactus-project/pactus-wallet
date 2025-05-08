@@ -156,7 +156,10 @@ export default [
 
       // TypeScript-specific indentation (overrides the shared one)
       // '@typescript-eslint/indent': ['error', 2],
-      indent: ['error', 2],
+      indent: ['error', 2, {
+        SwitchCase: 1,
+        flatTernaryExpressions: true
+      }],
 
       // TypeScript specific
       '@typescript-eslint/explicit-function-return-type': [

@@ -15,6 +15,7 @@ interface FormAddressDropdownProps {
   id?: string;
   name?: string;
   className?: string;
+  labelClassName?: string;
   disabled?: boolean;
   required?: boolean;
   error?: string;
@@ -36,6 +37,7 @@ const FormAddressDropdown: React.FC<FormAddressDropdownProps> = ({
   id,
   name,
   className = '',
+  labelClassName = '',
   disabled = false,
   required = false,
   error,
@@ -58,6 +60,7 @@ const FormAddressDropdown: React.FC<FormAddressDropdownProps> = ({
         id={id}
         name={name}
         className={inputClassName}
+        labelClassName={labelClassName}
         disabled={disabled}
         required={required}
         onBlur={onBlur}

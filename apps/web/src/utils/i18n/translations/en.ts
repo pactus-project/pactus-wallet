@@ -59,6 +59,15 @@ const translations = {
   confirmed: 'Confirmed',
   pending: 'Pending',
   failed: 'Failed',
+  from: 'From',
+  receiver: 'Receiver',
+  max: 'Max',
+  auto: 'Auto',
+  selectOrEnterAddress: 'Select or enter an address',
+  transactionSent: 'Sent',
+  transactionHash: 'Transaction Hash',
+  networkFee: 'Network Fee',
+  previewTransaction: 'Send Preview',
 
   // Error messages
   somethingWentWrong: 'Something went wrong',
@@ -70,7 +79,6 @@ const translations = {
   passwordsDoNotMatch: 'Passwords do not match.',
 
   // Success messages
-  transactionSent: 'Transaction sent successfully',
   walletCreated: 'Wallet created successfully',
   walletRestored: 'Wallet restored successfully',
 
