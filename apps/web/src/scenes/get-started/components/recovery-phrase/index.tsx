@@ -9,6 +9,7 @@ import { useWallet } from '@/wallet';
 import { useI18n } from '@/utils/i18n';
 import { LottieWithText } from '../../../../components/LottieWithText';
 import Button from '../../../../components/Button';
+import FormSelectInput from '../../../../components/common/FormSelectInput';
 const RecoveryPhrase: React.FC = () => {
   const [step, setStep] = useState<number>(1);
   const [wordCount, setWordCount] = useState<number>(24);
@@ -128,25 +129,28 @@ const RecoveryPhrase: React.FC = () => {
             description={t('writeDownWords', wordCount.toString())}
           />
           <div className="recovery-phrase__select-container">
-            <select
+            <FormSelectInput
               id="word-count-select"
-              className="recovery-phrase__select"
-              value={wordCount}
+              className="w-full min-w-[125px] text-[12px]"
+              value={wordCount.toString()}
               onChange={e => setWordCount(parseInt(e.target.value))}
-            >
-              <option value={12}>{t('twelveWords')}</option>
-              <option value={24}>{t('twentyFourWords')}</option>
-            </select>
+              options={[
+                { label: t('twelveWords'), value: '12' },
+                { label: t('twentyFourWords'), value: '24' },
+              ]}
+            />
           </div>
 
-          <div id="recoveryPhraseStep2-parent" className="recovery-phrase__seed-container">
-            {walletSeeds.map((word, index) => (
-              <span key={index} className="recovery-phrase__word">
-                <label className="recovery-phrase__word-label">{index + 1}.</label>
-                <span className="recovery-phrase__word-text">{word}</span>
-              </span>
-            ))}
-            <BorderBeam duration={10} size={400} parentId="recoveryPhraseStep2-parent" />
+          <div id="recoveryPhraseStep2-parent" className="w-full p-4 rounded-md bg-[#101010]">
+            <div className="grid grid-cols-3 md:grid-cols-6 gap-4 ml-4 mr-4 mt-3 mb-3">
+              {walletSeeds.map((word, index) => (
+                <span key={index} className="flex items-center p-2 bg-[#242424] rounded-md">
+                  <label className="text-sm mr-1 text-white">{index + 1}.</label>
+                  <span className="text-base text-white">{word}</span>
+                </span>
+              ))}
+              <BorderBeam duration={10} size={400} parentId="recoveryPhraseStep2-parent" />
+            </div>
           </div>
           <Button
             variant="primary"
@@ -169,42 +173,44 @@ const RecoveryPhrase: React.FC = () => {
           />
           <div
             id="recoveryPhraseStep3-parent"
-            className="recovery-phrase__seed-container"
+            className="w-full p-4 rounded-md bg-[#101010]"
             role="group"
             aria-label={t('confirmRecoveryPhrase')}
           >
-            {walletSeeds.map((word, index) =>
-              validationIndexes.includes(index) ? (
-                <span
-                  key={index}
-                  className={`recovery-phrase__word recovery-phrase__word--input ${
-                    inputErrors[index] === 'error'
-                      ? 'recovery-phrase__word--error'
-                      : inputErrors[index] === 'success'
-                        ? 'recovery-phrase__word--success'
-                        : ''
-                  }`}
-                >
-                  <label htmlFor={`word-input-${index}`} className="recovery-phrase__word-label">
-                    {index + 1}.
-                  </label>
-                  <input
-                    id={`word-input-${index}`}
-                    type="text"
-                    className="recovery-phrase__word-input"
-                    value={userInputs[index] || ''}
-                    onChange={e => handleInputChange(index, e.target.value)}
-                    aria-invalid={inputErrors[index] === 'error'}
-                    autoComplete="off"
-                  />
-                </span>
-              ) : (
-                <span key={index} className="recovery-phrase__word">
-                  <label className="recovery-phrase__word-label">{index + 1}.</label>
-                  <span className="recovery-phrase__word-text">{word}</span>
-                </span>
-              )
-            )}
+            <div className="grid grid-cols-3 md:grid-cols-6 gap-4 ml-4 mr-4 mt-3 mb-3">
+              {walletSeeds.map((word, index) =>
+                validationIndexes.includes(index) ? (
+                  <span
+                    key={index}
+                    className={`flex items-center p-2 bg-[#242424] rounded-md ${
+                      inputErrors[index] === 'error'
+                        ? 'recovery-phrase__word--error'
+                        : inputErrors[index] === 'success'
+                          ? 'recovery-phrase__word--success'
+                          : ''
+                    }`}
+                  >
+                    <label htmlFor={`word-input-${index}`} className="recovery-phrase__word-label">
+                      {index + 1}.
+                    </label>
+                    <input
+                      id={`word-input-${index}`}
+                      type="text"
+                      className="recovery-phrase__word-input  ml-1"
+                      value={userInputs[index] || ''}
+                      onChange={e => handleInputChange(index, e.target.value)}
+                      aria-invalid={inputErrors[index] === 'error'}
+                      autoComplete="off"
+                    />
+                  </span>
+                ) : (
+                  <span key={index} className="flex items-center p-2 bg-[#242424] rounded-md">
+                    <label className="text-sm ml-1 text-white">{index + 1}.</label>
+                    <span className="text-base text-white">{word}</span>
+                  </span>
+                )
+              )}
+            </div>
             <BorderBeam duration={10} size={400} parentId="recoveryPhraseStep3-parent" />
           </div>
 
