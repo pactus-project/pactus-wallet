@@ -18,8 +18,18 @@ import {
 
 // Configuration for RPC endpoints
 const RPC_ENDPOINTS = {
-  [NetworkValues.MAINNET]: ['https://bootstrap2.pactus.org:8545'],
-  [NetworkValues.TESTNET]: ['https://testnet1.pactus.org/jsonrpc'],
+  [NetworkValues.MAINNET]: [
+    'https://bootstrap1.pactus.org/jsonrpc',
+    'https://bootstrap2.pactus.org/jsonrpc',
+    'https://bootstrap3.pactus.org/jsonrpc',
+    'https://bootstrap4.pactus.org/jsonrpc'
+  ],
+  [NetworkValues.TESTNET]: [
+    'https://testnet1.pactus.org/jsonrpc',
+    'https://testnet2.pactus.org/jsonrpc',
+    'https://testnet3.pactus.org/jsonrpc',
+    'https://testnet4.pactus.org/jsonrpc'
+  ],
 };
 
 // Wallet configuration constants
