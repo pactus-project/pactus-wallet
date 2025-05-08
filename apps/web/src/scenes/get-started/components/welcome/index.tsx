@@ -106,7 +106,7 @@ const Welcome = () => {
         <Button
           onClick={() => push(PATHS.ADD_WALLET)}
           disabled={!isChecked}
-          className="btn btn-primary mt-xs h-button-desktop w-full max-w-full tablet:!min-w-[300px] tablet:!flex-grow-0"
+          className="mt-xs h-button-desktop w-full max-w-full tablet:!min-w-[300px] tablet:!flex-grow-0"
         >
           {t('letsStart')}
         </Button>
