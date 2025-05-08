@@ -1,6 +1,7 @@
 'use client';
 import React, { useEffect, useRef, useState, useId } from 'react';
 import './style.css';
+import { Typography } from '../common/Typography';
 
 export interface ModalProps {
   isOpen: boolean;
@@ -80,19 +81,19 @@ const Modal: React.FC<ModalProps> = ({
       role="presentation"
     >
       <div
-        className={`modal-container bg-surface-medium rounded-md ${isOpen ? 'show' : 'hide'} ${className}`}
+        className={`max-w-[600px] w-[90%] box-shadow-lg transform-translate-y-[-20px] transition-transform-normal overflow-hidden border-1 border-surface-medium bg-surface-medium rounded-md ${isOpen ? 'show' : 'hide'} ${className}`}
         ref={modalRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
       >
-        <header className="modal-header">
-          <h2 id={titleId} className="modal-title">
+        <header className="flex items-center justify-between p-4 border-b border-[#52526F40]">
+          <Typography variant="body2" color="text-quaternary" className="p-1 pl-4 font-medium">
             {title}
-          </h2>
+          </Typography>
           {showCloseButton && (
             <button
-              className="modal-close-button"
+              className="modal-close-button mr-3"
               onClick={onClose}
               aria-label="Close modal"
               type="button"

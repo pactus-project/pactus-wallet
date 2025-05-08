@@ -11,7 +11,7 @@ interface RefetchBalanceProps {
 const RefetchBalance: React.FC<RefetchBalanceProps> = ({ onRefresh, isLoading = false }) => {
   return (
     <button
-      className={`refetch-balance-button ${isLoading ? 'animate-spin' : ''}`}
+      className={`w-[24px] h-[24px] refetch-balance-button ${isLoading ? 'animate-spin' : ''}`}
       onClick={onRefresh}
       disabled={isLoading}
       aria-label="Refresh balance"

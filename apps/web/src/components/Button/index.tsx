@@ -37,6 +37,8 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
    * Custom class names
    */
   className?: string;
+
+  labelClassName?: string;
 }
 
 export const Button = ({
@@ -50,6 +52,7 @@ export const Button = ({
   fullWidth = false,
   className,
   type = 'button',
+  labelClassName,
   ...props
 }: ButtonProps) => {
   // Base classes for all buttons
@@ -95,7 +98,7 @@ export const Button = ({
       {...props}
     >
       {startIcon && <span className="mr-2">{startIcon}</span>}
-      <span>{children}</span>
+      <span className={cn('text-sm', labelClassName)}>{children}</span>
       {endIcon && <span className="ml-2">{endIcon}</span>}
 
       {isLoading && (

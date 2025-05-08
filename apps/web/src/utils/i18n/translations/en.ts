@@ -143,6 +143,15 @@ const translations = {
   addAccount: 'Add Account',
   bridge: 'Bridge',
   accountAddress: 'Account Address',
+  showPrivateKey: 'Show Private Key',
+  toShowPrivateKey:
+    'To show the private key, please enter your master password to decrypt your account.',
+  publicKey: 'Public Key',
+  privateKey: 'Private Key',
+  label: 'Label',
+  accountName: 'Account Name',
+  enterAccountName: 'Enter account name',
+  totalBalance: 'Total Balance',
 };
 
 export default translations;
