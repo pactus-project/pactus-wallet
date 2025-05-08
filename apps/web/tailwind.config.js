@@ -15,6 +15,7 @@ module.exports = {
         'primary-dark': '#064560',
         'primary-light': '#4fffc0',
         background: '#15191c',
+        secondary: '#15191c',
         surface: '#101010',
         'surface-light': '#242424',
         'surface-medium': '#1d2328',
@@ -94,10 +95,15 @@ module.exports = {
         tooltip: '700',
       },
       screens: {
+        sm: '640px',
+        md: '768px',
+        lg: '1024px',
+        xl: '1280px',
+        '2xl': '1536px',
         mobile: '481px',
         tablet: '769px',
         desktop: '1025px',
-        'large-desktop': '1441px',
+        'large-desktop': '1441px'
       },
       typography: theme => ({
         DEFAULT: {

@@ -31,16 +31,6 @@ const meta: Meta<typeof Typography> = {
       control: 'color',
       description: 'Custom text color (ignored if gradient is set)',
     },
-    gradient: {
-      control: 'select',
-      options: ['primary', 'success', 'warning', 'danger', 'custom'],
-      description: 'Gradient style to apply to the text',
-    },
-    customGradient: {
-      control: 'text',
-      description:
-        'Custom gradient classes when gradient is set to "custom" (e.g., "from-red-500 to-blue-500")',
-    },
   },
 };
 
@@ -112,88 +102,6 @@ export const CustomElement: Story = {
     as: 'p',
     className: 'text-left border border-white p-2',
   },
-};
-
-export const GradientText: Story = {
-  render: () => (
-    <div className="space-y-8 p-4 bg-background-primary rounded-lg">
-      <div>
-        <Typography variant="h2" className="mb-4">
-          Gradient Text Options
-        </Typography>
-
-        <div className="space-y-6">
-          <div>
-            <Typography variant="caption2" className="text-gray-400 mb-2">
-              Primary Gradient (Blue to Purple)
-            </Typography>
-            <Typography variant="h1" gradient="primary">
-              Primary Gradient
-            </Typography>
-            <Typography variant="body1" gradient="primary">
-              This text uses the primary gradient
-            </Typography>
-          </div>
-
-          <div>
-            <Typography variant="caption2" className="text-gray-400 mb-2">
-              Success Gradient (Green to Teal)
-            </Typography>
-            <Typography variant="h1" gradient="success">
-              Success Gradient
-            </Typography>
-            <Typography variant="body1" gradient="success">
-              This text uses the success gradient
-            </Typography>
-          </div>
-
-          <div>
-            <Typography variant="caption2" className="text-gray-400 mb-2">
-              Warning Gradient (Yellow to Orange)
-            </Typography>
-            <Typography variant="h1" gradient="warning">
-              Warning Gradient
-            </Typography>
-            <Typography variant="body1" gradient="warning">
-              This text uses the warning gradient
-            </Typography>
-          </div>
-
-          <div>
-            <Typography variant="caption2" className="text-gray-400 mb-2">
-              Danger Gradient (Red to Pink)
-            </Typography>
-            <Typography variant="h1" gradient="danger">
-              Danger Gradient
-            </Typography>
-            <Typography variant="body1" gradient="danger">
-              This text uses the danger gradient
-            </Typography>
-          </div>
-
-          <div>
-            <Typography variant="caption2" className="text-gray-400 mb-2">
-              Custom Gradient
-            </Typography>
-            <Typography
-              variant="h1"
-              gradient="custom"
-              customGradient="from-purple-400 via-pink-500 to-red-500"
-            >
-              Custom Gradient
-            </Typography>
-            <Typography
-              variant="body1"
-              gradient="custom"
-              customGradient="from-green-300 via-blue-500 to-purple-600"
-            >
-              This text uses a custom gradient
-            </Typography>
-          </div>
-        </div>
-      </div>
-    </div>
-  ),
 };
 
 export const AllVariants: Story = {

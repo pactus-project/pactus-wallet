@@ -141,6 +141,8 @@ const translations = {
   address: 'Address',
   title: 'Title',
   addAccount: 'Add Account',
+  bridge: 'Bridge',
+  accountAddress: 'Account Address',
 };
 
 export default translations;

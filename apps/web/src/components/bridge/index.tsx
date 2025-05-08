@@ -1,27 +1,28 @@
-import { bridgeIcon } from '@/assets'
-import Image from 'next/image'
-import React from 'react'
-import './style.css'
+import Image from 'next/image';
+import React from 'react';
+import Button from '../Button';
+import { bridgeIcon } from '../../assets';
+import { useI18n } from '@/utils/i18n';
 
 const BridgePac: React.FC = () => {
+  const { t } = useI18n();
   return (
-    <button 
-      className="btn btn-bridge btn-sm bridge-button"
-      type="button"
-      aria-label="Bridge PAC tokens"
-    >
-      <span className="bridge-button__icon">
-        <Image 
-          src={bridgeIcon} 
-          alt="" 
-          width={20} 
-          height={20}
-          aria-hidden="true"
-        />
-      </span>
-      <span className="bridge-button__text">Bridge</span>
-    </button>
-  )
-}
+    <>
+      <Button
+        variant="secondary"
+        size="small"
+        onClick={() => {
+          // TODO: Implement bridge
+        }}
+        aria-label={t('bridge')}
+        startIcon={<Image src={bridgeIcon} alt="" width={20} height={20} aria-hidden="true" />}
+        className="w-[119px] h-[38px]"
+        fullWidth
+      >
+        {t('bridge')}
+      </Button>
+    </>
+  );
+};
 
-export default BridgePac
+export default BridgePac;

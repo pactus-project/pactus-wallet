@@ -66,7 +66,7 @@ export const Button = ({
   // Variant classes
   const variantClasses = {
     primary: 'bg-gradient-primary text-white hover:opacity-90 disabled:opacity-50',
-    secondary: 'bg-secondary text-white hover:bg-secondary-dark disabled:bg-secondary/50',
+    secondary: 'bg-background text-white hover:opacity-85 disabled:opacity-50',
     outlined:
       'border border-gray-300 bg-transparent text-text-primary hover:bg-gray-50 disabled:text-gray-300',
     text: 'bg-transparent text-text-primary hover:bg-gray-100 disabled:text-gray-300',
