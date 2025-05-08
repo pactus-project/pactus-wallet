@@ -9,7 +9,7 @@ import { Wallet } from './src/wallet';
  */
 async function testJsonRpc(): Promise<void> {
   // Test endpoints
-  const endpoints = ['https://bootstrap2.pactus.org:8545'];
+  const endpoints = ['https://bootstrap1.pactus.org/jsonrpc'];
 
   // Test cases
   const testCases = [
