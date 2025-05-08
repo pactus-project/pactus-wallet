@@ -6,6 +6,7 @@ import { I18nProvider } from '@/utils/i18n';
 import Script from 'next/script';
 import { GA_MEASUREMENT_ID } from '@/utils/google-analytics';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
+import MainLayout from '@/components/layout';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -52,7 +53,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <I18nProvider>
           <WalletProvider>
             {!isDev && GA_MEASUREMENT_ID && <GoogleAnalytics />}
-            {children}
+            <MainLayout>{children}</MainLayout>
           </WalletProvider>
         </I18nProvider>
       </body>

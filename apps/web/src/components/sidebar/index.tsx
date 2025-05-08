@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './style.css';
 import Image from 'next/image';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
@@ -19,6 +19,8 @@ import BorderBeam from '../border-beam';
 import { useWallet } from '@/wallet';
 import { useAccount } from '@/wallet/hooks/use-account';
 import AddAccountModal from '../add-account-modal';
+import { PATHS } from '@/constants/paths';
+import { useI18n } from '../../utils/i18n';
 
 // External links
 const REPOSITORY_URL = 'https://github.com/pactus-project/pactus-wallet/issues/new/choose';
@@ -30,7 +32,7 @@ const Sidebar = () => {
   const searchParams = useSearchParams();
   const [isAddAccountModalOpen, setIsAddAccountModalOpen] = useState(false);
   const navigate = useRouter().push;
-
+  const { t } = useI18n();
   const openAddAccountModal = () => {
     setIsAddAccountModalOpen(true);
   };
@@ -54,6 +56,10 @@ const Sidebar = () => {
     return true;
   };
 
+  useEffect(() => {
+    console.log('render');
+  }, []);
+
   return (
     <aside className="sidebar">
       <div className="sidebar__header">
@@ -71,7 +77,7 @@ const Sidebar = () => {
             aria-label="Add new account"
           >
             <Image src={plusIcon} alt="" aria-hidden="true" width={15} height={15} />
-            <span>Add Account</span>
+            <span>{t('addAccount')}</span>
           </button>
 
           <button
@@ -87,9 +93,9 @@ const Sidebar = () => {
       <nav className="sidebar__nav">
         <button
           type="button"
-          className={`sidebar__nav-item ${isActiveRoute('/') ? 'sidebar__nav-item--active' : ''}`}
-          onClick={() => navigate('/')}
-          aria-current={isActiveRoute('/') ? 'page' : undefined}
+          className={`sidebar__nav-item ${isActiveRoute(PATHS.HOME) ? 'sidebar__nav-item--active' : ''}`}
+          onClick={() => navigate(PATHS.HOME)}
+          aria-current={isActiveRoute(PATHS.HOME) ? 'page' : undefined}
         >
           <Image src={overviewIcon} alt="" aria-hidden="true" />
           <span className="sidebar__nav-label">Overview</span>
@@ -121,8 +127,9 @@ const Sidebar = () => {
       <div className="sidebar__footer">
         <button
           type="button"
-          className={`sidebar__nav-item ${isActiveRoute('/settings') ? 'sidebar__nav-item--active' : ''}`}
-          aria-current={isActiveRoute('/settings') ? 'page' : undefined}
+          onClick={() => navigate(PATHS.SETTING_GENERAL)}
+          className={`sidebar__nav-item ${[PATHS.SETTING_GENERAL, PATHS.WALLET_MANAGER, PATHS.NODE_MANAGER].includes(pathname) ? 'sidebar__nav-item--active' : ''}`}
+          aria-current={isActiveRoute(PATHS.SETTING_GENERAL) ? 'page' : undefined}
         >
           <Image src={settingsIcon} alt="" aria-hidden="true" />
           <span className="sidebar__nav-label">Settings</span>

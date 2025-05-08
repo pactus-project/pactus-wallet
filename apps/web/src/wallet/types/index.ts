@@ -22,4 +22,6 @@ export interface WalletContextType {
   walletManager: WalletManager | null;
   isInitializingManager: boolean;
   managerError: string | null;
+  headerTitle: string;
+  setHeaderTitle: React.Dispatch<React.SetStateAction<string>>;
 }

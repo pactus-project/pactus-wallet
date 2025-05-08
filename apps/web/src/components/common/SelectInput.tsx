@@ -50,12 +50,12 @@ const SelectInput: React.FC<SelectInputProps> = ({
           value={value}
           onChange={onChange}
           onBlur={onBlur}
-          className={`w-full p-3 rounded-md bg-background text-text-primary text-sm border border-border focus:outline-none focus:border-primary appearance-none hover:bg-background focus:bg-background ${className}`}
+          className={`w-full p-3 rounded-md bg-background text-tertiary text-sm border border-border focus:outline-none focus:border-primary appearance-none hover:bg-background focus:bg-background ${className}`}
           disabled={disabled}
           required={required}
         >
           {placeholder && (
-            <option value="" disabled className="text-quaternary">
+            <option value="" disabled className="text-disabled">
               {placeholder}
             </option>
           )}
@@ -63,7 +63,7 @@ const SelectInput: React.FC<SelectInputProps> = ({
             <option
               key={`${option.value}-${index}`}
               value={option.value}
-              className="bg-background text-text-primary"
+              className="bg-background text-quaternary"
             >
               {option.label}
             </option>

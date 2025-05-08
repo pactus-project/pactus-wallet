@@ -38,6 +38,10 @@ export const WalletContext = createContext<WalletContextType>({
   walletManager: null,
   isInitializingManager: true,
   managerError: null,
+  headerTitle: "",
+  setHeaderTitle: () => {
+    /* Will be implemented in provider */
+  },
 });
 
 export function WalletProvider({ children }: { children: ReactNode }) {
@@ -51,6 +55,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   const [walletManager, setWalletManager] = useState<WalletManager | null>(null);
   const [isInitializingManager, setIsInitializingManager] = useState<boolean>(true);
   const [managerError, setManagerError] = useState<string | null>(null);
+  const [headerTitle, setHeaderTitleState] = useState<string>("");
   const router = useRouter();
 
   // Simulate loading for 2 seconds
@@ -147,6 +152,8 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         walletManager,
         isInitializingManager,
         managerError,
+        headerTitle,
+        setHeaderTitle: setHeaderTitleState,
       }}
     >
       {isLoading && <Loading />}

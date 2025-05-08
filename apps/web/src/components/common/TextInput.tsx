@@ -48,7 +48,7 @@ const TextInput: React.FC<TextInputProps> = ({
           </label>
           {showLogo && (
             <div className="flex items-center">
-              <span className="text-sm font-medium text-text-quaternary">
+              <span className="text-sm font-medium text-quaternary">
                 (
                 <Image src={simpleLogo} alt="Pactus logo" className="w-5 h-5 inline-block" />)
               </span>

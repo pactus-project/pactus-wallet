@@ -14,8 +14,7 @@
 }
 
 .activity__transactions {
-    width: 98%;
-    margin: var(--spacing-md) auto var(--spacing-xl);
+    width: 100%;
     min-height: 87dvh;
     border-radius: var(--radius-md);
     background: var(--color-surface-medium);

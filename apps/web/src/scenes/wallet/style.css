@@ -17,7 +17,7 @@
 
 /* Balance card section */
 .wallet__balance-card {
-  width: 98%;
+  width: 100%;
   margin: 0 auto;
   border-radius: var(--radius-md);
   background: var(--color-surface-medium);

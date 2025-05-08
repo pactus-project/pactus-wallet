@@ -54,10 +54,7 @@ const AddressDropdown: React.FC<AddressDropdownProps> = ({
   return (
     <div className="flex flex-col gap-3">
       {!hideLabel && label && (
-        <label
-          htmlFor={id}
-          className={`text-sm font-medium text-text-quaternary ${labelClassName}`}
-        >
+        <label htmlFor={id} className={`text-sm font-medium text-quaternary ${labelClassName}`}>
           {label}
         </label>
       )}
@@ -68,12 +65,12 @@ const AddressDropdown: React.FC<AddressDropdownProps> = ({
           value={value}
           onChange={onChange}
           onBlur={onBlur}
-          className={`w-full p-3 rounded-md bg-background text-text-primary text-sm border border-border focus:outline-none focus:border-primary appearance-none hover:bg-background focus:bg-background ${className}`}
+          className={`w-full p-3 rounded-md bg-background text-tertiary text-sm border border-border focus:outline-none focus:border-primary appearance-none hover:bg-background focus:bg-background ${className}`}
           disabled={disabled}
           required={required}
         >
           {placeholder && (
-            <option value="" disabled className="text-quaternary">
+            <option value="" disabled className="text-disabled">
               {placeholder}
             </option>
           )}
@@ -81,7 +78,7 @@ const AddressDropdown: React.FC<AddressDropdownProps> = ({
             <option
               key={option.address}
               value={option.address}
-              className="bg-background text-text-primary py-2"
+              className="bg-background text-tertiary py-2"
             >
               {option.name
                 ? `${option.name} (${formatAddress(option.address)})`
