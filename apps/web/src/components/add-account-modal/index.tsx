@@ -5,6 +5,7 @@ import './style.css';
 import { useAccount } from '@/wallet';
 import { hidePasswordIcon, showPasswordIcon, emojis } from '@/assets';
 import Image from 'next/image';
+import { useI18n } from '../../utils/i18n';
 
 interface AddAccountModalProps {
   isOpen: boolean;
@@ -17,7 +18,7 @@ const AddAccountModal: React.FC<AddAccountModalProps> = ({ isOpen, onClose }) =>
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { createAddress, error, clearError } = useAccount();
-
+  const { t } = useI18n();
   const togglePasswordVisibility = () => {
     setShowPassword(prevState => !prevState);
   };
@@ -32,7 +33,7 @@ const AddAccountModal: React.FC<AddAccountModalProps> = ({ isOpen, onClose }) =>
     setAccountName(e.target.value);
     clearError();
   };
-  
+
   const handleEmojiSelect = (emoji: string) => {
     setAccountName(prevName => prevName + emoji);
     clearError();
@@ -54,8 +55,14 @@ const AddAccountModal: React.FC<AddAccountModalProps> = ({ isOpen, onClose }) =>
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Add Account">
-      <form className="add-account-form" onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
+    <Modal isOpen={isOpen} onClose={onClose} title={t('addAccount')}>
+      <form
+        className="add-account-form"
+        onSubmit={e => {
+          e.preventDefault();
+          handleSubmit();
+        }}
+      >
         <div className="modal-input-container">
           <label className="modal-label" htmlFor="accountName">
             Label
@@ -67,14 +74,14 @@ const AddAccountModal: React.FC<AddAccountModalProps> = ({ isOpen, onClose }) =>
             placeholder="Enter account name"
             value={accountName}
             onChange={handleAccountNameChange}
-            aria-invalid={error ? "true" : "false"}
-            aria-describedby={error ? "account-error" : undefined}
+            aria-invalid={error ? 'true' : 'false'}
+            aria-describedby={error ? 'account-error' : undefined}
           />
         </div>
-        
+
         <div className="emoji-ChooseNameWallet" role="group" aria-label="Emoji selector">
           {emojis.map((emoji, index) => (
-            <button 
+            <button
               key={`${index}-emoji`}
               type="button"
               onClick={() => handleEmojiSelect(emoji)}
@@ -84,7 +91,7 @@ const AddAccountModal: React.FC<AddAccountModalProps> = ({ isOpen, onClose }) =>
             </button>
           ))}
         </div>
-        
+
         <div className="modal-input-container">
           <label className="modal-label" htmlFor="password">
             Password
@@ -98,13 +105,13 @@ const AddAccountModal: React.FC<AddAccountModalProps> = ({ isOpen, onClose }) =>
               value={password}
               onChange={handlePasswordChange}
               style={{ border: error ? '1px var(--color-error) solid' : 'none' }}
-              aria-invalid={error ? "true" : "false"}
-              aria-describedby={error ? "password-error" : undefined}
+              aria-invalid={error ? 'true' : 'false'}
+              aria-describedby={error ? 'password-error' : undefined}
             />
-            <button 
-              type="button" 
+            <button
+              type="button"
               onClick={togglePasswordVisibility}
-              aria-label={showPassword ? "Hide password" : "Show password"}
+              aria-label={showPassword ? 'Hide password' : 'Show password'}
             >
               {}
               <Image
@@ -118,7 +125,11 @@ const AddAccountModal: React.FC<AddAccountModalProps> = ({ isOpen, onClose }) =>
         </div>
 
         <div className="add-account-actions">
-          {error && <p id="password-error" className="modal-error-text" role="alert">{error}</p>}
+          {error && (
+            <p id="password-error" className="modal-error-text" role="alert">
+              {error}
+            </p>
+          )}
           <button
             type="submit"
             className="modal-button btn btn-primary"

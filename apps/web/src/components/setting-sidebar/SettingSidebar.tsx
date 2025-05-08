@@ -44,7 +44,7 @@ const Item: React.FC<ItemProps> = ({ iconUrl, title, isActive = false, onClick }
     )}
   >
     <Image src={iconUrl} width={16} height={16} alt="setting-icon" />
-    <div className="text-text-tertiary text-sm font-medium">{title}</div>
+    <div className="text-tertiary text-sm font-medium">{title}</div>
   </div>
 );
 
@@ -55,7 +55,13 @@ const SettingSidebar: React.FC = () => {
   return (
     <div className="flex flex-col gap-2 px-6 py-3 w-[219px] border-r-[1px] border-surface-medium min-h-[calc(100vh-57px)]">
       {sidebarData.map(({ iconUrl, title, path }) => (
-        <Item onClick={() => push(path)} key={path} iconUrl={iconUrl} title={title} isActive={pathname === path} />
+        <Item
+          onClick={() => push(path)}
+          key={path}
+          iconUrl={iconUrl}
+          title={title}
+          isActive={pathname === path}
+        />
       ))}
     </div>
   );

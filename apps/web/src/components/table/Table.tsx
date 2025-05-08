@@ -28,7 +28,7 @@ export default function Table<T extends RowData>({
   return (
     <div className={cn('overflow-auto', className)}>
       <table className="min-w-full text-left text-sm">
-        <thead className="text-text-tertiary font-medium text-xs">
+        <thead className="text-tertiary font-medium text-xs">
           {table.getHeaderGroups().map(headerGroup => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map(header => (

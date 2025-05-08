@@ -9,6 +9,8 @@ import { ColumnDef } from '@tanstack/react-table';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { useI18n } from '../../utils/i18n';
+import AddAccountModal from '../../components/add-account-modal';
 
 interface WalletManagerProps {
   title?: string;
@@ -25,11 +27,17 @@ const WalletManager: React.FC<WalletManagerProps> = () => {
   const [privateKeyAddress, setPrivateKeyAddress] = useState<string>('');
   const { getAccountList } = useAccount();
   const { push } = useRouter();
+  const { t } = useI18n();
+  const [isAddAccountModalOpen, setIsAddAccountModalOpen] = useState(false);
+
+  const closeAddAccountModal = () => {
+    setIsAddAccountModalOpen(false);
+  };
 
   const columns: ColumnDef<Account>[] = [
     {
       accessorKey: 'name',
-      header: 'Title',
+      header: t('title'),
       cell: info => {
         const rowValue = info.row.original;
         const name = info.getValue() as string;
@@ -43,7 +51,7 @@ const WalletManager: React.FC<WalletManagerProps> = () => {
     },
     {
       accessorKey: 'address',
-      header: 'Address',
+      header: t('address'),
       cell: info => {
         const address = info.getValue() as string;
         const query = new URLSearchParams({ address });
@@ -94,9 +102,17 @@ const WalletManager: React.FC<WalletManagerProps> = () => {
         </div>
         <div className="w-[1px] h-6 border-l-[1px] border-[#2C2D3C]"></div>
         <div className="text-xs font-medium text-[#D2D3E0] h-6 px-3 rounded-sm bg-surface-medium flex justify-center items-center gap-2 cursor-pointer hover:bg-surface-light">
-          <Image src={plusIcon} width={12} height={12} alt="plus-icon" /> Add Account
+          <button
+            type="button"
+            onClick={() => setIsAddAccountModalOpen(true)}
+            aria-label="Add new account"
+            className="flex items-center gap-2"
+          >
+            <Image src={plusIcon} width={12} height={12} alt="plus-icon" /> {t('addAccount')}
+          </button>
         </div>
       </div>
+
       <div>
         <Table columns={columns} data={getAccountList()} />
       </div>
@@ -106,6 +122,7 @@ const WalletManager: React.FC<WalletManagerProps> = () => {
         onClose={() => setPrivateKeyAddress('')}
         address={privateKeyAddress}
       />
+      <AddAccountModal isOpen={isAddAccountModalOpen} onClose={closeAddAccountModal} />
     </div>
   );
 };

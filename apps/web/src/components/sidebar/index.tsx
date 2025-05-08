@@ -20,6 +20,7 @@ import { useWallet } from '@/wallet';
 import { useAccount } from '@/wallet/hooks/use-account';
 import AddAccountModal from '../add-account-modal';
 import { PATHS } from '@/constants/paths';
+import { useI18n } from '../../utils/i18n';
 
 // External links
 const REPOSITORY_URL = 'https://github.com/pactus-project/pactus-wallet/issues/new/choose';
@@ -31,7 +32,7 @@ const Sidebar = () => {
   const searchParams = useSearchParams();
   const [isAddAccountModalOpen, setIsAddAccountModalOpen] = useState(false);
   const navigate = useRouter().push;
-
+  const { t } = useI18n();
   const openAddAccountModal = () => {
     setIsAddAccountModalOpen(true);
   };
@@ -56,8 +57,8 @@ const Sidebar = () => {
   };
 
   useEffect(() => {
-    console.log("render");
-  }, [])
+    console.log('render');
+  }, []);
 
   return (
     <aside className="sidebar">
@@ -76,7 +77,7 @@ const Sidebar = () => {
             aria-label="Add new account"
           >
             <Image src={plusIcon} alt="" aria-hidden="true" width={15} height={15} />
-            <span>Add Account</span>
+            <span>{t('addAccount')}</span>
           </button>
 
           <button

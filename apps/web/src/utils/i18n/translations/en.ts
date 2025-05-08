@@ -132,6 +132,15 @@ const translations = {
   importExistingWallet: 'Import Existing Wallet',
   importWalletDescription:
     'Restore access to your wallet by securely entering your 12 or 24-word recovery phrase.',
+  language: 'Language',
+  englishUs: 'English (US)',
+  settingsGeneral: 'Settings / General',
+  general: 'General',
+  walletManager: 'Wallet Manager',
+  nodeManager: 'Node Manager',
+  address: 'Address',
+  title: 'Title',
+  addAccount: 'Add Account',
 };
 
 export default translations;
