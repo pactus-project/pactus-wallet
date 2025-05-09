@@ -1,5 +1,6 @@
 'use client';
 import React, { useEffect, useRef, useState, useId } from 'react';
+import ReactDOM from 'react-dom';
 import './style.css';
 import { Typography } from '../common/Typography';
 
@@ -26,65 +27,62 @@ const Modal: React.FC<ModalProps> = ({
   const [isVisible, setIsVisible] = useState(false);
   const titleId = useId();
 
-  // Handle modal visibility
   useEffect(() => {
     if (isOpen) {
       setIsVisible(true);
       document.body.style.overflow = 'hidden';
-
-      // Focus trap setup - focus first focusable element
       setTimeout(() => {
         const focusableElements = modalRef.current?.querySelectorAll(
           'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
         );
-        if (focusableElements && focusableElements.length > 0) {
+        if (focusableElements?.length) {
           (focusableElements[0] as HTMLElement).focus();
         }
       }, 50);
     } else {
-      setTimeout(() => {
-        setIsVisible(false);
-      }, 300);
+      setTimeout(() => setIsVisible(false), 300);
       document.body.style.overflow = '';
     }
-
     return () => {
       document.body.style.overflow = '';
     };
   }, [isOpen]);
 
-  // Handle clicks outside of the modal
-  const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
-      onClose();
-    }
-  };
-
-  // Handle escape key press
   useEffect(() => {
     const handleEscapeKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && isOpen) {
         onClose();
       }
     };
-
     document.addEventListener('keydown', handleEscapeKey);
     return () => {
       document.removeEventListener('keydown', handleEscapeKey);
     };
   }, [isOpen, onClose]);
 
+  const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
+      onClose();
+    }
+  };
+
   if (!isVisible) return null;
 
-  return (
+  let portalRoot = document.getElementById('modal-root');
+  if (!portalRoot) {
+    portalRoot = document.createElement('div');
+    portalRoot.setAttribute('id', 'modal-root');
+    document.body.appendChild(portalRoot);
+  }
+
+  return ReactDOM.createPortal(
     <div
-      className={`modal-overlay ${isOpen ? 'show' : 'hide'}`}
+      className={`modal-overlay fixed inset-0 z-50 ${isOpen ? 'show' : 'hide'}`}
       onClick={handleOutsideClick}
-      role="presentation"
     >
       <div
-        className={`max-w-[600px] w-[90%] box-shadow-lg transform-translate-y-[-20px] transition-transform-normal overflow-hidden border-1 border-surface-medium bg-surface-medium rounded-md ${isOpen ? 'show' : 'hide'} ${className}`}
         ref={modalRef}
+        className={`max-w-[600px] w-[90%] mx-auto mt-[10vh] box-shadow-lg transform-translate-y-[-20px] transition-transform-normal overflow-hidden border border-surface-medium bg-surface-medium rounded-md ${className}`}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
@@ -108,7 +106,8 @@ const Modal: React.FC<ModalProps> = ({
         )}
         <div className="modal-content">{children}</div>
       </div>
-    </div>
+    </div>,
+    portalRoot
   );
 };
 
