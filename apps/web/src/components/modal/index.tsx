@@ -82,7 +82,10 @@ const Modal: React.FC<ModalProps> = ({
     >
       <div
         ref={modalRef}
-        className={`max-w-[600px] w-[90%] mx-auto mt-[10vh] box-shadow-lg transform-translate-y-[-20px] transition-transform-normal overflow-hidden border border-surface-medium bg-surface-medium rounded-md ${className}`}
+        className={`max-w-[600px] w-[90%] mx-auto mt-[10vh]
+           box-shadow-lg transform-translate-y-[-20px] 
+           transition-transform-normal overflow-hidden border 
+           border-surface-medium bg-surface-medium rounded-md ${className} ${isLoading ? '!border-none' : ''}`}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
