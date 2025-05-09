@@ -132,7 +132,7 @@ const SendPac: React.FC<{ address: string }> = ({ address }) => {
         signature={signedTxHex}
         onConfirm={handleConfirmTransaction}
         onClose={handleClosePreviewModal}
-        title={t('previewTransaction') || 'Preview Transaction'}
+        title={t('previewTransaction')}
         isSending={isSending}
         countdown={countdown}
       />
