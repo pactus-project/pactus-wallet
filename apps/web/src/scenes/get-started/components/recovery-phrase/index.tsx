@@ -131,7 +131,7 @@ const RecoveryPhrase: React.FC = () => {
           <div className="recovery-phrase__select-container">
             <FormSelectInput
               id="word-count-select"
-              className="w-full min-w-[125px] text-[12px]"
+              className="w-full min-w-[125px] h-[45px] text-[12px] text-white"
               value={wordCount.toString()}
               onChange={e => setWordCount(parseInt(e.target.value))}
               options={[
@@ -145,7 +145,7 @@ const RecoveryPhrase: React.FC = () => {
             <div className="grid grid-cols-3 md:grid-cols-6 gap-4 ml-4 mr-4 mt-3 mb-3">
               {walletSeeds.map((word, index) => (
                 <span key={index} className="flex items-center p-2 bg-[#242424] rounded-md">
-                  <label className="text-sm mr-1 text-white">{index + 1}.</label>
+                  <label className="text-sm ml-1 mr-1 text-white">{index + 1}.</label>
                   <span className="text-base text-white">{word}</span>
                 </span>
               ))}
@@ -194,10 +194,11 @@ const RecoveryPhrase: React.FC = () => {
                       {index + 1}.
                     </label>
                     <input
-                      id={`word-input-${index}`}
+                      id={`word-${index}`}
                       type="text"
-                      className="recovery-phrase__word-input  ml-1"
+                      className="import-wallet__word-input"
                       value={userInputs[index] || ''}
+                      data-index={index}
                       onChange={e => handleInputChange(index, e.target.value)}
                       aria-invalid={inputErrors[index] === 'error'}
                       autoComplete="off"
@@ -205,7 +206,7 @@ const RecoveryPhrase: React.FC = () => {
                   </span>
                 ) : (
                   <span key={index} className="flex items-center p-2 bg-[#242424] rounded-md">
-                    <label className="text-sm ml-1 text-white">{index + 1}.</label>
+                    <label className="text-sm ml-1 mr-1 text-white">{index + 1}.</label>
                     <span className="text-base text-white">{word}</span>
                   </span>
                 )

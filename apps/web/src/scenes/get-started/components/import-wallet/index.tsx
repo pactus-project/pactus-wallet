@@ -9,6 +9,7 @@ import { useI18n } from '@/utils/i18n';
 import BorderBeam from '@/components/border-beam';
 import Lottie from '@/components/lottie-player';
 import FormSelectInput from '../../../../components/common/FormSelectInput';
+import Button from '../../../../components/Button';
 const ImportWallet = () => {
   const [wordCount, setWordCount] = useState(24);
   const [words, setWords] = useState<string[]>(Array(wordCount).fill(''));
@@ -110,7 +111,7 @@ const ImportWallet = () => {
           id="word-count-select"
           className="w-full min-w-[125px] text-[12px]"
           value={wordCount.toString()}
-          onChange={e => setWordCount(parseInt(e.target.value))}
+          onChange={e => handleWordCountChange(parseInt(e.target.value))}
           options={[
             { label: t('twelveWords'), value: '12' },
             { label: t('twentyFourWords'), value: '24' },
@@ -119,33 +120,32 @@ const ImportWallet = () => {
       </div>
 
       <div id="recovery-phrase-parent" className="w-full p-4 rounded-md bg-[#101010]">
-        <div className="grid grid-cols-3 md:grid-cols-6 gap-4 ml-4 mr-4 mt-3 mb-3">
-          {/* <fieldset className="import-wallet__seed-fieldset">
-            <legend className="visually-hidden">{t('enterSeedPhrase')}</legend> */}
-
-          {Array.from({ length: wordCount }).map((_, index) => (
-            <div key={index} className="flex items-center p-2 bg-[#242424] rounded-md">
-              <label className="text-sm mr-1 text-white">{index + 1}.</label>
-              <input
-                id={`word-${index}`}
-                type="text"
-                className="import-wallet__word-input"
-                value={words[index]}
-                data-index={index}
-                onPaste={handlePaste}
-                onChange={e => {
-                  const newWords = [...words];
-                  newWords[index] = e.target.value;
-                  setWords(newWords);
-                  setError(''); // Clear error when user is typing
-                }}
-                aria-invalid={error ? 'true' : 'false'}
-                autoComplete="off"
-              />
-            </div>
-          ))}
-          {/* </fieldset> */}
-        </div>
+        <fieldset className="import-wallet__seed-fieldset w-full">
+          <legend className="visually-hidden">{t('enterSeedPhrase')}</legend>
+          <div className="grid grid-cols-3 md:grid-cols-6 gap-4 ml-4 mr-4 mt-3 mb-3">
+            {Array.from({ length: wordCount }).map((_, index) => (
+              <div key={index} className="flex items-center p-2 bg-[#242424] rounded-md">
+                <label className="text-sm ml-1 mr-1 text-white">{index + 1}.</label>
+                <input
+                  id={`word-${index}`}
+                  type="text"
+                  className="import-wallet__word-input"
+                  value={words[index]}
+                  data-index={index}
+                  onPaste={handlePaste}
+                  onChange={e => {
+                    const newWords = [...words];
+                    newWords[index] = e.target.value;
+                    setWords(newWords);
+                    setError(''); // Clear error when user is typing
+                  }}
+                  aria-invalid={error ? 'true' : 'false'}
+                  autoComplete="off"
+                />
+              </div>
+            ))}
+          </div>
+        </fieldset>
         <BorderBeam duration={4} size={300} parentId="recovery-phrase-parent" showOnHover={true} />
       </div>
 
@@ -154,16 +154,17 @@ const ImportWallet = () => {
           {error}
         </p>
       )}
-
-      <button
-        type="button"
+      <Button
+        variant="primary"
+        fullWidth
+        className="mt-4"
         disabled={hasEmptyWords() || error.length > 0}
-        className="btn btn-primary import-wallet__submit"
         onClick={handleContinue}
-        aria-disabled={hasEmptyWords() || error.length > 0}
+        isLoading={false}
+        type="button"
       >
         {t('continue')}
-      </button>
+      </Button>
     </section>
   );
 };

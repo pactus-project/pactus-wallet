@@ -140,12 +140,26 @@
   outline: none;
   padding: var(--spacing-xs) 0;
 }
+.import-wallet__word-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  padding: var(--spacing-xs) 0;
+}
 
-.recovery-phrase__word--error .recovery-phrase__word-input {
+.import-wallet__word-input:focus {
+  color: var(--color-primary);
+}
+
+.recovery-phrase__word--error .import-wallet__word-input {
   color: var(--color-error);
 }
 
-.recovery-phrase__word--success .recovery-phrase__word-input {
+.recovery-phrase__word--success .import-wallet__word-input {
   color: var(--color-success);
 }
 
