@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import Modal from '@/components/modal';
 import Button from '@/components/Button';
 import {
@@ -44,11 +44,20 @@ const SuccessTransferModal: React.FC<SuccessTransferModalProps> = ({
   const columnHelper = createColumnHelper<TransactionDetail>();
   const [copied, setCopied] = useState(false);
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(txHash);
+  const handleCopy = (value: string) => {
+    navigator.clipboard.writeText(value);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
   };
+
+  useEffect(() => {
+    if (copied) {
+      const timer = setTimeout(() => {
+        setCopied(false);
+      }, 2000);
+
+      return () => clearTimeout(timer); // Clean up the timer
+    }
+  }, [copied]);
 
   const columns = useMemo(
     () => [
@@ -69,7 +78,7 @@ const SuccessTransferModal: React.FC<SuccessTransferModalProps> = ({
                 <div className="text-tertiary break-all text-sm">{value}</div>
                 <button
                   className="w-10 h-10"
-                  onClick={handleCopy}
+                  onClick={() => handleCopy(txHash)}
                   aria-label="Copy address to clipboard"
                   title="Copy address to clipboard"
                 >
@@ -98,7 +107,7 @@ const SuccessTransferModal: React.FC<SuccessTransferModalProps> = ({
         },
       }),
     ],
-    []
+    [copied, txHash]
   );
 
   // Create data array

@@ -26,6 +26,7 @@ const SendPac: React.FC<{ address: string }> = ({ address }) => {
   const [txHash, setTxHash] = useState('');
   const countdownIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [createdDate, setCreatedDate] = useState('');
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -64,6 +65,7 @@ const SendPac: React.FC<{ address: string }> = ({ address }) => {
               clearInterval(countdownIntervalRef.current);
               countdownIntervalRef.current = null;
             }
+            setCreatedDate(new Date().toLocaleString());
             setIsPreviewModalOpen(false);
             setIsSending(false);
             setIsSuccessModalOpen(true);
@@ -117,7 +119,8 @@ const SendPac: React.FC<{ address: string }> = ({ address }) => {
           setIsLoading={setIsLoading}
           initialValues={formValues}
           onPreviewTransaction={handleFormSubmit}
-          submitButtonText={t('next')}
+          submitButtonText={isLoading ? t('loading') : t('next')}
+          isOpen={isModalOpen}
         />
       </Modal>
 
@@ -144,6 +147,7 @@ const SendPac: React.FC<{ address: string }> = ({ address }) => {
         txHash={txHash}
         amount={formValues.amount || ''}
         recipient={formValues.receiver || ''}
+        date={createdDate}
       />
       {isLoading && <LoadingDialog message="Processing transaction..." />}
     </>
