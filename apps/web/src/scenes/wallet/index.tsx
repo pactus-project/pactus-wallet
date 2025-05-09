@@ -77,7 +77,7 @@ const Wallet = () => {
               </div>
 
               <Typography variant="caption1" color="text-[#6F6F6F]">
-                ≈ 01 USD
+                ≈ 0 USD
               </Typography>
 
               <div className="flex flex-col gap-2 pt-4">
@@ -105,7 +105,7 @@ const Wallet = () => {
               </div>
 
               <div className="flex flex-wrap gap-2 pt-4">
-                <SendPac />
+                <SendPac address={addressData?.address ?? ''} />
                 <BridgePac />
               </div>
             </div>

@@ -63,7 +63,7 @@ const Dashboard = () => {
             </Typography>
 
             <div className="dashboard__actions">
-              <SendPac />
+              <SendPac address={''} />
               <ReceivePac />
               <BridgePac />
             </div>

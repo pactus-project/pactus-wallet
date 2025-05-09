@@ -10,6 +10,7 @@ import Button from '@/components/Button';
 import Checkbox from '@/components/Checkbox';
 import { LottieWithText } from '../../../../components/LottieWithText';
 import FormPasswordInput from '../../../../components/common/FormPasswordInput';
+import LoadingDialog from '../../../../components/common/LoadingDialog';
 
 const MasterPassword = () => {
   const { t } = useI18n();
@@ -168,12 +169,12 @@ const MasterPassword = () => {
           className="mt-4"
           disabled={!isFormValid}
           onClick={handleSubmit}
-          isLoading={isLoading}
           type="button"
         >
           {t('continue')}
         </Button>
       </form>
+      {isLoading && <LoadingDialog />}
     </section>
   );
 };

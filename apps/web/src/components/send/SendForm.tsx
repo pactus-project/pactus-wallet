@@ -25,6 +25,8 @@ interface SendFormProps {
   onSubmit?: (values: SendFormValues) => void;
   onPreviewTransaction?: (values: SendFormValues, signedRawTxHex: string) => void;
   submitButtonText?: string;
+  isLoading?: boolean;
+  setIsLoading?: (loading: boolean) => void;
 }
 
 const SendForm: React.FC<SendFormProps> = ({
@@ -32,6 +34,8 @@ const SendForm: React.FC<SendFormProps> = ({
   onSubmit,
   onPreviewTransaction,
   submitButtonText = 'Next',
+  isLoading = false,
+  setIsLoading,
 }) => {
   const { getAccountList } = useAccount();
   const accounts = getAccountList();
@@ -49,7 +53,12 @@ const SendForm: React.FC<SendFormProps> = ({
   const [password, setPassword] = useState(initialValues.password || '');
   const [passwordError, setPasswordError] = useState('');
   const [passwordTouched, setPasswordTouched] = useState(false);
-  const { balance, fetchBalance, isLoading } = useBalance(fromAccount);
+  const { balance, fetchBalance, isLoading: isBalanceLoading } = useBalance(fromAccount);
+  const [error, setError] = useState<string | null>(null);
+  const [internalLoading, setInternalLoading] = useState(false);
+
+  // Combined loading state from external and internal sources
+  const isSubmitting = isLoading || internalLoading;
 
   useEffect(() => {
     if (fromAccount) {
@@ -58,7 +67,7 @@ const SendForm: React.FC<SendFormProps> = ({
   }, [fromAccount, fetchBalance]);
 
   const handleMaxAmount = () => {
-    if (balance && !isLoading) {
+    if (balance && !isBalanceLoading) {
       const feeValue = parseFloat(fee) || 0.01;
       const maxAmount = Math.max(0, balance - feeValue);
       setAmount(maxAmount.toFixed(5));
@@ -86,6 +95,15 @@ const SendForm: React.FC<SendFormProps> = ({
   // Handle form submission
   const handleSubmit = async () => {
     try {
+      setError(null);
+
+      // Set loading state
+      if (setIsLoading) {
+        setIsLoading(true);
+      } else {
+        setInternalLoading(true);
+      }
+
       // Get signed transaction
       const result = await getSignTransferTransaction({
         fromAddress: fromAccount,
@@ -114,14 +132,22 @@ const SendForm: React.FC<SendFormProps> = ({
         onSubmit(values);
       }
     } catch (error) {
-      console.error('Error signing transaction:', error);
+      console.error('Error signing transaction:', error.message);
+      setError(error.message);
+    } finally {
+      // Reset loading state
+      if (setIsLoading) {
+        setIsLoading(false);
+      } else {
+        setInternalLoading(false);
+      }
     }
   };
 
   // Prepare account options for selects
   const accountOptions = accounts.map(account => ({
     value: account.address,
-    label: `🤝 ${t('account1')}`,
+    label: `🤝 ${account.name}`,
   }));
 
   // Check if form is valid
@@ -170,7 +196,7 @@ const SendForm: React.FC<SendFormProps> = ({
             variant="text"
             size="small"
             onClick={handleMaxAmount}
-            disabled={isLoading || !balance}
+            disabled={isBalanceLoading || !balance}
             className="px-2 py-1 min-w-[40px] bg-transparent hover:bg-transparent"
           >
             <GradientText>{t('max')}</GradientText>
@@ -218,15 +244,19 @@ const SendForm: React.FC<SendFormProps> = ({
         error={passwordError}
       />
 
+      {/* Error Message */}
+      {error && <div className="text-red-500">{error}</div>}
+
       {/* Submit Button */}
       <div className="flex justify-end mt-3">
         <Button
           variant="primary"
           size="small"
           onClick={handleSubmit}
-          disabled={!isFormValid}
+          disabled={!isFormValid || isSubmitting}
           type="button"
           className="w-[86px] h-[38px]"
+          isLoading={isSubmitting}
         >
           {submitButtonText}
         </Button>

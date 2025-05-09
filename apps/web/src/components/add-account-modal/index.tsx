@@ -87,36 +87,6 @@ const AddAccountModal: React.FC<AddAccountModalProps> = ({ isOpen, onClose }) =>
         </div>
 
         <div className="modal-input-container pl-1 pr-1">
-          {/* <label className="modal-label" htmlFor="password">
-            Password
-          </label> */}
-
-          {/* <div className="input-MasterPassword"> */}
-          {/* <input
-              id="password"
-              type={showPassword ? 'text' : 'password'}
-              placeholder="Enter your password"
-              value={password}
-              onChange={handlePasswordChange}
-              style={{ border: error ? '1px var(--color-error) solid' : 'none' }}
-              aria-invalid={error ? 'true' : 'false'}
-              aria-describedby={error ? 'password-error' : undefined}
-            />
-            <button
-              type="button"
-              onClick={togglePasswordVisibility}
-              aria-label={showPassword ? 'Hide password' : 'Show password'}
-            >
-              {}
-              <Image
-                src={showPassword ? hidePasswordIcon : showPasswordIcon}
-                alt=""
-                width={24}
-                height={24}
-              />
-            </button>
-          </div> */}
-
           <FormPasswordInput
             id="password"
             value={password}

@@ -10,6 +10,7 @@ export interface ModalProps {
   children: React.ReactNode;
   showCloseButton?: boolean;
   className?: string;
+  isLoading?: boolean;
 }
 
 const Modal: React.FC<ModalProps> = ({
@@ -19,6 +20,7 @@ const Modal: React.FC<ModalProps> = ({
   children,
   showCloseButton = true,
   className = '',
+  isLoading = false,
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
@@ -87,21 +89,23 @@ const Modal: React.FC<ModalProps> = ({
         aria-modal="true"
         aria-labelledby={titleId}
       >
-        <header className="flex items-center justify-between p-4 border-b border-[#52526F40]">
-          <Typography variant="body2" color="text-quaternary" className="p-1 pl-4 font-medium">
-            {title}
-          </Typography>
-          {showCloseButton && (
-            <button
-              className="modal-close-button mr-3"
-              onClick={onClose}
-              aria-label="Close modal"
-              type="button"
-            >
-              <span aria-hidden="true">✕</span>
-            </button>
-          )}
-        </header>
+        {!isLoading && (
+          <header className="flex items-center justify-between p-4 border-b border-[#52526F40]">
+            <Typography variant="body2" color="text-quaternary" className="p-1 pl-4 font-medium">
+              {title}
+            </Typography>
+            {showCloseButton && (
+              <button
+                className="modal-close-button mr-3"
+                onClick={onClose}
+                aria-label="Close modal"
+                type="button"
+              >
+                <span aria-hidden="true">✕</span>
+              </button>
+            )}
+          </header>
+        )}
         <div className="modal-content">{children}</div>
       </div>
     </div>

@@ -8,13 +8,16 @@ import SendForm, { SendFormValues } from './SendForm';
 import SendPreviewModal from './SendPreviewModal';
 import SuccessTransferModal from './SuccessTransferModal';
 import { useSendTransaction } from '@/wallet/hooks/use-send-transaction';
+import { useBalance } from '@/wallet/hooks/use-balance';
+import LoadingDialog from '@/components/common/LoadingDialog';
 
-const SendPac: React.FC = () => {
+const SendPac: React.FC<{ address: string }> = ({ address }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const { t } = useI18n();
   const { error, broadcastTransaction } = useSendTransaction();
+  const { fetchBalance } = useBalance();
   const [formValues, setFormValues] = useState<SendFormValues>({});
   const [signedTxHex, setSignedTxHex] = useState('');
   const [isSending, setIsSending] = useState(false);
@@ -22,6 +25,7 @@ const SendPac: React.FC = () => {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [txHash, setTxHash] = useState('');
   const countdownIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -31,6 +35,7 @@ const SendPac: React.FC = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setIsSuccessModalOpen(false);
+    fetchBalance(null, address);
   };
 
   const handleFormSubmit = (values: SendFormValues, signedRawTxHex: string) => {
@@ -108,6 +113,8 @@ const SendPac: React.FC = () => {
         {error && <div className="bg-error bg-opacity-10 text-error p-3 mb-4 rounded">{error}</div>}
 
         <SendForm
+          isLoading={isLoading}
+          setIsLoading={setIsLoading}
           initialValues={formValues}
           onPreviewTransaction={handleFormSubmit}
           submitButtonText={t('next')}
@@ -138,6 +145,7 @@ const SendPac: React.FC = () => {
         amount={formValues.amount || ''}
         recipient={formValues.receiver || ''}
       />
+      {isLoading && <LoadingDialog message="Processing transaction..." />}
     </>
   );
 };

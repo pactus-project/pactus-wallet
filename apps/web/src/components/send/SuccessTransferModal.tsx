@@ -13,6 +13,7 @@ import { useI18n } from '@/utils/i18n';
 import Typography from '../common/Typography';
 import GradientText from '../common/GradientText';
 import { successIcon, copyIcon } from '../../assets/images/icons';
+import { useWallet } from '@/wallet';
 
 interface SuccessTransferModalProps {
   isOpen: boolean;
@@ -39,7 +40,7 @@ const SuccessTransferModal: React.FC<SuccessTransferModalProps> = ({
   networkFee = '0.001',
 }) => {
   const { t } = useI18n();
-
+  const { wallet } = useWallet();
   const columnHelper = createColumnHelper<TransactionDetail>();
   const [copied, setCopied] = useState(false);
 
@@ -120,7 +121,11 @@ const SuccessTransferModal: React.FC<SuccessTransferModalProps> = ({
   });
 
   const handleViewOnPacviewer = () => {
-    window.open(`https://pacviewer.com/transaction/${txHash}`, '_blank');
+    if (wallet?.isTestnet()) {
+      window.open(`https://phoenix.pacviewer.com/transaction/${txHash}`, '_blank');
+    } else {
+      window.open(`https://pacviewer.com/transaction/${txHash}`, '_blank');
+    }
   };
 
   return (

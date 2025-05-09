@@ -423,9 +423,7 @@ export class Wallet {
       }
     }
 
-    throw new NetworkError(
-      `Failed to fetch JSON-RPC result after ${maxAttempts} attempts: ${lastError?.message}`
-    );
+    throw new NetworkError(`${lastError?.message}`);
   }
 
   /**
