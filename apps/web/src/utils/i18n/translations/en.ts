@@ -135,6 +135,7 @@ const translations = {
   language: 'Language',
   englishUs: 'English (US)',
   settingsGeneral: 'Settings / General',
+  settingsWalletManager: 'Settings / Wallet Manager',
   general: 'General',
   walletManager: 'Wallet Manager',
   nodeManager: 'Node Manager',
@@ -152,6 +153,7 @@ const translations = {
   accountName: 'Account Name',
   enterAccountName: 'Enter account name',
   totalBalance: 'Total Balance',
+  transactionLoading: "Processing transaction...",
 };
 
 export default translations;

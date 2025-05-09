@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { useAccount } from '@/wallet/hooks/use-account';
 import FormMemoInput from '@/components/common/FormMemoInput';
 import FormTextInput from '@/components/common/FormTextInput';
@@ -10,6 +10,7 @@ import Button from '@/components/Button';
 import GradientText from '@/components/common/GradientText';
 import { validatePassword } from '@/utils/password-validator';
 import { useSendTransaction } from '@/wallet/hooks/use-send-transaction';
+import { WalletContext } from '@/wallet';
 
 export interface SendFormValues {
   fromAccount?: string;
@@ -41,6 +42,7 @@ const SendForm: React.FC<SendFormProps> = ({
   isOpen = true,
   forceReset = 0,
 }) => {
+  const { showLoadingDialog, hideLoadingDialog } = useContext(WalletContext);
   const { getAccountList } = useAccount();
   const accounts = getAccountList();
   const { t } = useI18n();
@@ -146,6 +148,7 @@ const SendForm: React.FC<SendFormProps> = ({
       // Set loading state
       if (setIsLoading) {
         setIsLoading(true);
+        showLoadingDialog(t("transactionLoading"));
       } else {
         setInternalLoading(true);
       }
@@ -186,6 +189,7 @@ const SendForm: React.FC<SendFormProps> = ({
       // Reset loading state
       if (setIsLoading) {
         setIsLoading(false);
+        hideLoadingDialog();
       } else {
         setInternalLoading(false);
       }

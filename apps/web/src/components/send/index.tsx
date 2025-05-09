@@ -9,7 +9,6 @@ import SendPreviewModal from './SendPreviewModal';
 import SuccessTransferModal from './SuccessTransferModal';
 import { useSendTransaction } from '@/wallet/hooks/use-send-transaction';
 import { useBalance } from '@/wallet/hooks/use-balance';
-import LoadingDialog from '@/components/common/LoadingDialog';
 
 const SendPac: React.FC<{ address: string }> = ({ address }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -149,7 +148,6 @@ const SendPac: React.FC<{ address: string }> = ({ address }) => {
         recipient={formValues.receiver || ''}
         date={createdDate}
       />
-      {isLoading && <LoadingDialog message="Processing transaction..." />}
     </>
   );
 };

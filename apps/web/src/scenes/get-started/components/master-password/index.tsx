@@ -1,25 +1,24 @@
 'use client';
 import { masterPasswordLottie } from '@/assets';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import './style.css';
 import { validatePassword } from '@/utils/password-validator';
-import { useAccount, useRestoreWallet, useWallet } from '@/wallet';
+import { useAccount, useRestoreWallet, useWallet, WalletContext } from '@/wallet';
 import { useI18n } from '@/utils/i18n';
 import { useRouter } from 'next/navigation';
 import Button from '@/components/Button';
 import Checkbox from '@/components/Checkbox';
 import { LottieWithText } from '../../../../components/LottieWithText';
 import FormPasswordInput from '../../../../components/common/FormPasswordInput';
-import LoadingDialog from '../../../../components/common/LoadingDialog';
 
 const MasterPassword = () => {
+  const { showLoadingDialog, hideLoadingDialog } = useContext(WalletContext);
   const { t } = useI18n();
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isChecked, setIsChecked] = useState(false);
   const { setWalletName, setPassword: setWalletPassword } = useWallet();
   const { restoreWallet, restorationError } = useRestoreWallet();
-  const [isLoading, setIsLoading] = useState(false);
   const { createAddress } = useAccount();
   const router = useRouter();
   const defaultWalletName = 'My Wallet';
@@ -61,7 +60,7 @@ const MasterPassword = () => {
 
   const handleCreateWallet = async () => {
     try {
-      setIsLoading(true);
+      showLoadingDialog();
 
       setWalletPassword(password);
 
@@ -71,11 +70,11 @@ const MasterPassword = () => {
         await createAddress(t('account1'), password, wallet);
         router.replace('/');
       } else {
-        setIsLoading(false);
+        hideLoadingDialog();
       }
     } catch (error) {
       console.error('Error creating wallet:', error);
-      setIsLoading(false);
+      hideLoadingDialog();
     }
   };
 
@@ -174,7 +173,6 @@ const MasterPassword = () => {
           {t('continue')}
         </Button>
       </form>
-      {isLoading && <LoadingDialog />}
     </section>
   );
 };
