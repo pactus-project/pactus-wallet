@@ -1,180 +1,178 @@
 /* Dashboard styles using BEM naming convention */
 
 .dashboard {
-    display: flex;
-    width: 100%;
-    min-height: 100dvh;
+  display: flex;
+  width: 100%;
+  min-height: 100dvh;
 }
 
 .dashboard__content {
-    width: calc(100% - 219px);
-    display: flex;
-    flex-direction: column;
-    margin-left: auto;
+  width: calc(100% - 219px);
+  display: flex;
+  flex-direction: column;
+  margin-left: auto;
 }
 
 .dashboard__summary {
-    width: 100%;
-    height: 349px;
-    border-radius: var(--radius-md);
-    background: var(--color-surface-medium);
-    box-shadow: var(--shadow-inset);
+  width: 100%;
+  background: var(--color-surface-medium);
+  box-shadow: var(--shadow-inset);
 }
 
 .dashboard__summary > div {
-    display: flex;
-    justify-content: space-between;
-    padding: var(--spacing-md) var(--spacing-xl);
+  display: flex;
+  justify-content: space-between;
+  padding: var(--spacing-md) var(--spacing-xl);
 }
 
 .dashboard__divider {
-    background: var(--color-background);
-    border: none;
-    height: 1px;
-    width: 100%;
+  background: var(--color-background);
+  border: none;
+  height: 1px;
+  width: 100%;
 }
 
 .dashboard__balance-section {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-sm);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
 }
 
 .dashboard__balance-header {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .dashboard__balance-title {
-    color: var(--color-text-primary);
-    font-size: var(--font-size-lg);
-    font-weight: var(--font-weight-semibold);
-    line-height: var(--line-height-normal);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-normal);
 }
 
 .dashboard__balance-amount {
-    display: flex;
-    align-items: flex-end;
-    gap: var(--spacing-xs);
+  display: flex;
+  align-items: flex-end;
+  gap: var(--spacing-xs);
 }
 
 .dashboard__balance-value {
-    color: var(--color-text-primary);
-    font-size: 34px;
-    font-weight: var(--font-weight-medium);
-    line-height: var(--line-height-tight);
+  color: var(--color-text-primary);
+  font-size: 34px;
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-tight);
 }
 
 .dashboard__balance-currency {
-    color: var(--color-text-disabled);
-    font-size: 22px;
-    font-weight: var(--font-weight-medium);
-    line-height: var(--line-height-tight);
+  color: var(--color-text-disabled);
+  font-size: 22px;
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-tight);
 }
 
 .dashboard__balance-fiat {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .dashboard__fiat-value {
-    color: var(--color-text-disabled);
-    font-size: var(--font-size-sm);
+  color: var(--color-text-disabled);
+  font-size: var(--font-size-sm);
 }
 
 .dashboard__actions {
-    margin-top: var(--spacing-xl);
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-md);
+  margin-top: var(--spacing-xl);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
 }
 
 .dashboard__stats {
-    justify-content: flex-start !important;
-    align-items: center;
-    gap: var(--spacing-lg);
+  justify-content: flex-start !important;
+  align-items: center;
+  gap: var(--spacing-lg);
 }
 
 .dashboard__stat-item {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .dashboard__stat-header {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-xs);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
 }
 
 .dashboard__stat-indicator {
-    width: 2px;
-    height: 10px;
-    background: var(--color-primary);
-    border: none;
+  width: 2px;
+  height: 10px;
+  background: var(--color-primary);
+  border: none;
 }
 
 .dashboard__stat-title {
-    color: var(--color-text-primary);
-    font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
 }
 
 .dashboard__stat-value {
-    color: var(--color-text-disabled);
-    font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-medium);
+  color: var(--color-text-disabled);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
 }
 
 .dashboard__loading {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100vh;
-    color: var(--color-text-primary);
-    font-size: var(--font-size-lg);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+  color: var(--color-text-primary);
+  font-size: var(--font-size-lg);
 }
 
 /* Responsive adjustments */
-@media (max-width:  768px) {
-    .dashboard__content {
-        width: 100%;
-    }
-    
-    .dashboard__summary > div {
-        padding: var(--spacing-md);
-    }
-    
-    .dashboard__actions {
-        flex-wrap: wrap;
-        gap: var(--spacing-sm);
-    }
-    
-    .dashboard__balance-value {
-        font-size: 28px;
-    }
-    
-    .dashboard__balance-currency {
-        font-size: 18px;
-    }
+@media (max-width: 768px) {
+  .dashboard__content {
+    width: 100%;
+  }
+
+  .dashboard__summary > div {
+    padding: var(--spacing-md);
+  }
+
+  .dashboard__actions {
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+  }
+
+  .dashboard__balance-value {
+    font-size: 28px;
+  }
+
+  .dashboard__balance-currency {
+    font-size: 18px;
+  }
 }
 
 /* For very small screens */
-@media (max-width:480px) {
-    .dashboard__stats {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: var(--spacing-md);
-    }
-    
-    .dashboard__summary {
-        height: auto;
-    }
+@media (max-width: 480px) {
+  .dashboard__stats {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-md);
+  }
+
+  .dashboard__summary {
+    height: auto;
+  }
 }
 
 /* Support for reduced motion preferences */
 @media (prefers-reduced-motion: reduce) {
-    .dashboard__actions button {
-        transition: none;
-    }
+  .dashboard__actions button {
+    transition: none;
+  }
 }

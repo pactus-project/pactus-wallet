@@ -25,13 +25,25 @@ import { useI18n } from '../../utils/i18n';
 // External links
 const REPOSITORY_URL = 'https://github.com/pactus-project/pactus-wallet/issues/new/choose';
 
-const Sidebar = () => {
+interface SidebarProps {
+  isOpen?: boolean;
+  onClose?: () => void;
+  isMobile?: boolean;
+}
+
+// Function to prevent linter errors with empty arrow functions
+const noop = () => {
+  /* Intentionally empty */
+};
+
+const Sidebar = ({ isOpen = true, onClose = noop, isMobile = false }: SidebarProps) => {
   const { wallet } = useWallet();
   const { getAccountList } = useAccount();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [isAddAccountModalOpen, setIsAddAccountModalOpen] = useState(false);
   const navigate = useRouter().push;
+
   const { t } = useI18n();
   const openAddAccountModal = () => {
     setIsAddAccountModalOpen(true);
@@ -57,13 +69,54 @@ const Sidebar = () => {
   };
 
   useEffect(() => {
-    console.log('render');
-  }, []);
+    if (isMobile && isOpen) {
+      document.body.style.overflow = 'hidden';
+      const handleClickOutside = (e: MouseEvent) => {
+        const target = e.target as HTMLElement;
+        if (!target.closest('.sidebar') && isOpen) {
+          onClose();
+        }
+      };
+
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => {
+        document.body.style.overflow = '';
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    }
+
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen, isMobile, onClose]);
 
   return (
-    <aside className="sidebar">
-      <div className="sidebar__header">
-        <div className="sidebar__wallet-info">
+    <aside className={`sidebar ${isMobile ? 'mobile' : ''} ${isOpen ? 'open' : 'closed'}`}>
+      {isMobile && (
+        <button
+          type="button"
+          className="sidebar__close-button"
+          onClick={onClose}
+          aria-label="Close sidebar"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      )}
+      <div className={`sidebar__header ${isMobile ? 'mt-4' : ''}`}>
+        <div className={`sidebar__wallet-info ${isMobile ? 'mt-4' : ''}`}>
           <span className="sidebar__wallet-emoji">😀</span>
           <h2 className="sidebar__wallet-name">{wallet?.getName()}</h2>
           <Image src={lockIcon} alt="Wallet is locked" className="sidebar__lock-icon" />
@@ -164,11 +217,13 @@ const Sidebar = () => {
         </button>
 
         <div id="contributing-parent" className="sidebar__contributing">
-          <Image src={gradientCopyIcon} alt="" aria-hidden="true" />
+          <div className="sidebar__contributing-icon w-[32px] h-[32px]">
+            <Image src={gradientCopyIcon} alt="" aria-hidden="true" />
+          </div>
           <div className="sidebar__contributing-content">
             <h4 className="sidebar__contributing-title">Contributing</h4>
             <p className="sidebar__contributing-description">
-              You can contribute to the Pactus wallet project at any time.
+              You can contribute to the Pactus wallet project at any time.``
             </p>
             <a
               href="https://github.com/pactus-project/pactus-wallet"

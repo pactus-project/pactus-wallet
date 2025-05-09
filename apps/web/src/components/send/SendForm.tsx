@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useAccount } from '@/wallet/hooks/use-account';
 import FormMemoInput from '@/components/common/FormMemoInput';
 import FormTextInput from '@/components/common/FormTextInput';
@@ -25,6 +25,10 @@ interface SendFormProps {
   onSubmit?: (values: SendFormValues) => void;
   onPreviewTransaction?: (values: SendFormValues, signedRawTxHex: string) => void;
   submitButtonText?: string;
+  isLoading?: boolean;
+  setIsLoading?: (loading: boolean) => void;
+  isOpen?: boolean;
+  forceReset?: number;
 }
 
 const SendForm: React.FC<SendFormProps> = ({
@@ -32,11 +36,16 @@ const SendForm: React.FC<SendFormProps> = ({
   onSubmit,
   onPreviewTransaction,
   submitButtonText = 'Next',
+  isLoading = false,
+  setIsLoading,
+  isOpen = true,
+  forceReset = 0,
 }) => {
   const { getAccountList } = useAccount();
   const accounts = getAccountList();
   const { t } = useI18n();
   const { getSignTransferTransaction } = useSendTransaction();
+  const formRef = useRef<HTMLDivElement>(null);
 
   // Form state
   const [fromAccount, setFromAccount] = useState(
@@ -49,7 +58,53 @@ const SendForm: React.FC<SendFormProps> = ({
   const [password, setPassword] = useState(initialValues.password || '');
   const [passwordError, setPasswordError] = useState('');
   const [passwordTouched, setPasswordTouched] = useState(false);
-  const { balance, fetchBalance, isLoading } = useBalance(fromAccount);
+  const { balance, fetchBalance, isLoading: isBalanceLoading } = useBalance(fromAccount);
+  const [error, setError] = useState<string | null>(null);
+  const [internalLoading, setInternalLoading] = useState(false);
+
+  // Combined loading state from external and internal sources
+  const isSubmitting = isLoading || internalLoading;
+
+  // Reset form function that can be called manually
+  const resetForm = () => {
+    setFromAccount(accounts[0]?.address || '');
+    setReceiver('');
+    setAmount('');
+    setFee('0.01');
+    setMemo('');
+    setPassword('');
+    setPasswordError('');
+    setPasswordTouched(false);
+    setError(null);
+
+    // Clear any HTML form values directly
+    if (formRef.current) {
+      const inputs = formRef.current.querySelectorAll('input, textarea, select');
+      inputs.forEach((input: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement) => {
+        if (input.id === 'from-account') {
+          input.value = accounts[0]?.address || '';
+        } else if (input.id !== 'fee') {
+          input.value = '';
+        } else {
+          input.value = '0.01';
+        }
+      });
+    }
+  };
+
+  // Reset form when isOpen changes to false
+  useEffect(() => {
+    if (!isOpen) {
+      resetForm();
+    }
+  }, [isOpen, accounts]);
+
+  // Reset form when forceReset counter changes
+  useEffect(() => {
+    if (forceReset > 0) {
+      resetForm();
+    }
+  }, [forceReset, accounts]);
 
   useEffect(() => {
     if (fromAccount) {
@@ -58,7 +113,7 @@ const SendForm: React.FC<SendFormProps> = ({
   }, [fromAccount, fetchBalance]);
 
   const handleMaxAmount = () => {
-    if (balance && !isLoading) {
+    if (balance && !isBalanceLoading) {
       const feeValue = parseFloat(fee) || 0.01;
       const maxAmount = Math.max(0, balance - feeValue);
       setAmount(maxAmount.toFixed(5));
@@ -86,6 +141,15 @@ const SendForm: React.FC<SendFormProps> = ({
   // Handle form submission
   const handleSubmit = async () => {
     try {
+      setError(null);
+
+      // Set loading state
+      if (setIsLoading) {
+        setIsLoading(true);
+      } else {
+        setInternalLoading(true);
+      }
+
       // Get signed transaction
       const result = await getSignTransferTransaction({
         fromAddress: fromAccount,
@@ -105,6 +169,9 @@ const SendForm: React.FC<SendFormProps> = ({
         password,
       };
 
+      // Reset form BEFORE callbacks to ensure it happens
+      resetForm();
+
       // If onPreviewTransaction is provided, call it with the signed transaction
       if (onPreviewTransaction) {
         onPreviewTransaction(values, result.signedRawTxHex);
@@ -114,14 +181,21 @@ const SendForm: React.FC<SendFormProps> = ({
         onSubmit(values);
       }
     } catch (error) {
-      console.error('Error signing transaction:', error);
+      setError(error.message);
+    } finally {
+      // Reset loading state
+      if (setIsLoading) {
+        setIsLoading(false);
+      } else {
+        setInternalLoading(false);
+      }
     }
   };
 
   // Prepare account options for selects
   const accountOptions = accounts.map(account => ({
     value: account.address,
-    label: `🤝 ${t('account1')}`,
+    label: `🤝 ${account.name}`,
   }));
 
   // Check if form is valid
@@ -135,7 +209,7 @@ const SendForm: React.FC<SendFormProps> = ({
     validatePassword(password);
 
   return (
-    <div className="flex flex-col gap-5 w-full px-2">
+    <div className="flex flex-col gap-5 w-full px-2" ref={formRef}>
       {/* From Account */}
       <FormSelectInput
         id="from-account"
@@ -170,7 +244,7 @@ const SendForm: React.FC<SendFormProps> = ({
             variant="text"
             size="small"
             onClick={handleMaxAmount}
-            disabled={isLoading || !balance}
+            disabled={isBalanceLoading || !balance}
             className="px-2 py-1 min-w-[40px] bg-transparent hover:bg-transparent"
           >
             <GradientText>{t('max')}</GradientText>
@@ -218,15 +292,19 @@ const SendForm: React.FC<SendFormProps> = ({
         error={passwordError}
       />
 
+      {/* Error Message */}
+      {error && <div className="text-red-500">{error}</div>}
+
       {/* Submit Button */}
       <div className="flex justify-end mt-3">
         <Button
           variant="primary"
           size="small"
           onClick={handleSubmit}
-          disabled={!isFormValid}
+          disabled={!isFormValid || isSubmitting}
           type="button"
           className="w-[86px] h-[38px]"
+          isLoading={isSubmitting}
         >
           {submitButtonText}
         </Button>

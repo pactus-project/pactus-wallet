@@ -37,6 +37,8 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
    * Custom class names
    */
   className?: string;
+
+  labelClassName?: string;
 }
 
 export const Button = ({
@@ -50,6 +52,7 @@ export const Button = ({
   fullWidth = false,
   className,
   type = 'button',
+  labelClassName,
   ...props
 }: ButtonProps) => {
   // Base classes for all buttons
@@ -66,7 +69,7 @@ export const Button = ({
   // Variant classes
   const variantClasses = {
     primary: 'bg-gradient-primary text-white hover:opacity-90 disabled:opacity-50',
-    secondary: 'bg-secondary text-white hover:bg-secondary-dark disabled:bg-secondary/50',
+    secondary: 'bg-background text-white hover:opacity-85 disabled:opacity-50',
     outlined:
       'border border-gray-300 bg-transparent text-text-primary hover:bg-gray-50 disabled:text-gray-300',
     text: 'bg-transparent text-text-primary hover:bg-gray-100 disabled:text-gray-300',
@@ -95,7 +98,7 @@ export const Button = ({
       {...props}
     >
       {startIcon && <span className="mr-2">{startIcon}</span>}
-      <span>{children}</span>
+      <span className={cn('text-sm', labelClassName)}>{children}</span>
       {endIcon && <span className="ml-2">{endIcon}</span>}
 
       {isLoading && (

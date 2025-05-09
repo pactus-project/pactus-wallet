@@ -5,6 +5,8 @@ import './style.css';
 import { AddressInfo } from '@/wallet/hooks/use-account';
 import { copyIcon, successIcon } from '@/assets'; // Add this import
 import Image from 'next/image';
+import { useI18n } from '../../utils/i18n';
+import Typography from '../common/Typography';
 interface AddressInfoModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -18,6 +20,7 @@ const AddressInfoModal: React.FC<AddressInfoModalProps> = ({
   addressInfo,
   privateKeyHex,
 }) => {
+  const { t } = useI18n();
   const [copiedAddress, setCopiedAddress] = useState(false);
   const [copiedPublicKey, setCopiedPublicKey] = useState(false);
   const [copiedPrivateKey, setCopiedPrivateKey] = useState(false);
@@ -36,11 +39,15 @@ const AddressInfoModal: React.FC<AddressInfoModalProps> = ({
     }
   };
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Show Private Key">
-      <div className="info-field">
-        <label>Address</label>
-        <div className="info-value">
-          {addressInfo.address}
+    <Modal isOpen={isOpen} onClose={onClose} title={t('showPrivateKey')}>
+      <div className="info-field pl-1 pr-1">
+        <Typography variant="body2" color="text-quaternary" className="pb-2 font-bold">
+          {t('address')}
+        </Typography>
+        <div className="flex items-center">
+          <Typography variant="caption2" color="text-quaternary" className="pb-2">
+            {addressInfo.address}
+          </Typography>
           <button
             className="wallet_info-copy-button"
             onClick={() => handleCopy(addressInfo.address, 'address')}
@@ -57,10 +64,14 @@ const AddressInfoModal: React.FC<AddressInfoModalProps> = ({
         </div>
       </div>
 
-      <div className="info-field">
-        <label>Public Key</label>
-        <div className="info-value">
-          {addressInfo.publicKey}
+      <div className="info-field pl-1 pr-1">
+        <Typography variant="body2" color="text-quaternary" className="pb-2 font-bold">
+          {t('publicKey')}
+        </Typography>
+        <div className="flex items-center">
+          <Typography variant="caption2" color="text-quaternary" className="pb-2">
+            {addressInfo.publicKey}
+          </Typography>
           <button
             className="wallet_info-copy-button"
             onClick={() => handleCopy(addressInfo.publicKey, 'publicKey')}
@@ -77,10 +88,14 @@ const AddressInfoModal: React.FC<AddressInfoModalProps> = ({
         </div>
       </div>
 
-      <div className="info-field">
-        <label>Private Key</label>
-        <div className="info-value">
-          {privateKeyHex}
+      <div className="info-field pl-1 pr-1">
+        <Typography variant="body2" color="text-quaternary" className="pb-2 font-bold">
+          {t('privateKey')}
+        </Typography>
+        <div className="flex items-center">
+          <Typography variant="caption2" color="text-quaternary" className="pb-2">
+            {privateKeyHex}
+          </Typography>
           <button
             className="wallet_info-copy-button"
             onClick={() => handleCopy(privateKeyHex, 'privateKey')}

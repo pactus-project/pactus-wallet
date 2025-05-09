@@ -1,5 +1,5 @@
-'use client'
-import { Suspense } from 'react';
+'use client';
+import { Suspense, useState, useEffect } from 'react';
 import Sidebar from '../sidebar';
 import Header from '../header';
 import { usePathname } from 'next/navigation';
@@ -7,6 +7,18 @@ import { PATHS_WITH_SIDEBAR } from '@/constants/paths';
 
 function MainLayout({ children }) {
   const pathname = usePathname();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   if (PATHS_WITH_SIDEBAR.includes(pathname)) {
     return (
       <Suspense
@@ -21,10 +33,37 @@ function MainLayout({ children }) {
         }
       >
         <main className="flex w-full min-h-[100dvh]">
-          <Sidebar />
-          <div className="flex-1 flex flex-col ml-[219px]">
+          {isMobile && (
+            <button
+              className="fixed top-4 left-4 z-50 p-2 rounded-md bg-gray-800 text-white hover:bg-gray-700 transition-colors"
+              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+              aria-label="Toggle sidebar"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+              </svg>
+            </button>
+          )}
+          <Sidebar
+            isOpen={isSidebarOpen}
+            onClose={() => setIsSidebarOpen(false)}
+            isMobile={isMobile}
+          />
+          <div className="flex-1 flex flex-col md:ml-[219px]">
             <Header />
-              {children}
+            {children}
           </div>
         </main>
       </Suspense>

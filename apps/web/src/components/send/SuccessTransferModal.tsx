@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import Modal from '@/components/modal';
 import Button from '@/components/Button';
 import {
@@ -13,6 +13,7 @@ import { useI18n } from '@/utils/i18n';
 import Typography from '../common/Typography';
 import GradientText from '../common/GradientText';
 import { successIcon, copyIcon } from '../../assets/images/icons';
+import { useWallet } from '@/wallet';
 
 interface SuccessTransferModalProps {
   isOpen: boolean;
@@ -39,15 +40,24 @@ const SuccessTransferModal: React.FC<SuccessTransferModalProps> = ({
   networkFee = '0.001',
 }) => {
   const { t } = useI18n();
-
+  const { wallet } = useWallet();
   const columnHelper = createColumnHelper<TransactionDetail>();
   const [copied, setCopied] = useState(false);
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(txHash);
+  const handleCopy = (value: string) => {
+    navigator.clipboard.writeText(value);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
   };
+
+  useEffect(() => {
+    if (copied) {
+      const timer = setTimeout(() => {
+        setCopied(false);
+      }, 2000);
+
+      return () => clearTimeout(timer); // Clean up the timer
+    }
+  }, [copied]);
 
   const columns = useMemo(
     () => [
@@ -68,7 +78,7 @@ const SuccessTransferModal: React.FC<SuccessTransferModalProps> = ({
                 <div className="text-tertiary break-all text-sm">{value}</div>
                 <button
                   className="w-10 h-10"
-                  onClick={handleCopy}
+                  onClick={() => handleCopy(txHash)}
                   aria-label="Copy address to clipboard"
                   title="Copy address to clipboard"
                 >
@@ -97,7 +107,7 @@ const SuccessTransferModal: React.FC<SuccessTransferModalProps> = ({
         },
       }),
     ],
-    []
+    [copied, txHash]
   );
 
   // Create data array
@@ -120,7 +130,11 @@ const SuccessTransferModal: React.FC<SuccessTransferModalProps> = ({
   });
 
   const handleViewOnPacviewer = () => {
-    window.open(`https://pacviewer.com/transaction/${txHash}`, '_blank');
+    if (wallet?.isTestnet()) {
+      window.open(`https://phoenix.pacviewer.com/transaction/${txHash}`, '_blank');
+    } else {
+      window.open(`https://pacviewer.com/transaction/${txHash}`, '_blank');
+    }
   };
 
   return (

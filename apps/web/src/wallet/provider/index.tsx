@@ -27,7 +27,7 @@ export const WalletContext = createContext<WalletContextType>({
   setMnemonic: () => {
     /* Will be implemented in provider */
   },
-  networkType: NetworkValues.MAINNET,
+  networkType: NetworkValues.TESTNET,
   setNetworkType: () => {
     /* Will be implemented in provider */
   },
@@ -38,7 +38,7 @@ export const WalletContext = createContext<WalletContextType>({
   walletManager: null,
   isInitializingManager: true,
   managerError: null,
-  headerTitle: "",
+  headerTitle: '',
   setHeaderTitle: () => {
     /* Will be implemented in provider */
   },
@@ -50,12 +50,12 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   const [walletStatus, setWalletStatusState] = useState<WalletStatus>(WalletStatus.WALLET_LOCKED);
   const [password, setPasswordState] = useState<string>('');
   const [mnemonic, setMnemonicState] = useState<string>('');
-  const [networkType, setNetworkTypeState] = useState<NetworkType>(NetworkValues.MAINNET);
+  const [networkType, setNetworkTypeState] = useState<NetworkType>(NetworkValues.TESTNET);
   const [walletName, setWalletNameState] = useState<string>('');
   const [walletManager, setWalletManager] = useState<WalletManager | null>(null);
   const [isInitializingManager, setIsInitializingManager] = useState<boolean>(true);
   const [managerError, setManagerError] = useState<string | null>(null);
-  const [headerTitle, setHeaderTitleState] = useState<string>("");
+  const [headerTitle, setHeaderTitleState] = useState<string>('');
   const router = useRouter();
 
   // Simulate loading for 2 seconds

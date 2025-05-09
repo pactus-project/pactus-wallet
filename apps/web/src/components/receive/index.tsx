@@ -1,27 +1,27 @@
-import { receiveIcon } from '@/assets'
-import Image from 'next/image'
-import React from 'react'
-import './style.css'
+import { receiveIcon } from '@/assets';
+import Image from 'next/image';
+import React from 'react';
+import './style.css';
+import Button from '../Button';
+import { useI18n } from '@/utils/i18n';
 
 const ReceivePac: React.FC = () => {
+  const { t } = useI18n();
   return (
-    <button 
-      className="btn btn-receive btn-sm receive-button"
-      type="button"
-      aria-label="Receive PAC tokens"
+    <Button
+      variant="secondary"
+      size="small"
+      onClick={() => {
+        // TODO: Implement bridge
+      }}
+      aria-label={t('bridge')}
+      startIcon={<Image src={receiveIcon} alt="" width={20} height={20} aria-hidden="true" />}
+      className="w-[119px] h-[38px]"
+      fullWidth
     >
-      <span className="receive-button__icon">
-        <Image 
-          src={receiveIcon} 
-          alt="" 
-          width={20} 
-          height={20}
-          aria-hidden="true"
-        />
-      </span>
-      <span className="receive-button__text">Receive</span>
-    </button>
-  )
-}
+      {t('receive')}
+    </Button>
+  );
+};
 
-export default ReceivePac
+export default ReceivePac;

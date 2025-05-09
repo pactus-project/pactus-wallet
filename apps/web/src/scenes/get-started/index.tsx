@@ -30,8 +30,13 @@ const GetStartedContent = () => {
     'import-wallet': <components.importWallet />,
     'recovery-phrase': <components.recoveryPhrase />,
   };
+  // items-center justify-center
 
-  return <div className="px-9 flex flex-col min-h-[100dvh] w-screen items-center justify-center py-[50px]">{stepsMap[step || 'welcome']}</div>;
+  return (
+    <div className="px-9 flex flex-col min-h-[100dvh] w-screen  py-[50px] items-center justify-center">
+      {stepsMap[step || 'welcome']}
+    </div>
+  );
 };
 
 const GetStarted = () => {

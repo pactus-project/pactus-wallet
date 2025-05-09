@@ -2,10 +2,13 @@
 import React, { useState } from 'react';
 import Modal from '../modal';
 import './style.css';
-import { hidePasswordIcon, showPasswordIcon } from '@/assets';
-import Image from 'next/image';
 import { useAccount, AddressInfo } from '@/wallet';
 import PrivateKeyDisplayModal from '@/components/address-infom-modal';
+import { Typography } from '../common/Typography';
+import Button from '../Button';
+import FormPasswordInput from '../common/FormPasswordInput';
+import { useI18n } from '../../utils/i18n';
+import { validatePassword } from '../../utils/password-validator';
 
 interface ShowPrivateKeyModalProps {
   isOpen: boolean;
@@ -15,7 +18,6 @@ interface ShowPrivateKeyModalProps {
 
 const ShowPrivateKeyModal: React.FC<ShowPrivateKeyModalProps> = ({ isOpen, onClose, address }) => {
   const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPrivateKeyModal, setShowPrivateKeyModal] = useState(false);
   const [addressInfo, setAddressInfo] = useState<(AddressInfo & { privateKeyHex: string }) | null>(
@@ -23,15 +25,9 @@ const ShowPrivateKeyModal: React.FC<ShowPrivateKeyModalProps> = ({ isOpen, onClo
   );
   const [error, setError] = useState('');
   const { getAddressInfo } = useAccount();
-
-  const togglePasswordVisibility = () => {
-    setShowPassword(prevState => !prevState);
-  };
-
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-    setError('');
-  };
+  const { t } = useI18n();
+  const [passwordError, setPasswordError] = useState('');
+  const [passwordTouched, setPasswordTouched] = useState(false);
 
   const handlePasswordVerified = (result: {
     privateKeyHex: string;
@@ -60,15 +56,25 @@ const ShowPrivateKeyModal: React.FC<ShowPrivateKeyModalProps> = ({ isOpen, onClo
       }
       handlePasswordVerified(addressInfo);
       setPassword('');
-      setShowPassword(false);
       onClose();
     } catch (err) {
-      console.error('Error verifying password:', err);
-      setError('Incorrect password');
+      setError(`Error verifying password: ${err}`);
     } finally {
       setIsSubmitting(false);
     }
   };
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newPassword = e.target.value;
+    setPassword(newPassword);
+    setPasswordTouched(true);
+
+    if (newPassword && !validatePassword(newPassword)) {
+      setPasswordError(t('passwordRequirements'));
+    } else {
+      setPasswordError('');
+    }
+  };
+  const isDisabled = isSubmitting || !password.trim() || !validatePassword(password);
 
   return (
     <>
@@ -80,55 +86,38 @@ const ShowPrivateKeyModal: React.FC<ShowPrivateKeyModalProps> = ({ isOpen, onClo
             handleSubmit();
           }}
         >
-          <div className="modal-input-container">
-            <label
-              className="modal-label"
-              htmlFor="password"
-              style={{ padding: '10px', display: 'block' }}
-            >
-              To show the private key, please enter your master password to decrypt your account.
-            </label>
-
-            <div className="input-MasterPassword">
-              <input
-                id="password"
-                type={showPassword ? 'text' : 'password'}
-                placeholder="Enter your password"
-                value={password}
-                onChange={handlePasswordChange}
-                style={{ border: error ? '1px var(--color-error) solid' : 'none' }}
-                aria-invalid={error ? 'true' : 'false'}
-                aria-describedby={error ? 'password-error' : undefined}
-              />
-              <button
-                type="button"
-                onClick={togglePasswordVisibility}
-                aria-label={showPassword ? 'Hide password' : 'Show password'}
-              >
-                <Image
-                  src={showPassword ? hidePasswordIcon : showPasswordIcon}
-                  alt=""
-                  width={24}
-                  height={24}
-                />
-              </button>
-            </div>
+          <div className="modal-input-container pl-1 pr-1">
+            <Typography variant="caption1" className="p-1 mb-2">
+              {t('toShowPrivateKey')}
+            </Typography>
+            <FormPasswordInput
+              id="password"
+              value={password}
+              onChange={handlePasswordChange}
+              placeholder={t('enterYourPassword')}
+              label={t('password')}
+              hideLabel={true}
+              touched={passwordTouched}
+              error={passwordError}
+            />
           </div>
 
-          <div className="add-account-actions">
+          <div className="add-account-actions pl-1 pr-1">
             {error && (
               <p id="password-error" className="modal-error-text" role="alert">
                 {error}
               </p>
             )}
-            <button
-              type="submit"
-              className="modal-button btn btn-primary"
-              style={{ marginLeft: 'auto' }}
-              disabled={isSubmitting || !password.trim()}
+            <Button
+              variant="primary"
+              disabled={isDisabled}
+              onClick={handleSubmit}
+              type="button"
+              className="w-[86px] h-[38px] ml-auto"
+              labelClassName="text-sm"
             >
               {isSubmitting ? 'Verifying...' : 'Show'}
-            </button>
+            </Button>
           </div>
         </form>
       </Modal>

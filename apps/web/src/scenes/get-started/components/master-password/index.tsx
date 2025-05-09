@@ -1,28 +1,21 @@
 'use client';
-import { showPasswordIcon, hidePasswordIcon, masterPasswordLottie } from '@/assets';
-import Image from 'next/image';
+import { masterPasswordLottie } from '@/assets';
 import React, { useState } from 'react';
 import './style.css';
 import { validatePassword } from '@/utils/password-validator';
 import { useAccount, useRestoreWallet, useWallet } from '@/wallet';
 import { useI18n } from '@/utils/i18n';
-import Lottie from '@/components/lottie-player';
 import { useRouter } from 'next/navigation';
 import Button from '@/components/Button';
 import Checkbox from '@/components/Checkbox';
+import { LottieWithText } from '../../../../components/LottieWithText';
+import FormPasswordInput from '../../../../components/common/FormPasswordInput';
+import LoadingDialog from '../../../../components/common/LoadingDialog';
 
 const MasterPassword = () => {
-  const [showPassword, setShowPassword] = useState<{ [key: string]: boolean }>({
-    password: false,
-    confirm: false,
-  });
   const { t } = useI18n();
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [errors, setErrors] = useState<{ [key: string]: string }>({
-    password: '',
-    confirm: '',
-  });
   const [isChecked, setIsChecked] = useState(false);
   const { setWalletName, setPassword: setWalletPassword } = useWallet();
   const { restoreWallet, restorationError } = useRestoreWallet();
@@ -30,42 +23,39 @@ const MasterPassword = () => {
   const { createAddress } = useAccount();
   const router = useRouter();
   const defaultWalletName = 'My Wallet';
-  const togglePasswordVisibility = (input: string) => {
-    setShowPassword(prevState => ({
-      ...prevState,
-      [input]: !prevState[input],
-    }));
-  };
+
+  const [passwordTouched, setPasswordTouched] = useState(false);
+  const [passwordError, setPasswordError] = useState('');
+  const [confirmPasswordTouched, setConfirmPasswordTouched] = useState(false);
+  const [confirmPasswordError, setConfirmPasswordError] = useState('');
+  // const togglePasswordVisibility = (input: string) => {
+  //   setShowPassword(prevState => ({
+  //     ...prevState,
+  //     [input]: !prevState[input],
+  //   }));
+  // };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setPassword(value);
-    if (value && !validatePassword(value)) {
-      setErrors(prevState => ({
-        ...prevState,
-        password: t('passwordRequirements'),
-      }));
+    const newPassword = e.target.value;
+    setPassword(newPassword);
+    setPasswordTouched(true);
+
+    if (newPassword && !validatePassword(newPassword)) {
+      setPasswordError(t('passwordRequirements'));
     } else {
-      setErrors(prevState => ({
-        ...prevState,
-        password: '',
-      }));
+      setPasswordError('');
     }
   };
 
   const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setConfirmPassword(value);
-    if (value && value !== password) {
-      setErrors(prevState => ({
-        ...prevState,
-        confirm: t('passwordsDoNotMatch'),
-      }));
+    const newPassword = e.target.value;
+    setConfirmPassword(newPassword);
+    setConfirmPasswordTouched(true);
+
+    if (newPassword && !validatePassword(newPassword)) {
+      setConfirmPasswordError(t('passwordsDoNotMatch'));
     } else {
-      setErrors(prevState => ({
-        ...prevState,
-        confirm: '',
-      }));
+      setConfirmPasswordError('');
     }
   };
 
@@ -98,60 +88,38 @@ const MasterPassword = () => {
   };
 
   const isFormValid =
-    !errors.password &&
-    !errors.confirm &&
+    !passwordError &&
+    !confirmPasswordError &&
     password.length > 0 &&
     confirmPassword.length > 0 &&
     isChecked;
 
   return (
     <section className="master-password">
-      <Lottie
+      <LottieWithText
         animationData={masterPasswordLottie}
-        className="master-password__animation"
-        loop={false}
-        play
-        aria-hidden="true"
+        title={t('createMasterPassword')}
+        description={t('masterPasswordDescription')}
       />
-      <h1 className="master-password__title">{t('createMasterPassword')}</h1>
-      <p className="master-password__description">{t('masterPasswordDescription')}</p>
 
-      <form className="master-password__form" onSubmit={e => e.preventDefault()}>
+      <form className="master-password__form mt-4" onSubmit={e => e.preventDefault()}>
         <div className="master-password__input-group">
           <label htmlFor="password" className="visually-hidden">
             {t('enterYourPassword')}
           </label>
           <div className="master-password__input-container">
-            <input
+            <FormPasswordInput
               id="password"
-              type={showPassword.password ? 'text' : 'password'}
-              className={`master-password__input ${errors.password ? 'master-password__input--error' : ''}`}
-              placeholder={t('enterYourPassword')}
               value={password}
               onChange={handlePasswordChange}
-              aria-invalid={errors.password ? 'true' : 'false'}
-              aria-describedby={errors.password ? 'password-error' : undefined}
+              placeholder={t('enterYourPassword')}
+              label={t('password')}
+              touched={passwordTouched}
+              error={passwordError}
+              hideLabel={true}
+              className={`h-[60px] bg-surface-medium  ${passwordError ? '!border-error' : 'border-surface-medium'}`}
             />
-            <button
-              type="button"
-              className="master-password__toggle-button"
-              onClick={() => togglePasswordVisibility('password')}
-              aria-label={showPassword.password ? t('hidePassword') : t('showPassword')}
-            >
-              <Image
-                src={showPassword.password ? hidePasswordIcon : showPasswordIcon}
-                alt=""
-                aria-hidden="true"
-                width={24}
-                height={24}
-              />
-            </button>
           </div>
-          {errors.password && (
-            <p id="password-error" className="master-password__error" role="alert">
-              {errors.password}
-            </p>
-          )}
         </div>
 
         <div className="master-password__input-group">
@@ -159,37 +127,20 @@ const MasterPassword = () => {
             {t('confirmYourPassword')}
           </label>
           <div className="master-password__input-container">
-            <input
+            <FormPasswordInput
               id="confirm-password"
-              type={showPassword.confirm ? 'text' : 'password'}
-              className={`master-password__input ${errors.confirm ? 'master-password__input--error' : ''}`}
-              placeholder={t('confirmYourPassword')}
               value={confirmPassword}
               onChange={handleConfirmPasswordChange}
-              aria-invalid={errors.confirm ? 'true' : 'false'}
-              aria-describedby={errors.confirm ? 'confirm-error' : undefined}
+              placeholder={t('confirmYourPassword')}
+              label={t('confirmPassword')}
+              touched={confirmPasswordTouched}
+              error={confirmPasswordError}
+              hideLabel={true}
+              className={`h-[60px] bg-surface-medium ${confirmPasswordError ? '!border-error' : 'border-surface-medium'}`}
             />
-            <button
-              type="button"
-              className="master-password__toggle-button"
-              onClick={() => togglePasswordVisibility('confirm')}
-              aria-label={showPassword.confirm ? t('hidePassword') : t('showPassword')}
-            >
-              <Image
-                src={showPassword.confirm ? hidePasswordIcon : showPasswordIcon}
-                alt=""
-                aria-hidden="true"
-                width={24}
-                height={24}
-              />
-            </button>
           </div>
-          {errors.confirm && (
-            <p id="confirm-error" className="master-password__error" role="alert">
-              {errors.confirm}
-            </p>
-          )}
         </div>
+
         <div className="master-password__terms">
           <Checkbox
             id="terms-checkbox"
@@ -218,12 +169,12 @@ const MasterPassword = () => {
           className="mt-4"
           disabled={!isFormValid}
           onClick={handleSubmit}
-          isLoading={isLoading}
           type="button"
         >
           {t('continue')}
         </Button>
       </form>
+      {isLoading && <LoadingDialog />}
     </section>
   );
 };

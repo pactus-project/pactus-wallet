@@ -10,12 +10,13 @@ import BridgePac from '@/components/bridge';
 import { useBalance } from '@/wallet/hooks/use-balance';
 import { useAccount } from '@/wallet/hooks/use-account';
 import { WalletContext } from '@/wallet';
-
+import Typography from '../../components/common/Typography';
+import { useI18n } from '@/utils/i18n';
 const Dashboard = () => {
   const { balance, fetchBalance, isLoading } = useBalance();
   const { getAccountList } = useAccount();
   const accounts = getAccountList();
-
+  const { t } = useI18n();
   useEffect(() => {
     // Fetch balance initially
     fetchBalance();
@@ -28,32 +29,41 @@ const Dashboard = () => {
   const { setHeaderTitle } = useContext(WalletContext);
 
   useEffect(() => {
-    setHeaderTitle("Overview");
+    setHeaderTitle('Overview');
   }, []);
 
   return (
-    <div className='pt-4 px-7'>
-      <section className="dashboard__summary">
+    <div className="pt-4 px-7">
+      <section className="dashboard__summary rounded-md pt-4">
         <div className="dashboard__balance-container">
-          <div className="dashboard__balance-section">
-            <div className="dashboard__balance-header">
-              <h2 className="dashboard__balance-title">Total Balance</h2>
+          <div className="flex flex-col gap-0">
+            <div className="flex items-center gap-2">
+              <Typography variant="body1" color="text-quaternary" className="font-medium">
+                {t('totalBalance')}
+              </Typography>
               <RefetchBalance onRefresh={handleRefresh} isLoading={isLoading} />
             </div>
 
-            <div className="dashboard__balance-amount">
-              <Image src={simpleLogo} alt="Pactus logo" className="wallet__currency-icon" />
-
-              <p className="dashboard__balance-value">{balance}</p>
-              <span className="dashboard__balance-currency">PAC</span>
+            <div className="flex items-center gap-2">
+              <Image src={simpleLogo} alt="Pactus logo" />
+              <Typography
+                variant="h1"
+                color="text-quaternary"
+                className="font-medium text-[24px] md:text-[30px]"
+              >
+                {balance}
+              </Typography>
+              <Typography variant="h2" color="text-disabled" className="font-medium mt-1">
+                PAC
+              </Typography>
             </div>
 
-            <div className="dashboard__balance-fiat">
-              <span className="dashboard__fiat-value">≈ 0 USD</span>
-            </div>
+            <Typography variant="caption1" color="text-[#6F6F6F]">
+              ≈ 0 USD
+            </Typography>
 
             <div className="dashboard__actions">
-              <SendPac />
+              <SendPac address={''} />
               <ReceivePac />
               <BridgePac />
             </div>
