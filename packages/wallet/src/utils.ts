@@ -77,7 +77,7 @@ export async function fetchJsonRpcResult(
   const data = await response.json();
 
   if (data.error) {
-    throw new Error(`JSON-RPC Error: ${data.error.message}`);
+    throw new Error(`${data.error.message}`);
   }
 
   return data.result;
