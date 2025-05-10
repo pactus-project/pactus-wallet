@@ -14,6 +14,8 @@ interface FormPasswordInputProps {
   hideLabel?: boolean;
   autoComplete?: string;
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   size?: 'sm' | 'md' | 'lg';
 }
 
@@ -30,6 +32,8 @@ const FormPasswordInput: React.FC<FormPasswordInputProps> = ({
   hideLabel = false,
   autoComplete = 'current-password',
   onKeyDown,
+  onFocus,
+  onBlur,
   size = 'md',
 }) => {
   const showError = touched && error;
@@ -52,6 +56,8 @@ const FormPasswordInput: React.FC<FormPasswordInputProps> = ({
         error={showError ? error : null}
         autoComplete={autoComplete}
         onKeyDown={onKeyDown}
+        onFocus={onFocus}
+        onBlur={onBlur}
         size={size}
         customErrorDisplay={true}
       />
