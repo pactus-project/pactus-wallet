@@ -202,6 +202,7 @@ const SendPreviewModal: React.FC<SendPreviewModalProps> = ({
                 size="small"
                 className="w-[86px] h-[38px] bg-gradient-to-r from-[#EF0F0F] to-[#890909] text-white border-0"
                 onClick={onClose}
+                disabled={true}
               >
                 Cancel
               </Button>
