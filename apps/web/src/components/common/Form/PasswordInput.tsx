@@ -4,8 +4,8 @@ import { hidePasswordIcon, showPasswordIcon } from '@/assets';
 
 interface PasswordInputProps {
   id?: string;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder?: string;
   error?: string | null;
   className?: string;

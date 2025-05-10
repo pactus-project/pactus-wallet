@@ -3,8 +3,8 @@ import GradientText from './GradientText';
 import { simpleLogo } from '../../assets/images/branding';
 import Image from 'next/image';
 interface MemoInputProps {
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   maxLength?: number;
   placeholder?: string;
   id?: string;
@@ -67,7 +67,7 @@ const MemoInput: React.FC<MemoInputProps> = ({
           required={required}
         />
         <GradientText className="absolute right-3 bottom-3">
-          {value.length}/{maxLength}
+          {value?.length}/{maxLength}
         </GradientText>
       </div>
     </div>

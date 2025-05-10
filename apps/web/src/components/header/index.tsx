@@ -7,9 +7,10 @@ import { useContext } from 'react';
 
 const Header: React.FC = () => {
   const { setWallet } = useWallet();
-  const { headerTitle } = useContext(WalletContext);
+  const { headerTitle, showLoadingDialog } = useContext(WalletContext);
 
   const handleLogout = () => {
+    showLoadingDialog();
     localStorage.clear();
     setWallet(null);
     window.location.href = '/get-started';

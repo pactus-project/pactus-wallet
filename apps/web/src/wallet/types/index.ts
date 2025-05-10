@@ -24,4 +24,6 @@ export interface WalletContextType {
   managerError: string | null;
   headerTitle: string;
   setHeaderTitle: React.Dispatch<React.SetStateAction<string>>;
+  showLoadingDialog: (message?: string) => void;
+  hideLoadingDialog: () => void;
 }

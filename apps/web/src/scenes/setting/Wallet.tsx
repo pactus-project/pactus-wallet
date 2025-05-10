@@ -4,11 +4,11 @@ import { plusIcon, trashIcon, showPasswordIcon } from '@/assets';
 import ShowPrivateKeyModal from '@/components/password-modal';
 import Table from '@/components/table';
 import { PATHS } from '@/constants/paths';
-import { useAccount } from '@/wallet';
+import { useAccount, WalletContext } from '@/wallet';
 import { ColumnDef } from '@tanstack/react-table';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useI18n } from '../../utils/i18n';
 import AddAccountModal from '../../components/add-account-modal';
 
@@ -24,6 +24,7 @@ interface Account {
 }
 
 const WalletManager: React.FC<WalletManagerProps> = () => {
+  const { setHeaderTitle } = useContext(WalletContext);
   const [privateKeyAddress, setPrivateKeyAddress] = useState<string>('');
   const { getAccountList } = useAccount();
   const { push } = useRouter();
@@ -93,6 +94,10 @@ const WalletManager: React.FC<WalletManagerProps> = () => {
       },
     },
   ];
+
+  useEffect(() => {
+    setHeaderTitle(t("settingsWalletManager"));
+  }, []);
 
   return (
     <div className="w-full">

@@ -23,6 +23,7 @@
         "copy-webpack-plugin": "^13.0.0",
         "framer-motion": "^12.4.10",
         "next": "15.2.4",
+        "rc-field-form": "^2.4.0",
         "react": "^19.0.0",
         "react-dom": "^19.0.0",
         "react-lottie-player": "^2.1.0",
