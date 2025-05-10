@@ -68,6 +68,7 @@ const MasterPassword = () => {
 
       if (wallet) {
         await createAddress(t('account1'), password, wallet);
+        hideLoadingDialog();
         router.replace('/');
       } else {
         hideLoadingDialog();

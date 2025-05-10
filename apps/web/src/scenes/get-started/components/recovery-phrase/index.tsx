@@ -10,7 +10,10 @@ import { useI18n } from '@/utils/i18n';
 import { LottieWithText } from '../../../../components/LottieWithText';
 import Button from '../../../../components/Button';
 import FormSelectInput from '../../../../components/common/FormSelectInput';
+import { Form, useForm } from '@/components/common/Form';
+
 const RecoveryPhrase: React.FC = () => {
+  const [ form ] = useForm();
   const [step, setStep] = useState<number>(1);
   const [wordCount, setWordCount] = useState<number>(24);
   const [walletSeeds, setWalletSeeds] = useState<string[]>([]);
@@ -20,7 +23,6 @@ const RecoveryPhrase: React.FC = () => {
   const navigate = useRouter().push;
   const { setMnemonic } = useWallet();
   const { t } = useI18n();
-
   // Generate recovery phrase when the component loads or word count changes
   useEffect(() => {
     generateRecoveryPhrase(wordCount);
@@ -120,7 +122,6 @@ const RecoveryPhrase: React.FC = () => {
           </Button>
         </div>
       )}
-
       {step === 2 && (
         <div className="recovery-phrase__step">
           <LottieWithText
@@ -128,18 +129,18 @@ const RecoveryPhrase: React.FC = () => {
             title={t('recoveryPhrase')}
             description={t('writeDownWords', wordCount.toString())}
           />
-          <div className="recovery-phrase__select-container">
+          <Form className="recovery-phrase__select-container" form={form} initialValues={{ wordCountSelect: "24" }}>
             <FormSelectInput
               id="word-count-select"
+              name='wordCountSelect'
               className="w-full min-w-[125px] h-[45px] text-[12px] text-white"
-              value={wordCount.toString()}
               onChange={e => setWordCount(parseInt(e.target.value))}
               options={[
                 { label: t('twelveWords'), value: '12' },
                 { label: t('twentyFourWords'), value: '24' },
               ]}
             />
-          </div>
+          </Form>
 
           <div id="recoveryPhraseStep2-parent" className="w-full p-4 rounded-md bg-[#101010]">
             <div className="grid grid-cols-3 md:grid-cols-6 gap-4 ml-4 mr-4 mt-3 mb-3">

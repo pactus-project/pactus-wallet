@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useAccount } from '@/wallet/hooks/use-account';
 import FormMemoInput from '@/components/common/FormMemoInput';
 import FormTextInput from '@/components/common/FormTextInput';
@@ -8,9 +8,10 @@ import { useI18n } from '@/utils/i18n';
 import { useBalance } from '@/wallet/hooks/use-balance';
 import Button from '@/components/Button';
 import GradientText from '@/components/common/GradientText';
-import { validatePassword } from '@/utils/password-validator';
 import { useSendTransaction } from '@/wallet/hooks/use-send-transaction';
 import { WalletContext } from '@/wallet';
+import { Form, useForm, useWatch } from '../common/Form';
+import { validatePassword } from '@/utils/password-validator';
 
 export interface SendFormValues {
   fromAccount?: string;
@@ -33,7 +34,6 @@ interface SendFormProps {
 }
 
 const SendForm: React.FC<SendFormProps> = ({
-  initialValues = {},
   onSubmit,
   onPreviewTransaction,
   submitButtonText = 'Next',
@@ -42,71 +42,42 @@ const SendForm: React.FC<SendFormProps> = ({
   isOpen = true,
   forceReset = 0,
 }) => {
+  const [form] = useForm();
+
+  const fromAccount = useWatch('fromAccount', form);
+  const fee = useWatch('fee', form);
+  const receiver = useWatch('receiver', form);
+  const amount = useWatch('amount', form);
+  const password = useWatch('password', form);
+
   const { showLoadingDialog, hideLoadingDialog } = useContext(WalletContext);
   const { getAccountList } = useAccount();
   const accounts = getAccountList();
   const { t } = useI18n();
   const { getSignTransferTransaction } = useSendTransaction();
-  const formRef = useRef<HTMLDivElement>(null);
 
-  // Form state
-  const [fromAccount, setFromAccount] = useState(
-    initialValues.fromAccount || accounts[0]?.address || ''
-  );
-  const [receiver, setReceiver] = useState(initialValues.receiver || '');
-  const [amount, setAmount] = useState(initialValues.amount || '');
-  const [fee, setFee] = useState(initialValues.fee || '0.01');
-  const [memo, setMemo] = useState(initialValues.memo || '');
-  const [password, setPassword] = useState(initialValues.password || '');
-  const [passwordError, setPasswordError] = useState('');
-  const [passwordTouched, setPasswordTouched] = useState(false);
   const { balance, fetchBalance, isLoading: isBalanceLoading } = useBalance(fromAccount);
   const [error, setError] = useState<string | null>(null);
+  const [passwordError, setPasswordError] = useState<string>("");
+  const [passwordTouched, setPasswordTouched] = useState(false);
   const [internalLoading, setInternalLoading] = useState(false);
 
   // Combined loading state from external and internal sources
   const isSubmitting = isLoading || internalLoading;
 
-  // Reset form function that can be called manually
-  const resetForm = () => {
-    setFromAccount(accounts[0]?.address || '');
-    setReceiver('');
-    setAmount('');
-    setFee('0.01');
-    setMemo('');
-    setPassword('');
-    setPasswordError('');
-    setPasswordTouched(false);
-    setError(null);
-
-    // Clear any HTML form values directly
-    if (formRef.current) {
-      const inputs = formRef.current.querySelectorAll('input, textarea, select');
-      inputs.forEach((input: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement) => {
-        if (input.id === 'from-account') {
-          input.value = accounts[0]?.address || '';
-        } else if (input.id !== 'fee') {
-          input.value = '';
-        } else {
-          input.value = '0.01';
-        }
-      });
-    }
-  };
-
   // Reset form when isOpen changes to false
   useEffect(() => {
     if (!isOpen) {
-      resetForm();
+      form.resetFields();
     }
   }, [isOpen, accounts]);
 
   // Reset form when forceReset counter changes
   useEffect(() => {
     if (forceReset > 0) {
-      resetForm();
+      form.resetFields();
     }
-  }, [forceReset, accounts]);
+  }, [forceReset]);
 
   useEffect(() => {
     if (fromAccount) {
@@ -118,62 +89,41 @@ const SendForm: React.FC<SendFormProps> = ({
     if (balance && !isBalanceLoading) {
       const feeValue = parseFloat(fee) || 0.01;
       const maxAmount = Math.max(0, balance - feeValue);
-      setAmount(maxAmount.toFixed(5));
+      form.setFieldValue('amount', maxAmount.toFixed(5));
     }
   };
 
   // Handle auto fee
   const handleAutoFee = () => {
-    setFee('0.01');
-  };
-
-  // Handle password change
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newPassword = e.target.value;
-    setPassword(newPassword);
-    setPasswordTouched(true);
-
-    if (newPassword && !validatePassword(newPassword)) {
-      setPasswordError(t('passwordRequirements'));
-    } else {
-      setPasswordError('');
-    }
+    form.setFieldValue('fe', '0.01');
   };
 
   // Handle form submission
-  const handleSubmit = async () => {
+  const handleSubmit = async (values: SendFormValues) => {
     try {
+      const { fromAccount, receiver, amount, fee, memo, password } = values;
       setError(null);
 
       // Set loading state
       if (setIsLoading) {
         setIsLoading(true);
-        showLoadingDialog(t("transactionLoading"));
+        showLoadingDialog(t('transactionLoading'));
       } else {
         setInternalLoading(true);
       }
 
       // Get signed transaction
       const result = await getSignTransferTransaction({
-        fromAddress: fromAccount,
-        toAddress: receiver,
-        amount,
-        fee,
-        memo,
-        password,
+        fromAddress: fromAccount || '',
+        toAddress: receiver || '',
+        amount: amount || '',
+        fee: fee || '',
+        memo: memo || '',
+        password: password || '',
       });
 
-      const values = {
-        fromAccount,
-        receiver,
-        amount,
-        fee,
-        memo,
-        password,
-      };
-
       // Reset form BEFORE callbacks to ensure it happens
-      resetForm();
+      form.resetFields();
 
       // If onPreviewTransaction is provided, call it with the signed transaction
       if (onPreviewTransaction) {
@@ -196,6 +146,17 @@ const SendForm: React.FC<SendFormProps> = ({
     }
   };
 
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newPassword = e.target.value;
+    setPasswordTouched(true);
+
+    if (newPassword && !validatePassword(newPassword)) {
+      setPasswordError(t('passwordRequirements'));
+    } else {
+      setPasswordError('');
+    }
+  };
+
   // Prepare account options for selects
   const accountOptions = accounts.map(account => ({
     value: account.address,
@@ -211,15 +172,24 @@ const SendForm: React.FC<SendFormProps> = ({
     password &&
     fromAccount !== receiver &&
     validatePassword(password);
-
   return (
-    <div className="flex flex-col gap-5 w-full px-2" ref={formRef}>
+    <Form
+      className="flex flex-col gap-5 w-full px-2"
+      form={form}
+      initialValues={{
+        fromAccount: accounts[0]?.address || '',
+        receiver: '',
+        amount: '',
+        fee: '0.01',
+        memo: '',
+        password: '',
+      }}
+      onFinish={handleSubmit}
+    >
       {/* From Account */}
       <FormSelectInput
         id="from-account"
         name="fromAccount"
-        value={fromAccount}
-        onChange={e => setFromAccount(e.target.value)}
         options={accountOptions}
         label={t('from')}
       />
@@ -228,8 +198,6 @@ const SendForm: React.FC<SendFormProps> = ({
       <FormTextInput
         id="receiver"
         name="receiver"
-        value={receiver}
-        onChange={e => setReceiver(e.target.value)}
         placeholder={t('selectOrEnterAddress')}
         label={t('receiver')}
       />
@@ -238,8 +206,6 @@ const SendForm: React.FC<SendFormProps> = ({
       <FormTextInput
         id="amount"
         name="amount"
-        value={amount}
-        onChange={e => setAmount(e.target.value)}
         placeholder="0.00"
         label={`${t('amount')}`}
         showLogo={true}
@@ -260,8 +226,6 @@ const SendForm: React.FC<SendFormProps> = ({
       <FormTextInput
         id="fee"
         name="fee"
-        value={fee}
-        onChange={e => setFee(e.target.value)}
         placeholder="0.001"
         label={`${t('fee')}`}
         showLogo={true}
@@ -278,23 +242,10 @@ const SendForm: React.FC<SendFormProps> = ({
       />
 
       {/* Memo */}
-      <FormMemoInput
-        value={memo}
-        onChange={e => setMemo(e.target.value)}
-        touched={false}
-        error=""
-      />
+      <FormMemoInput />
 
       {/* Password */}
-      <FormPasswordInput
-        id="password"
-        value={password}
-        onChange={handlePasswordChange}
-        placeholder={t('enterYourPassword')}
-        label={t('password')}
-        touched={passwordTouched}
-        error={passwordError}
-      />
+      <FormPasswordInput touched={passwordTouched} id="password" placeholder={t('enterYourPassword')} label={t('password')} error={passwordError} onChange={handlePasswordChange} />
 
       {/* Error Message */}
       {error && <div className="text-red-500">{error}</div>}
@@ -304,16 +255,15 @@ const SendForm: React.FC<SendFormProps> = ({
         <Button
           variant="primary"
           size="small"
-          onClick={handleSubmit}
-          disabled={!isFormValid || isSubmitting}
-          type="button"
+          type="submit"
           className="w-[86px] h-[38px]"
           isLoading={isSubmitting}
+          disabled={!isFormValid || isSubmitting}
         >
           {submitButtonText}
         </Button>
       </div>
-    </div>
+    </Form>
   );
 };
 

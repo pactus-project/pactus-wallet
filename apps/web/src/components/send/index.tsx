@@ -1,6 +1,6 @@
 import { sendIcon } from '@/assets';
 import Image from 'next/image';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useI18n } from '@/utils/i18n';
 import Button from '@/components/Button';
 import Modal from '@/components/modal';
@@ -12,6 +12,7 @@ import { useBalance } from '@/wallet/hooks/use-balance';
 
 const SendPac: React.FC<{ address: string }> = ({ address }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [forceReset, setForceReset] = useState(0);
   const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const { t } = useI18n();
@@ -89,6 +90,10 @@ const SendPac: React.FC<{ address: string }> = ({ address }) => {
     setCountdown(0);
   };
 
+  useEffect(() => {
+    setForceReset(forceReset + 1);
+  }, [isModalOpen]);
+
   return (
     <>
       <Button
@@ -120,6 +125,7 @@ const SendPac: React.FC<{ address: string }> = ({ address }) => {
           onPreviewTransaction={handleFormSubmit}
           submitButtonText={isLoading ? t('loading') : t('next')}
           isOpen={isModalOpen}
+          forceReset={forceReset}
         />
       </Modal>
 

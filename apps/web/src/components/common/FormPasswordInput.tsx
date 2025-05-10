@@ -1,9 +1,9 @@
 import React from 'react';
-import { PasswordInput } from '@/components/common/Form';
+import { FormItem, PasswordInput } from '@/components/common/Form';
 
 interface FormPasswordInputProps {
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder?: string;
   id?: string;
   className?: string;
@@ -36,25 +36,27 @@ const FormPasswordInput: React.FC<FormPasswordInputProps> = ({
   const inputClassName = showError ? `${className} border-error` : className;
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className='flex flex-col gap-3'>
       {!hideLabel && (
-        <label htmlFor={id} className="text-sm font-medium text-quaternary">
+        <label htmlFor={id} className="text-sm font-medium text-quaternary w-fit">
           {label}
         </label>
       )}
-      <PasswordInput
-        id={id}
-        value={value}
-        onChange={onChange}
-        placeholder={placeholder}
-        className={inputClassName}
-        disabled={disabled}
-        error={showError ? error : null}
-        autoComplete={autoComplete}
-        onKeyDown={onKeyDown}
-        size={size}
-        customErrorDisplay={true}
-      />
+      <FormItem name="password" className="flex flex-col gap-3">
+          <PasswordInput
+            id={id}
+            value={value}
+            onChange={onChange}
+            placeholder={placeholder}
+            className={inputClassName}
+            disabled={disabled}
+            error={showError ? error : null}
+            autoComplete={autoComplete}
+            onKeyDown={onKeyDown}
+            size={size}
+            customErrorDisplay={true}
+          />
+      </FormItem>
       {showError && <div className="text-xs text-error mt-1 pl-1">{error}</div>}
     </div>
   );
