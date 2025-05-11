@@ -16,7 +16,7 @@ interface WalletManagerProps {
   title?: string;
 }
 
-interface Account {
+export interface Account {
   address: string;
   name: string;
   emoji: string;
@@ -26,7 +26,7 @@ interface Account {
 const WalletManager: React.FC<WalletManagerProps> = () => {
   const { setHeaderTitle } = useContext(WalletContext);
   const [privateKeyAddress, setPrivateKeyAddress] = useState<string>('');
-  const { getAccountList } = useAccount();
+  const { accountList } = useAccount();
   const { push } = useRouter();
   const { t } = useI18n();
   const [isAddAccountModalOpen, setIsAddAccountModalOpen] = useState(false);
@@ -103,7 +103,7 @@ const WalletManager: React.FC<WalletManagerProps> = () => {
     <div className="w-full">
       <div className="h-[52px] w-full flex justify-end border-b-[1px] border-surface-medium items-center gap-4 pr-4">
         <div className="text-xs text-[#4C4F6B]">
-          <span className="text-text-tertiary">{getAccountList().length}</span>/ 200
+          <span className="text-text-tertiary">{accountList.length}</span>/ 200
         </div>
         <div className="w-[1px] h-6 border-l-[1px] border-[#2C2D3C]"></div>
         <div className="text-xs font-medium text-[#D2D3E0] h-6 px-3 rounded-sm bg-surface-medium flex justify-center items-center gap-2 cursor-pointer hover:bg-surface-light">
@@ -119,7 +119,7 @@ const WalletManager: React.FC<WalletManagerProps> = () => {
       </div>
 
       <div>
-        <Table columns={columns} data={getAccountList()} />
+        <Table columns={columns} data={accountList} />
       </div>
 
       <ShowPrivateKeyModal

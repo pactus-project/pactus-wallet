@@ -38,7 +38,7 @@ const noop = () => {
 
 const Sidebar = ({ isOpen = true, onClose = noop, isMobile = false }: SidebarProps) => {
   const { wallet } = useWallet();
-  const { getAccountList } = useAccount();
+  const { accountList } = useAccount();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [isAddAccountModalOpen, setIsAddAccountModalOpen] = useState(false);
@@ -158,7 +158,7 @@ const Sidebar = ({ isOpen = true, onClose = noop, isMobile = false }: SidebarPro
           <div className="sidebar__accounts-divider">
             <hr />
             <div className="sidebar__account-list">
-              {getAccountList()?.map((item, i) => (
+              {accountList?.map((item, i) => (
                 <button
                   type="button"
                   className={`sidebar__account-item ${isActiveRoute(`/wallet?address=${item?.address}`) ? 'sidebar__account-item--active' : ''}`}

@@ -1,4 +1,5 @@
 // types.ts
+import { Account } from '@/scenes/setting/Wallet';
 import { Wallet, NetworkType, WalletManager } from '@pactus-wallet/wallet';
 
 export enum WalletStatus {
@@ -26,4 +27,6 @@ export interface WalletContextType {
   setHeaderTitle: React.Dispatch<React.SetStateAction<string>>;
   showLoadingDialog: (message?: string) => void;
   hideLoadingDialog: () => void;
+  accountList: Account[];
+  setAccountList: React.Dispatch<React.SetStateAction<Account[]>>;
 }
