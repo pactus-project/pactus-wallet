@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import FormTextInput from '../components/common/FormTextInput';
 import TextButton from '../components/common/TextButton';
+import { Form, useForm } from '@/components/common/Form';
 
 const meta: Meta<typeof FormTextInput> = {
   title: 'Design System/Form/FormTextInput',
@@ -71,6 +72,7 @@ export const WithRightElementAndError: Story = {
 
 // Interactive component with validation
 const InteractiveFormTextInput = () => {
+  const [form] = useForm();
   const [value, setValue] = useState('');
   const [touched, setTouched] = useState(false);
   const [error, setError] = useState('');
@@ -99,17 +101,19 @@ const InteractiveFormTextInput = () => {
   };
 
   return (
-    <FormTextInput
-      id="interactive-input"
-      name="interactive-input"
-      value={value}
-      onChange={handleChange}
-      onBlur={handleBlur}
-      label="Interactive Input with Validation"
-      placeholder="Type at least 5 characters (letters, numbers, _)"
-      touched={touched}
-      error={error}
-    />
+    <Form form={form}>
+        <FormTextInput
+          id="interactive-input"
+          name="interactive-input"
+          value={value}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          label="Interactive Input with Validation"
+          placeholder="Type at least 5 characters (letters, numbers, _)"
+          touched={touched}
+          error={error}
+        />
+    </Form>
   );
 };
 

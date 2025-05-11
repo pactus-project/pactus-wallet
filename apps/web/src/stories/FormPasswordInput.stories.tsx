@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import FormPasswordInput from '../components/common/FormPasswordInput';
+import { Form, useForm } from '@/components/common/Form';
 
 const meta: Meta<typeof FormPasswordInput> = {
   title: 'Design System/Form/FormPasswordInput',
@@ -91,6 +92,7 @@ export const Disabled: Story = {
 
 // Interactive component with validation
 const InteractiveFormPasswordInput = () => {
+  const [ form ] = useForm();
   const [value, setValue] = useState('');
   const [touched, setTouched] = useState(false);
   const [error, setError] = useState('');
@@ -130,16 +132,18 @@ const InteractiveFormPasswordInput = () => {
   };
 
   return (
-    <FormPasswordInput
-      id="interactive-password"
-      value={value}
-      onChange={handleChange}
-      label="Interactive Password with Validation"
-      placeholder="Enter a strong password"
-      touched={touched}
-      error={error}
-      onKeyDown={handleKeyDown}
-    />
+    <Form form={form}>
+        <FormPasswordInput
+          id="interactive-password"
+          value={value}
+          onChange={handleChange}
+          label="Interactive Password with Validation"
+          placeholder="Enter a strong password"
+          touched={touched}
+          error={error}
+          onKeyDown={handleKeyDown}
+        />
+    </Form>
   );
 };
 

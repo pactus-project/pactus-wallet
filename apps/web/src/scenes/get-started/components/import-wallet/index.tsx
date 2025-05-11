@@ -14,7 +14,7 @@ import { Form, useForm, useWatch } from '@/components/common/Form';
 const ImportWallet = () => {
   const [ form ] = useForm();
   const wordCount = useWatch("wordCountSelect", form);
-  const [words, setWords] = useState<string[]>(Array(wordCount).fill(''));
+  const [words, setWords] = useState<string[]>(Array(24).fill(''));
   const [error, setError] = useState<string>('');
   const { setMnemonic } = useWallet();
   const navigate = useRouter().push;

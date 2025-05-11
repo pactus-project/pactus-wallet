@@ -4,6 +4,7 @@ import { Rule } from 'rc-field-form/es/interface';
 
 interface FormPasswordInputProps {
   value?: string;
+  name?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder?: string;
   id?: string;
@@ -23,6 +24,7 @@ interface FormPasswordInputProps {
 
 const FormPasswordInput: React.FC<FormPasswordInputProps> = ({
   value,
+  name = "password",
   onChange,
   placeholder = 'Enter your password',
   id = 'password',
@@ -49,7 +51,7 @@ const FormPasswordInput: React.FC<FormPasswordInputProps> = ({
           {label}
         </label>
       )}
-      <FormItem name="password" className="flex flex-col gap-3" rules={rules}>
+      <FormItem name={name} className="flex flex-col gap-3" rules={rules}>
           <PasswordInput
             id={id}
             value={value}

@@ -10,6 +10,7 @@ import FormPasswordInput from '../common/FormPasswordInput';
 import { useI18n } from '../../utils/i18n';
 import { validatePassword } from '../../utils/password-validator';
 import PasswordStrengthIndicator from '@/components/common/PasswordStrengthIndicator';
+import { Form, useForm, useWatch } from '../common/Form';
 
 interface ShowPrivateKeyModalProps {
   isOpen: boolean;
@@ -18,7 +19,8 @@ interface ShowPrivateKeyModalProps {
 }
 
 const ShowPrivateKeyModal: React.FC<ShowPrivateKeyModalProps> = ({ isOpen, onClose, address }) => {
-  const [password, setPassword] = useState('');
+  const [ form ] = useForm();
+  const password = useWatch("password", form) || "";
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPrivateKeyModal, setShowPrivateKeyModal] = useState(false);
   const [addressInfo, setAddressInfo] = useState<(AddressInfo & { privateKeyHex: string }) | null>(
@@ -63,7 +65,6 @@ const ShowPrivateKeyModal: React.FC<ShowPrivateKeyModalProps> = ({ isOpen, onClo
         throw new Error('Failed to get address info');
       }
       handlePasswordVerified(addressInfo);
-      setPassword('');
       onClose();
     } catch (err) {
       setError(`Error verifying password: ${err}`);
@@ -71,9 +72,7 @@ const ShowPrivateKeyModal: React.FC<ShowPrivateKeyModalProps> = ({ isOpen, onClo
       setIsSubmitting(false);
     }
   };
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newPassword = e.target.value;
-    setPassword(newPassword);
+  const handlePasswordChange = () => {
     setPasswordTouched(true);
   };
   const isDisabled = isSubmitting || !password.trim() || !validatePassword(password);
@@ -88,13 +87,12 @@ const ShowPrivateKeyModal: React.FC<ShowPrivateKeyModalProps> = ({ isOpen, onClo
             handleSubmit();
           }}
         >
-          <div className="modal-input-container pl-1 pr-1">
+          <Form className="modal-input-container pl-1 pr-1" form={form} initialValues={{ password: "" }}>
             <Typography variant="caption1" className="p-1 mb-2">
               {t('toShowPrivateKey')}
             </Typography>
             <FormPasswordInput
               id="password"
-              value={password}
               onChange={handlePasswordChange}
               placeholder={t('enterYourPassword')}
               label={t('password')}
@@ -109,7 +107,7 @@ const ShowPrivateKeyModal: React.FC<ShowPrivateKeyModalProps> = ({ isOpen, onClo
               className="mt-2"
               isFocused={isPasswordFocused}
             />
-          </div>
+          </Form>
 
           <div className="add-account-actions pl-1 pr-1">
             {error && (

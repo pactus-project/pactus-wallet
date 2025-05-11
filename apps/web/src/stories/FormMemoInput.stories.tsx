@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import FormMemoInput from '../components/common/FormMemoInput';
+import { Form, useForm } from '@/components/common/Form';
 
 const meta: Meta<typeof FormMemoInput> = {
   title: 'Design System/Form/FormMemoInput',
@@ -49,6 +50,7 @@ export const WithError: Story = {
 
 // Interactive component with validation
 const InteractiveFormMemoInput = () => {
+  const [form] = useForm();
   const [value, setValue] = useState('');
   const [touched, setTouched] = useState(false);
   const [error, setError] = useState('');
@@ -74,14 +76,16 @@ const InteractiveFormMemoInput = () => {
   };
 
   return (
-    <FormMemoInput
-      value={value}
-      onChange={handleChange}
-      onBlur={handleBlur}
-      touched={touched}
-      error={error}
-      placeholder="Type something (try special characters)"
-    />
+    <Form form={form}>
+        <FormMemoInput
+          value={value}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          touched={touched}
+          error={error}
+          placeholder="Type something (try special characters)"
+        />
+    </Form>
   );
 };
 

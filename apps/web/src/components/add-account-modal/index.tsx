@@ -9,15 +9,22 @@ import Button from '../Button';
 import FormPasswordInput from '../common/FormPasswordInput';
 import { validatePassword } from '../../utils/password-validator';
 import FormTextInput from '../common/FormTextInput';
+import { Form, useForm, useWatch } from '../common/Form';
 
 interface AddAccountModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
+interface AddAccountPayload {
+  accountName: string;
+  password: string;
+}
+
 const AddAccountModal: React.FC<AddAccountModalProps> = ({ isOpen, onClose }) => {
-  const [accountName, setAccountName] = useState('');
-  const [password, setPassword] = useState('');
+  const [ form ] = useForm();
+  const accountName = useWatch("accountName", form) || "";
+  const password = useWatch("password", form) || "";
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { createAddress, error, clearError } = useAccount();
   const { t } = useI18n();
@@ -26,7 +33,6 @@ const AddAccountModal: React.FC<AddAccountModalProps> = ({ isOpen, onClose }) =>
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newPassword = e.target.value;
-    setPassword(newPassword);
     setPasswordTouched(true);
 
     if (newPassword && !validatePassword(newPassword)) {
@@ -37,16 +43,16 @@ const AddAccountModal: React.FC<AddAccountModalProps> = ({ isOpen, onClose }) =>
   };
 
   const handleEmojiSelect = (emoji: string) => {
-    setAccountName(prevName => prevName + emoji);
+    form.setFieldValue("accountName", form.getFieldValue("accountName") + emoji);
     clearError();
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (values: AddAccountPayload) => {
     try {
       setIsSubmitting(true);
-      await createAddress(accountName, password);
-      setAccountName('');
-      setPassword('');
+      await createAddress(values.accountName, values.password);
+      form.setFieldValue("accountName", "");
+      form.setFieldValue("password", "");
       onClose();
     } finally {
       setIsSubmitting(false);
@@ -55,19 +61,19 @@ const AddAccountModal: React.FC<AddAccountModalProps> = ({ isOpen, onClose }) =>
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={t('addAccount')}>
-      <form
+      <Form
         className="add-account-form"
-        onSubmit={e => {
-          e.preventDefault();
-          handleSubmit();
+        onFinish={handleSubmit}
+        form={form}
+        initialValues={{
+          accountName: "",
+          password: "",
         }}
       >
         <div className="modal-input-container pl-1 pr-1">
           <FormTextInput
             id="receiver"
             name="accountName"
-            value={accountName}
-            onChange={e => setAccountName(e.target.value)}
             placeholder={t('enterAccountName')}
             label={t('label')}
           />
@@ -89,7 +95,6 @@ const AddAccountModal: React.FC<AddAccountModalProps> = ({ isOpen, onClose }) =>
         <div className="modal-input-container pl-1 pr-1">
           <FormPasswordInput
             id="password"
-            value={password}
             onChange={handlePasswordChange}
             placeholder={t('enterYourPassword')}
             label={t('password')}
@@ -107,15 +112,14 @@ const AddAccountModal: React.FC<AddAccountModalProps> = ({ isOpen, onClose }) =>
           <Button
             variant="primary"
             disabled={isSubmitting || !accountName.trim() || !password.trim()}
-            onClick={handleSubmit}
-            type="button"
+            type="submit"
             className="w-[86px] h-[38px] ml-auto"
             labelClassName="text-sm"
           >
             {isSubmitting ? 'Creating...' : 'Create'}
           </Button>
         </div>
-      </form>
+      </Form>
     </Modal>
   );
 };
