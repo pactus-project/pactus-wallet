@@ -14,6 +14,8 @@ interface PasswordInputProps {
   ariaInvalid?: boolean | 'false' | 'true';
   autoComplete?: string;
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   size?: 'sm' | 'md' | 'lg';
   iconSize?: number;
   customErrorDisplay?: boolean;
@@ -34,6 +36,8 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
   ariaInvalid,
   autoComplete = 'current-password',
   onKeyDown,
+  onFocus,
+  onBlur,
   size = 'md',
   iconSize = 20,
   customErrorDisplay = false,
@@ -62,6 +66,8 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
         value={value}
         onChange={onChange}
         onKeyDown={onKeyDown}
+        onFocus={onFocus}
+        onBlur={onBlur}
         placeholder={placeholder}
         disabled={disabled}
         autoComplete={autoComplete}

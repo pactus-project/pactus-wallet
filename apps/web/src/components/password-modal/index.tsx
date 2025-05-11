@@ -9,6 +9,7 @@ import Button from '../Button';
 import FormPasswordInput from '../common/FormPasswordInput';
 import { useI18n } from '../../utils/i18n';
 import { validatePassword } from '../../utils/password-validator';
+import PasswordStrengthIndicator from '@/components/common/PasswordStrengthIndicator';
 
 interface ShowPrivateKeyModalProps {
   isOpen: boolean;
@@ -26,8 +27,15 @@ const ShowPrivateKeyModal: React.FC<ShowPrivateKeyModalProps> = ({ isOpen, onClo
   const [error, setError] = useState('');
   const { getAddressInfo } = useAccount();
   const { t } = useI18n();
-  const [passwordError, setPasswordError] = useState('');
   const [passwordTouched, setPasswordTouched] = useState(false);
+  const [isPasswordFocused, setIsPasswordFocused] = useState(false);
+  const handlePasswordFocus = (_e: React.FocusEvent<HTMLInputElement>) => {
+    setIsPasswordFocused(true);
+  };
+
+  const handlePasswordBlur = (_e: React.FocusEvent<HTMLInputElement>) => {
+    setIsPasswordFocused(false);
+  };
 
   const handlePasswordVerified = (result: {
     privateKeyHex: string;
@@ -67,12 +75,6 @@ const ShowPrivateKeyModal: React.FC<ShowPrivateKeyModalProps> = ({ isOpen, onClo
     const newPassword = e.target.value;
     setPassword(newPassword);
     setPasswordTouched(true);
-
-    if (newPassword && !validatePassword(newPassword)) {
-      setPasswordError(t('passwordRequirements'));
-    } else {
-      setPasswordError('');
-    }
   };
   const isDisabled = isSubmitting || !password.trim() || !validatePassword(password);
 
@@ -98,7 +100,14 @@ const ShowPrivateKeyModal: React.FC<ShowPrivateKeyModalProps> = ({ isOpen, onClo
               label={t('password')}
               hideLabel={true}
               touched={passwordTouched}
-              error={passwordError}
+              error={''}
+              onFocus={handlePasswordFocus}
+              onBlur={handlePasswordBlur}
+            />
+            <PasswordStrengthIndicator
+              password={password}
+              className="mt-2"
+              isFocused={isPasswordFocused}
             />
           </div>
 

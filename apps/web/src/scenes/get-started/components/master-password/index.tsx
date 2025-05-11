@@ -10,6 +10,7 @@ import Button from '@/components/Button';
 import Checkbox from '@/components/Checkbox';
 import { LottieWithText } from '../../../../components/LottieWithText';
 import FormPasswordInput from '../../../../components/common/FormPasswordInput';
+import PasswordStrengthIndicator from '@/components/common/PasswordStrengthIndicator';
 
 const MasterPassword = () => {
   const { showLoadingDialog, hideLoadingDialog } = useContext(WalletContext);
@@ -17,6 +18,7 @@ const MasterPassword = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isChecked, setIsChecked] = useState(false);
+  const [isPasswordFocused, setIsPasswordFocused] = useState(false);
   const { setWalletName, setPassword: setWalletPassword } = useWallet();
   const { restoreWallet, restorationError } = useRestoreWallet();
   const { createAddress } = useAccount();
@@ -27,12 +29,6 @@ const MasterPassword = () => {
   const [passwordError, setPasswordError] = useState('');
   const [confirmPasswordTouched, setConfirmPasswordTouched] = useState(false);
   const [confirmPasswordError, setConfirmPasswordError] = useState('');
-  // const togglePasswordVisibility = (input: string) => {
-  //   setShowPassword(prevState => ({
-  //     ...prevState,
-  //     [input]: !prevState[input],
-  //   }));
-  // };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newPassword = e.target.value;
@@ -44,6 +40,14 @@ const MasterPassword = () => {
     } else {
       setPasswordError('');
     }
+  };
+
+  const handlePasswordFocus = (_e: React.FocusEvent<HTMLInputElement>) => {
+    setIsPasswordFocused(true);
+  };
+
+  const handlePasswordBlur = (_e: React.FocusEvent<HTMLInputElement>) => {
+    setIsPasswordFocused(false);
   };
 
   const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -112,12 +116,19 @@ const MasterPassword = () => {
               id="password"
               value={password}
               onChange={handlePasswordChange}
+              onFocus={handlePasswordFocus}
+              onBlur={handlePasswordBlur}
               placeholder={t('enterYourPassword')}
               label={t('password')}
               touched={passwordTouched}
-              error={passwordError}
+              error={''}
               hideLabel={true}
-              className={`h-[60px] bg-surface-medium  ${passwordError ? '!border-error' : 'border-surface-medium'}`}
+              className={`h-[60px] bg-surface-medium  ${passwordError ? '!border-error' : '!border-surface-medium'}`}
+            />
+            <PasswordStrengthIndicator
+              password={password}
+              className="mt-2"
+              isFocused={isPasswordFocused}
             />
           </div>
         </div>
@@ -136,7 +147,7 @@ const MasterPassword = () => {
               touched={confirmPasswordTouched}
               error={confirmPasswordError}
               hideLabel={true}
-              className={`h-[60px] bg-surface-medium ${confirmPasswordError ? '!border-error' : 'border-surface-medium'}`}
+              className={`h-[60px] bg-surface-medium ${confirmPasswordError ? '!border-error' : '!border-surface-medium'}`}
             />
           </div>
         </div>
