@@ -28,7 +28,7 @@ export const WalletContext = createContext<WalletContextType>({
   setMnemonic: () => {
     /* Will be implemented in provider */
   },
-  networkType: NetworkValues.TESTNET,
+  networkType: NetworkValues.MAINNET,
   setNetworkType: () => {
     /* Will be implemented in provider */
   },
@@ -59,7 +59,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   const [walletStatus, setWalletStatusState] = useState<WalletStatus>(WalletStatus.WALLET_LOCKED);
   const [password, setPasswordState] = useState<string>('');
   const [mnemonic, setMnemonicState] = useState<string>('');
-  const [networkType, setNetworkTypeState] = useState<NetworkType>(NetworkValues.TESTNET);
+  const [networkType, setNetworkTypeState] = useState<NetworkType>(NetworkValues.MAINNET);
   const [walletName, setWalletNameState] = useState<string>('');
   const [walletManager, setWalletManager] = useState<WalletManager | null>(null);
   const [isInitializingManager, setIsInitializingManager] = useState<boolean>(true);

@@ -136,7 +136,7 @@ interface ErrorsProps {
 function Errors({ errors, className, classNames = {} }: ErrorsProps) {
   return (
     !!errors.length && (
-      <div className={cn("flex [flex-flow:column] gap-[10px] pt-[6px] pr-[0] pb-[0] pl-[16px] text-[12px] leading-[16px] text-error", classNames.errors, className)}>
+      <div className={cn("flex flex-col gap-[10px] text-xs leading-4 text-error mt-3", classNames.errors, className)}>
         {errors.map((error, index) => (
           <div key={index} className={cn("tracking-[0.24px]", classNames.error)}>
             {error}

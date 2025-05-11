@@ -1,6 +1,7 @@
 import React from 'react';
 import SelectInput from './SelectInput';
 import FormItem from './Form/FormItem';
+import { Rule } from 'rc-field-form/es/interface';
 
 interface SelectOption {
   value: string;
@@ -23,6 +24,7 @@ interface FormSelectInputProps {
   onBlur?: (e: React.FocusEvent<HTMLSelectElement>) => void;
   label?: string;
   hideLabel?: boolean;
+  rules?: Rule[];
 }
 
 const FormSelectInput: React.FC<FormSelectInputProps> = ({
@@ -39,9 +41,10 @@ const FormSelectInput: React.FC<FormSelectInputProps> = ({
   onBlur,
   label,
   hideLabel = false,
+  rules,
 }) => {
   return (
-    <FormItem name={name} className="flex flex-col gap-1">
+    <FormItem name={name} className="flex flex-col gap-1" rules={rules}>
       <SelectInput
         value={value}
         onChange={onChange}

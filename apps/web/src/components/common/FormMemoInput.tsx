@@ -1,6 +1,7 @@
 import React from 'react';
 import MemoInput from './MemoInput';
 import FormItem from './Form/FormItem';
+import { Rule } from 'rc-field-form/es/interface';
 
 interface FormMemoInputProps {
   value?: string;
@@ -17,6 +18,7 @@ interface FormMemoInputProps {
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   label?: string;
   hideLabel?: boolean;
+  rules?: Rule[];
 }
 
 const FormMemoInput: React.FC<FormMemoInputProps> = ({
@@ -32,10 +34,11 @@ const FormMemoInput: React.FC<FormMemoInputProps> = ({
   onBlur,
   label = 'Memo',
   hideLabel = false,
+  rules,
 }) => {
 
   return (
-    <FormItem name={name} className="flex flex-col gap-1">
+    <FormItem name={name} className="flex flex-col gap-1" rules={rules}>
       <MemoInput
         value={value}
         onChange={onChange}

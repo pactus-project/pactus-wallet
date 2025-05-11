@@ -1,6 +1,7 @@
 import React from 'react';
 import TextInput from './TextInput';
 import FormItem from './Form/FormItem';
+import { Rule } from 'rc-field-form/es/interface';
 
 interface FormTextInputProps {
   value?: string;
@@ -21,6 +22,7 @@ interface FormTextInputProps {
   rightElement?: React.ReactNode;
   autoComplete?: string;
   showLogo?: boolean;
+  rules?: Rule[];
 }
 
 const FormTextInput: React.FC<FormTextInputProps> = ({
@@ -40,10 +42,11 @@ const FormTextInput: React.FC<FormTextInputProps> = ({
   rightElement,
   autoComplete,
   showLogo = false,
+  rules,
 }) => {
 
   return (
-    <FormItem name={name} className="flex flex-col gap-1">
+    <FormItem name={name} className="flex flex-col gap-1" rules={rules}>
       <TextInput
         value={value}
         onChange={onChange}

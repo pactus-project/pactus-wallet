@@ -1,5 +1,6 @@
 import React from 'react';
 import { FormItem, PasswordInput } from '@/components/common/Form';
+import { Rule } from 'rc-field-form/es/interface';
 
 interface FormPasswordInputProps {
   value?: string;
@@ -17,6 +18,7 @@ interface FormPasswordInputProps {
   onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   size?: 'sm' | 'md' | 'lg';
+  rules?: Rule[];
 }
 
 const FormPasswordInput: React.FC<FormPasswordInputProps> = ({
@@ -35,6 +37,7 @@ const FormPasswordInput: React.FC<FormPasswordInputProps> = ({
   onFocus,
   onBlur,
   size = 'md',
+  rules,
 }) => {
   const showError = touched && error;
   const inputClassName = showError ? `${className} border-error` : className;
@@ -46,7 +49,7 @@ const FormPasswordInput: React.FC<FormPasswordInputProps> = ({
           {label}
         </label>
       )}
-      <FormItem name="password" className="flex flex-col gap-3">
+      <FormItem name="password" className="flex flex-col gap-3" rules={rules}>
           <PasswordInput
             id={id}
             value={value}
