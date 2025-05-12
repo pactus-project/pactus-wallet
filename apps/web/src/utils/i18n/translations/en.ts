@@ -154,6 +154,10 @@ const translations = {
   enterAccountName: 'Enter account name',
   totalBalance: 'Total Balance',
   transactionLoading: 'Processing transaction...',
+  checkOnExplorer: "Check On Explorer",
+  showPublicKey: "Show Public Key",
+  copyPrivateKey: "Copy private key to clipboard",
+  copyPublicKey: "Copy public key to clipboard",
 };
 
 export default translations;

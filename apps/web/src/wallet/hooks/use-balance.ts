@@ -42,6 +42,7 @@ export function useBalance(address?: string) {
         setBalance(balanceValue);
         return balanceValue;
       } catch (err) {
+        setBalance(0);
         const errorMessage = err instanceof Error ? err.message : 'Failed to fetch balance';
         setError(errorMessage);
         return 0;
