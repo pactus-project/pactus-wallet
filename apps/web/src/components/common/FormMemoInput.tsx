@@ -1,9 +1,11 @@
 import React from 'react';
 import MemoInput from './MemoInput';
+import FormItem from './Form/FormItem';
+import { Rule } from 'rc-field-form/es/interface';
 
 interface FormMemoInputProps {
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   maxLength?: number;
   placeholder?: string;
   id?: string;
@@ -16,6 +18,7 @@ interface FormMemoInputProps {
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   label?: string;
   hideLabel?: boolean;
+  rules?: Rule[];
 }
 
 const FormMemoInput: React.FC<FormMemoInputProps> = ({
@@ -28,17 +31,14 @@ const FormMemoInput: React.FC<FormMemoInputProps> = ({
   className = '',
   disabled = false,
   required = false,
-  error,
-  touched,
   onBlur,
   label = 'Memo',
   hideLabel = false,
+  rules,
 }) => {
-  const showError = touched && error;
-  const inputClassName = showError ? `${className} border-error` : className;
 
   return (
-    <div className="flex flex-col gap-1">
+    <FormItem name={name} className="flex flex-col gap-1" rules={rules}>
       <MemoInput
         value={value}
         onChange={onChange}
@@ -46,15 +46,14 @@ const FormMemoInput: React.FC<FormMemoInputProps> = ({
         placeholder={placeholder}
         id={id}
         name={name}
-        className={inputClassName}
+        className={className}
         disabled={disabled}
         required={required}
         onBlur={onBlur}
         label={label}
         hideLabel={hideLabel}
       />
-      {showError && <div className="text-xs text-error mt-1 pl-1">{error}</div>}
-    </div>
+    </FormItem>
   );
 };
 

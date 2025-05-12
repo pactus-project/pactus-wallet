@@ -1,9 +1,11 @@
 import React from 'react';
 import TextInput from './TextInput';
+import FormItem from './Form/FormItem';
+import { Rule } from 'rc-field-form/es/interface';
 
 interface FormTextInputProps {
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   type?: string;
   placeholder?: string;
   id?: string;
@@ -20,6 +22,7 @@ interface FormTextInputProps {
   rightElement?: React.ReactNode;
   autoComplete?: string;
   showLogo?: boolean;
+  rules?: Rule[];
 }
 
 const FormTextInput: React.FC<FormTextInputProps> = ({
@@ -33,20 +36,17 @@ const FormTextInput: React.FC<FormTextInputProps> = ({
   labelClassName = '',
   disabled = false,
   required = false,
-  error,
-  touched,
   onBlur,
   label,
   hideLabel = false,
   rightElement,
   autoComplete,
   showLogo = false,
+  rules,
 }) => {
-  const showError = touched && error;
-  const inputClassName = showError ? `${className} border-error` : className;
 
   return (
-    <div className="flex flex-col gap-1">
+    <FormItem name={name} className="flex flex-col gap-1" rules={rules}>
       <TextInput
         value={value}
         onChange={onChange}
@@ -54,7 +54,7 @@ const FormTextInput: React.FC<FormTextInputProps> = ({
         placeholder={placeholder}
         id={id}
         name={name}
-        className={inputClassName}
+        className={className}
         labelClassName={labelClassName}
         disabled={disabled}
         required={required}
@@ -65,8 +65,7 @@ const FormTextInput: React.FC<FormTextInputProps> = ({
         autoComplete={autoComplete}
         showLogo={showLogo}
       />
-      {showError && <div className="text-xs text-error mt-1 pl-1">{error}</div>}
-    </div>
+    </FormItem>
   );
 };
 

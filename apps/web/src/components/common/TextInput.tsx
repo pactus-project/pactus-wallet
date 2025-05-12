@@ -3,8 +3,8 @@ import Image from 'next/image';
 import { simpleLogo } from '../../assets/images/branding';
 
 interface TextInputProps {
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   type?: string;
   placeholder?: string;
   id?: string;

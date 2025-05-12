@@ -9,6 +9,8 @@ import type { WalletContextType } from '../types';
 import { WalletStatus } from '../types';
 import Loading from '@/components/loading';
 import WalletLock from '@/components/wallet-lock';
+import LoadingDialog from '@/components/common/LoadingDialog';
+import { Account } from '@/scenes/setting/Wallet';
 
 export const WalletContext = createContext<WalletContextType>({
   wallet: null,
@@ -42,10 +44,22 @@ export const WalletContext = createContext<WalletContextType>({
   setHeaderTitle: () => {
     /* Will be implemented in provider */
   },
+  showLoadingDialog: () => {
+    /* Will be implemented in provider */
+  },
+  hideLoadingDialog: () => {
+    /* Will be implemented in provider */
+  },
+  accountList: [],
+  setAccountList: () => {
+    /* Will be implemented in provider */
+  },
 });
 
 export function WalletProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true); // State for loading
+  const [isLoadingFullscreen, setIsLoadingFullscreen] = useState(false);
+  const [loadingMessage, setLoadingMessage] = useState("");
   const [wallet, setWallet] = useState<Wallet | null>(null);
   const [walletStatus, setWalletStatusState] = useState<WalletStatus>(WalletStatus.WALLET_LOCKED);
   const [password, setPasswordState] = useState<string>('');
@@ -56,6 +70,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   const [isInitializingManager, setIsInitializingManager] = useState<boolean>(true);
   const [managerError, setManagerError] = useState<string | null>(null);
   const [headerTitle, setHeaderTitleState] = useState<string>('');
+  const [accountList, setAccountListState] = useState<Account[]>([]);
   const router = useRouter();
 
   // Simulate loading for 2 seconds
@@ -134,6 +149,32 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const showLoadingDialog = (message: string = "") => {
+    setLoadingMessage(message);
+    setIsLoadingFullscreen(true);
+  };
+
+  const hideLoadingDialog = () => {
+    setLoadingMessage("");
+    setIsLoadingFullscreen(false);
+  };
+
+  useEffect(() => {
+    if (!wallet) {
+      setAccountListState([]);
+      return;
+    }
+
+    setAccountListState(
+      wallet.getAddresses().map(address => ({
+        name: address.label,
+        balance: 0,
+        address: address.address,
+        emoji: '🤝',
+      }))
+    );
+  }, [wallet]);
+
   return (
     <WalletContext.Provider
       value={{
@@ -154,8 +195,13 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         managerError,
         headerTitle,
         setHeaderTitle: setHeaderTitleState,
+        showLoadingDialog,
+        hideLoadingDialog,
+        accountList,
+        setAccountList: setAccountListState
       }}
     >
+      {isLoadingFullscreen && <LoadingDialog message={loadingMessage} />}
       {isLoading && <Loading />}
       {!isLoading && (
         <>

@@ -1,27 +1,33 @@
 'use client';
 import { masterPasswordLottie } from '@/assets';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import './style.css';
 import { validatePassword } from '@/utils/password-validator';
-import { useAccount, useRestoreWallet, useWallet } from '@/wallet';
+import { useAccount, useRestoreWallet, useWallet, WalletContext } from '@/wallet';
 import { useI18n } from '@/utils/i18n';
 import { useRouter } from 'next/navigation';
 import Button from '@/components/Button';
 import Checkbox from '@/components/Checkbox';
 import { LottieWithText } from '../../../../components/LottieWithText';
 import FormPasswordInput from '../../../../components/common/FormPasswordInput';
-import LoadingDialog from '../../../../components/common/LoadingDialog';
 import PasswordStrengthIndicator from '@/components/common/PasswordStrengthIndicator';
+import { Form, useForm, useWatch } from '@/components/common/Form';
+
+interface MasterPasswordForm {
+  password: string;
+  confirmPassword: string;
+}
 
 const MasterPassword = () => {
+  const [ form ] = useForm();
+  const password = useWatch("password", form) || "";
+  const confirmPassword = useWatch("confirmPassword", form) || "";
+  const { showLoadingDialog, hideLoadingDialog } = useContext(WalletContext);
   const { t } = useI18n();
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
   const [isChecked, setIsChecked] = useState(false);
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
   const { setWalletName, setPassword: setWalletPassword } = useWallet();
   const { restoreWallet, restorationError } = useRestoreWallet();
-  const [isLoading, setIsLoading] = useState(false);
   const { createAddress } = useAccount();
   const router = useRouter();
   const defaultWalletName = 'My Wallet';
@@ -33,7 +39,6 @@ const MasterPassword = () => {
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newPassword = e.target.value;
-    setPassword(newPassword);
     setPasswordTouched(true);
 
     if (newPassword && !validatePassword(newPassword)) {
@@ -53,7 +58,6 @@ const MasterPassword = () => {
 
   const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newPassword = e.target.value;
-    setConfirmPassword(newPassword);
     setConfirmPasswordTouched(true);
 
     if (newPassword && !validatePassword(newPassword)) {
@@ -63,9 +67,9 @@ const MasterPassword = () => {
     }
   };
 
-  const handleCreateWallet = async () => {
+  const handleCreateWallet = async (password: string) => {
     try {
-      setIsLoading(true);
+      showLoadingDialog();
 
       setWalletPassword(password);
 
@@ -73,22 +77,22 @@ const MasterPassword = () => {
 
       if (wallet) {
         await createAddress(t('account1'), password, wallet);
+        hideLoadingDialog();
         router.replace('/');
       } else {
-        setIsLoading(false);
+        hideLoadingDialog();
       }
     } catch (error) {
       console.error('Error creating wallet:', error);
-      setIsLoading(false);
+      hideLoadingDialog();
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (values: MasterPasswordForm) => {
     if (!isFormValid) return;
 
     await setWalletName(defaultWalletName);
-    handleCreateWallet();
+    handleCreateWallet(values.password);
   };
 
   const isFormValid =
@@ -106,7 +110,7 @@ const MasterPassword = () => {
         description={t('masterPasswordDescription')}
       />
 
-      <form className="master-password__form mt-4" onSubmit={e => e.preventDefault()}>
+      <Form className="master-password__form mt-4" onFinish={handleSubmit} form={form} initialValues={{ password: "", confirmPassword: "" }}>
         <div className="master-password__input-group">
           <label htmlFor="password" className="visually-hidden">
             {t('enterYourPassword')}
@@ -114,7 +118,6 @@ const MasterPassword = () => {
           <div className="master-password__input-container">
             <FormPasswordInput
               id="password"
-              value={password}
               onChange={handlePasswordChange}
               onFocus={handlePasswordFocus}
               onBlur={handlePasswordBlur}
@@ -140,7 +143,7 @@ const MasterPassword = () => {
           <div className="master-password__input-container">
             <FormPasswordInput
               id="confirm-password"
-              value={confirmPassword}
+              name='confirmPassword'
               onChange={handleConfirmPasswordChange}
               placeholder={t('confirmYourPassword')}
               label={t('confirmPassword')}
@@ -179,13 +182,11 @@ const MasterPassword = () => {
           fullWidth
           className="mt-4"
           disabled={!isFormValid}
-          onClick={handleSubmit}
-          type="button"
+          type="submit"
         >
           {t('continue')}
         </Button>
-      </form>
-      {isLoading && <LoadingDialog />}
+      </Form>
     </section>
   );
 };

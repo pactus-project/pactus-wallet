@@ -1,5 +1,7 @@
 import React from 'react';
 import SelectInput from './SelectInput';
+import FormItem from './Form/FormItem';
+import { Rule } from 'rc-field-form/es/interface';
 
 interface SelectOption {
   value: string;
@@ -7,8 +9,8 @@ interface SelectOption {
 }
 
 interface FormSelectInputProps {
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   options: SelectOption[];
   placeholder?: string;
   id?: string;
@@ -22,6 +24,7 @@ interface FormSelectInputProps {
   onBlur?: (e: React.FocusEvent<HTMLSelectElement>) => void;
   label?: string;
   hideLabel?: boolean;
+  rules?: Rule[];
 }
 
 const FormSelectInput: React.FC<FormSelectInputProps> = ({
@@ -30,30 +33,26 @@ const FormSelectInput: React.FC<FormSelectInputProps> = ({
   options,
   placeholder,
   id,
+  className,
   name,
-  className = '',
   labelClassName = '',
   disabled = false,
   required = false,
-  error,
-  touched,
   onBlur,
   label,
   hideLabel = false,
+  rules,
 }) => {
-  const showError = touched && error;
-  const inputClassName = showError ? `${className} border-error` : className;
-
   return (
-    <div className="flex flex-col gap-1">
+    <FormItem name={name} className="flex flex-col gap-1" rules={rules}>
       <SelectInput
         value={value}
         onChange={onChange}
         options={options}
         placeholder={placeholder}
         id={id}
+        className={className}
         name={name}
-        className={inputClassName}
         labelClassName={labelClassName}
         disabled={disabled}
         required={required}
@@ -61,8 +60,7 @@ const FormSelectInput: React.FC<FormSelectInputProps> = ({
         label={label}
         hideLabel={hideLabel}
       />
-      {showError && <div className="text-xs text-error mt-1 pl-1">{error}</div>}
-    </div>
+    </FormItem>
   );
 };
 

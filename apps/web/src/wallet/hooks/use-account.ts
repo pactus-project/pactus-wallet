@@ -9,8 +9,9 @@ export interface AddressInfo {
   path: string;
   privateKeyHex: string;
 }
+
 export function useAccount() {
-  const { wallet } = useWallet();
+  const { wallet, accountList, setAccountList } = useWallet();
   const [error, setError] = useState<string | null>(null);
 
   const createAddress = useCallback(
@@ -37,6 +38,15 @@ export function useAccount() {
 
       try {
         const result = await targetWallet.createAddress(label, password);
+        setAccountList([
+          ...accountList,
+          {
+            name: result.label,
+            balance: 0,
+            address: result.address,
+            emoji: '🤝',
+          },
+        ]);
         return result;
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : 'Failed to create address';
@@ -44,7 +54,7 @@ export function useAccount() {
         throw err;
       }
     },
-    [wallet]
+    [wallet, accountList]
   );
 
   const getAccountList = useCallback(
@@ -142,5 +152,6 @@ export function useAccount() {
     getMnemonic,
     error,
     clearError,
+    accountList,
   };
 }

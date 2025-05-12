@@ -10,9 +10,11 @@ import BorderBeam from '@/components/border-beam';
 import Lottie from '@/components/lottie-player';
 import FormSelectInput from '../../../../components/common/FormSelectInput';
 import Button from '../../../../components/Button';
+import { Form, useForm, useWatch } from '@/components/common/Form';
 const ImportWallet = () => {
-  const [wordCount, setWordCount] = useState(24);
-  const [words, setWords] = useState<string[]>(Array(wordCount).fill(''));
+  const [ form ] = useForm();
+  const wordCount = useWatch("wordCountSelect", form);
+  const [words, setWords] = useState<string[]>(Array(24).fill(''));
   const [error, setError] = useState<string>('');
   const { setMnemonic } = useWallet();
   const navigate = useRouter().push;
@@ -22,7 +24,6 @@ const ImportWallet = () => {
   const hasEmptyWords = () => words.some(word => word.trim() === '');
 
   const handleWordCountChange = (count: number) => {
-    setWordCount(count);
     setWords(Array(count).fill(''));
     setError('');
   };
@@ -60,7 +61,7 @@ const ImportWallet = () => {
     // Case 1: Standard valid seed phrases (12 or 24 words exactly)
     if (pastedWords.length === 12 || pastedWords.length === 24) {
       // Automatically adjust the word count to match
-      setWordCount(pastedWords.length);
+      form.setFieldValue("wordCountSelect", pastedWords.length.toString())
       // Fill all inputs with the pasted words
       setWords(pastedWords);
       setError('');
@@ -106,18 +107,18 @@ const ImportWallet = () => {
       <h1 className="import-wallet__title">{t('importExistingWallet')}</h1>
       <p className="import-wallet__description">{t('importWalletDescription')}</p>
 
-      <div className="import-wallet__controls">
+      <Form className="import-wallet__controls" form={form} initialValues={{ wordCountSelect: '24' }}>
         <FormSelectInput
           id="word-count-select"
+          name="wordCountSelect"
           className="w-full min-w-[125px] text-[12px]"
-          value={wordCount.toString()}
           onChange={e => handleWordCountChange(parseInt(e.target.value))}
           options={[
             { label: t('twelveWords'), value: '12' },
             { label: t('twentyFourWords'), value: '24' },
           ]}
         />
-      </div>
+      </Form>
 
       <div id="recovery-phrase-parent" className="w-full p-4 rounded-md bg-[#101010]">
         <fieldset className="import-wallet__seed-fieldset w-full">

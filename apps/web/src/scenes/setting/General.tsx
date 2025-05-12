@@ -1,14 +1,16 @@
 'use client';
 import { WalletContext } from '@/wallet';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 import FormSelectInput from '../../components/common/FormSelectInput';
 import { useI18n } from '../../utils/i18n';
+import { Form, useForm } from '@/components/common/Form';
 
 interface GeneralProps {
   title?: string;
 }
 
 const General: React.FC<GeneralProps> = () => {
+  const [ form ] = useForm();
   const { setHeaderTitle } = useContext(WalletContext);
 
   useEffect(() => {
@@ -17,7 +19,6 @@ const General: React.FC<GeneralProps> = () => {
   const { t } = useI18n();
   const defaultLanguage = t('englishUs');
 
-  const [language, setLanguage] = useState(defaultLanguage);
   // Prepare account options for selects
   const accountOptions = [
     {
@@ -26,17 +27,15 @@ const General: React.FC<GeneralProps> = () => {
     },
   ];
   return (
-    <div className="flex-1 pt-4 pl-[52px] pr-[60px]">
+    <Form className="flex-1 pt-4 pl-[52px] pr-[60px]" form={form}>
       <FormSelectInput
         id="language"
         name="language"
-        value={language}
-        onChange={e => setLanguage(e.target.value)}
         options={accountOptions}
         label={t('language')}
         className="w-full text-sm text-quaternary"
       />
-    </div>
+    </Form>
   );
 };
 

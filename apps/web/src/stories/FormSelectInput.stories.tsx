@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import FormSelectInput from '../components/common/FormSelectInput';
+import { Form, useForm } from '@/components/common/Form';
 
 const meta: Meta<typeof FormSelectInput> = {
   title: 'Design System/Form/FormSelectInput',
@@ -78,6 +79,7 @@ export const WithSelectedValueAndError: Story = {
 
 // Interactive component with validation
 const InteractiveFormSelectInput = () => {
+  const [form] = useForm();
   const [value, setValue] = useState('');
   const [touched, setTouched] = useState(false);
   const [error, setError] = useState('');
@@ -107,18 +109,20 @@ const InteractiveFormSelectInput = () => {
   };
 
   return (
-    <FormSelectInput
-      id="interactive-select"
-      name="interactive-select"
-      value={value}
-      onChange={handleChange}
-      onBlur={handleBlur}
-      options={countryOptions}
-      label="Interactive Select with Validation"
-      placeholder="Select a country"
-      touched={touched}
-      error={error}
-    />
+    <Form form={form}>
+        <FormSelectInput
+          id="interactive-select"
+          name="interactive-select"
+          value={value}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          options={countryOptions}
+          label="Interactive Select with Validation"
+          placeholder="Select a country"
+          touched={touched}
+          error={error}
+        />
+    </Form>
   );
 };
 
