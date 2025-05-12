@@ -76,7 +76,7 @@ const translations = {
   invalidSeedPhrase: 'Invalid seed phrase',
   passwordRequirements:
     'Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.',
-  passwordsDoNotMatch: 'Passwords do not match.',
+  passwordsDoNotMatch: 'Confirm password does not match.',
 
   // Success messages
   walletCreated: 'Wallet created successfully',
@@ -153,7 +153,7 @@ const translations = {
   accountName: 'Account Name',
   enterAccountName: 'Enter account name',
   totalBalance: 'Total Balance',
-  transactionLoading: "Processing transaction...",
+  transactionLoading: 'Processing transaction...',
 };
 
 export default translations;

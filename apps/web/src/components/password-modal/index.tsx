@@ -19,8 +19,8 @@ interface ShowPrivateKeyModalProps {
 }
 
 const ShowPrivateKeyModal: React.FC<ShowPrivateKeyModalProps> = ({ isOpen, onClose, address }) => {
-  const [ form ] = useForm();
-  const password = useWatch("password", form) || "";
+  const [form] = useForm();
+  const password = useWatch('password', form) || '';
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPrivateKeyModal, setShowPrivateKeyModal] = useState(false);
   const [addressInfo, setAddressInfo] = useState<(AddressInfo & { privateKeyHex: string }) | null>(
@@ -31,6 +31,18 @@ const ShowPrivateKeyModal: React.FC<ShowPrivateKeyModalProps> = ({ isOpen, onClo
   const { t } = useI18n();
   const [passwordTouched, setPasswordTouched] = useState(false);
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
+
+  // Reset form and state when modal closes
+  React.useEffect(() => {
+    if (!isOpen) {
+      form.resetFields();
+      setPasswordTouched(false);
+      setIsPasswordFocused(false);
+      setError('');
+      setIsSubmitting(false);
+    }
+  }, [isOpen, form]);
+
   const handlePasswordFocus = (_e: React.FocusEvent<HTMLInputElement>) => {
     setIsPasswordFocused(true);
   };
@@ -72,61 +84,60 @@ const ShowPrivateKeyModal: React.FC<ShowPrivateKeyModalProps> = ({ isOpen, onClo
       setIsSubmitting(false);
     }
   };
+
   const handlePasswordChange = () => {
     setPasswordTouched(true);
   };
+
   const isDisabled = isSubmitting || !password.trim() || !validatePassword(password);
 
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose} title="Password">
-        <form
-          className="add-account-form"
-          onSubmit={e => {
-            e.preventDefault();
-            handleSubmit();
-          }}
+        <Form
+          className="modal-input-container pl-1 pr-1"
+          form={form}
+          initialValues={{ password: '' }}
+          onFinish={handleSubmit}
         >
-          <Form className="modal-input-container pl-1 pr-1" form={form} initialValues={{ password: "" }}>
-            <Typography variant="caption1" className="p-1 mb-2">
-              {t('toShowPrivateKey')}
-            </Typography>
-            <FormPasswordInput
-              id="password"
-              onChange={handlePasswordChange}
-              placeholder={t('enterYourPassword')}
-              label={t('password')}
-              hideLabel={true}
-              touched={passwordTouched}
-              error={''}
-              onFocus={handlePasswordFocus}
-              onBlur={handlePasswordBlur}
-            />
-            <PasswordStrengthIndicator
-              password={password}
-              className="mt-2"
-              isFocused={isPasswordFocused}
-            />
-          </Form>
+          <Typography variant="caption1" className="p-1 mb-2">
+            {t('toShowPrivateKey')}
+          </Typography>
+          <FormPasswordInput
+            id="password"
+            onChange={handlePasswordChange}
+            placeholder={t('enterYourPassword')}
+            label={t('password')}
+            hideLabel={true}
+            touched={passwordTouched}
+            error={''}
+            onFocus={handlePasswordFocus}
+            onBlur={handlePasswordBlur}
+          />
+          <PasswordStrengthIndicator
+            password={password}
+            className="mt-2"
+            isFocused={isPasswordFocused}
+          />
+        </Form>
 
-          <div className="add-account-actions pl-1 pr-1">
-            {error && (
-              <p id="password-error" className="modal-error-text" role="alert">
-                {error}
-              </p>
-            )}
-            <Button
-              variant="primary"
-              disabled={isDisabled}
-              onClick={handleSubmit}
-              type="button"
-              className="w-[86px] h-[38px] ml-auto"
-              labelClassName="text-sm"
-            >
-              {isSubmitting ? 'Verifying...' : 'Show'}
-            </Button>
-          </div>
-        </form>
+        <div className="add-account-actions pl-1 pr-1">
+          {error && (
+            <p id="password-error" className="modal-error-text" role="alert">
+              {error}
+            </p>
+          )}
+          <Button
+            variant="primary"
+            disabled={isDisabled}
+            onClick={() => handleSubmit()}
+            type="button"
+            className="w-[86px] h-[38px] ml-auto"
+            labelClassName="text-sm"
+          >
+            {isSubmitting ? 'Verifying...' : 'Show'}
+          </Button>
+        </div>
       </Modal>
       {addressInfo && (
         <PrivateKeyDisplayModal
