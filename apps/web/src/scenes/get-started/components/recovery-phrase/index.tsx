@@ -146,7 +146,7 @@ const RecoveryPhrase: React.FC = () => {
             <div className="grid grid-cols-3 md:grid-cols-6 gap-4 ml-4 mr-4 mt-3 mb-3">
               {walletSeeds.map((word, index) => (
                 <span key={index} className="flex items-center p-2 bg-[#242424] rounded-md">
-                  <label className="text-sm ml-1 mr-1 text-white">{index + 1}.</label>
+                  <label className="text-sm ml-1 mr-1 text-muted">{index + 1}.</label>
                   <span className="text-base text-white">{word}</span>
                 </span>
               ))}

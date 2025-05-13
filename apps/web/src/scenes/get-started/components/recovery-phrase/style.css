@@ -99,6 +99,8 @@
   text-overflow: ellipsis;
 }
 
+
+
 .recovery-phrase__word--input {
   padding: 0;
   background: var(--color-surface-light);
@@ -233,4 +235,9 @@
   .recovery-phrase__select {
     transition: none;
   }
+}
+
+.text-muted {
+  color: #a0a0a0;
+  opacity: 0.7;
 }
