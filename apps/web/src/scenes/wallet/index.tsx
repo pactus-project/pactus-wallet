@@ -12,17 +12,22 @@ import { WalletContext } from '@/wallet';
 import { useI18n } from '@/utils/i18n';
 import Typography from '../../components/common/Typography';
 import QRCode from 'react-qr-code';
-
+import Button from '@/components/Button';
+import AddressInfoModal from '@/components/address-infom-modal';
+import Skeleton from '@/components/common/skeleton/Skeleton';
+import pacviewIcon from '@/assets/images/icons/pacview-icon.svg';
+import linkIcon from '@/assets/images/icons/link-icon.svg';
 const Wallet = () => {
-  const { setHeaderTitle } = useContext(WalletContext);
+  const { wallet, setHeaderTitle } = useContext(WalletContext);
   const [copied, setCopied] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [showPublicKeyModal, setShowPublicKeyModal] = useState(false);
 
   const { getAccountByAddress } = useAccount();
   const searchParams = useSearchParams();
   const address = searchParams?.get('address') ?? '';
   const addressData = address ? getAccountByAddress(address) : null;
-  const { balance } = useBalance(addressData?.address);
+  const { balance, isLoading } = useBalance(addressData?.address);
   const { t } = useI18n();
   const handleCopy = () => {
     navigator.clipboard.writeText(addressData?.address ?? '');
@@ -37,6 +42,14 @@ const Wallet = () => {
   useEffect(() => {
     setHeaderTitle(`🤝 ${addressData?.label ?? ''}`);
   });
+
+  const handleViewOnPacviewer = () => {
+    if (wallet?.isTestnet()) {
+      window.open(`https://phoenix.pacviewer.com/address/${address}`, '_blank');
+    } else {
+      window.open(`https://pacviewer.com/address/${address}`, '_blank');
+    }
+  };
 
   return (
     <Suspense fallback={<div>{t('loading')}</div>}>
@@ -57,28 +70,32 @@ const Wallet = () => {
                 <Typography variant="body1" color="text-quaternary" className="font-medium">
                   {t('balance')}
                 </Typography>
-                <button className="ml-auto" onClick={handleShowPrivateKey}>
+                <button
+                  className="ml-auto"
+                  onClick={handleShowPrivateKey}
+                  title={t('showPrivateKey')}
+                >
                   <Image src={showPasswordIcon} alt="" width={24} height={24} />
                 </button>
               </div>
 
-              <div className="flex items-center gap-2">
-                <Image src={simpleLogo} alt="Pactus logo" />
-                <Typography
-                  variant="h1"
-                  color="text-quaternary"
-                  className="font-medium text-[24px] md:text-[30px]"
-                >
-                  {balance}
-                </Typography>
-                <Typography variant="h2" color="text-disabled" className="font-medium mt-1">
-                  PAC
-                </Typography>
-              </div>
-
-              <Typography variant="caption1" color="text-[#6F6F6F]">
-                ≈ 0 USD
-              </Typography>
+              {isLoading ? (
+                <Skeleton radius="6px" width="400px" height="45px" />
+              ) : (
+                <div className="flex items-center gap-2">
+                  <Image src={simpleLogo} alt="Pactus logo" />
+                  <Typography
+                    variant="h1"
+                    color="text-quaternary"
+                    className="font-medium text-[24px] md:text-[30px]"
+                  >
+                    {balance}
+                  </Typography>
+                  <Typography variant="h2" color="text-disabled" className="font-medium mt-1">
+                    PAC
+                  </Typography>
+                </div>
+              )}
 
               <div className="flex flex-col gap-2 pt-4">
                 <Typography variant="caption1" color="text-quaternary">
@@ -92,7 +109,7 @@ const Wallet = () => {
                     onClick={handleCopy}
                     aria-label="Copy address to clipboard"
                     title="Copy address to clipboard"
-                    className="flex-shrink-0"
+                    className="flex-shrink-0 w-fit"
                   >
                     <Image
                       src={copied ? successIcon : copyIcon}
@@ -101,12 +118,28 @@ const Wallet = () => {
                       height={25}
                     />
                   </button>
+                  <button onClick={() => setShowPublicKeyModal(true)} title={t('showPublicKey')}>
+                    <Image src={linkIcon} alt="" width={24} height={24} />
+                  </button>
                 </div>
               </div>
 
               <div className="flex flex-wrap gap-2 pt-4">
                 <SendPac address={addressData?.address ?? ''} />
                 <BridgePac />
+                <Button
+                  variant="secondary"
+                  size="small"
+                  onClick={handleViewOnPacviewer}
+                  aria-label={t('bridge')}
+                  className="w-fit h-[38px]"
+                  fullWidth
+                  startIcon={
+                    <Image src={pacviewIcon} alt="" width={20} height={20} aria-hidden="true" />
+                  }
+                >
+                  {t('checkOnExplorer')}
+                </Button>
               </div>
             </div>
           </div>
@@ -116,6 +149,17 @@ const Wallet = () => {
         isOpen={showPasswordModal}
         onClose={() => setShowPasswordModal(false)}
         address={addressData?.address ?? ''}
+      />
+      <AddressInfoModal
+        isOpen={showPublicKeyModal}
+        onClose={() => setShowPublicKeyModal(false)}
+        privateKeyHex={wallet?.getAddressInfo(address)?.publicKey ?? ''}
+        title={t('showPublicKey')}
+        label={t('publicKey')}
+        copyTitle={t('copyPublicKey')}
+        extraInfo={wallet?.getAddressInfo(address)?.path}
+        extraInfoTitle={t('hdPath')}
+        extraInfoCopyTitle={t('copyHDPath')}
       />
     </Suspense>
   );

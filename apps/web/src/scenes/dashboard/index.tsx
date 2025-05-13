@@ -58,10 +58,6 @@ const Dashboard = () => {
               </Typography>
             </div>
 
-            <Typography variant="caption1" color="text-[#6F6F6F]">
-              ≈ 0 USD
-            </Typography>
-
             <div className="dashboard__actions">
               <SendPac address={''} />
               <ReceivePac />
