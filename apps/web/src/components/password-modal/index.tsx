@@ -147,7 +147,7 @@ const ShowPrivateKeyModal: React.FC<ShowPrivateKeyModalProps> = ({ isOpen, onClo
           privateKeyHex={addressInfo.privateKeyHex ?? ''}
           title={t('showPrivateKey')}
           label={t('privateKey')}
-          copyTitle={t("copyPrivateKey")}
+          copyTitle={t('copyPrivateKey')}
         />
       )}
     </>

@@ -15,7 +15,8 @@ import QRCode from 'react-qr-code';
 import Button from '@/components/Button';
 import AddressInfoModal from '@/components/address-infom-modal';
 import Skeleton from '@/components/common/skeleton/Skeleton';
-
+import pacviewIcon from '@/assets/images/icons/pacview-icon.svg';
+import linkIcon from '@/assets/images/icons/link-icon.svg';
 const Wallet = () => {
   const { wallet, setHeaderTitle } = useContext(WalletContext);
   const [copied, setCopied] = useState(false);
@@ -69,27 +70,32 @@ const Wallet = () => {
                 <Typography variant="body1" color="text-quaternary" className="font-medium">
                   {t('balance')}
                 </Typography>
-                <button className="ml-auto" onClick={handleShowPrivateKey} title={t("showPrivateKey")}>
+                <button
+                  className="ml-auto"
+                  onClick={handleShowPrivateKey}
+                  title={t('showPrivateKey')}
+                >
                   <Image src={showPasswordIcon} alt="" width={24} height={24} />
                 </button>
               </div>
 
-              {isLoading ? <Skeleton radius="6px" width="400px" height="45px" /> :<div className="flex items-center gap-2">
-                <Image src={simpleLogo} alt="Pactus logo" />
-                <Typography
-                  variant="h1"
-                  color="text-quaternary"
-                  className="font-medium text-[24px] md:text-[30px]"
-                >
-                  {balance}
-                </Typography>
-                <Typography variant="h2" color="text-disabled" className="font-medium mt-1">
-                  PAC
-                </Typography>
-              </div>}
-              {/* <Typography variant="caption1" color="text-[#6F6F6F]">
-                ≈ 0 USD
-              </Typography> */}
+              {isLoading ? (
+                <Skeleton radius="6px" width="400px" height="45px" />
+              ) : (
+                <div className="flex items-center gap-2">
+                  <Image src={simpleLogo} alt="Pactus logo" />
+                  <Typography
+                    variant="h1"
+                    color="text-quaternary"
+                    className="font-medium text-[24px] md:text-[30px]"
+                  >
+                    {balance}
+                  </Typography>
+                  <Typography variant="h2" color="text-disabled" className="font-medium mt-1">
+                    PAC
+                  </Typography>
+                </div>
+              )}
 
               <div className="flex flex-col gap-2 pt-4">
                 <Typography variant="caption1" color="text-quaternary">
@@ -112,8 +118,8 @@ const Wallet = () => {
                       height={25}
                     />
                   </button>
-                  <button onClick={() => setShowPublicKeyModal(true)} title={t("showPublicKey")}>
-                    <Image src={showPasswordIcon} alt="" width={24} height={24} />
+                  <button onClick={() => setShowPublicKeyModal(true)} title={t('showPublicKey')}>
+                    <Image src={linkIcon} alt="" width={24} height={24} />
                   </button>
                 </div>
               </div>
@@ -128,8 +134,11 @@ const Wallet = () => {
                   aria-label={t('bridge')}
                   className="w-fit h-[38px]"
                   fullWidth
+                  startIcon={
+                    <Image src={pacviewIcon} alt="" width={20} height={20} aria-hidden="true" />
+                  }
                 >
-                  {t("checkOnExplorer")}
+                  {t('checkOnExplorer')}
                 </Button>
               </div>
             </div>
@@ -147,7 +156,10 @@ const Wallet = () => {
         privateKeyHex={wallet?.getAddressInfo(address)?.publicKey ?? ''}
         title={t('showPublicKey')}
         label={t('publicKey')}
-        copyTitle={t("copyPublicKey")}
+        copyTitle={t('copyPublicKey')}
+        extraInfo={wallet?.getAddressInfo(address)?.path}
+        extraInfoTitle={t('hdPath')}
+        extraInfoCopyTitle={t('copyHDPath')}
       />
     </Suspense>
   );
