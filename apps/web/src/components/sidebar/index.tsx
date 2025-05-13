@@ -157,7 +157,7 @@ const Sidebar = ({ isOpen = true, onClose = noop, isMobile = false }: SidebarPro
         <div className="sidebar__accounts">
           <div className="sidebar__accounts-divider">
             <hr />
-            <div className="sidebar__account-list">
+            <div className="sidebar__account-list w-full">
               {accountList?.map((item, i) => (
                 <button
                   type="button"
