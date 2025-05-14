@@ -234,3 +234,8 @@
     transition: none;
   }
 }
+
+.text-muted {
+  color: var(--color-text-tertiary);
+  opacity: 0.7;
+}
