@@ -8,8 +8,6 @@ import { Typography } from '../common/Typography';
 import Button from '../Button';
 import FormPasswordInput from '../common/FormPasswordInput';
 import { useI18n } from '../../utils/i18n';
-import { validatePassword } from '../../utils/password-validator';
-import PasswordStrengthIndicator from '@/components/common/PasswordStrengthIndicator';
 import { Form, useForm, useWatch } from '../common/Form';
 
 interface ShowPrivateKeyModalProps {
@@ -30,26 +28,16 @@ const ShowPrivateKeyModal: React.FC<ShowPrivateKeyModalProps> = ({ isOpen, onClo
   const { getAddressInfo } = useAccount();
   const { t } = useI18n();
   const [passwordTouched, setPasswordTouched] = useState(false);
-  const [isPasswordFocused, setIsPasswordFocused] = useState(false);
 
   // Reset form and state when modal closes
   React.useEffect(() => {
     if (!isOpen) {
       form.resetFields();
       setPasswordTouched(false);
-      setIsPasswordFocused(false);
       setError('');
       setIsSubmitting(false);
     }
   }, [isOpen, form]);
-
-  const handlePasswordFocus = (_e: React.FocusEvent<HTMLInputElement>) => {
-    setIsPasswordFocused(true);
-  };
-
-  const handlePasswordBlur = (_e: React.FocusEvent<HTMLInputElement>) => {
-    setIsPasswordFocused(false);
-  };
 
   const handlePasswordVerified = (result: {
     privateKeyHex: string;
@@ -89,7 +77,7 @@ const ShowPrivateKeyModal: React.FC<ShowPrivateKeyModalProps> = ({ isOpen, onClo
     setPasswordTouched(true);
   };
 
-  const isDisabled = isSubmitting || !password.trim() || !validatePassword(password);
+  const isDisabled = isSubmitting || !password.trim();
 
   return (
     <>
@@ -111,14 +99,12 @@ const ShowPrivateKeyModal: React.FC<ShowPrivateKeyModalProps> = ({ isOpen, onClo
             hideLabel={true}
             touched={passwordTouched}
             error={''}
-            onFocus={handlePasswordFocus}
-            onBlur={handlePasswordBlur}
           />
-          <PasswordStrengthIndicator
+          {/* <PasswordStrengthIndicator
             password={password}
             className="mt-2"
             isFocused={isPasswordFocused}
-          />
+          /> */}
         </Form>
 
         <div className="add-account-actions pl-1 pr-1">
