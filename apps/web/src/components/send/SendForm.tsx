@@ -11,7 +11,6 @@ import GradientText from '@/components/common/GradientText';
 import { useSendTransaction } from '@/wallet/hooks/use-send-transaction';
 import { WalletContext } from '@/wallet';
 import { Form, useForm, useWatch } from '../common/Form';
-import { validatePassword } from '@/utils/password-validator';
 
 export interface SendFormValues {
   fromAccount?: string;
@@ -58,8 +57,6 @@ const SendForm: React.FC<SendFormProps> = ({
 
   const { balance, fetchBalance, isLoading: isBalanceLoading } = useBalance(fromAccount);
   const [error, setError] = useState<string | null>(null);
-  const [passwordError, setPasswordError] = useState<string>("");
-  const [passwordTouched, setPasswordTouched] = useState(false);
   const [internalLoading, setInternalLoading] = useState(false);
 
   // Combined loading state from external and internal sources
@@ -146,18 +143,6 @@ const SendForm: React.FC<SendFormProps> = ({
     }
   };
 
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newPassword = e.target.value;
-    setPasswordTouched(true);
-
-    if (newPassword && !validatePassword(newPassword)) {
-      setPasswordError(t('passwordRequirements'));
-    } else {
-      setPasswordError('');
-    }
-  };
-
-  // Prepare account options for selects
   const accountOptions = accounts.map(account => ({
     value: account.address,
     label: `🤝 ${account.name}`,
@@ -165,13 +150,7 @@ const SendForm: React.FC<SendFormProps> = ({
 
   // Check if form is valid
   const isFormValid =
-    fromAccount &&
-    receiver &&
-    amount &&
-    fee &&
-    password &&
-    fromAccount !== receiver &&
-    validatePassword(password);
+    fromAccount && receiver && amount && fee && password && fromAccount !== receiver;
   return (
     <Form
       className="flex flex-col gap-5 w-full px-2"
@@ -245,7 +224,7 @@ const SendForm: React.FC<SendFormProps> = ({
       <FormMemoInput />
 
       {/* Password */}
-      <FormPasswordInput touched={passwordTouched} id="password" placeholder={t('enterYourPassword')} label={t('password')} error={passwordError} onChange={handlePasswordChange} />
+      <FormPasswordInput id="password" placeholder={t('enterYourPassword')} label={t('password')} />
 
       {/* Error Message */}
       {error && <div className="text-red-500">{error}</div>}

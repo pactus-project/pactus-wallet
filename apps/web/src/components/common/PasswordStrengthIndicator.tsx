@@ -2,6 +2,7 @@ import React from 'react';
 import { getPasswordValidationDetails } from '@/utils/password-utils';
 import Image from 'next/image';
 import { successIcon } from '@/assets';
+import { SPECIAL_CHARACTERS } from '@/utils/constants';
 
 interface PasswordStrengthIndicatorProps {
   password: string;
@@ -53,7 +54,7 @@ const PasswordStrengthIndicator: React.FC<PasswordStrengthIndicatorProps> = ({
       isMet: validationDetails.hasNumber,
     },
     {
-      label: 'Contains special character',
+      label: `Contains special character (${SPECIAL_CHARACTERS})`,
       isMet: validationDetails.hasSpecialChar,
     },
   ];
