@@ -67,7 +67,7 @@ const ShowPrivateKeyModal: React.FC<ShowPrivateKeyModalProps> = ({ isOpen, onClo
       handlePasswordVerified(addressInfo);
       onClose();
     } catch (err) {
-      setError(`Error verifying password: ${err}`);
+      setError(`${err}`);
     } finally {
       setIsSubmitting(false);
     }
@@ -100,11 +100,6 @@ const ShowPrivateKeyModal: React.FC<ShowPrivateKeyModalProps> = ({ isOpen, onClo
             touched={passwordTouched}
             error={''}
           />
-          {/* <PasswordStrengthIndicator
-            password={password}
-            className="mt-2"
-            isFocused={isPasswordFocused}
-          /> */}
         </Form>
 
         <div className="add-account-actions pl-1 pr-1">

@@ -143,18 +143,6 @@ const SendForm: React.FC<SendFormProps> = ({
     }
   };
 
-  // const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const newPassword = e.target.value;
-  //   setPasswordTouched(true);
-
-  //   if (newPassword && !validatePassword(newPassword)) {
-  //     setPasswordError(t('passwordRequirements'));
-  //   } else {
-  //     setPasswordError('');
-  //   }
-  // };
-
-  // Prepare account options for selects
   const accountOptions = accounts.map(account => ({
     value: account.address,
     label: `🤝 ${account.name}`,
@@ -162,12 +150,7 @@ const SendForm: React.FC<SendFormProps> = ({
 
   // Check if form is valid
   const isFormValid =
-    fromAccount &&
-    receiver &&
-    amount &&
-    fee &&
-    password &&
-    fromAccount !== receiver
+    fromAccount && receiver && amount && fee && password && fromAccount !== receiver;
   return (
     <Form
       className="flex flex-col gap-5 w-full px-2"
