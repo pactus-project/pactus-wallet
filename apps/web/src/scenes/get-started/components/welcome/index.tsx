@@ -11,6 +11,7 @@ import Button from '@/components/Button';
 import { PATHS } from '@/constants/paths';
 import Title from '@/components/common/title';
 import Description from '@/components/common/description';
+import Link from 'next/link';
 
 const Welcome = () => {
   const { push } = useRouter();
@@ -95,10 +96,12 @@ const Welcome = () => {
         checkBoxClassName="w-[16px] h-[16px] cursor-pointer [accent-color:theme('colors.primary')]"
         labelClassName="text-text-secondary text-xs font-regular leading-normal cursor-pointer select-none"
         description={
-          <span className="bg-gradient-primary bg-clip-text text-transparent font-medium ml-1 cursor-pointer whitespace-nowrap">
-            {t('termsAndConditions')}
-            {'.'}
-          </span>
+          <Link href={PATHS.TERMS_AND_CONDITIONS}>
+            <span className="bg-gradient-primary bg-clip-text text-transparent font-medium ml-1 cursor-pointer whitespace-nowrap">
+              {t('termsAndConditions')}
+              {'.'}
+            </span>
+          </Link>
         }
         size="small"
       />
