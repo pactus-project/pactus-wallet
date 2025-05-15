@@ -96,7 +96,7 @@ const Welcome = () => {
         checkBoxClassName="w-[16px] h-[16px] cursor-pointer [accent-color:theme('colors.primary')]"
         labelClassName="text-text-secondary text-xs font-regular leading-normal cursor-pointer select-none"
         description={
-          <Link href={PATHS.TERMS_AND_CONDITIONS}>
+          <Link target='_blank' href={PATHS.TERMS_AND_CONDITIONS}>
             <span className="bg-gradient-primary bg-clip-text text-transparent font-medium ml-1 cursor-pointer whitespace-nowrap">
               {t('termsAndConditions')}
               {'.'}
