@@ -11,6 +11,7 @@ import Loading from '@/components/loading';
 import WalletLock from '@/components/wallet-lock';
 import LoadingDialog from '@/components/common/LoadingDialog';
 import { Account } from '@/scenes/setting/Wallet';
+import { PATHS } from '../../constants/paths';
 
 export const WalletContext = createContext<WalletContextType>({
   wallet: null,
@@ -59,7 +60,7 @@ export const WalletContext = createContext<WalletContextType>({
 export function WalletProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true); // State for loading
   const [isLoadingFullscreen, setIsLoadingFullscreen] = useState(false);
-  const [loadingMessage, setLoadingMessage] = useState("");
+  const [loadingMessage, setLoadingMessage] = useState('');
   const [wallet, setWallet] = useState<Wallet | null>(null);
   const [walletStatus, setWalletStatusState] = useState<WalletStatus>(WalletStatus.WALLET_LOCKED);
   const [password, setPasswordState] = useState<string>('');
@@ -94,13 +95,13 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         // Get wallet status from storage
         const storedWalletStatus = localStorage.getItem('walletStatus');
 
-        if (!walletData) {
+        if (!walletData && window.location.pathname != PATHS.TERMS_AND_CONDITIONS) {
           setWalletStatusState(WalletStatus.WALLET_LOCKED);
-          router.replace('/get-started');
+          router.replace(PATHS.GET_START);
           return;
         }
-        if (window.location.pathname == '/get-started' && walletData) {
-          router.replace('/');
+        if (window.location.pathname == PATHS.GET_START && walletData) {
+          router.replace(PATHS.HOME);
         }
 
         // Load wallet data
@@ -149,13 +150,13 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const showLoadingDialog = (message: string = "") => {
+  const showLoadingDialog = (message: string = '') => {
     setLoadingMessage(message);
     setIsLoadingFullscreen(true);
   };
 
   const hideLoadingDialog = () => {
-    setLoadingMessage("");
+    setLoadingMessage('');
     setIsLoadingFullscreen(false);
   };
 
@@ -198,7 +199,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         showLoadingDialog,
         hideLoadingDialog,
         accountList,
-        setAccountList: setAccountListState
+        setAccountList: setAccountListState,
       }}
     >
       {isLoadingFullscreen && <LoadingDialog message={loadingMessage} />}

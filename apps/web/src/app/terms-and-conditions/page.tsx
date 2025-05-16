@@ -1,5 +1,6 @@
-import TermsAndConditionsScene from '@/scenes/terms-and-conditions';
 import { Metadata } from 'next';
+import TermsAndConditionsScene from '@/scenes/terms-and-conditions';
+import { getMarkdownContent } from '@/utils/markdown';
 
 export const metadata: Metadata = {
   title: 'Terms and Conditions | Pactus Wallet',
@@ -7,5 +8,6 @@ export const metadata: Metadata = {
 };
 
 export default function TermsAndConditionsPage() {
-  return <TermsAndConditionsScene />;
+  const { content } = getMarkdownContent('terms-and-conditions');
+  return <TermsAndConditionsScene content={content} />;
 }
