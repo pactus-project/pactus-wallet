@@ -17,6 +17,9 @@
     "type-check": "yarn workspaces run type-check"
   },
   "dependencies": {
+    "gray-matter": "^4.0.3",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1",
     "typescript": "~5.5.3"
   },
   "devDependencies": {
