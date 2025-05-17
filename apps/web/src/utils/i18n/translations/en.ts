@@ -159,6 +159,10 @@ const translations = {
   copyPrivateKey: 'Copy private key to clipboard',
   copyPublicKey: 'Copy public key to clipboard',
   hdPath: 'HD Path',
+
+  // Logout Confirmation
+  confirmLogout: 'Logout',
+  logoutWarning: 'Are you sure you want to sign out? This action will remove your wallet from this device. You will need your recovery phrase to recover your wallet.',
 };
 
 export default translations;
