@@ -9,6 +9,7 @@ import Typography from '../common/Typography';
 import { useAccount } from '@/wallet';
 import QRCode from 'react-qr-code';
 import FormSelectInput from '../common/FormSelectInput';
+import { Form, useForm, useWatch } from '../common/Form';
 
 const ReceivePac: React.FC = () => {
   const { t } = useI18n();
@@ -16,7 +17,8 @@ const ReceivePac: React.FC = () => {
   const [copied, setCopied] = useState(false);
   const { getAccountList } = useAccount();
   const accounts = getAccountList();
-  const [selectedAccount, setSelectedAccount] = useState(accounts[0]?.address ?? '');
+  const [form] = useForm();
+  const selectedAccount = useWatch('account', form) ?? accounts[0]?.address ?? '';
 
   const handleCopy = (text: string) => {
     navigator.clipboard.writeText(text);
@@ -45,16 +47,21 @@ const ReceivePac: React.FC = () => {
 
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={t('receive')}>
         <div className="flex flex-col gap-4 p-4">
-          <div className="modal-input-container">
-            <FormSelectInput
-              id="account"
-              name="account"
-              label={t('Account')}
-              value={selectedAccount}
-              onChange={(e) => setSelectedAccount(e.target.value)}
-              options={accountOptions}
-            />
-          </div>
+          <Form 
+            form={form}
+            initialValues={{
+              account: accounts[0]?.address ?? ''
+            }}
+          >
+            <div className="modal-input-container">
+              <FormSelectInput
+                id="account"
+                name="account"
+                label={t('Account')}
+                options={accountOptions}
+              />
+            </div>
+          </Form>
 
           <div className="flex justify-center">
             <div className="bg-white rounded-md p-4 w-fit">
@@ -71,7 +78,7 @@ const ReceivePac: React.FC = () => {
             <Typography variant="body2" color="text-quaternary">
               {accounts.find(acc => acc.address === selectedAccount)?.name}
             </Typography>
-
+            
             <div className="flex items-center justify-center gap-2">
               <Typography variant="caption1" className="break-all text-center text-gradient">
                 {selectedAccount}
