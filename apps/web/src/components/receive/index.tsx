@@ -47,7 +47,7 @@ const ReceivePac: React.FC = () => {
 
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={t('receive')}>
         <div className="flex flex-col gap-4 p-4">
-          <Form 
+          <Form
             form={form}
             initialValues={{
               account: accounts[0]?.address ?? ''
@@ -78,7 +78,7 @@ const ReceivePac: React.FC = () => {
             <Typography variant="body2" color="text-quaternary">
               {accounts.find(acc => acc.address === selectedAccount)?.name}
             </Typography>
-            
+
             <div className="flex items-center justify-center gap-2">
               <Typography variant="caption1" className="break-all text-center text-gradient">
                 {selectedAccount}
