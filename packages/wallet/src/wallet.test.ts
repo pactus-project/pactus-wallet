@@ -3,7 +3,7 @@ import * as bip39 from 'bip39';
 import { MnemonicError } from './error';
 import { MemoryStorage } from './storage/memory-storage';
 import { StorageKey } from './storage-key';
-import { MnemonicValues } from './types/vault';
+import { MnemonicValues, Vault } from './types/vault';
 import { NetworkValues } from './types/wallet_info';
 import { getWordCount } from './utils';
 import { Wallet } from './wallet';
@@ -535,5 +535,40 @@ describe('Pactus Wallet Tests', () => {
         'Empty transaction buffer'
       );
     });
+  });
+});
+
+describe('changeWalletPassword', () => {
+  let wallet: Wallet;
+  let storage: IStorage;
+
+  const oldPassword = '';
+  const newPassword = '';
+
+  beforeEach(async () => {
+    storage = new MemoryStorage();
+    const core = await initWasm();
+    const password = ''; // Use an empty password to speed up tests
+    wallet = await Wallet.create(core, storage, password, MnemonicValues.NORMAL, NetworkValues.MAINNET);
+  });
+
+  it('should change the password and re-encrypt the vault', async () => {
+    const resultKeystore = await wallet.changeWalletPassword(oldPassword, newPassword, storage);
+    const vaultKey = StorageKey.walletVaultKey(wallet.getID());
+    const newSerializedVault = storage.get(vaultKey) || '';
+    expect(newSerializedVault).toBeTruthy();
+
+    const newVault = Vault.deserialize(newSerializedVault);
+    const decryptedData = await newVault.encrypter.decrypt(newVault.keyStore, newPassword);
+    const needTruthy = JSON.parse(decryptedData).master_node;
+    expect(needTruthy).toBeTruthy();
+
+    expect(resultKeystore).toBe(newVault.keyStore);
+  });
+
+  it('should throw if old password is incorrect', async () => {
+    await expect(
+      wallet.changeWalletPassword('wrong-password', newPassword, storage)
+    ).rejects.toThrow('Invalid password');
   });
 });

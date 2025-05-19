@@ -612,7 +612,7 @@ export class Wallet {
     const vaultVal = storage.get(vaultKey);
 
     if (!vaultVal) {
-      throw new Error('Không tìm thấy Vault của ví');
+      throw new Error('Wallet vault not found!');
     }
 
     const oldVault = Vault.deserialize(vaultVal);
@@ -621,7 +621,7 @@ export class Wallet {
 
     try {
       const decryptedKeyStore = await encrypter.decrypt(oldVault.keyStore, oldPassword);
-      const newEncrypter = Encrypter.defaultEncrypter();
+      const newEncrypter = Encrypter.noEncrypter();
       const newKeyStore = await newEncrypter.encrypt(decryptedKeyStore, newPassword);
 
       const vault = new Vault(encrypter, newKeyStore);
