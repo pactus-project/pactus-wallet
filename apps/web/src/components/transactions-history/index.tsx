@@ -1,7 +1,7 @@
 import React from 'react';
 import './style.css';
 
-interface Transaction {
+export interface Transaction {
     date: string;
     txHash: string;
     sender: string;
@@ -24,9 +24,9 @@ const TransactionsHistory: React.FC<TransactionsHistoryProps> = ({ transactions,
                 <div className="transactions-history__header" role="rowgroup">
                     <div className="transactions-history__row" role="row">
                         {headings.map((heading, index) => (
-                            <div 
-                                key={`heading-${index}`} 
-                                className="transactions-history__cell transactions-history__cell--header" 
+                            <div
+                                key={`heading-${index}`}
+                                className="transactions-history__cell transactions-history__cell--header"
                                 role="columnheader"
                             >
                                 {heading}
@@ -34,17 +34,17 @@ const TransactionsHistory: React.FC<TransactionsHistoryProps> = ({ transactions,
                         ))}
                     </div>
                 </div>
-                
-                <div 
-                    className="transactions-history__body" 
+
+                <div
+                    className="transactions-history__body"
                     role="rowgroup"
                     style={{ maxHeight: `calc(${height} - 40px)` }}
                 >
                     {transactions.length > 0 ? (
                         transactions.map((transaction, rowIndex) => (
-                            <div 
-                                key={`transaction-${rowIndex}`} 
-                                className="transactions-history__row" 
+                            <div
+                                key={`transaction-${rowIndex}`}
+                                className="transactions-history__row"
                                 role="row"
                             >
                                 <div className="transactions-history__cell" role="cell">
