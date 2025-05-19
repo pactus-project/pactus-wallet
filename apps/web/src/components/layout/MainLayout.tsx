@@ -4,6 +4,7 @@ import Sidebar from '../sidebar';
 import Header from '../header';
 import { usePathname } from 'next/navigation';
 import { PATHS_WITH_SIDEBAR } from '@/constants/paths';
+import { Toaster } from 'sonner';
 
 function MainLayout({ children }) {
   const pathname = usePathname();
@@ -65,6 +66,12 @@ function MainLayout({ children }) {
             <Header />
             {children}
           </div>
+          <Toaster
+            duration={2500}
+            richColors
+            closeButton
+            position="top-center"
+          />
         </main>
       </Suspense>
     );

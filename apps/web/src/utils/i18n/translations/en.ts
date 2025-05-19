@@ -23,6 +23,8 @@ const translations = {
 
   // Authentication
   password: 'Password',
+  oldPassword: 'Old Password',
+  newPassword: 'New Password',
   confirmPassword: 'Confirm Password',
   enterPassword: 'Enter Password',
   createPassword: 'Create Password',
@@ -159,6 +161,7 @@ const translations = {
   copyPrivateKey: 'Copy private key to clipboard',
   copyPublicKey: 'Copy public key to clipboard',
   hdPath: 'HD Path',
+  updatePassword: 'Update Wallet Password'
 };
 
 export default translations;

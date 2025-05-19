@@ -7,7 +7,6 @@ import { emojis } from '@/assets';
 import { useI18n } from '../../utils/i18n';
 import Button from '../Button';
 import FormPasswordInput from '../common/FormPasswordInput';
-import { validatePassword } from '../../utils/password-validator';
 import FormTextInput from '../common/FormTextInput';
 import { Form, useForm, useWatch } from '../common/Form';
 
@@ -28,19 +27,6 @@ const AddAccountModal: React.FC<AddAccountModalProps> = ({ isOpen, onClose }) =>
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { createAddress, error, clearError } = useAccount();
   const { t } = useI18n();
-  const [passwordError, setPasswordError] = useState('');
-  const [passwordTouched, setPasswordTouched] = useState(false);
-
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newPassword = e.target.value;
-    setPasswordTouched(true);
-
-    if (newPassword && !validatePassword(newPassword)) {
-      setPasswordError(t('passwordRequirements'));
-    } else {
-      setPasswordError('');
-    }
-  };
 
   const handleEmojiSelect = (emoji: string) => {
     form.setFieldValue("accountName", form.getFieldValue("accountName") + emoji);
@@ -95,11 +81,8 @@ const AddAccountModal: React.FC<AddAccountModalProps> = ({ isOpen, onClose }) =>
         <div className="modal-input-container pl-1 pr-1">
           <FormPasswordInput
             id="password"
-            onChange={handlePasswordChange}
             placeholder={t('enterYourPassword')}
             label={t('password')}
-            touched={passwordTouched}
-            error={passwordError}
           />
         </div>
 

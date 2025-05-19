@@ -4,6 +4,7 @@ import { useContext, useEffect } from 'react';
 import FormSelectInput from '../../components/common/FormSelectInput';
 import { useI18n } from '../../utils/i18n';
 import { Form, useForm } from '@/components/common/Form';
+import ChangePasswordModal from '@/components/change-password-modal';
 
 interface GeneralProps {
   title?: string;
@@ -27,15 +28,18 @@ const General: React.FC<GeneralProps> = () => {
     },
   ];
   return (
-    <Form className="flex-1 pt-4 pl-[52px] pr-[60px]" form={form}>
-      <FormSelectInput
-        id="language"
-        name="language"
-        options={accountOptions}
-        label={t('language')}
-        className="w-full text-sm text-quaternary"
-      />
-    </Form>
+    <div className='flex flex-col flex-1 pl-[52px] pr-[60px] gap-4'>
+      <Form className="pt-4" form={form}>
+        <FormSelectInput
+          id="language"
+          name="language"
+          options={accountOptions}
+          label={t('language')}
+          className="w-full text-sm text-quaternary"
+        />
+      </Form>
+      <ChangePasswordModal />
+    </div>
   );
 };
 
