@@ -1,5 +1,5 @@
 'use client';
-import React, { Suspense, useContext, useEffect, useState } from 'react';
+import React, { Suspense, useCallback, useContext, useEffect, useState } from 'react';
 import Image from 'next/image';
 import { copyIcon, showPasswordIcon, simpleLogo, successIcon } from '@/assets';
 import SendPac from '@/components/send';
@@ -18,7 +18,7 @@ import Skeleton from '@/components/common/skeleton/Skeleton';
 import pacviewIcon from '@/assets/images/icons/pacview-icon.svg';
 import linkIcon from '@/assets/images/icons/link-icon.svg';
 import TransactionsHistory from '@/components/transactions-history';
-import { transactions } from '@/assets/images/dashboard';
+import { fetchAccountTransactions, Transaction } from '@/services/transaction';
 
 const Wallet = () => {
   const { wallet, setHeaderTitle } = useContext(WalletContext);
@@ -29,8 +29,15 @@ const Wallet = () => {
   const searchParams = useSearchParams();
   const address = searchParams?.get('address') ?? '';
   const addressData = address ? getAccountByAddress(address) : null;
-  const { balance, isLoading } = useBalance(addressData?.address);
+  const { balance, isLoading: balanceLoading } = useBalance(addressData?.address);
   const { t } = useI18n();
+
+  // Transaction loading state
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [pageNo, setPageNo] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [isLoadingTransactions, setIsLoadingTransactions] = useState(false);
+  const [hasTransactionError, setHasTransactionError] = useState(false);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(addressData?.address ?? '');
@@ -50,9 +57,38 @@ const Wallet = () => {
     }
   };
 
+  const loadTransactions = useCallback(async () => {
+    if (!addressData?.address || isLoadingTransactions || !hasMore) return;
+
+    setIsLoadingTransactions(true);
+    setHasTransactionError(false);
+    try {
+      const response = await fetchAccountTransactions(addressData.address, pageNo);
+      const { data: { data: newTransactions, total_items: totalItems } } = response;
+
+      setTransactions(prev => [...prev, ...newTransactions]);
+      setHasMore(transactions.length + newTransactions.length < totalItems);
+      setPageNo(prev => prev + 1);
+    } catch (error) {
+      console.error('Failed to load transactions:', error);
+      setHasTransactionError(true);
+    } finally {
+      setIsLoadingTransactions(false);
+    }
+  }, [addressData?.address, pageNo, hasMore, isLoadingTransactions, transactions.length]);
+
+  // Reset transactions when address changes
+  useEffect(() => {
+    setTransactions([]);
+    setPageNo(1);
+    setHasMore(true);
+    setHasTransactionError(false);
+    loadTransactions();
+  }, [addressData?.address]);
+
   useEffect(() => {
     setHeaderTitle(`🤝 ${addressData?.label ?? ''}`);
-  });
+  }, [addressData?.label, setHeaderTitle]);
 
   return (
     <Suspense fallback={<div>{t('loading')}</div>}>
@@ -82,7 +118,7 @@ const Wallet = () => {
                 </button>
               </div>
 
-              {isLoading ? (
+              {balanceLoading ? (
                 <Skeleton radius="6px" width="400px" height="45px" />
               ) : (
                 <div className="flex items-center gap-2">
@@ -149,7 +185,13 @@ const Wallet = () => {
 
         <section className="w-full ml-auto bg-surface-medium rounded-md mt-4">
           <div className="p-4">
-            <TransactionsHistory transactions={transactions} />
+            <TransactionsHistory
+              transactions={transactions}
+              onLoadMore={loadTransactions}
+              isLoading={isLoadingTransactions}
+              hasMore={hasMore}
+              hasError={hasTransactionError}
+            />
           </div>
         </section>
       </div>
