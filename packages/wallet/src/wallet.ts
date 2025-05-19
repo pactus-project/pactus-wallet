@@ -621,7 +621,7 @@ export class Wallet {
 
     try {
       const decryptedKeyStore = await encrypter.decrypt(oldVault.keyStore, oldPassword);
-      const newEncrypter = Encrypter.noEncrypter();
+      const newEncrypter = Encrypter.defaultEncrypter();
       const newKeyStore = await newEncrypter.encrypt(decryptedKeyStore, newPassword);
 
       const vault = new Vault(encrypter, newKeyStore);

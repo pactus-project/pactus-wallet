@@ -542,13 +542,13 @@ describe('changeWalletPassword', () => {
   let wallet: Wallet;
   let storage: IStorage;
 
-  const oldPassword = '';
-  const newPassword = '';
+  const oldPassword = '*OldPassword123';
+  const newPassword = '*NewPassword123';
 
   beforeEach(async () => {
     storage = new MemoryStorage();
     const core = await initWasm();
-    const password = ''; // Use an empty password to speed up tests
+    const password = '*OldPassword123';
     wallet = await Wallet.create(core, storage, password, MnemonicValues.NORMAL, NetworkValues.MAINNET);
   });
 
