@@ -19,6 +19,7 @@ import BorderBeam from '../border-beam';
 import { useWallet } from '@/wallet';
 import { useAccount } from '@/wallet/hooks/use-account';
 import AddAccountModal from '../add-account-modal';
+import CommandSearch from '../command-search';
 import { PATHS } from '@/constants/paths';
 import { useI18n } from '../../utils/i18n';
 
@@ -42,9 +43,24 @@ const Sidebar = ({ isOpen = true, onClose = noop, isMobile = false }: SidebarPro
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [isAddAccountModalOpen, setIsAddAccountModalOpen] = useState(false);
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
   const navigate = useRouter().push;
 
   const { t } = useI18n();
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Open search with Cmd/Ctrl + K
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setIsSearchModalOpen(true);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   const openAddAccountModal = () => {
     setIsAddAccountModalOpen(true);
   };
@@ -136,7 +152,8 @@ const Sidebar = ({ isOpen = true, onClose = noop, isMobile = false }: SidebarPro
           <button
             type="button"
             className="sidebar__action-button sidebar__search-button"
-            aria-label="Search accounts"
+            onClick={() => setIsSearchModalOpen(true)}
+            aria-label="Search accounts (Ctrl+K)"
           >
             <Image src={searchIcon} alt="" aria-hidden="true" width={16} height={16} />
           </button>
@@ -239,6 +256,7 @@ const Sidebar = ({ isOpen = true, onClose = noop, isMobile = false }: SidebarPro
       </div>
 
       <AddAccountModal isOpen={isAddAccountModalOpen} onClose={closeAddAccountModal} />
+      <CommandSearch isOpen={isSearchModalOpen} onClose={() => setIsSearchModalOpen(false)} />
     </aside>
   );
 };
