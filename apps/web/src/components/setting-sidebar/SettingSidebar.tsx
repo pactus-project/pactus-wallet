@@ -21,11 +21,6 @@ const sidebarData: SidebarItem[] = [
     title: 'Wallet Manager',
     path: PATHS.WALLET_MANAGER,
   },
-  // {
-  //   iconUrl: nodeManagerIcon,
-  //   title: 'Node Manager',
-  //   path: PATHS.NODE_MANAGER,
-  // },
 ];
 
 interface ItemProps {
@@ -51,19 +46,20 @@ const Item: React.FC<ItemProps> = ({ iconUrl, title, isActive = false, onClick }
 const SettingSidebar: React.FC = () => {
   const pathname = usePathname();
   const { push } = useRouter();
-
   return (
-    <div className="flex flex-col gap-2 px-6 py-3 w-[219px] border-r-[1px] border-surface-medium min-h-[calc(100vh-57px)]">
-      {sidebarData.map(({ iconUrl, title, path }) => (
-        <Item
-          onClick={() => push(path)}
-          key={path}
-          iconUrl={iconUrl}
-          title={title}
-          isActive={pathname === path}
-        />
-      ))}
-    </div>
+    <>
+      <div className="flex flex-col gap-2 px-6 py-3 w-[219px] border-r-[1px] border-surface-medium min-h-[calc(100vh-57px)]">
+        {sidebarData.map(({ iconUrl, title, path }) => (
+          <Item
+            onClick={() => push(path)}
+            key={path}
+            iconUrl={iconUrl}
+            title={title}
+            isActive={pathname === path}
+          />
+        ))}
+      </div>
+    </>
   );
 };
 
