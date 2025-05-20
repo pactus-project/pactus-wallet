@@ -1,5 +1,5 @@
 'use client';
-import type { Wallet } from '@pactus-wallet/wallet';
+import { BrowserStorage, type Wallet } from '@pactus-wallet/wallet';
 import { useCallback, useState } from 'react';
 import { useWallet } from '@/wallet';
 export interface AddressInfo {
@@ -140,6 +140,33 @@ export function useAccount() {
     [wallet]
   );
 
+  const changePassword = useCallback(
+    async (oldPassword: string, newPassword: string, walletOverride?: Wallet) => {
+      setError(null);
+
+      if (!oldPassword || oldPassword.trim() === '') {
+        setError('oldPassword is required');
+        throw new Error('oldPassword is required');
+      }
+
+      if (!newPassword || newPassword.trim() === '') {
+        setError('newPassword is required');
+        throw new Error('newPassword is required');
+      }
+
+      const targetWallet = walletOverride ?? wallet;
+      if (!targetWallet) {
+        setError('Wallet is not available');
+        throw new Error('Wallet is not available');
+      }
+
+      const storage = new BrowserStorage();
+
+      return targetWallet.changeWalletPassword(oldPassword, newPassword, storage);
+    },
+    [wallet]
+  );
+
   const clearError = useCallback(() => {
     setError(null);
   }, []);
@@ -153,5 +180,6 @@ export function useAccount() {
     error,
     clearError,
     accountList,
+    changePassword,
   };
 }

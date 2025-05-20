@@ -30,6 +30,7 @@
         "react-lottie-player": "^2.1.0",
         "react-qr-code": "^2.0.15",
         "sharp": "^0.33.5",
+        "sonner": "^2.0.3",
         "tailwind-merge": "^2.5.3"
     },
     "devDependencies": {
