@@ -80,7 +80,7 @@ const Wallet = () => {
               </div>
 
               {isLoading ? (
-                <Skeleton radius="6px" width="400px" height="45px" />
+                <Skeleton radius="6px" width="100px" height="30px" />
               ) : (
                 <div className="flex items-center gap-2">
                   <Image src={simpleLogo} alt="Pactus logo" />

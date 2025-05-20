@@ -20,6 +20,7 @@ interface FormPasswordInputProps {
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   size?: 'sm' | 'md' | 'lg';
   rules?: Rule[];
+  dependencies?: string[];
 }
 
 const FormPasswordInput: React.FC<FormPasswordInputProps> = ({

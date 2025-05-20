@@ -1,4 +1,5 @@
 import * as bip39 from 'bip39';
+import * as crypto from 'crypto';
 import { Encrypter } from './encrypter/encrypter';
 import { MnemonicError, StorageError, NetworkError } from './error';
 import { StorageKey } from './storage-key';
@@ -597,5 +598,39 @@ export class Wallet {
     }
 
     return endpoints[Math.floor(Math.random() * endpoints.length)];
+  }
+
+  /**
+   * change wallet password
+   */
+  async changeWalletPassword(
+    oldPassword: string,
+    newPassword: string,
+    storage: IStorage
+  ): Promise<string> {
+    const vaultKey = StorageKey.walletVaultKey(this.getID());
+    const vaultVal = storage.get(vaultKey);
+
+    if (!vaultVal) {
+      throw new Error('Wallet vault not found!');
+    }
+
+    const oldVault = Vault.deserialize(vaultVal);
+
+    const encrypter = oldVault.encrypter;
+
+    try {
+      const decryptedKeyStore = await encrypter.decrypt(oldVault.keyStore, oldPassword);
+      const newEncrypter = Encrypter.defaultEncrypter();
+      const newKeyStore = await newEncrypter.encrypt(decryptedKeyStore, newPassword);
+
+      const vault = new Vault(encrypter, newKeyStore);
+
+      storage.set(vaultKey, vault.serialize());
+
+      return newKeyStore;
+    } catch (err) {
+      throw new Error(`cannot change wallet password: ${(err as Error).message}`);
+    }
   }
 }
