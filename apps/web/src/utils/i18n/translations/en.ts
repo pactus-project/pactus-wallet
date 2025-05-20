@@ -165,6 +165,8 @@ const translations = {
     logoutWarning:
         'Are you sure you want to sign out? This action will remove your wallet from this device. You will need your recovery phrase to recover your wallet.',
     updatePassword: 'Update Wallet Password',
+    oldPassword: 'Old Password',
+    newPassword: 'New Password',
 };
 
 export default translations;

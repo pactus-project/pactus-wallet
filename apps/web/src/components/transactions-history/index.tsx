@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Transaction } from '@/services/transaction';
 import { Amount } from '@pactus-wallet/wallet';
+import Image from 'next/image';
 import './style.css';
 
 interface TransactionsHistoryProps {
@@ -98,13 +99,33 @@ const TransactionsHistory: React.FC<TransactionsHistoryProps> = ({
                                         {formatDate(transaction.createdAt)}
                                     </td>
                                     <td className="transactions-history__cell transactions-history__cell--hash">
-                                        {transaction.hash}
+                                        <a href={`https://pacviewer.com/transaction/${transaction.hash}`} target='_blank'>{transaction.hash}</a>
                                     </td>
-                                    <td className="transactions-history__cell text-truncate" title={transaction.from}>
-                                        {transaction.from_address_alias?.title ?? transaction.from}
+                                    <td className="transactions-history__cell flex" title={transaction.from}>
+                                        {transaction.from_address_alias?.icon && (
+                                            <Image
+                                                src={transaction.from_address_alias.icon}
+                                                alt=""
+                                                width={16}
+                                                height={16}
+                                                className="mr-1"
+                                            />
+                                        )}
+                                        <span className='text-truncate'>{transaction.from_address_alias?.title ?? transaction.from}</span>
                                     </td>
-                                    <td className="transactions-history__cell text-truncate" title={transaction.to}>
-                                        {transaction.to_address_alias?.title ?? transaction.to}
+                                    <td className="transactions-history__cell" title={transaction.to}>
+                                        <div className='flex'>
+                                        {transaction.to_address_alias?.icon && (
+                                            <Image
+                                                src={transaction.to_address_alias.icon}
+                                                alt=""
+                                                width={16}
+                                                height={16}
+                                                className="mr-1"
+                                            />
+                                        )}
+                                        <span className='text-truncate'>{transaction.to_address_alias?.title ?? transaction.to}</span>
+                                        </div>
                                     </td>
                                     <td className="transactions-history__cell">
                                         {formatAmount(transaction.value)}

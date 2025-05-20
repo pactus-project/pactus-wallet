@@ -29,7 +29,7 @@ const Wallet = () => {
   const searchParams = useSearchParams();
   const address = searchParams?.get('address') ?? '';
   const addressData = address ? getAccountByAddress(address) : null;
-  const { balance, isLoading: balanceLoading } = useBalance(addressData?.address);
+  const { balance, isLoading } = useBalance(addressData?.address);
   const { t } = useI18n();
 
   // Transaction loading state

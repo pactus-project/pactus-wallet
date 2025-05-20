@@ -31,6 +31,10 @@ const nextConfig: NextConfig = {
   // Configure the output to be static export
   output: 'export',
 
+  images: {
+    unoptimized: true, // <-- Add this line to fix the error
+  },
+
   // Transpile packages from the monorepo
   transpilePackages: ['@pactus-wallet/wallet'],
 
@@ -71,6 +75,7 @@ const nextConfig: NextConfig = {
 
     // Set the publicPath to ensure correct loading of WASM files
     config.output.publicPath = '/_next/';
+
 
     if (!isServer) {
       // Add CopyPlugin to copy wallet-core.wasm to the output directory
