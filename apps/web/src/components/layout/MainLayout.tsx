@@ -36,7 +36,7 @@ function MainLayout({ children }) {
         <main className="flex w-full min-h-[100dvh]">
           {isMobile && (
             <button
-              className="fixed top-4 left-4 z-50 p-2 rounded-md bg-gray-800 text-white hover:bg-gray-700 transition-colors"
+              className="fixed top-2 right-4 z-50 p-2 rounded-md text-white hover:bg-gray-700 transition-colors"
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
               aria-label="Toggle sidebar"
             >
@@ -66,12 +66,7 @@ function MainLayout({ children }) {
             <Header />
             {children}
           </div>
-          <Toaster
-            duration={2500}
-            richColors
-            closeButton
-            position="top-center"
-          />
+          <Toaster duration={2500} richColors closeButton position="top-center" />
         </main>
       </Suspense>
     );
