@@ -10,7 +10,8 @@ import Button from '@/components/Button';
 import GradientText from '@/components/common/GradientText';
 import { useSendTransaction } from '@/wallet/hooks/use-send-transaction';
 import { WalletContext } from '@/wallet';
-import { Form, useForm, useWatch } from '../common/Form';
+import { Form, FormItem, useForm, useWatch } from '../common/Form';
+import Switch from '../common/switch';
 
 export interface SendFormValues {
   fromAccount?: string;
@@ -225,6 +226,10 @@ const SendForm: React.FC<SendFormProps> = ({
 
       {/* Password */}
       <FormPasswordInput id="password" placeholder={t('enterYourPassword')} label={t('password')} />
+
+      <FormItem name="">
+        <Switch />
+      </FormItem>
 
       {/* Error Message */}
       {error && <div className="text-red-500">{error}</div>}
