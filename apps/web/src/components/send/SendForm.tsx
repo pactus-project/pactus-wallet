@@ -10,8 +10,7 @@ import Button from '@/components/Button';
 import GradientText from '@/components/common/GradientText';
 import { useSendTransaction } from '@/wallet/hooks/use-send-transaction';
 import { WalletContext } from '@/wallet';
-import { Form, FormItem, useForm, useWatch } from '../common/Form';
-import Switch from '../common/switch';
+import { Form, useForm, useWatch } from '../common/Form';
 
 export interface SendFormValues {
   fromAccount?: string;
@@ -49,7 +48,8 @@ const SendForm: React.FC<SendFormProps> = ({
   const receiver = useWatch('receiver', form);
   const amount = useWatch('amount', form);
   const password = useWatch('password', form);
-  const isBond = useWatch('isBond', form);
+  const transactionType = useWatch('transactionType', form);
+  const isBond = transactionType === "BOND";
 
   const { showLoadingDialog, hideLoadingDialog } = useContext(WalletContext);
   const { getAccountList } = useAccount();
@@ -158,6 +158,7 @@ const SendForm: React.FC<SendFormProps> = ({
       className="flex flex-col gap-5 w-full px-2"
       form={form}
       initialValues={{
+        transactionType: "TRANSFER",
         fromAccount: accounts[0]?.address || '',
         receiver: '',
         amount: '',
@@ -167,6 +168,23 @@ const SendForm: React.FC<SendFormProps> = ({
       }}
       onFinish={handleSubmit}
     >
+      {/* Transfer or Bond */}
+      <FormSelectInput
+        id="transactionType"
+        name="transactionType"
+        options={[
+          {
+            value: 'TRANSFER',
+            label: 'Transfer Transaction',
+          },
+          {
+            value: 'BOND',
+            label: 'Bond Transaction',
+          },
+        ]}
+        label={t('transactionType')}
+      />
+
       {/* From Account */}
       <FormSelectInput
         id="from-account"
@@ -228,23 +246,17 @@ const SendForm: React.FC<SendFormProps> = ({
       {/* Password */}
       <FormPasswordInput id="password" placeholder={t('enterYourPassword')} label={t('password')} />
 
-      {/* Transfer or Bond */}
-      <div className='flex flex-col gap-3'>
-        <label htmlFor="isBond" className="text-sm font-medium text-quaternary">
-          {t("bondTransaction")}
-        </label>
-        <FormItem name="isBond" id="isBond">
-          <Switch />
-        </FormItem>
-      </div>
-
       {/* Public Key */}
-      {isBond ? <FormTextInput
-        id="publicKey"
-        name="publicKey"
-        placeholder={t('enterPublickey')}
-        label={t('publicKey')}
-      /> : <></>}
+      {isBond ? (
+        <FormTextInput
+          id="publicKey"
+          name="publicKey"
+          placeholder={t('enterPublickey')}
+          label={t('publicKey')}
+        />
+      ) : (
+        <></>
+      )}
 
       {/* Error Message */}
       {error && <div className="text-red-500">{error}</div>}
