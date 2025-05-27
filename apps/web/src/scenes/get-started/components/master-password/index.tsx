@@ -60,7 +60,7 @@ const MasterPassword = () => {
     const newPassword = e.target.value;
     setConfirmPasswordTouched(true);
 
-    if (newPassword && !validatePassword(newPassword)) {
+    if (newPassword !== password) {
       setConfirmPasswordError(t('passwordsDoNotMatch'));
     } else {
       setConfirmPasswordError('');
