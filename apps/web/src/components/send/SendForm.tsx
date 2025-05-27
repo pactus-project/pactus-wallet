@@ -49,6 +49,7 @@ const SendForm: React.FC<SendFormProps> = ({
   const receiver = useWatch('receiver', form);
   const amount = useWatch('amount', form);
   const password = useWatch('password', form);
+  const isBond = useWatch('isBond', form);
 
   const { showLoadingDialog, hideLoadingDialog } = useContext(WalletContext);
   const { getAccountList } = useAccount();
@@ -227,9 +228,23 @@ const SendForm: React.FC<SendFormProps> = ({
       {/* Password */}
       <FormPasswordInput id="password" placeholder={t('enterYourPassword')} label={t('password')} />
 
-      <FormItem name="">
-        <Switch />
-      </FormItem>
+      {/* Transfer or Bond */}
+      <div className='flex flex-col gap-3'>
+        <label htmlFor="isBond" className="text-sm font-medium text-quaternary">
+          {t("bondTransaction")}
+        </label>
+        <FormItem name="isBond" id="isBond">
+          <Switch />
+        </FormItem>
+      </div>
+
+      {/* Public Key */}
+      {isBond ? <FormTextInput
+        id="publicKey"
+        name="publicKey"
+        placeholder={t('enterPublickey')}
+        label={t('publicKey')}
+      /> : <></>}
 
       {/* Error Message */}
       {error && <div className="text-red-500">{error}</div>}
