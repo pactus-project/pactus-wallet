@@ -522,9 +522,6 @@ export class Wallet {
       );
     }
 
-    // Get validator public key
-    const txPublicKey = await this.getValidatorPublicKey(toAddress);
-
     // Build raw transaction
     const tx: BondTransaction = {
       sender: fromAddress,
@@ -533,7 +530,7 @@ export class Wallet {
       fee: calculatedFee,
       memo: memo ?? '', // Ensure memo is always a string
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      public_key: publicKey || txPublicKey,
+      public_key: publicKey ?? '',
     };
     const rawTxHex = await this.getRawBondTransaction(tx);
 
