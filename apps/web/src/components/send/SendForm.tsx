@@ -48,6 +48,8 @@ const SendForm: React.FC<SendFormProps> = ({
   const receiver = useWatch('receiver', form);
   const amount = useWatch('amount', form);
   const password = useWatch('password', form);
+  const transactionType = useWatch('transactionType', form);
+  const isBond = transactionType === "BOND";
 
   const { showLoadingDialog, hideLoadingDialog } = useContext(WalletContext);
   const { getAccountList } = useAccount();
@@ -156,6 +158,7 @@ const SendForm: React.FC<SendFormProps> = ({
       className="flex flex-col gap-5 w-full px-2"
       form={form}
       initialValues={{
+        transactionType: "TRANSFER",
         fromAccount: accounts[0]?.address || '',
         receiver: '',
         amount: '',
@@ -165,6 +168,23 @@ const SendForm: React.FC<SendFormProps> = ({
       }}
       onFinish={handleSubmit}
     >
+      {/* Transfer or Bond */}
+      <FormSelectInput
+        id="transactionType"
+        name="transactionType"
+        options={[
+          {
+            value: 'TRANSFER',
+            label: 'Transfer Transaction',
+          },
+          {
+            value: 'BOND',
+            label: 'Bond Transaction',
+          },
+        ]}
+        label={t('transactionType')}
+      />
+
       {/* From Account */}
       <FormSelectInput
         id="from-account"
@@ -225,6 +245,18 @@ const SendForm: React.FC<SendFormProps> = ({
 
       {/* Password */}
       <FormPasswordInput id="password" placeholder={t('enterYourPassword')} label={t('password')} />
+
+      {/* Public Key */}
+      {isBond ? (
+        <FormTextInput
+          id="publicKey"
+          name="publicKey"
+          placeholder={t('enterPublickey')}
+          label={t('publicKey')}
+        />
+      ) : (
+        <></>
+      )}
 
       {/* Error Message */}
       {error && <div className="text-red-500">{error}</div>}

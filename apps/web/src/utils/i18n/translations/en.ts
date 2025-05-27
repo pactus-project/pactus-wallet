@@ -154,6 +154,7 @@ const translations = {
   label: 'Label',
   accountName: 'Account Name',
   enterAccountName: 'Enter account name',
+  enterPublickey: 'Enter public key',
   totalBalance: 'Total Balance',
   transactionLoading: 'Processing transaction...',
   checkOnExplorer: 'Check On Explorer',
@@ -165,6 +166,8 @@ const translations = {
   logoutWarning:
     'Are you sure you want to sign out? This action will remove your wallet from this device. You will need your recovery phrase to recover your wallet.',
   updatePassword: 'Update Wallet Password',
+  bondTransaction: 'Bond Transaction',
+  transactionType: 'Transaction Type',
 };
 
 export default translations;
