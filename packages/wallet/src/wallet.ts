@@ -522,6 +522,9 @@ export class Wallet {
       );
     }
 
+    // Get validator public key
+    const txPublicKey = await this.getValidatorPublicKey(toAddress);
+
     // Build raw transaction
     const tx: BondTransaction = {
       sender: fromAddress,
@@ -530,7 +533,7 @@ export class Wallet {
       fee: calculatedFee,
       memo: memo ?? '', // Ensure memo is always a string
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      public_key: publicKey || '',
+      public_key: publicKey || txPublicKey,
     };
     const rawTxHex = await this.getRawBondTransaction(tx);
 
@@ -576,13 +579,21 @@ export class Wallet {
   private async getValidatorPublicKey(address: string): Promise<string> {
     const method = 'pactus.blockchain.get_public_key';
 
-    const txParams = {
-      address,
-    };
+    try {
+      const txParams = {
+        address,
+      };
 
-    const result = await this.tryFetchJsonRpcResult(method, txParams);
+      const result = await this.tryFetchJsonRpcResult(method, txParams);
 
-    return result.public_key;
+      return result.public_key;
+    } catch (error) {
+      if (error instanceof NetworkError && error.message.includes('Not Found')) {
+        console.warn(`Validator public key not found for address: ${address}`);
+      }
+
+      return '';
+    }
   }
 
   /**
