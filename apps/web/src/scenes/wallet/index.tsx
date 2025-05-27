@@ -118,7 +118,11 @@ const Wallet = () => {
                       height={25}
                     />
                   </button>
-                  <button onClick={() => setShowPublicKeyModal(true)} title={t('showPublicKey')}>
+                  <button
+                    onClick={() => setShowPublicKeyModal(true)}
+                    title={t('showPublicKey')}
+                    className="flex-shrink-0 w-fit"
+                  >
                     <Image src={linkIcon} alt="" width={24} height={24} />
                   </button>
                 </div>

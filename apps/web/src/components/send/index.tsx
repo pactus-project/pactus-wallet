@@ -17,7 +17,7 @@ const SendPac: React.FC<{ address: string }> = ({ address }) => {
   const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const { t } = useI18n();
-  const { error, broadcastTransaction } = useSendTransaction();
+  const { broadcastTransaction } = useSendTransaction();
   const { fetchBalance } = useBalance();
   const [formValues, setFormValues] = useState<SendFormValues>({});
   const [signedTxHex, setSignedTxHex] = useState('');
