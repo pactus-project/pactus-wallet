@@ -17,7 +17,14 @@ import {
   TransferTransaction,
   BondTransaction,
 } from './types/transaction';
-import { PactusOpenRPC } from 'pactus-jsonrpc';
+
+let PactusOpenRPC;
+
+if (process.env.NODE_ENV !== 'test') {
+  import('pactus-jsonrpc').then(module => {
+    PactusOpenRPC = module.PactusOpenRPC;
+  });
+}
 
 // Configuration for RPC endpoints
 const RPC_ENDPOINTS = {
@@ -709,7 +716,7 @@ export class Wallet {
     return endpoints[Math.floor(Math.random() * endpoints.length)];
   }
 
-  private getClient(): PactusOpenRPC {
+  private getClient(): InstanceType<typeof PactusOpenRPC> {
     return new PactusOpenRPC({
       transport: {
         type: 'https',
