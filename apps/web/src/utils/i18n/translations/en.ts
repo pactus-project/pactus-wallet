@@ -169,7 +169,7 @@ const translations = {
   bondTransaction: 'Bond Transaction',
   transactionType: 'Transaction Type',
   validatorAddress: 'Validator Address',
-  validatorPublicKey: 'Validator Public Key',
+  validatorPublicKey: 'Validator Public Key (Optional)',
 };
 
 export default translations;
