@@ -543,7 +543,7 @@ export class Wallet {
 
     try {
       const result = await client.pactusTransactionGetRawTransferTransaction(
-        Math.floor(Date.now() / 1000), // lock_time as current Unix timestamp
+        undefined,
         txParams.sender,
         txParams.receiver,
         txParams.amount,
@@ -598,7 +598,7 @@ export class Wallet {
 
     try {
       const result = await client.pactusTransactionGetRawBondTransaction(
-        Math.floor(Date.now() / 1000), // lock_time as current Unix timestamp
+        undefined,
         txParams.sender,
         txParams.receiver,
         txParams.stake,
