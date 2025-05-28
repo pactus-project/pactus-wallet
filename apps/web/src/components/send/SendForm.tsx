@@ -50,14 +50,16 @@ const SendForm: React.FC<SendFormProps> = ({
   const amount = useWatch('amount', form);
   const password = useWatch('password', form);
   const transactionType = useWatch('transactionType', form);
+  const publicKey = useWatch('publicKey', form);
   const isBond = transactionType === 'BOND';
 
   const { showLoadingDialog, hideLoadingDialog } = useContext(WalletContext);
   const { getAccountList } = useAccount();
   const accounts = getAccountList();
   const { t } = useI18n();
-  const { getSignTransferTransaction, getSignBondTransaction } = useSendTransaction();
-
+  const { getSignTransferTransaction, getSignBondTransaction, getValidatorPublicKey } =
+    useSendTransaction();
+  const [warning, setWarning] = useState<string | null>(null);
   const { balance, fetchBalance, isLoading: isBalanceLoading } = useBalance(fromAccount);
   const [internalLoading, setInternalLoading] = useState(false);
 
@@ -83,6 +85,26 @@ const SendForm: React.FC<SendFormProps> = ({
       fetchBalance(null, fromAccount);
     }
   }, [fromAccount, fetchBalance]);
+
+  useEffect(() => {
+    const fetchPublicKey = async () => {
+      if (isBond && receiver && !publicKey) {
+        try {
+          const txtPublicKey = await getValidatorPublicKey(receiver);
+          if (txtPublicKey) {
+            setWarning(null);
+          } else {
+            setWarning(t('validatorPublicKeyNotFound'));
+          }
+        } catch (error) {
+          setWarning(error.message);
+        }
+      } else {
+        setWarning(null);
+      }
+    };
+    fetchPublicKey();
+  }, [isBond, receiver, form, publicKey, getValidatorPublicKey]);
 
   const handleMaxAmount = () => {
     if (balance && !isBalanceLoading) {
@@ -211,12 +233,14 @@ const SendForm: React.FC<SendFormProps> = ({
       />
       {/* Public Key */}
       {isBond ? (
-        <FormTextInput
-          id="publicKey"
-          name="publicKey"
-          placeholder={t('enterPublickey')}
-          label={t('validatorPublicKey')}
-        />
+        <>
+          <FormTextInput
+            id="publicKey"
+            name="publicKey"
+            placeholder={t('enterPublickey')}
+            label={t('validatorPublicKey')}
+          />
+        </>
       ) : (
         <></>
       )}
@@ -264,7 +288,9 @@ const SendForm: React.FC<SendFormProps> = ({
 
       {/* Password */}
       <FormPasswordInput id="password" placeholder={t('enterYourPassword')} label={t('password')} />
-
+      {isBond && warning && (
+        <div className="text-warning text-sm mt-2">{t('validatorPublicKeyNotFound')}</div>
+      )}
       {/* Submit Button */}
       <div className="flex justify-end mt-3">
         <Button

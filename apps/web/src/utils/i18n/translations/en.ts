@@ -170,6 +170,7 @@ const translations = {
   transactionType: 'Transaction Type',
   validatorAddress: 'Validator Address',
   validatorPublicKey: 'Validator Public Key (Optional)',
+  validatorPublicKeyNotFound: 'Warning: Validator public key not found, Please enter manually',
 };
 
 export default translations;

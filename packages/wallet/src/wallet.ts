@@ -536,7 +536,7 @@ export class Wallet {
 
     try {
       const result = await client.pactusTransactionGetRawTransferTransaction(
-        0,
+        Math.floor(Date.now() / 1000), // lock_time as current Unix timestamp
         txParams.sender,
         txParams.receiver,
         txParams.amount,
@@ -557,7 +557,7 @@ export class Wallet {
   /**
    * Get public key of validator
    */
-  private async getValidatorPublicKey(address: string): Promise<string> {
+  async getValidatorPublicKey(address: string): Promise<string> {
     const client = this.getClient();
 
     try {
@@ -569,11 +569,7 @@ export class Wallet {
 
       return result.public_key ?? '';
     } catch (error) {
-      if (error instanceof NetworkError && error.message.includes('Not Found')) {
-        console.warn(`Validator public key not found for address: ${address}`);
-      }
-
-      return '';
+      throw new NetworkError(`Failed to get validator public key: ${error}`);
     }
   }
 
@@ -595,7 +591,7 @@ export class Wallet {
 
     try {
       const result = await client.pactusTransactionGetRawBondTransaction(
-        0,
+        Math.floor(Date.now() / 1000), // lock_time as current Unix timestamp
         txParams.sender,
         txParams.receiver,
         txParams.stake,

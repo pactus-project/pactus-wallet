@@ -151,10 +151,18 @@ export function useSendTransaction() {
     [wallet]
   );
 
+  const getValidatorPublicKey = useCallback(
+    async (address: string): Promise<string> => {
+      return wallet?.getValidatorPublicKey(address) ?? '';
+    },
+    [wallet]
+  );
+
   return {
     getSignTransferTransaction,
     getSignBondTransaction,
     broadcastTransaction,
+    getValidatorPublicKey,
     isLoading,
     error,
     txHash,
