@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "gray-matter": "^4.0.3",
+    "pactus-jsonrpc": "^1.7.4",
     "react-markdown": "^10.1.0",
     "remark-gfm": "^4.0.1",
     "typescript": "~5.5.3"
