@@ -1,6 +1,5 @@
 {
   "name": "pactus-wallet",
-  "version": "0.1.0",
   "repository": "https://github.com/pactus-project/pactus-wallet.git",
   "license": "MIT",
   "packageManager": "yarn@1.22.22",
