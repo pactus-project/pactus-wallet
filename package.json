@@ -52,6 +52,7 @@
     "webpack": "^5.1.0",
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-unused-imports": "^4.0.0",
+    "string-width": "4.2.3",
     "@typescript-eslint/eslint-plugin": "^8.28.0",
     "@typescript-eslint/parser": "^8.28.0",
     "@typescript-eslint/utils": "^8.28.0",
