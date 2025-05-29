@@ -41,7 +41,7 @@ Keep your terminal open for further steps.
 
 ```bash
 PRV_VER="0.3.0"
-CUR_VER="0.4.0-rc1"
+CUR_VER="0.4.0"
 NEXT_VER="0.4.0"
 BASE_BRANCH="main"
 TAG_NAME="v${CUR_VER}"

@@ -1,6 +1,6 @@
 {
   "name": "@pactus-wallet/wallet",
-  "version": "0.4.0-rc1",
+  "version": "0.4.0",
   "description": "Pactus wallet manager",
   "license": "MIT",
   "main": "dist/index.js",
