@@ -101,6 +101,12 @@
   user-select: none;
 }
 
+/* Add muted styling for number labels */
+.text-muted {
+  color: var(--color-text-tertiary);
+  opacity: 0.7;
+}
+
 .import-wallet__word-input {
   width: 100%;
   background: transparent;
@@ -147,6 +153,31 @@
   }
 }
 
+/* Tablet responsiveness */
+@media (max-width: 768px) {
+  .import-wallet__title {
+    font-size: var(--font-size-4xl);
+  }
+
+  .import-wallet__submit {
+    height: var(--button-primary-height-mobile);
+  }
+  
+  /* 3 columns for tablets */
+  .grid.grid-cols-3.md\:grid-cols-6 {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+}
+
+/* Small tablet responsiveness */
+@media (max-width: 600px) {
+  /* 2 columns for small tablets */
+  .grid.grid-cols-3.md\:grid-cols-6 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+/* Mobile responsiveness */
 @media (max-width: 480px) {
   .import-wallet__title {
     font-size: var(--font-size-3xl);
@@ -158,6 +189,11 @@
 
   .import-wallet__word-container {
     padding: var(--spacing-xs);
+  }
+  
+  /* 1 column for mobile */
+  .grid.grid-cols-3.md\:grid-cols-6 {
+    grid-template-columns: repeat(1, 1fr) !important;
   }
 }
 
