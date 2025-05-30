@@ -7,6 +7,15 @@ export interface TransferTransaction {
   fee: Amount;
   memo?: string;
 }
+export interface BondTransaction {
+  sender: string;
+  receiver: string;
+  stake: Amount;
+  fee: Amount;
+  memo?: string;
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  public_key: string;
+}
 
 export const TransactionType = {
   UNKNOWN: 0,

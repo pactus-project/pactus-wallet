@@ -11,8 +11,15 @@ interface SendTransactionParams {
   memo?: string;
   password: string;
 }
+interface BondTransactionParams extends SendTransactionParams {
+  publicKey?: string;
+}
 
 interface GetSignTransferTransaction {
+  signedRawTxHex: string;
+}
+
+interface GetSignBondTransaction {
   signedRawTxHex: string;
 }
 
@@ -69,6 +76,55 @@ export function useSendTransaction() {
     [wallet]
   );
 
+  const getSignBondTransaction = useCallback(
+    async ({
+      fromAddress,
+      toAddress,
+      amount,
+      fee,
+      memo = '',
+      password,
+      publicKey = '',
+    }: BondTransactionParams): Promise<GetSignBondTransaction> => {
+      setIsLoading(true);
+      setError(null);
+      setTxHash(null);
+
+      try {
+        if (!wallet) {
+          throw new Error('Wallet is not available');
+        }
+
+        if (!fromAddress || !toAddress || !amount || !fee || !password) {
+          throw new Error('Missing required transaction parameters');
+        }
+
+        const amountValue = Amount.fromString(amount);
+        const feeValue = Amount.fromString(fee);
+
+        const result = await wallet.getSignBondTransaction(
+          fromAddress,
+          toAddress,
+          amountValue,
+          feeValue,
+          memo,
+          password,
+          publicKey
+        );
+
+        setTxHash(result.signedRawTxHex);
+        return result;
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : 'Failed to send transaction';
+        setError(errorMessage);
+        throw err;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [wallet]
+  );
+
   const broadcastTransaction = useCallback(
     async (signedRawTxHex: string): Promise<string> => {
       setIsLoading(true);
@@ -95,9 +151,18 @@ export function useSendTransaction() {
     [wallet]
   );
 
+  const getValidatorPublicKey = useCallback(
+    async (address: string): Promise<string> => {
+      return wallet?.getValidatorPublicKey(address) ?? '';
+    },
+    [wallet]
+  );
+
   return {
     getSignTransferTransaction,
+    getSignBondTransaction,
     broadcastTransaction,
+    getValidatorPublicKey,
     isLoading,
     error,
     txHash,

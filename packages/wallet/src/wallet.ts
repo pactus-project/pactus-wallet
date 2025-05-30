@@ -6,7 +6,7 @@ import { StorageKey } from './storage-key';
 import { AddressInfo, Ledger, Purposes } from './types/ledger';
 import { KeyStore, MnemonicStrength, MnemonicValues, Vault } from './types/vault';
 import { NetworkType, NetworkValues, WalletID, WalletInfo } from './types/wallet_info';
-import { encodeBech32WithType, fetchJsonRpcResult, generateUUID, sprintf } from './utils';
+import { encodeBech32WithType, generateUUID, sprintf } from './utils';
 import { IStorage } from './storage/storage';
 import { WalletCore } from '@trustwallet/wallet-core';
 import { HDWallet } from '@trustwallet/wallet-core/dist/src/wallet-core';
@@ -15,21 +15,30 @@ import {
   RawTransferTransaction,
   TransactionDetailsType,
   TransferTransaction,
+  BondTransaction,
 } from './types/transaction';
+
+let PactusOpenRPC;
+
+if (process.env.NODE_ENV !== 'test') {
+  import('pactus-jsonrpc').then(module => {
+    PactusOpenRPC = module.PactusOpenRPC;
+  });
+}
 
 // Configuration for RPC endpoints
 const RPC_ENDPOINTS = {
   [NetworkValues.MAINNET]: [
-    'https://bootstrap1.pactus.org/jsonrpc',
-    'https://bootstrap2.pactus.org/jsonrpc',
-    'https://bootstrap3.pactus.org/jsonrpc',
-    'https://bootstrap4.pactus.org/jsonrpc'
+    'bootstrap1.pactus.org/jsonrpc',
+    'bootstrap2.pactus.org/jsonrpc',
+    'bootstrap3.pactus.org/jsonrpc',
+    'bootstrap4.pactus.org/jsonrpc',
   ],
   [NetworkValues.TESTNET]: [
-    'https://testnet1.pactus.org/jsonrpc',
-    'https://testnet2.pactus.org/jsonrpc',
-    'https://testnet3.pactus.org/jsonrpc',
-    'https://testnet4.pactus.org/jsonrpc'
+    'testnet1.pactus.org/jsonrpc',
+    'testnet2.pactus.org/jsonrpc',
+    'testnet3.pactus.org/jsonrpc',
+    'testnet4.pactus.org/jsonrpc',
   ],
 };
 
@@ -390,14 +399,16 @@ export class Wallet {
    * @returns Promise with the account balance as Amount
    */
   private async fetchAccount(address: string): Promise<Amount> {
-    // https://docs.pactus.org/api/json-rpc/#pactusblockchainget_account-span-idpactusblockchainget_account-classrpc-badgespan
-    const method = 'pactus.blockchain.get_account';
-    const params = { address };
+    const client = this.getClient();
 
     try {
-      const result = await this.tryFetchJsonRpcResult(method, params);
+      const result = await client.pactusBlockchainGetAccount(address);
 
-      return new Amount(result['account'].balance);
+      if (!result?.account?.balance) {
+        return Amount.zero();
+      }
+
+      return new Amount(result.account.balance);
     } catch (error) {
       // If the account is not found, it means the balance is zero
       if (error instanceof NetworkError && error.message.includes('Not Found')) {
@@ -406,35 +417,6 @@ export class Wallet {
 
       throw error;
     }
-  }
-
-  private async tryFetchJsonRpcResult(
-    method: string,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    params: any,
-    maxAttempts = WALLET_CONFIG.MAX_RPC_ATTEMPTS
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ): Promise<any> {
-    let lastError: Error | null = null;
-
-    for (let attempts = 0; attempts < maxAttempts; attempts++) {
-      try {
-        const client = this.getRandomClient();
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const result = await fetchJsonRpcResult(client, method, params as any);
-
-        return result;
-      } catch (err) {
-        lastError = err as Error;
-
-        // Exponential backoff
-        if (attempts < maxAttempts - 1) {
-          await new Promise(resolve => setTimeout(resolve, 500 * (attempts + 1)));
-        }
-      }
-    }
-
-    throw new NetworkError(`${lastError?.message}`);
   }
 
   /**
@@ -490,13 +472,67 @@ export class Wallet {
   }
 
   /**
+   * Send bond transaction with comprehensive error handling
+   */
+  async getSignBondTransaction(
+    fromAddress: string,
+    toAddress: string,
+    amount: Amount,
+    fee?: Amount,
+    memo?: string,
+    password?: string,
+    publicKey?: string
+  ): Promise<{ signedRawTxHex: string }> {
+    // Validate sender address
+    const addressInfo = await this.getAddressInfo(fromAddress);
+
+    if (!addressInfo) {
+      throw new Error(`Sender address ${fromAddress} not found in wallet`);
+    }
+
+    // Check balance
+    const balance = await this.getAddressBalance(fromAddress);
+
+    const fixedFee = Amount.fromPac(WALLET_CONFIG.DEFAULT_FEE);
+    const calculatedFee = fee ?? fixedFee;
+    const totalAmount = amount.add(calculatedFee);
+
+    if (balance.lessThan(totalAmount)) {
+      throw new Error(
+        `Insufficient balance: ${balance.formatIncludeUnit()} (needed: ${totalAmount.formatIncludeUnit()})`
+      );
+    }
+
+    // Build raw transaction
+    const tx: BondTransaction = {
+      sender: fromAddress,
+      receiver: toAddress,
+      stake: amount,
+      fee: calculatedFee,
+      memo: memo ?? '', // Ensure memo is always a string
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      public_key: publicKey ?? '',
+    };
+    const rawTxHex = await this.getRawBondTransaction(tx);
+
+    // Sign transaction
+    const { signedRawTxHex } = await this.signTransaction(
+      rawTxHex.raw_transaction,
+      addressInfo.path,
+      password ?? ''
+    );
+
+    // Broadcast transaction
+    return { signedRawTxHex };
+  }
+
+  /**
    * Get raw transfer transaction hex
    */
   private async getRawTransferTransaction(
     tx: TransferTransaction
   ): Promise<RawTransferTransaction> {
-    const method = 'pactus.transaction.get_raw_transfer_transaction';
-
+    const client = this.getClient();
     const txParams = {
       sender: tx.sender,
       receiver: tx.receiver,
@@ -505,13 +541,80 @@ export class Wallet {
       memo: tx.memo || '',
     };
 
-    const result = await this.tryFetchJsonRpcResult(method, txParams);
+    try {
+      const result = await client.pactusTransactionGetRawTransferTransaction(
+        undefined,
+        txParams.sender,
+        txParams.receiver,
+        txParams.amount,
+        txParams.fee,
+        txParams.memo
+      );
 
-    return {
+      return {
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        raw_transaction: result.raw_transaction ?? '',
+        id: result.id ?? '',
+      };
+    } catch (error) {
+      throw new NetworkError(`Failed to get raw transfer transaction: ${error}`);
+    }
+  }
+
+  /**
+   * Get public key of validator
+   */
+  async getValidatorPublicKey(address: string): Promise<string> {
+    const client = this.getClient();
+
+    try {
+      const txParams = {
+        address,
+      };
+
+      const result = await client.pactusBlockchainGetPublicKey(txParams.address);
+
+      return result.public_key ?? '';
+    } catch (error) {
+      throw new NetworkError(`Failed to get validator public key: ${error}`);
+    }
+  }
+
+  /**
+   * Get raw bond transaction hex
+   */
+  private async getRawBondTransaction(tx: BondTransaction): Promise<RawTransferTransaction> {
+    const client = this.getClient();
+
+    const txParams = {
+      sender: tx.sender,
+      receiver: tx.receiver,
+      stake: Number(tx.stake.toString()), // Convert to number
+      fee: Number(tx.fee.toString()), // Convert to number
+      memo: tx.memo || '',
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      raw_transaction: result.raw_transaction,
-      id: result.id,
+      public_key: tx.public_key,
     };
+
+    try {
+      const result = await client.pactusTransactionGetRawBondTransaction(
+        undefined,
+        txParams.sender,
+        txParams.receiver,
+        txParams.stake,
+        txParams.public_key,
+        txParams.fee,
+        txParams.memo
+      );
+
+      return {
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        raw_transaction: result.raw_transaction ?? '',
+        id: result.id ?? '',
+      };
+    } catch (error) {
+      throw new NetworkError(`Failed to get raw bond transaction: ${error}`);
+    }
   }
 
   /**
@@ -565,25 +668,38 @@ export class Wallet {
    * Broadcast the signed transaction to the network
    */
   async broadcastTransaction(signedRawTxHex: string): Promise<string> {
-    const method = 'pactus.transaction.broadcast_transaction';
+    const client = this.getClient();
     const params = {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       signed_raw_transaction: signedRawTxHex,
     };
-    const result = await this.tryFetchJsonRpcResult(method, params);
 
-    return result.id;
+    try {
+      const result = await client.pactusTransactionBroadcastTransaction(
+        params.signed_raw_transaction
+      );
+
+      return result.id ?? '';
+    } catch (error) {
+      throw new NetworkError(`Failed to broadcast transaction: ${error}`);
+    }
   }
 
   async getTransaction(txHash: string): Promise<string> {
-    const method = 'pactus.transaction.get_transaction';
+    const client = this.getClient();
     const params = {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       tx_hash: txHash,
       verbosity: TransactionDetailsType.TRANSACTION_DATA,
     };
 
-    return this.tryFetchJsonRpcResult(method, params);
+    try {
+      const result = await client.pactusTransactionGetTransaction(params.tx_hash, params.verbosity);
+
+      return result.id ?? '';
+    } catch (error) {
+      throw new NetworkError(`Failed to get transaction: ${error}`);
+    }
   }
 
   /**
@@ -598,6 +714,16 @@ export class Wallet {
     }
 
     return endpoints[Math.floor(Math.random() * endpoints.length)];
+  }
+
+  private getClient(): InstanceType<typeof PactusOpenRPC> {
+    return new PactusOpenRPC({
+      transport: {
+        type: 'https',
+        host: this.getRandomClient(),
+        port: 80,
+      },
+    });
   }
 
   /**

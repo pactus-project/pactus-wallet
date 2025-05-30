@@ -9,6 +9,7 @@ import SendPreviewModal from './SendPreviewModal';
 import SuccessTransferModal from './SuccessTransferModal';
 import { useSendTransaction } from '@/wallet/hooks/use-send-transaction';
 import { useBalance } from '@/wallet/hooks/use-balance';
+import { toast } from 'sonner';
 
 const SendPac: React.FC<{ address: string }> = ({ address }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -16,7 +17,7 @@ const SendPac: React.FC<{ address: string }> = ({ address }) => {
   const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const { t } = useI18n();
-  const { error, broadcastTransaction } = useSendTransaction();
+  const { broadcastTransaction } = useSendTransaction();
   const { fetchBalance } = useBalance();
   const [formValues, setFormValues] = useState<SendFormValues>({});
   const [signedTxHex, setSignedTxHex] = useState('');
@@ -75,7 +76,7 @@ const SendPac: React.FC<{ address: string }> = ({ address }) => {
         });
       }, 1000);
     } catch (error) {
-      console.error('Error broadcasting transaction:', error);
+      toast.error(error.message);
       setIsSending(false);
     }
   };
@@ -115,8 +116,6 @@ const SendPac: React.FC<{ address: string }> = ({ address }) => {
             {successMessage}
           </div>
         )}
-
-        {error && <div className="bg-error bg-opacity-10 text-error p-3 mb-4 rounded">{error}</div>}
 
         <SendForm
           isLoading={isLoading}
