@@ -22,7 +22,7 @@ function Skeleton({
   width,
   circle = false,
   animate = true,
-  radius,
+  radius = "8px",
   className,
   style,
   ...props
