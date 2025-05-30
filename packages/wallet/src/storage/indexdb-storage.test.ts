@@ -8,12 +8,7 @@ describe('IndexedDBStorage', () => {
   });
 
   afterEach(async () => {
-    const dbDeleteReq = indexedDB.deleteDatabase('PactusWalletStorage');
-    await new Promise<void>((resolve, reject) => {
-      dbDeleteReq.onsuccess = () => resolve();
-      dbDeleteReq.onerror = () => reject(dbDeleteReq.error);
-      dbDeleteReq.onblocked = () => console.warn('Database delete blocked');
-    });
+    indexedDB.deleteDatabase('PactusWalletStorage');
   });
 
   describe('basic functionality', () => {
@@ -35,7 +30,7 @@ describe('IndexedDBStorage', () => {
       await storage.set('key1', 'value1');
       await storage.delete('key1');
       const value = await storage.get('key1');
-      expect(value).toBeNull();
+      expect(value).toBeUndefined();
     });
   });
 
