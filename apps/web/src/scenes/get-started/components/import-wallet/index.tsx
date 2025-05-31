@@ -11,7 +11,7 @@ import FormSelectInput from '@/components/common/FormSelectInput';
 import Button from '@/components/Button';
 import { LottieWithText } from '@/components/LottieWithText';
 import BorderBeam from '@/components/border-beam';
-import SeedWord from '@/components/SeedWord';
+import SeedWord, { SeedWordGrid } from '@/components/SeedWord';
 import Lottie from '@/components/lottie-player';
 
 const ImportWallet = () => {
@@ -126,7 +126,7 @@ const ImportWallet = () => {
       <div id="recovery-phrase-parent" className="w-full p-4 rounded-md bg-[#101010]">
         <fieldset className="import-wallet__seed-fieldset w-full">
           <legend className="visually-hidden">{t('enterSeedPhrase')}</legend>
-          <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 mx-4 my-3">
+          <SeedWordGrid>
             {Array.from({ length: wordCount }).map((_, index) => (
               <SeedWord
                 key={index}
@@ -143,7 +143,7 @@ const ImportWallet = () => {
                 hasError={!!error}
               />
             ))}
-          </div>
+          </SeedWordGrid>
         </fieldset>
         <BorderBeam duration={4} size={300} parentId="recovery-phrase-parent" showOnHover={true} />
       </div>

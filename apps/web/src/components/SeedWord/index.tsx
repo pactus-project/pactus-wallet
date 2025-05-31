@@ -1,5 +1,6 @@
 'use client';
 import React from 'react';
+import './style.css';
 
 export interface SeedWordProps {
   index: number;
@@ -59,4 +60,5 @@ const SeedWord: React.FC<SeedWordProps> = ({
   );
 };
 
+export { default as SeedWordGrid } from './SeedWordGrid';
 export default SeedWord;

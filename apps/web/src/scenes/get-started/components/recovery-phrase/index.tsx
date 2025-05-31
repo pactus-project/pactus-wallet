@@ -11,7 +11,7 @@ import { LottieWithText } from '../../../../components/LottieWithText';
 import Button from '../../../../components/Button';
 import FormSelectInput from '../../../../components/common/FormSelectInput';
 import { Form, useForm } from '@/components/common/Form';
-import SeedWord from '../../../../components/SeedWord';
+import SeedWord, { SeedWordGrid } from '../../../../components/SeedWord';
 
 const RecoveryPhrase: React.FC = () => {
   const [ form ] = useForm();
@@ -144,7 +144,7 @@ const RecoveryPhrase: React.FC = () => {
           </Form>
 
           <div id="recoveryPhraseStep2-parent" className="w-full p-4 rounded-md bg-[#101010]">
-            <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 mx-4 my-3">
+            <SeedWordGrid>
               {walletSeeds.map((word, index) => (
                 <SeedWord
                   key={index}
@@ -153,7 +153,7 @@ const RecoveryPhrase: React.FC = () => {
                 />
               ))}
               <BorderBeam duration={10} size={400} parentId="recoveryPhraseStep2-parent" />
-            </div>
+            </SeedWordGrid>
           </div>
           <Button
             variant="primary"
@@ -180,7 +180,7 @@ const RecoveryPhrase: React.FC = () => {
             role="group"
             aria-label={t('confirmRecoveryPhrase')}
           >
-            <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 mx-4 my-3">
+            <SeedWordGrid>
               {walletSeeds.map((word, index) =>
                 validationIndexes.includes(index) ? (
                   <SeedWord
@@ -200,7 +200,7 @@ const RecoveryPhrase: React.FC = () => {
                   />
                 )
               )}
-            </div>
+            </SeedWordGrid>
             <BorderBeam duration={10} size={400} parentId="recoveryPhraseStep3-parent" />
           </div>
 
