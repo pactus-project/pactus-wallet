@@ -3,6 +3,7 @@ import { Transaction } from '@/services/transaction';
 import { Amount } from '@pactus-wallet/wallet';
 import Image from 'next/image';
 import './style.css';
+import Skeleton from '../common/skeleton/Skeleton';
 
 interface TransactionsHistoryProps {
     transactions: Transaction[];
@@ -67,6 +68,11 @@ const TransactionsHistory: React.FC<TransactionsHistoryProps> = ({
     return (
         <div className="transactions-history" style={{ height }}>
             <div className="transactions-history__wrapper">
+                <div>
+                    <div>Activity</div>
+                    <div></div>
+                    <div></div>
+                </div>
                 <table className="transactions-history__table">
                     <thead className="transactions-history__header">
                         <tr className="transactions-history__row">
@@ -143,11 +149,23 @@ const TransactionsHistory: React.FC<TransactionsHistoryProps> = ({
                             </tr>
                         ) : null}
                         {isLoading && (
-                            <tr>
-                                <td colSpan={6} className="transactions-history__loading">
-                                    Loading more transactions...
-                                </td>
-                            </tr>
+                            <>
+                                <tr>
+                                    <td colSpan={6}>
+                                        <Skeleton width="100%" height="34px" radius="8px" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colSpan={6}>
+                                        <Skeleton width="100%" height="34px" radius="8px" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colSpan={6}>
+                                        <Skeleton width="100%" height="34px" radius="8px" />
+                                    </td>
+                                </tr>
+                            </>
                         )}
                     </tbody>
                 </table>
