@@ -536,6 +536,64 @@ describe('Pactus Wallet Tests', () => {
       );
     });
   });
+
+  describe('Private Key Management', () => {
+    const testMnemonic =
+      'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon cactus';
+    let wallet: Wallet;
+
+    beforeEach(async () => {
+      wallet = await Wallet.restore(core, storage, testMnemonic, password, NetworkValues.MAINNET);
+    });
+
+    it('should retrieve private key for a valid address path', async () => {
+      const addressInfo = await wallet.createAddress('Test Address', password);
+      const privateKey = await wallet.getPrivateKey(addressInfo.path, password);
+      expect(privateKey).toContain('secret1');
+      // Verify private key format: should be bech32 encoded
+      expect(privateKey).toMatch(/^secret1[a-zA-Z0-9]+$/);
+    });
+
+    it('should generate deterministic private keys', async () => {
+      const addressInfo = await wallet.createAddress('Test Address', password);
+      const privateKey1 = await wallet.getPrivateKey(addressInfo.path, password);
+      const privateKey2 = await wallet.getPrivateKey(addressInfo.path, password);
+      expect(privateKey1).toBe(privateKey2);
+    });
+
+    it('should generate different private keys for different paths', async () => {
+      const addr1 = await wallet.createAddress('Address 1', password);
+      const addr2 = await wallet.createAddress('Address 2', password);
+      const privateKey1 = await wallet.getPrivateKey(addr1.path, password);
+      const privateKey2 = await wallet.getPrivateKey(addr2.path, password);
+      expect(privateKey1).not.toBe(privateKey2);
+    });
+
+    it('should generate correct private key format for testnet', async () => {
+      const testnetWallet = await Wallet.restore(
+        core,
+        storage,
+        testMnemonic,
+        password,
+        NetworkValues.TESTNET
+      );
+      const addressInfo = await testnetWallet.createAddress('Test Address', password);
+      const privateKey = await testnetWallet.getPrivateKey(addressInfo.path, password);
+      expect(privateKey).toContain('tsecret1');
+      expect(privateKey).toMatch(/^tsecret1[a-zA-Z0-9]+$/);
+    });
+
+    it('should throw error for invalid password', async () => {
+      const addressInfo = await wallet.createAddress('Test Address', password);
+      await expect(wallet.getPrivateKey(addressInfo.path, 'wrong-password')).rejects.toThrow();
+    });
+
+    it('should throw error for invalid address path', async () => {
+      await expect(wallet.getPrivateKey('invalid/path', password)).rejects.toThrow(
+        'Failed to get private key'
+      );
+    });
+  });
 });
 
 describe('changeWalletPassword', () => {
@@ -549,7 +607,13 @@ describe('changeWalletPassword', () => {
     storage = new MemoryStorage();
     const core = await initWasm();
     const password = '*OldPassword123';
-    wallet = await Wallet.create(core, storage, password, MnemonicValues.NORMAL, NetworkValues.MAINNET);
+    wallet = await Wallet.create(
+      core,
+      storage,
+      password,
+      MnemonicValues.NORMAL,
+      NetworkValues.MAINNET
+    );
   });
 
   it('should change the password and re-encrypt the vault', async () => {

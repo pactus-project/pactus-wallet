@@ -320,12 +320,19 @@ export class Wallet {
    * @throws Error if the address is not found or decryption fails
    */
   async getPrivateKey(addressPath: string, password: string): Promise<string> {
-    const mnemonic = await this.getMnemonic(password);
-    const hdWallet = this.core.HDWallet.createWithMnemonic(mnemonic, '');
+    try {
+      const mnemonic = await this.getMnemonic(password);
+      const hdWallet = this.core.HDWallet.createWithMnemonic(mnemonic, '');
 
-    const privateKey = hdWallet.getKey(this.core.CoinType.pactus, addressPath);
+      const privateKey = hdWallet.getKey(this.core.CoinType.pactus, addressPath);
+      const prefix = this.privateKeyPrefix();
 
-    return Buffer.from(privateKey.data()).toString('hex');
+      const privateKeyStr = encodeBech32WithType(prefix, privateKey.data(), 3);
+
+      return privateKeyStr;
+    } catch (error) {
+      throw new Error(`Failed to get private key: ${error}`);
+    }
   }
 
   /**
@@ -379,6 +386,17 @@ export class Wallet {
         return 'public';
       case NetworkValues.TESTNET:
         return 'tpublic';
+      default:
+        throw new Error(`Unknown network type: ${this.info.network}`);
+    }
+  }
+
+  private privateKeyPrefix(): string {
+    switch (this.info.network) {
+      case NetworkValues.MAINNET:
+        return 'SECRET1';
+      case NetworkValues.TESTNET:
+        return 'TSECRET1';
       default:
         throw new Error(`Unknown network type: ${this.info.network}`);
     }
