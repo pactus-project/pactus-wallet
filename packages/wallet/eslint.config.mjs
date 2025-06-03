@@ -43,7 +43,6 @@ const sharedRules = {
   'eol-last': ['error', 'always'],
   'no-trailing-spaces': 'error',
   'key-spacing': ['error', { beforeColon: false, afterColon: true }],
-  'no-multi-spaces': 'error',
   'function-call-argument-newline': ['error', 'consistent'],
   'object-shorthand': ['error', 'always'],
   'quote-props': ['error', 'as-needed'],
@@ -56,7 +55,6 @@ const sharedRules = {
     },
   ],
   'prefer-template': 'error',
-  'lines-between-class-members': ['error', 'always', { exceptAfterSingleLine: false }],
 
   // Line breaks and whitespace formatting
   'padding-line-between-statements': [

@@ -242,7 +242,6 @@ const styleRules = {
   'eol-last': ['error', 'always'],
   'no-trailing-spaces': 'error',
   'key-spacing': ['error', { beforeColon: false, afterColon: true }],
-  'no-multi-spaces': 'error',
   'function-call-argument-newline': ['error', 'consistent'],
   'object-shorthand': ['error', 'always'],
   'quote-props': ['error', 'as-needed'],
