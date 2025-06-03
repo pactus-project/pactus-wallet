@@ -21,7 +21,8 @@
     "@trustwallet/wallet-core": "^4.3.1",
     "argon2-browser": "^1.18.0",
     "bech32": "^2.0.0",
-    "bip39": "^3.1.0"
+    "bip39": "^3.1.0",
+    "pactus-jsonrpc": "^1.7.4"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.0.0",
