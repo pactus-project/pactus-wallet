@@ -329,7 +329,7 @@ export class Wallet {
 
       const privateKeyStr = encodeBech32WithType(prefix, privateKey.data(), 3);
 
-      return privateKeyStr;
+      return privateKeyStr.toUpperCase();
     } catch (error) {
       throw new Error(`Failed to get private key: ${error}`);
     }
@@ -394,9 +394,9 @@ export class Wallet {
   private privateKeyPrefix(): string {
     switch (this.info.network) {
       case NetworkValues.MAINNET:
-        return 'SECRET1';
+        return 'SECRET';
       case NetworkValues.TESTNET:
-        return 'TSECRET1';
+        return 'TSECRET';
       default:
         throw new Error(`Unknown network type: ${this.info.network}`);
     }

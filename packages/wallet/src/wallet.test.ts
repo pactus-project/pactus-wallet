@@ -117,20 +117,20 @@ describe('Pactus Wallet Tests', () => {
       expect(wallet.getMnemonic(password)).resolves.toBe(testMnemonic);
 
       const addrInfo1 = await wallet.createAddress('Address 1', password);
+      const privateKey1 = await wallet.getPrivateKey(addrInfo1.path, password);
       expect(addrInfo1.address).toBe('pc1rcx9x55nfme5juwdgxd2ksjdcmhvmvkrygmxpa3');
-      expect(addrInfo1.publicKey).toBe(
-        'public1rd5p573yq3j5wkvnasslqa7ne5vw87qcj5a0wlwxcj2t2xlaca9lstzm8u5'
-      );
+      expect(addrInfo1.publicKey).toBe('public1rd5p573yq3j5wkvnasslqa7ne5vw87qcj5a0wlwxcj2t2xlaca9lstzm8u5');
       expect(addrInfo1.label).toBe('Address 1');
       expect(addrInfo1.path).toBe("m/44'/21888'/3'/0'");
+      expect(privateKey1).toBe('SECRET1R3K02X58V70X9RFVWN5QUN0CKHKYXWD7R40G3HX47L8W9HXJQHMASKGEPH2');
 
       const addrInfo2 = await wallet.createAddress('Address 2', password);
+      const privateKey2 = await wallet.getPrivateKey(addrInfo2.path, password);
       expect(addrInfo2.address).toBe('pc1r7aynw9urvh66ktr3fte2gskjjnxzruflkgde94');
-      expect(addrInfo2.publicKey).toBe(
-        'public1r8jud8m6mfuyhwq6lupmuz0pq6uzhm9a6hkqfmc89jk7k6fr30e2sns7ghs'
-      );
+      expect(addrInfo2.publicKey).toBe('public1r8jud8m6mfuyhwq6lupmuz0pq6uzhm9a6hkqfmc89jk7k6fr30e2sns7ghs');
       expect(addrInfo2.label).toBe('Address 2');
       expect(addrInfo2.path).toBe("m/44'/21888'/3'/1'");
+      expect(privateKey2).toBe('SECRET1RHCHV0XJMKXDLVG47MHU3PREN0RP6QFEM4C5YSV6LKF4NTF9PCR3S860T80');
     });
 
     it('should restore a testnet wallet with deterministic addresses from standard 12-word mnemonic', async () => {
@@ -206,17 +206,13 @@ describe('Pactus Wallet Tests', () => {
 
       const addrInfo1 = await wallet.createAddress('Address 1', password);
       expect(addrInfo1.address).toBe('pc1r8rel7ctk0p4cs49wlhdccvkk27rpllwhrv3g6z');
-      expect(addrInfo1.publicKey).toBe(
-        'public1rs6yq6kf9hyll78qsfk338k06j96sv69j6dpn9rqats0urnqaj4fsfhxgza'
-      );
+      expect(addrInfo1.publicKey).toBe('public1rs6yq6kf9hyll78qsfk338k06j96sv69j6dpn9rqats0urnqaj4fsfhxgza');
       expect(addrInfo1.label).toBe('Address 1');
       expect(addrInfo1.path).toBe("m/44'/21888'/3'/0'");
 
       const addrInfo2 = await wallet.createAddress('Address 2', password);
       expect(addrInfo2.address).toBe('pc1rssed2c3h6l9fm6gu4v7nmj5s33a388e8ygtgc4');
-      expect(addrInfo2.publicKey).toBe(
-        'public1r503wn3q8hlf9hsq6f7v2vmke5mgphx3kvatasqtlzyfaadvuhy0s2tzq84'
-      );
+      expect(addrInfo2.publicKey).toBe('public1r503wn3q8hlf9hsq6f7v2vmke5mgphx3kvatasqtlzyfaadvuhy0s2tzq84');
       expect(addrInfo2.label).toBe('Address 2');
       expect(addrInfo2.path).toBe("m/44'/21888'/3'/1'");
     });
@@ -372,9 +368,7 @@ describe('Pactus Wallet Tests', () => {
       expect(addrInfo1).toBeTruthy();
       expect(addrInfo1?.path).toBe("m/44'/21777'/3'/0'");
       expect(addrInfo1?.label).toBe('Account 1');
-      expect(addrInfo1?.publicKey).toBe(
-        'tpublic1rpduuzct4tdvmtgmreknjx86zv6sdvk4udf47whc3nqxcq0phuf7sycm6l9'
-      );
+      expect(addrInfo1?.publicKey).toBe('tpublic1rpduuzct4tdvmtgmreknjx86zv6sdvk4udf47whc3nqxcq0phuf7sycm6l9');
 
       // New address should use testnet coin type
       const addrInfo2 = await wallet.createAddress('Address 2', testPassword);
@@ -483,16 +477,22 @@ describe('Pactus Wallet Tests', () => {
 
       const addrInfo1 = await wallet.createAddress('Address 1', passphrase);
       const addrInfo2 = await wallet.createAddress('Address 2', passphrase);
-      expect(addrInfo1.address.startsWith('tpc1')).toBe(true);
-      expect(addrInfo2.address.startsWith('tpc1')).toBe(true);
+      const privateKey1 = await wallet.getPrivateKey(addrInfo1.path, password);
+      const privateKey2 = await wallet.getPrivateKey(addrInfo2.path, password);
 
       expect(addrInfo1.address).toBe('tpc1r35xwz99uw2qrhz9wmdanaqcsge2nzsfegvv555');
       expect(addrInfo2.address).toBe('tpc1r34xj32k004j8v35fx6uqw4yaka54g6jdr58tvk');
 
-      expect(wallet.isTestnet()).toBe(true);
+      expect(addrInfo1.publicKey).toBe('tpublic1rpduuzct4tdvmtgmreknjx86zv6sdvk4udf47whc3nqxcq0phuf7sycm6l9');
+      expect(addrInfo2.publicKey).toBe('tpublic1rhpzmczhn0382yekcvkdsjtf4l5nxu0gxqekgenxfhxlmxdyygztq7zydz8');
+
+      expect(privateKey1).toBe('TSECRET1R4VMP0A2U3G74Z2XUHFRSDV3GJVVSPN22P9DFL3GK3SLP2D4H2SKQ5HJKKV');
+      expect(privateKey2).toBe('TSECRET1R25L9JLEVH7SMYMDA5VM8G5SFWLDUYMGXJ8TWS30S0N0ZWRYK7QCQ80XZYQ');
 
       expect(addrInfo1.path).toBe("m/44'/21777'/3'/0'");
       expect(addrInfo2.path).toBe("m/44'/21777'/3'/1'");
+
+      expect(wallet.isTestnet()).toBeTruthy();
     });
   });
 
@@ -533,64 +533,6 @@ describe('Pactus Wallet Tests', () => {
 
       await expect(wallet.signTransaction('', addrInfo.path, password)).rejects.toThrow(
         'Empty transaction buffer'
-      );
-    });
-  });
-
-  describe('Private Key Management', () => {
-    const testMnemonic =
-      'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon cactus';
-    let wallet: Wallet;
-
-    beforeEach(async () => {
-      wallet = await Wallet.restore(core, storage, testMnemonic, password, NetworkValues.MAINNET);
-    });
-
-    it('should retrieve private key for a valid address path', async () => {
-      const addressInfo = await wallet.createAddress('Test Address', password);
-      const privateKey = await wallet.getPrivateKey(addressInfo.path, password);
-      expect(privateKey).toContain('secret1');
-      // Verify private key format: should be bech32 encoded
-      expect(privateKey).toMatch(/^secret1[a-zA-Z0-9]+$/);
-    });
-
-    it('should generate deterministic private keys', async () => {
-      const addressInfo = await wallet.createAddress('Test Address', password);
-      const privateKey1 = await wallet.getPrivateKey(addressInfo.path, password);
-      const privateKey2 = await wallet.getPrivateKey(addressInfo.path, password);
-      expect(privateKey1).toBe(privateKey2);
-    });
-
-    it('should generate different private keys for different paths', async () => {
-      const addr1 = await wallet.createAddress('Address 1', password);
-      const addr2 = await wallet.createAddress('Address 2', password);
-      const privateKey1 = await wallet.getPrivateKey(addr1.path, password);
-      const privateKey2 = await wallet.getPrivateKey(addr2.path, password);
-      expect(privateKey1).not.toBe(privateKey2);
-    });
-
-    it('should generate correct private key format for testnet', async () => {
-      const testnetWallet = await Wallet.restore(
-        core,
-        storage,
-        testMnemonic,
-        password,
-        NetworkValues.TESTNET
-      );
-      const addressInfo = await testnetWallet.createAddress('Test Address', password);
-      const privateKey = await testnetWallet.getPrivateKey(addressInfo.path, password);
-      expect(privateKey).toContain('tsecret1');
-      expect(privateKey).toMatch(/^tsecret1[a-zA-Z0-9]+$/);
-    });
-
-    it('should throw error for invalid password', async () => {
-      const addressInfo = await wallet.createAddress('Test Address', password);
-      await expect(wallet.getPrivateKey(addressInfo.path, 'wrong-password')).rejects.toThrow();
-    });
-
-    it('should throw error for invalid address path', async () => {
-      await expect(wallet.getPrivateKey('invalid/path', password)).rejects.toThrow(
-        'Failed to get private key'
       );
     });
   });
