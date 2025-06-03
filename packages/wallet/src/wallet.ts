@@ -48,19 +48,30 @@ const WALLET_CONFIG = {
   MAX_RPC_ATTEMPTS: 3,
 };
 
+// The type of blockchain address used in Pactus.
+export enum AddressType {
+  Treasury = 0,        // Reserved for the treasury account.
+  Validator = 1,       // Used by validators in the consensus process.
+  BLSAccount = 2,      // Account with a BLS public key.
+  Ed25519Account = 3,  // Account with an Ed25519 public key.
+}
+
+// The type of cryptographic signature scheme used in Pactus.
+// Note: The web wallet currently supports only Ed25519 signatures.
+export enum SignatureType {
+  BLS = 1,
+  Ed25519 = 3,
+}
+
 /**
  * Pactus Wallet Implementation
  * Manages cryptographic operations using Trust Wallet Core
  */
 export class Wallet {
   private core: WalletCore;
-
   private storage: IStorage;
-
   private info: WalletInfo;
-
   private vault: Vault;
-
   private ledger: Ledger;
 
   /**
@@ -281,7 +292,7 @@ export class Wallet {
     ).description();
 
     const prefix = this.publicKeyPrefix();
-    const publicKeyStr = encodeBech32WithType(prefix, publicKey.data(), 3);
+    const publicKeyStr = encodeBech32WithType(prefix, publicKey.data(), SignatureType.Ed25519);
 
     const addressInfo: AddressInfo = {
       address,
@@ -327,7 +338,7 @@ export class Wallet {
       const privateKey = hdWallet.getKey(this.core.CoinType.pactus, addressPath);
       const prefix = this.privateKeyPrefix();
 
-      const privateKeyStr = encodeBech32WithType(prefix, privateKey.data(), 3);
+      const privateKeyStr = encodeBech32WithType(prefix, privateKey.data(), SignatureType.Ed25519);
 
       return privateKeyStr.toUpperCase();
     } catch (error) {
