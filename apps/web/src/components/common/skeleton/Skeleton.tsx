@@ -10,7 +10,6 @@ interface SkeletonProps extends HTMLAttributes<HTMLDivElement> {
   width?: string | number;
   circle?: boolean;
   animate?: boolean;
-  radius?: string | number;
   className?: string;
   style?: CSSProperties;
 }
@@ -22,7 +21,6 @@ function Skeleton({
   width,
   circle = false,
   animate = true,
-  radius = "8px",
   className,
   style,
   ...props
@@ -35,12 +33,11 @@ function Skeleton({
           ...style,
           '--skeleton-height': height,
           '--skeleton-width': circle ? height : width,
-          '--skeleton-radius': circle ? '999px' : radius,
         } as CSSProperties
       }
       data-visible={visible}
       data-animate={animate}
-      className={cn('skeleton', className)}
+      className={cn('skeleton rounded-md', className)}
     >
       {children}
     </div>
