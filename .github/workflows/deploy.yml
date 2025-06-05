@@ -25,10 +25,12 @@ jobs:
         run: |
           if [[ "${{ github.ref }}" == refs/tags/* ]]; then
             echo "🔥 Using production environment"
+            echo "IS_PRODUCTION=true" >> $GITHUB_ENV
             echo "CNAME=wallet.pactus.org" >> $GITHUB_ENV
             echo "NEXT_PUBLIC_GA_ID=${{ secrets.NEXT_PUBLIC_GA_PRODUCTION_ID }}" >> $GITHUB_ENV
           else
             echo "🧪 Using staging environment"
+            echo "IS_PRODUCTION=false" >> $GITHUB_ENV
             echo "CNAME=wallet-beta.pactus.org" >> $GITHUB_ENV
             echo "NEXT_PUBLIC_GA_ID=${{ secrets.NEXT_PUBLIC_GA_BETA_ID }}" >> $GITHUB_ENV
           fi
@@ -49,11 +51,19 @@ jobs:
       - name: Build web app
         run: yarn build:web
 
-      # Deploy the built project
-      - name: Deploy
+      - name: Deploy to Production (Tagged Release)
+        if: env.IS_PRODUCTION == 'true'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          personal_token: ${{ secrets.DEPLOY_TOKEN }}
+          external_repository: pactus-project/pactus-wallet-deploy
+          publish_dir: ./apps/web/out
+          cname: ${{ env.CNAME }}
+
+      - name: Deploy to Staging (Main Branch)
+        if: env.IS_PRODUCTION == 'false'
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: web
           publish_dir: ./apps/web/out
           cname: ${{ env.CNAME }}

@@ -119,7 +119,7 @@ const Wallet = () => {
               </div>
 
               {isLoading ? (
-                <Skeleton radius="6px" width="100px" height="30px" />
+                <Skeleton width="100px" height="30px" />
               ) : (
                 <div className="flex items-center gap-2">
                   <Image src={simpleLogo} alt="Pactus logo" />
@@ -156,7 +156,11 @@ const Wallet = () => {
                       width={25} height={25}
                     />
                   </button>
-                  <button onClick={() => setShowPublicKeyModal(true)} title={t('showPublicKey')}>
+                  <button
+                    onClick={() => setShowPublicKeyModal(true)}
+                    title={t('showPublicKey')}
+                    className="flex-shrink-0 w-fit"
+                  >
                     <Image src={linkIcon} alt="" width={24} height={24} />
                   </button>
                 </div>

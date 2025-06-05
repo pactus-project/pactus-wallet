@@ -152,6 +152,7 @@ const translations = {
     label: 'Label',
     accountName: 'Account Name',
     enterAccountName: 'Enter account name',
+    enterPublickey: 'Enter public key (optional)',
     totalBalance: 'Total Balance',
     transactionLoading: 'Processing transaction...',
     checkOnExplorer: 'Check On Explorer',
@@ -167,6 +168,11 @@ const translations = {
     updatePassword: 'Update Wallet Password',
     oldPassword: 'Old Password',
     newPassword: 'New Password',
+    bondTransaction: 'Bond Transaction',
+    transactionType: 'Transaction Type',
+    validatorAddress: 'Validator Address',
+    validatorPublicKey: 'Validator Public Key (Optional)',
+    validatorPublicKeyNotFound: 'Warning: Validator public key not found, Please enter manually',
 };
 
 export default translations;

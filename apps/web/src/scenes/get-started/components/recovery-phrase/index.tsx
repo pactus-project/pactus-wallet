@@ -191,7 +191,7 @@ const RecoveryPhrase: React.FC = () => {
                           : ''
                     }`}
                   >
-                    <label htmlFor={`word-input-${index}`} className="recovery-phrase__word-label">
+                    <label htmlFor={`word-input-${index}`} className="recovery-phrase__number text-muted">
                       {index + 1}.
                     </label>
                     <input
@@ -207,7 +207,7 @@ const RecoveryPhrase: React.FC = () => {
                   </span>
                 ) : (
                   <span key={index} className="flex items-center p-2 bg-[#242424] rounded-md">
-                    <label className="text-sm ml-1 mr-1 text-white">{index + 1}.</label>
+                    <label className="text-sm ml-1 mr-1 text-muted">{index + 1}.</label>
                     <span className="text-base text-white">{word}</span>
                   </span>
                 )

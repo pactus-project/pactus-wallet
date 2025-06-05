@@ -117,6 +117,14 @@
   padding: 0 var(--spacing-sm);
   user-select: none;
   font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-sm);
+}
+
+.recovery-phrase__number {
+  padding: 0 var(--spacing-sm);
+  user-select: none;
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-sm);
 }
 
 .recovery-phrase__word-text {

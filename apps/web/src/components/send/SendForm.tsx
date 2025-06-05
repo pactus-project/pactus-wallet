@@ -11,7 +11,7 @@ import GradientText from '@/components/common/GradientText';
 import { useSendTransaction } from '@/wallet/hooks/use-send-transaction';
 import { WalletContext } from '@/wallet';
 import { Form, useForm, useWatch } from '../common/Form';
-
+import { toast } from 'sonner';
 export interface SendFormValues {
   fromAccount?: string;
   receiver?: string;
@@ -19,6 +19,7 @@ export interface SendFormValues {
   fee?: string;
   memo?: string;
   password?: string;
+  publicKey?: string;
 }
 
 interface SendFormProps {
@@ -48,15 +49,15 @@ const SendForm: React.FC<SendFormProps> = ({
   const receiver = useWatch('receiver', form);
   const amount = useWatch('amount', form);
   const password = useWatch('password', form);
+  const transactionType = useWatch('transactionType', form);
+  const isBond = transactionType === 'BOND';
 
   const { showLoadingDialog, hideLoadingDialog } = useContext(WalletContext);
   const { getAccountList } = useAccount();
   const accounts = getAccountList();
   const { t } = useI18n();
-  const { getSignTransferTransaction } = useSendTransaction();
-
+  const { getSignTransferTransaction, getSignBondTransaction } = useSendTransaction();
   const { balance, fetchBalance, isLoading: isBalanceLoading } = useBalance(fromAccount);
-  const [error, setError] = useState<string | null>(null);
   const [internalLoading, setInternalLoading] = useState(false);
 
   // Combined loading state from external and internal sources
@@ -98,8 +99,7 @@ const SendForm: React.FC<SendFormProps> = ({
   // Handle form submission
   const handleSubmit = async (values: SendFormValues) => {
     try {
-      const { fromAccount, receiver, amount, fee, memo, password } = values;
-      setError(null);
+      const { fromAccount, receiver, amount, fee, memo, password, publicKey } = values;
 
       // Set loading state
       if (setIsLoading) {
@@ -110,14 +110,24 @@ const SendForm: React.FC<SendFormProps> = ({
       }
 
       // Get signed transaction
-      const result = await getSignTransferTransaction({
-        fromAddress: fromAccount || '',
-        toAddress: receiver || '',
-        amount: amount || '',
-        fee: fee || '',
-        memo: memo || '',
-        password: password || '',
-      });
+      const result = isBond
+        ? await getSignBondTransaction({
+            fromAddress: fromAccount || '',
+            toAddress: receiver || '',
+            amount: amount || '',
+            fee: fee || '',
+            memo: memo || '',
+            password: password || '',
+            publicKey: publicKey || '',
+          })
+        : await getSignTransferTransaction({
+            fromAddress: fromAccount || '',
+            toAddress: receiver || '',
+            amount: amount || '',
+            fee: fee || '',
+            memo: memo || '',
+            password: password || '',
+          });
 
       // Reset form BEFORE callbacks to ensure it happens
       form.resetFields();
@@ -131,7 +141,7 @@ const SendForm: React.FC<SendFormProps> = ({
         onSubmit(values);
       }
     } catch (error) {
-      setError(error.message);
+      toast.error(error.message);
     } finally {
       // Reset loading state
       if (setIsLoading) {
@@ -156,6 +166,7 @@ const SendForm: React.FC<SendFormProps> = ({
       className="flex flex-col gap-5 w-full px-2"
       form={form}
       initialValues={{
+        transactionType: 'TRANSFER',
         fromAccount: accounts[0]?.address || '',
         receiver: '',
         amount: '',
@@ -165,12 +176,29 @@ const SendForm: React.FC<SendFormProps> = ({
       }}
       onFinish={handleSubmit}
     >
+      {/* Transfer or Bond */}
+      <FormSelectInput
+        id="transactionType"
+        name="transactionType"
+        options={[
+          {
+            value: 'TRANSFER',
+            label: 'Transfer',
+          },
+          {
+            value: 'BOND',
+            label: 'Bond',
+          },
+        ]}
+        label={t('transactionType')}
+      />
+
       {/* From Account */}
       <FormSelectInput
         id="from-account"
         name="fromAccount"
         options={accountOptions}
-        label={t('from')}
+        label={isBond ? t('accountAddress') : t('from')}
       />
 
       {/* Receiver */}
@@ -178,9 +206,21 @@ const SendForm: React.FC<SendFormProps> = ({
         id="receiver"
         name="receiver"
         placeholder={t('selectOrEnterAddress')}
-        label={t('receiver')}
+        label={isBond ? t('validatorAddress') : t('receiver')}
       />
-
+      {/* Public Key */}
+      {isBond ? (
+        <>
+          <FormTextInput
+            id="publicKey"
+            name="publicKey"
+            placeholder={t('enterPublickey')}
+            label={t('validatorPublicKey')}
+          />
+        </>
+      ) : (
+        <></>
+      )}
       {/* Amount */}
       <FormTextInput
         id="amount"
@@ -225,9 +265,6 @@ const SendForm: React.FC<SendFormProps> = ({
 
       {/* Password */}
       <FormPasswordInput id="password" placeholder={t('enterYourPassword')} label={t('password')} />
-
-      {/* Error Message */}
-      {error && <div className="text-red-500">{error}</div>}
 
       {/* Submit Button */}
       <div className="flex justify-end mt-3">
