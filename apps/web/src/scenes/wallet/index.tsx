@@ -92,7 +92,7 @@ const Wallet = () => {
 
   return (
     <Suspense fallback={<div>{t('loading')}</div>}>
-      <div className="pt-4 px-4 md:px-7">
+      <div className="pt-4 px-4 md:px-7 pb-7">
         <section className="w-full ml-auto bg-surface-medium rounded-md shadow-inset">
           <div className="flex gap-4 md:gap-6 p-4 md:p-6 w-full">
             <div className="flex flex-col justify-center bg-white rounded-md p-4 w-[214px] h-[214px] min-w-[214px] min-h-[214px]">
@@ -188,7 +188,7 @@ const Wallet = () => {
         </section>
 
         <section className="w-full ml-auto bg-surface-medium rounded-md mt-4">
-          <div className="p-4">
+          <div>
             <TransactionsHistory
               transactions={transactions}
               onLoadMore={loadTransactions}
