@@ -1,19 +1,21 @@
 'use client';
 import { importWalletLottie } from '@/assets';
-import { useWallet } from '@/wallet';
 import React, { useState } from 'react';
 import './style.css';
 import { useRouter } from 'next/navigation';
-import * as bip39 from 'bip39';
+import { useWallet } from '@/wallet';
 import { useI18n } from '@/utils/i18n';
-import BorderBeam from '@/components/border-beam';
-import Lottie from '@/components/lottie-player';
-import FormSelectInput from '../../../../components/common/FormSelectInput';
-import Button from '../../../../components/Button';
+import * as bip39 from 'bip39';
 import { Form, useForm, useWatch } from '@/components/common/Form';
+import FormSelectInput from '@/components/common/FormSelectInput';
+import Button from '@/components/Button';
+import BorderBeam from '@/components/border-beam';
+import SeedWord, { SeedWordGrid } from '@/components/SeedWord';
+import Lottie from '@/components/lottie-player';
+
 const ImportWallet = () => {
-  const [ form ] = useForm();
-  const wordCount = useWatch("wordCountSelect", form);
+  const [form] = useForm();
+  const wordCount = useWatch('wordCountSelect', form);
   const [words, setWords] = useState<string[]>(Array(24).fill(''));
   const [error, setError] = useState<string>('');
   const { setMnemonic } = useWallet();
@@ -61,7 +63,7 @@ const ImportWallet = () => {
     // Case 1: Standard valid seed phrases (12 or 24 words exactly)
     if (pastedWords.length === 12 || pastedWords.length === 24) {
       // Automatically adjust the word count to match
-      form.setFieldValue("wordCountSelect", pastedWords.length.toString())
+      form.setFieldValue('wordCountSelect', pastedWords.length.toString());
       // Fill all inputs with the pasted words
       setWords(pastedWords);
       setError('');
@@ -107,7 +109,11 @@ const ImportWallet = () => {
       <h1 className="import-wallet__title">{t('importExistingWallet')}</h1>
       <p className="import-wallet__description">{t('importWalletDescription')}</p>
 
-      <Form className="import-wallet__controls" form={form} initialValues={{ wordCountSelect: '24' }}>
+      <Form
+        className="import-wallet__controls"
+        form={form}
+        initialValues={{ wordCountSelect: '24' }}
+      >
         <FormSelectInput
           id="word-count-select"
           name="wordCountSelect"
@@ -123,29 +129,24 @@ const ImportWallet = () => {
       <div id="recovery-phrase-parent" className="w-full p-4 rounded-md bg-[#101010]">
         <fieldset className="import-wallet__seed-fieldset w-full">
           <legend className="visually-hidden">{t('enterSeedPhrase')}</legend>
-          <div className="grid grid-cols-3 md:grid-cols-6 gap-4 ml-4 mr-4 mt-3 mb-3">
+          <SeedWordGrid>
             {Array.from({ length: wordCount }).map((_, index) => (
-              <div key={index} className="flex items-center p-2 bg-[#242424] rounded-md">
-                <label className="text-sm ml-1 mr-1 text-white">{index + 1}.</label>
-                <input
-                  id={`word-${index}`}
-                  type="text"
-                  className="import-wallet__word-input"
-                  value={words[index]}
-                  data-index={index}
-                  onPaste={handlePaste}
-                  onChange={e => {
-                    const newWords = [...words];
-                    newWords[index] = e.target.value;
-                    setWords(newWords);
-                    setError(''); // Clear error when user is typing
-                  }}
-                  aria-invalid={error ? 'true' : 'false'}
-                  autoComplete="off"
-                />
-              </div>
+              <SeedWord
+                key={index}
+                index={index + 1}
+                editable={true}
+                value={words[index]}
+                onPaste={handlePaste}
+                onChange={(idx, value) => {
+                  const newWords = [...words];
+                  newWords[idx] = value;
+                  setWords(newWords);
+                  setError(''); // Clear error when user is typing
+                }}
+                hasError={!!error}
+              />
             ))}
-          </div>
+          </SeedWordGrid>
         </fieldset>
         <BorderBeam duration={4} size={300} parentId="recovery-phrase-parent" showOnHover={true} />
       </div>

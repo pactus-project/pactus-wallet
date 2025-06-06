@@ -11,9 +11,10 @@ import { LottieWithText } from '../../../../components/LottieWithText';
 import Button from '../../../../components/Button';
 import FormSelectInput from '../../../../components/common/FormSelectInput';
 import { Form, useForm } from '@/components/common/Form';
+import SeedWord, { SeedWordGrid } from '../../../../components/SeedWord';
 
 const RecoveryPhrase: React.FC = () => {
-  const [ form ] = useForm();
+  const [form] = useForm();
   const [step, setStep] = useState<number>(1);
   const [wordCount, setWordCount] = useState<number>(24);
   const [walletSeeds, setWalletSeeds] = useState<string[]>([]);
@@ -129,10 +130,14 @@ const RecoveryPhrase: React.FC = () => {
             title={t('recoveryPhrase')}
             description={t('writeDownWords', wordCount.toString())}
           />
-          <Form className="recovery-phrase__select-container" form={form} initialValues={{ wordCountSelect: "24" }}>
+          <Form
+            className="recovery-phrase__select-container"
+            form={form}
+            initialValues={{ wordCountSelect: '24' }}
+          >
             <FormSelectInput
               id="word-count-select"
-              name='wordCountSelect'
+              name="wordCountSelect"
               className="w-full min-w-[125px] h-[45px] text-[12px] text-white"
               onChange={e => setWordCount(parseInt(e.target.value))}
               options={[
@@ -143,15 +148,12 @@ const RecoveryPhrase: React.FC = () => {
           </Form>
 
           <div id="recoveryPhraseStep2-parent" className="w-full p-4 rounded-md bg-[#101010]">
-            <div className="grid grid-cols-3 md:grid-cols-6 gap-4 ml-4 mr-4 mt-3 mb-3">
+            <SeedWordGrid>
               {walletSeeds.map((word, index) => (
-                <span key={index} className="flex items-center p-2 bg-[#242424] rounded-md">
-                  <label className="text-sm ml-1 mr-1 text-muted">{index + 1}.</label>
-                  <span className="text-base text-white">{word}</span>
-                </span>
+                <SeedWord key={index} index={index + 1} word={word} />
               ))}
               <BorderBeam duration={10} size={400} parentId="recoveryPhraseStep2-parent" />
-            </div>
+            </SeedWordGrid>
           </div>
           <Button
             variant="primary"
@@ -178,41 +180,23 @@ const RecoveryPhrase: React.FC = () => {
             role="group"
             aria-label={t('confirmRecoveryPhrase')}
           >
-            <div className="grid grid-cols-3 md:grid-cols-6 gap-4 ml-4 mr-4 mt-3 mb-3">
+            <SeedWordGrid>
               {walletSeeds.map((word, index) =>
                 validationIndexes.includes(index) ? (
-                  <span
+                  <SeedWord
                     key={index}
-                    className={`flex items-center p-2 bg-[#242424] rounded-md ${
-                      inputErrors[index] === 'error'
-                        ? 'recovery-phrase__word--error'
-                        : inputErrors[index] === 'success'
-                          ? 'recovery-phrase__word--success'
-                          : ''
-                    }`}
-                  >
-                    <label htmlFor={`word-input-${index}`} className="recovery-phrase__number text-muted">
-                      {index + 1}.
-                    </label>
-                    <input
-                      id={`word-${index}`}
-                      type="text"
-                      className="import-wallet__word-input"
-                      value={userInputs[index] || ''}
-                      data-index={index}
-                      onChange={e => handleInputChange(index, e.target.value)}
-                      aria-invalid={inputErrors[index] === 'error'}
-                      autoComplete="off"
-                    />
-                  </span>
+                    index={index + 1}
+                    editable={true}
+                    value={userInputs[index] || ''}
+                    onChange={(idx, value) => handleInputChange(idx, value)}
+                    hasError={inputErrors[index] === 'error'}
+                    isSuccess={inputErrors[index] === 'success'}
+                  />
                 ) : (
-                  <span key={index} className="flex items-center p-2 bg-[#242424] rounded-md">
-                    <label className="text-sm ml-1 mr-1 text-muted">{index + 1}.</label>
-                    <span className="text-base text-white">{word}</span>
-                  </span>
+                  <SeedWord key={index} index={index + 1} word={word} />
                 )
               )}
-            </div>
+            </SeedWordGrid>
             <BorderBeam duration={10} size={400} parentId="recoveryPhraseStep3-parent" />
           </div>
 
