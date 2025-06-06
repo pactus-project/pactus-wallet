@@ -9,14 +9,13 @@ import * as bip39 from 'bip39';
 import { Form, useForm, useWatch } from '@/components/common/Form';
 import FormSelectInput from '@/components/common/FormSelectInput';
 import Button from '@/components/Button';
-import { LottieWithText } from '@/components/LottieWithText';
 import BorderBeam from '@/components/border-beam';
 import SeedWord, { SeedWordGrid } from '@/components/SeedWord';
 import Lottie from '@/components/lottie-player';
 
 const ImportWallet = () => {
-  const [ form ] = useForm();
-  const wordCount = useWatch("wordCountSelect", form);
+  const [form] = useForm();
+  const wordCount = useWatch('wordCountSelect', form);
   const [words, setWords] = useState<string[]>(Array(24).fill(''));
   const [error, setError] = useState<string>('');
   const { setMnemonic } = useWallet();
@@ -64,7 +63,7 @@ const ImportWallet = () => {
     // Case 1: Standard valid seed phrases (12 or 24 words exactly)
     if (pastedWords.length === 12 || pastedWords.length === 24) {
       // Automatically adjust the word count to match
-      form.setFieldValue("wordCountSelect", pastedWords.length.toString())
+      form.setFieldValue('wordCountSelect', pastedWords.length.toString());
       // Fill all inputs with the pasted words
       setWords(pastedWords);
       setError('');
@@ -110,7 +109,11 @@ const ImportWallet = () => {
       <h1 className="import-wallet__title">{t('importExistingWallet')}</h1>
       <p className="import-wallet__description">{t('importWalletDescription')}</p>
 
-      <Form className="import-wallet__controls" form={form} initialValues={{ wordCountSelect: '24' }}>
+      <Form
+        className="import-wallet__controls"
+        form={form}
+        initialValues={{ wordCountSelect: '24' }}
+      >
         <FormSelectInput
           id="word-count-select"
           name="wordCountSelect"

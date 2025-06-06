@@ -14,7 +14,7 @@ import { Form, useForm } from '@/components/common/Form';
 import SeedWord, { SeedWordGrid } from '../../../../components/SeedWord';
 
 const RecoveryPhrase: React.FC = () => {
-  const [ form ] = useForm();
+  const [form] = useForm();
   const [step, setStep] = useState<number>(1);
   const [wordCount, setWordCount] = useState<number>(24);
   const [walletSeeds, setWalletSeeds] = useState<string[]>([]);
@@ -130,10 +130,14 @@ const RecoveryPhrase: React.FC = () => {
             title={t('recoveryPhrase')}
             description={t('writeDownWords', wordCount.toString())}
           />
-          <Form className="recovery-phrase__select-container" form={form} initialValues={{ wordCountSelect: "24" }}>
+          <Form
+            className="recovery-phrase__select-container"
+            form={form}
+            initialValues={{ wordCountSelect: '24' }}
+          >
             <FormSelectInput
               id="word-count-select"
-              name='wordCountSelect'
+              name="wordCountSelect"
               className="w-full min-w-[125px] h-[45px] text-[12px] text-white"
               onChange={e => setWordCount(parseInt(e.target.value))}
               options={[
@@ -146,11 +150,7 @@ const RecoveryPhrase: React.FC = () => {
           <div id="recoveryPhraseStep2-parent" className="w-full p-4 rounded-md bg-[#101010]">
             <SeedWordGrid>
               {walletSeeds.map((word, index) => (
-                <SeedWord
-                  key={index}
-                  index={index + 1}
-                  word={word}
-                />
+                <SeedWord key={index} index={index + 1} word={word} />
               ))}
               <BorderBeam duration={10} size={400} parentId="recoveryPhraseStep2-parent" />
             </SeedWordGrid>
@@ -193,11 +193,7 @@ const RecoveryPhrase: React.FC = () => {
                     isSuccess={inputErrors[index] === 'success'}
                   />
                 ) : (
-                  <SeedWord
-                    key={index}
-                    index={index + 1}
-                    word={word}
-                  />
+                  <SeedWord key={index} index={index + 1} word={word} />
                 )
               )}
             </SeedWordGrid>
