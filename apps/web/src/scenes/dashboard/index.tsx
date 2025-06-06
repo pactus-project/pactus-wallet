@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import './style.css';
 import RefetchBalance from '@/components/refetch';
 import Image from 'next/image';
@@ -12,14 +12,16 @@ import { useAccount } from '@/wallet/hooks/use-account';
 import { WalletContext } from '@/wallet';
 import Typography from '../../components/common/Typography';
 import { useI18n } from '@/utils/i18n';
+import Skeleton from '@/components/common/skeleton/Skeleton';
 const Dashboard = () => {
+  const [ isLoadingFull, setIsLoadingFull ] = useState(true);
   const { balance, fetchBalance, isLoading } = useBalance();
   const { getAccountList } = useAccount();
   const accounts = getAccountList();
   const { t } = useI18n();
   useEffect(() => {
     // Fetch balance initially
-    fetchBalance();
+    fetchBalance().finally(() => setIsLoadingFull(false));
   }, [fetchBalance]);
 
   const handleRefresh = () => {
@@ -36,7 +38,15 @@ const Dashboard = () => {
     <div className="pt-4 px-7">
       <section className="dashboard__summary rounded-md pt-4">
         <div className="dashboard__balance-container">
-          <div className="flex flex-col gap-0">
+          {isLoadingFull ? <div className="flex flex-col gap-4">
+            <Skeleton height="24px" width="150px" />
+            <Skeleton height="45px" width="200px" />
+            <div className='flex gap-4'>
+              <Skeleton width="120px" height="38px" />
+              <Skeleton width="120px" height="38px" />
+              <Skeleton width="120px" height="38px" />
+            </div>
+          </div> : <div className="flex flex-col">
             <div className="flex items-center gap-2">
               <Typography variant="body1" color="text-quaternary" className="font-medium">
                 {t('totalBalance')}
@@ -44,7 +54,7 @@ const Dashboard = () => {
               <RefetchBalance onRefresh={handleRefresh} isLoading={isLoading} />
             </div>
 
-            <div className="flex items-center gap-2">
+            {isLoading ? <Skeleton height="45px" width="200px" /> : <div className="flex items-center gap-2">
               <Image src={simpleLogo} alt="Pactus logo" />
               <Typography
                 variant="h1"
@@ -56,14 +66,14 @@ const Dashboard = () => {
               <Typography variant="h2" color="text-disabled" className="font-medium mt-1">
                 PAC
               </Typography>
-            </div>
+            </div>}
 
             <div className="dashboard__actions">
               <SendPac address={''} />
               <ReceivePac />
               <BridgePac />
             </div>
-          </div>
+          </div>}
         </div>
 
         <hr className="dashboard__divider" />

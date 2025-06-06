@@ -83,18 +83,6 @@
   overflow: hidden;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
 .recovery-phrase__button {
   width: 100%;
   max-width: 1000px;
@@ -135,8 +123,6 @@
   .recovery-phrase__description {
     font-size: var(--font-size-sm);
   }
-
-
 
   .recovery-phrase__animation {
     height: 200px;
