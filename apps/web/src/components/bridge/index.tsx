@@ -6,13 +6,14 @@ import { useI18n } from '@/utils/i18n';
 
 const BridgePac: React.FC = () => {
   const { t } = useI18n();
+  const urlWrapTo = 'https://wrapto.app/';
   return (
     <>
       <Button
         variant="secondary"
         size="small"
         onClick={() => {
-          // TODO: Implement bridge
+          window.open(urlWrapTo, '_blank');
         }}
         aria-label={t('bridge')}
         startIcon={<Image src={bridgeIcon} alt="" width={20} height={20} aria-hidden="true" />}
