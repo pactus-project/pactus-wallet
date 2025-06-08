@@ -28,7 +28,7 @@ const ReceivePac: React.FC = () => {
 
   const accountOptions = accounts.map(account => ({
     label: account.name,
-    value: account.address
+    value: account.address,
   }));
 
   return (
@@ -50,7 +50,7 @@ const ReceivePac: React.FC = () => {
           <Form
             form={form}
             initialValues={{
-              account: accounts[0]?.address ?? ''
+              account: accounts[0]?.address ?? '',
             }}
           >
             <div className="modal-input-container">
@@ -66,7 +66,7 @@ const ReceivePac: React.FC = () => {
           <div className="flex justify-center">
             <div className="bg-white rounded-md p-4 w-fit">
               <QRCode
-                value={selectedAccount}
+                value={formatPactusAddress(selectedAccount)}
                 size={200}
                 level="H"
                 className="rounded-md"

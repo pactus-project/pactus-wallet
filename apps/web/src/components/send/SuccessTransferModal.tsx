@@ -14,6 +14,7 @@ import Typography from '../common/Typography';
 import GradientText from '../common/GradientText';
 import { successIcon, copyIcon } from '../../assets/images/icons';
 import { useWallet } from '@/wallet';
+import { PACVIEWER_URL } from '../../utils/constants';
 
 interface SuccessTransferModalProps {
   isOpen: boolean;
@@ -131,9 +132,9 @@ const SuccessTransferModal: React.FC<SuccessTransferModalProps> = ({
 
   const handleViewOnPacviewer = () => {
     if (wallet?.isTestnet()) {
-      window.open(`https://phoenix.pacviewer.com/transaction/${txHash}`, '_blank');
+      window.open(`${PACVIEWER_URL.TESTNET}/transaction/${txHash}`, '_blank');
     } else {
-      window.open(`https://pacviewer.com/transaction/${txHash}`, '_blank');
+      window.open(`${PACVIEWER_URL.MAINNET}/transaction/${txHash}`, '_blank');
     }
   };
 
