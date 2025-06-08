@@ -10,6 +10,7 @@ import { useAccount } from '@/wallet';
 import QRCode from 'react-qr-code';
 import FormSelectInput from '../common/FormSelectInput';
 import { Form, useForm, useWatch } from '../common/Form';
+import { formatPactusAddress } from '@/utils/common';
 
 const ReceivePac: React.FC = () => {
   const { t } = useI18n();
