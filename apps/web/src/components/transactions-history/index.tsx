@@ -5,6 +5,7 @@ import Image from 'next/image';
 import './style.css';
 import Skeleton from '../common/skeleton/Skeleton';
 import { searchIcon } from '@/assets';
+import { useI18n } from '@/utils/i18n';
 
 interface TransactionsHistoryProps {
   transactions: Transaction[];
@@ -23,6 +24,7 @@ const TransactionsHistory: React.FC<TransactionsHistoryProps> = ({
   height = '100%',
   hasError = false,
 }) => {
+  const { t } = useI18n();
   const [searchQuery, setSearchQuery] = useState('');
   const headings = ['Date', 'TX Hash', 'From', 'To', 'Amount', 'Fee'];
   const observer = useRef<IntersectionObserver | null>(null);
@@ -71,7 +73,7 @@ const TransactionsHistory: React.FC<TransactionsHistoryProps> = ({
     <div className="transactions-history shadow-inset" style={{ height }}>
       <div className="transactions-history__wrapper">
         <div className='flex gap-[64px] items-center pb-3 pt-5 px-8 border-b-1 border-[#15191C] shadow-[0px_1px_2.2px_0px_#66666640]'>
-          <div className='text-xl font-semibold'>Activity</div>
+          <div className='text-xl font-semibold'>{t("activity")}</div>
           <div className="relative flex-1">
             <Image
               src={searchIcon}
@@ -92,9 +94,9 @@ const TransactionsHistory: React.FC<TransactionsHistoryProps> = ({
             />
           </div>
           <div className='items-center flex rounded-md bg-[#15191C] text-xs font-medium text-[#858699] w-fit px-4 h-8 gap-3'>
-            <div className='hover:text-white cursor-pointer'>1D</div>
-            <div className='hover:text-white cursor-pointer'>7D</div>
-            <div className='hover:text-white cursor-pointer'>All</div>
+            <div className='hover:text-white cursor-pointer'>{t("oneDay")}</div>
+            <div className='hover:text-white cursor-pointer'>{t("oneWeek")}</div>
+            <div className='hover:text-white cursor-pointer'>{t("all")}</div>
           </div>
         </div>
         <div className='px-8 py-6'>
@@ -116,7 +118,7 @@ const TransactionsHistory: React.FC<TransactionsHistoryProps> = ({
                 {hasError ? (
                 <tr>
                     <td colSpan={6} className="transactions-history__empty">
-                    Failed to fetch transactions. Please try again later.
+                    {t("fetchTransactionFail")}
                     </td>
                 </tr>
                 ) : transactions.length > 0 ? (
@@ -174,7 +176,7 @@ const TransactionsHistory: React.FC<TransactionsHistoryProps> = ({
                 ) : !isLoading ? (
                 <tr>
                     <td colSpan={6} className="transactions-history__empty">
-                    No transactions found
+                    {t("noTransactionFound")}
                     </td>
                 </tr>
                 ) : null}

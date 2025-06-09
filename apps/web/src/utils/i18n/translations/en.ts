@@ -68,6 +68,9 @@ const translations = {
     transactionHash: 'Transaction Hash',
     networkFee: 'Network Fee',
     previewTransaction: 'Send Preview',
+    oneDay: '1D',
+    oneWeek: '7D',
+    all: 'ALL',
 
     // Error messages
     somethingWentWrong: 'Something went wrong',
@@ -77,6 +80,8 @@ const translations = {
     passwordRequirements:
     'Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.',
     passwordsDoNotMatch: 'Confirm password does not match.',
+    fetchTransactionFail: 'Failed to fetch transactions. Please try again later.',
+    noTransactionFound: 'No transactions found',
 
     // Success messages
     walletCreated: 'Wallet created successfully',
