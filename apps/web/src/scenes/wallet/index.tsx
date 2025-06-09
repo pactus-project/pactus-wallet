@@ -1,7 +1,7 @@
 'use client';
 import React, { Suspense, useCallback, useContext, useEffect, useState } from 'react';
 import Image from 'next/image';
-import { copyIcon, showPasswordIcon, simpleLogo, successIcon } from '@/assets';
+import { copyIcon, pactusLogo, showPasswordIcon, simpleLogo, successIcon } from '@/assets';
 import SendPac from '@/components/send';
 import BridgePac from '@/components/bridge';
 import { useAccount } from '@/wallet/hooks/use-account';
@@ -95,14 +95,19 @@ const Wallet = () => {
       <div className="pt-4 px-4 md:px-7 pb-7">
         <section className="w-full ml-auto bg-surface-medium rounded-md shadow-inset">
           <div className="flex gap-4 md:gap-6 p-4 md:p-6 w-full">
-            <div className="flex flex-col justify-center bg-white rounded-md p-4 w-[214px] h-[214px] min-w-[214px] min-h-[214px]">
-              <QRCode
-                value={addressData?.address ?? ''}
-                level="H"
-                size={214}
-                aria-label="QR code for wallet address"
-                className="rounded-md w-full h-full"
-              />
+            <div className='relative h-fit'>
+              <div className="flex flex-col justify-center bg-white rounded-md p-4 w-[214px] h-[214px] min-w-[214px] min-h-[214px]">
+                <QRCode
+                  value={addressData?.address ?? ''}
+                  level="H"
+                  size={214}
+                  aria-label="QR code for wallet address"
+                  className="rounded-md w-full h-full"
+                />
+              </div>
+              <div className='absolute top-1/2 left-1/2 w-[48px] h-[48px] rounded-full overflow-hidden bg-white flex items-center justify-center transform -translate-x-1/2 -translate-y-1/2'>
+                <Image unoptimized src={pactusLogo} alt="" width={40} height={40} />
+              </div>
             </div>
             <div className="w-full flex flex-col">
               <div className="flex items-center">

@@ -1,3 +1,8 @@
+import { indexedDB, IDBKeyRange } from 'fake-indexeddb';
+
+globalThis.indexedDB = indexedDB;
+globalThis.IDBKeyRange = IDBKeyRange;
+
 // Mock for localStorage
 const localStorageMock = (() => {
   let store: Record<string, string> = {};
@@ -33,6 +38,10 @@ Object.defineProperty(global, 'localStorage', {
   value: localStorageMock,
   writable: true,
 });
+
+if (typeof globalThis.structuredClone === 'undefined') {
+  globalThis.structuredClone = <T>(value: T): T => JSON.parse(JSON.stringify(value)) as T;
+}
 
 // Reset mocks between tests
 beforeEach(() => {
