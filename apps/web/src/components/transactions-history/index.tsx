@@ -72,7 +72,7 @@ const TransactionsHistory: React.FC<TransactionsHistoryProps> = ({
   return (
     <div className="transactions-history shadow-inset" style={{ height }}>
       <div className="transactions-history__wrapper">
-        <div className='flex gap-[64px] items-center pb-3 pt-5 px-8 border-b-1 border-[#15191C] shadow-[0px_1px_2.2px_0px_#66666640]'>
+        {/* <div className='flex gap-[64px] items-center pb-3 pt-5 px-8 border-b-1 border-[#15191C] shadow-[0px_1px_2.2px_0px_#66666640]'>
           <div className='text-xl font-semibold'>{t("activity")}</div>
           <div className="relative flex-1">
             <Image
@@ -98,7 +98,7 @@ const TransactionsHistory: React.FC<TransactionsHistoryProps> = ({
             <div className='hover:text-white cursor-pointer'>{t("oneWeek")}</div>
             <div className='hover:text-white cursor-pointer'>{t("all")}</div>
           </div>
-        </div>
+        </div> */}
         <div className='px-8 py-6'>
             <table className="transactions-history__table bg-[#15191C] rounded-md">
             <thead className="transactions-history__header">

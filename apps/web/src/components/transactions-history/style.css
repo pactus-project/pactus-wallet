@@ -92,34 +92,3 @@ tbody .transactions-history__row:hover {
 .transactions-history__wrapper::-webkit-scrollbar-thumb:hover {
     background: var(--color-text-tertiary);
 }
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .transactions-history__cell {
-        padding: var(--spacing-xs);
-        font-size: 11px;
-        max-width: 150px;
-    }
-
-    .transactions-history {
-        padding: var(--spacing-sm);
-    }
-
-    .transactions-history__cell--hash {
-        max-width: 140px;
-    }
-}
-
-/* For very small screens, provide horizontal scrolling */
-@media (max-width: 480px) {
-    .transactions-history__wrapper {
-        overflow-x: auto;
-    }
-}
-
-/* Support for reduced motion preferences */
-@media (prefers-reduced-motion: reduce) {
-    tbody .transactions-history__row {
-        transition: none;
-    }
-}
