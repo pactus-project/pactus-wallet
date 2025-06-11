@@ -45,7 +45,7 @@ const Wallet = () => {
     setHeaderTitle(`🤝 ${addressData?.label ?? ''}`);
   });
 
-  const handleViewOnPacviewer = () => {
+  const handleViewOnExplorer = () => {
     if (wallet?.isTestnet()) {
       window.open(`${PACVIEWER_URL.TESTNET}/address/${address}`, '_blank');
     } else {
@@ -141,7 +141,7 @@ const Wallet = () => {
                 <Button
                   variant="secondary"
                   size="small"
-                  onClick={handleViewOnPacviewer}
+                  onClick={handleViewOnExplorer}
                   aria-label={t('bridge')}
                   className="w-fit h-[38px]"
                   fullWidth

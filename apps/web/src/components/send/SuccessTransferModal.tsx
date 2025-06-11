@@ -130,7 +130,7 @@ const SuccessTransferModal: React.FC<SuccessTransferModalProps> = ({
     getCoreRowModel: getCoreRowModel(),
   });
 
-  const handleViewOnPacviewer = () => {
+  const handleViewOnExplorer = () => {
     if (wallet?.isTestnet()) {
       window.open(`${PACVIEWER_URL.TESTNET}/transaction/${txHash}`, '_blank');
     } else {
@@ -169,7 +169,7 @@ const SuccessTransferModal: React.FC<SuccessTransferModalProps> = ({
           <Button variant="secondary" size="medium" className="flex-1 invisible" onClick={onClose}>
             {t('close')}
           </Button>
-          <Button variant="primary" size="medium" onClick={handleViewOnPacviewer}>
+          <Button variant="primary" size="medium" onClick={handleViewOnExplorer}>
             View on Pacviewer
           </Button>
         </div>
