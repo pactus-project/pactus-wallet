@@ -1,10 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Transaction } from '@/services/transaction';
 import { Amount } from '@pactus-wallet/wallet';
 import Image from 'next/image';
 import './style.css';
 import Skeleton from '../common/skeleton/Skeleton';
-import { searchIcon } from '@/assets';
 import { useI18n } from '@/utils/i18n';
 
 interface TransactionsHistoryProps {
@@ -25,7 +24,6 @@ const TransactionsHistory: React.FC<TransactionsHistoryProps> = ({
   hasError = false,
 }) => {
   const { t } = useI18n();
-  const [searchQuery, setSearchQuery] = useState('');
   const headings = ['Date', 'TX Hash', 'From', 'To', 'Amount', 'Fee'];
   const observer = useRef<IntersectionObserver | null>(null);
   const lastElementRef = useRef<HTMLTableRowElement | null>(null);
