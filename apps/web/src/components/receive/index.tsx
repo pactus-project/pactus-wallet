@@ -1,4 +1,4 @@
-import { receiveIcon, copyIcon, successIcon } from '@/assets';
+import { receiveIcon, copyIcon, pactusLogo, successIcon } from '@/assets';
 import Image from 'next/image';
 import React, { useState } from 'react';
 import './style.css';
@@ -10,6 +10,7 @@ import { useAccount } from '@/wallet';
 import QRCode from 'react-qr-code';
 import FormSelectInput from '../common/FormSelectInput';
 import { Form, useForm, useWatch } from '../common/Form';
+import { formatPactusAddress } from '@/utils/common';
 
 const ReceivePac: React.FC = () => {
   const { t } = useI18n();
@@ -28,7 +29,7 @@ const ReceivePac: React.FC = () => {
 
   const accountOptions = accounts.map(account => ({
     label: account.name,
-    value: account.address
+    value: account.address,
   }));
 
   return (
@@ -50,7 +51,7 @@ const ReceivePac: React.FC = () => {
           <Form
             form={form}
             initialValues={{
-              account: accounts[0]?.address ?? ''
+              account: accounts[0]?.address ?? '',
             }}
           >
             <div className="modal-input-container">
@@ -64,13 +65,27 @@ const ReceivePac: React.FC = () => {
           </Form>
 
           <div className="flex justify-center">
-            <div className="bg-white rounded-md p-4 w-fit">
+            {/* <div className="bg-white rounded-md p-4 w-fit">
               <QRCode
-                value={selectedAccount}
+                value={formatPactusAddress(selectedAccount)}
                 size={200}
                 level="H"
                 className="rounded-md"
               />
+            </div> */}
+            <div className="relative h-fit">
+              <div className="flex flex-col justify-center bg-white rounded-md p-4 w-[214px] h-[214px] min-w-[214px] min-h-[214px]">
+                <QRCode
+                  value={formatPactusAddress(selectedAccount)}
+                  level="H"
+                  size={200}
+                  aria-label="QR code for wallet address"
+                  className="rounded-md w-full h-full"
+                />
+              </div>
+              <div className="absolute top-1/2 left-1/2 w-[48px] h-[48px] rounded-full overflow-hidden bg-white flex items-center justify-center transform -translate-x-1/2 -translate-y-1/2">
+                <Image unoptimized src={pactusLogo} alt="" width={40} height={40} />
+              </div>
             </div>
           </div>
 

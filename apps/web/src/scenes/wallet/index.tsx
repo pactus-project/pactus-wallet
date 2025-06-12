@@ -20,6 +20,8 @@ import linkIcon from '@/assets/images/icons/link-icon.svg';
 import TransactionsHistory from '@/components/transactions-history';
 import { fetchAccountTransactions, Transaction } from '@/services/transaction';
 
+import { formatPactusAddress } from '../../utils/common';
+import { PACVIEWER_URL } from '../../utils/constants';
 const Wallet = () => {
   const { wallet, setHeaderTitle } = useContext(WalletContext);
   const [copied, setCopied] = useState(false);
@@ -49,11 +51,11 @@ const Wallet = () => {
     setShowPasswordModal(true);
   };
 
-  const handleViewOnPacviewer = () => {
+  const handleViewOnExplorer = () => {
     if (wallet?.isTestnet()) {
-      window.open(`https://phoenix.pacviewer.com/address/${address}`, '_blank');
+      window.open(`${PACVIEWER_URL.TESTNET}/address/${address}`, '_blank');
     } else {
-      window.open(`https://pacviewer.com/address/${address}`, '_blank');
+      window.open(`${PACVIEWER_URL.MAINNET}/address/${address}`, '_blank');
     }
   };
 
@@ -95,17 +97,17 @@ const Wallet = () => {
       <div className="pt-4 px-4 md:px-7 pb-7">
         <section className="w-full ml-auto bg-surface-medium rounded-md shadow-inset">
           <div className="flex gap-4 md:gap-6 p-4 md:p-6 w-full">
-            <div className='relative h-fit'>
+            <div className="relative h-fit">
               <div className="flex flex-col justify-center bg-white rounded-md p-4 w-[214px] h-[214px] min-w-[214px] min-h-[214px]">
                 <QRCode
-                  value={addressData?.address ?? ''}
+                  value={formatPactusAddress(addressData?.address ?? '')}
                   level="H"
                   size={214}
                   aria-label="QR code for wallet address"
                   className="rounded-md w-full h-full"
                 />
               </div>
-              <div className='absolute top-1/2 left-1/2 w-[48px] h-[48px] rounded-full overflow-hidden bg-white flex items-center justify-center transform -translate-x-1/2 -translate-y-1/2'>
+              <div className="absolute top-1/2 left-1/2 w-[48px] h-[48px] rounded-full overflow-hidden bg-white flex items-center justify-center transform -translate-x-1/2 -translate-y-1/2">
                 <Image unoptimized src={pactusLogo} alt="" width={40} height={40} />
               </div>
             </div>
@@ -177,7 +179,7 @@ const Wallet = () => {
                 <Button
                   variant="secondary"
                   size="small"
-                  onClick={handleViewOnPacviewer}
+                  onClick={handleViewOnExplorer}
                   aria-label={t('bridge')}
                   className="w-fit h-[38px]"
                   fullWidth
