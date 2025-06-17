@@ -7,6 +7,7 @@ const translations = {
     walletNamePlaceholder: 'Wallet name',
     finish: 'Finish',
     account1: 'Account 1',
+    clickToEdit: 'Click to edit',
 
     // Common
     next: 'Next',
