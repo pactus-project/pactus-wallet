@@ -95,7 +95,11 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         // Get wallet status from storage
         const storedWalletStatus = localStorage.getItem('walletStatus');
 
-        if (!walletData && window.location.pathname != PATHS.TERMS_AND_CONDITIONS) {
+        if (
+          !walletData &&
+          window.location.pathname != PATHS.TERMS_AND_CONDITIONS &&
+          window.location.pathname != PATHS.RECOVERY_PHRASE_TERM
+        ) {
           setWalletStatusState(WalletStatus.WALLET_LOCKED);
           router.replace(PATHS.GET_START);
           return;

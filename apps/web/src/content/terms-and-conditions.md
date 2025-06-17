@@ -40,3 +40,7 @@ Pactus reserves the right to modify or update these Terms at any time without pr
 ## 9. Governing Law
 
 These Terms shall be governed by applicable laws, without regard to conflict of law principles. 
+
+## 10. Wallet Recovery and Secret Recovery Phrase
+
+As a non-custodial service, Pactus does not have access to, store, or control your private keys, passwords, or Secret Recovery Phrases. You acknowledge that you are solely responsible for maintaining the security and confidentiality of your Secret Recovery Phrase. If you are unable to unlock your wallet, you will need to reset it using the Secret Recovery Phrase you created during setup. You understand and agree that Pactus cannot recover your wallet or digital assets if your Secret Recovery Phrase is lost, forgotten, or compromised. The loss of your Secret Recovery Phrase will result in the permanent and irreversible loss of access to your wallet and its contents, and Pactus is not responsible for any such losses or damages.
