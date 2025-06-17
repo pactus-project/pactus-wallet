@@ -74,6 +74,7 @@ const Wallet = () => {
     } catch (error) {
       console.error('Failed to load transactions:', error);
       setHasTransactionError(true);
+      setHasMore(false);
     } finally {
       setIsLoadingTransactions(false);
     }
