@@ -8,6 +8,7 @@ export const PATHS = {
   WALLET_MANAGER: '/setting/wallet',
   NODE_MANAGER: '/setting/node',
   TERMS_AND_CONDITIONS: '/terms-and-conditions',
+  RECOVERY_PHRASE_TERM: '/recovery-phrase-term',
 };
 
 export const PATHS_WITH_SIDEBAR = [
