@@ -28,10 +28,11 @@ const Dashboard = () => {
     fetchBalance();
   };
 
-  const { setHeaderTitle } = useContext(WalletContext);
+  const { setHeaderTitle, setEmoji } = useContext(WalletContext);
 
   useEffect(() => {
     setHeaderTitle('Overview');
+    setEmoji('');
   }, []);
 
   return (

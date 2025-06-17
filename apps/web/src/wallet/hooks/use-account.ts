@@ -6,6 +6,7 @@ export interface AddressInfo {
   address: string;
   publicKey: string;
   label: string;
+  emoji: string;
   path: string;
   privateKeyHex: string;
 }
@@ -68,7 +69,7 @@ export function useAccount() {
         name: address.label,
         balance: 0,
         address: address.address,
-        emoji: '🤝',
+        emoji: address.emoji || '🤝',
       }));
     },
     [wallet]
@@ -167,6 +168,32 @@ export function useAccount() {
     [wallet]
   );
 
+  const updateAccountName = useCallback(
+    (address: string, name: string, walletOverride?: Wallet | null) => {
+      const targetWallet = walletOverride ?? wallet;
+      if (!targetWallet) {
+        setError('Wallet is not available');
+        throw new Error('Wallet is not available');
+      }
+      targetWallet.updateAccountName(address, name);
+      setAccountList(accountList.map(account => account.address === address ? { ...account, name } : account));
+    },
+    [wallet]
+  );
+
+  const updateAccountEmoji = useCallback(
+    (address: string, emoji: string, walletOverride?: Wallet | null) => {
+      const targetWallet = walletOverride ?? wallet;
+      if (!targetWallet) {
+        setError('Wallet is not available');
+        throw new Error('Wallet is not available');
+      }
+      targetWallet.updateAccountEmoji(address, emoji);
+      setAccountList(accountList.map(account => account.address === address ? { ...account, emoji } : account));
+    },
+    [wallet, accountList, setAccountList]
+  );
+
   const clearError = useCallback(() => {
     setError(null);
   }, []);
@@ -181,5 +208,7 @@ export function useAccount() {
     clearError,
     accountList,
     changePassword,
+    updateAccountName,
+    updateAccountEmoji,
   };
 }

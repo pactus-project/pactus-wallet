@@ -297,6 +297,7 @@ export class Wallet {
     const addressInfo: AddressInfo = {
       address,
       label,
+      emoji: '🤝',
       path: derivationPath,
       publicKey: publicKeyStr,
     };
@@ -370,6 +371,26 @@ export class Wallet {
     this.info.name = name;
 
     this.saveInfo();
+  }
+
+  updateAccountName(address: string, name: string): void {
+    const account = this.ledger.addresses.get(address);
+
+    if (account) {
+      account.label = name;
+    }
+
+    this.saveLedger();
+  }
+
+  updateAccountEmoji(address: string, emoji: string): void {
+    const account = this.ledger.addresses.get(address);
+
+    if (account) {
+      account.emoji = emoji;
+    }
+
+    this.saveLedger();
   }
 
   private async hdWallet(password: string): Promise<HDWallet> {

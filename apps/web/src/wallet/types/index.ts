@@ -25,6 +25,8 @@ export interface WalletContextType {
   managerError: string | null;
   headerTitle: string;
   setHeaderTitle: React.Dispatch<React.SetStateAction<string>>;
+  emoji: string;
+  setEmoji: React.Dispatch<React.SetStateAction<string>>;
   showLoadingDialog: (message?: string) => void;
   hideLoadingDialog: () => void;
   accountList: Account[];

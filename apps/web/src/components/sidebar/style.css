@@ -41,7 +41,6 @@
   color: var(--color-text-secondary);
   margin: 0;
   padding: 2px 4px;
-  border-radius: 4px;
 }
 
 .sidebar__wallet-name:focus {

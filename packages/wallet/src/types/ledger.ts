@@ -4,6 +4,7 @@ export interface AddressInfo {
   publicKey: string; // Public key associated with the address
   label: string; // Label for the address
   path: string; // Path for the address
+  emoji: string; // Emoji for the address
 }
 
 // Interface for Purposes

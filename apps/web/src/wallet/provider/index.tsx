@@ -45,6 +45,10 @@ export const WalletContext = createContext<WalletContextType>({
   setHeaderTitle: () => {
     /* Will be implemented in provider */
   },
+  emoji: '',
+  setEmoji: () => {
+    /* Will be implemented in provider */
+  },
   showLoadingDialog: () => {
     /* Will be implemented in provider */
   },
@@ -71,6 +75,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   const [isInitializingManager, setIsInitializingManager] = useState<boolean>(true);
   const [managerError, setManagerError] = useState<string | null>(null);
   const [headerTitle, setHeaderTitleState] = useState<string>('');
+  const [emoji, setEmojiState] = useState<string>('');
   const [accountList, setAccountListState] = useState<Account[]>([]);
   const router = useRouter();
 
@@ -171,7 +176,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         name: address.label,
         balance: 0,
         address: address.address,
-        emoji: '🤝',
+        emoji: address.emoji || '🤝',
       }))
     );
   }, [wallet]);
@@ -196,6 +201,8 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         managerError,
         headerTitle,
         setHeaderTitle: setHeaderTitleState,
+        emoji,
+        setEmoji: setEmojiState,
         showLoadingDialog,
         hideLoadingDialog,
         accountList,
