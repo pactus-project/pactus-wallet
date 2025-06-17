@@ -49,7 +49,7 @@ interface PaginatedResponse<T> {
 export const fetchAccountTransactions = async (
   address: string,
   pageNo: number = 1,
-  pageSize: number = 10
+  pageSize: number = 20
 ): Promise<PaginatedResponse<Transaction>> => {
     console.log("address", pacviwerConfig.url);
   const response = await fetch(
