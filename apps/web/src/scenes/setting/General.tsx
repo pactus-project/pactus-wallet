@@ -12,10 +12,11 @@ interface GeneralProps {
 
 const General: React.FC<GeneralProps> = () => {
   const [ form ] = useForm();
-  const { setHeaderTitle } = useContext(WalletContext);
+  const { setHeaderTitle, setEmoji } = useContext(WalletContext);
 
   useEffect(() => {
     setHeaderTitle(t('settingsGeneral'));
+    setEmoji('');
   }, []);
   const { t } = useI18n();
   const defaultLanguage = t('englishUs');
