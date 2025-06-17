@@ -12,6 +12,8 @@ import { LottieWithText } from '../../../../components/LottieWithText';
 import FormPasswordInput from '../../../../components/common/FormPasswordInput';
 import PasswordStrengthIndicator from '@/components/common/PasswordStrengthIndicator';
 import { Form, useForm, useWatch } from '@/components/common/Form';
+import { PATHS } from '../../../../constants/paths';
+import Link from 'next/link';
 
 interface MasterPasswordForm {
   password: string;
@@ -19,9 +21,9 @@ interface MasterPasswordForm {
 }
 
 const MasterPassword = () => {
-  const [ form ] = useForm();
-  const password = useWatch("password", form) || "";
-  const confirmPassword = useWatch("confirmPassword", form) || "";
+  const [form] = useForm();
+  const password = useWatch('password', form) || '';
+  const confirmPassword = useWatch('confirmPassword', form) || '';
   const { showLoadingDialog, hideLoadingDialog } = useContext(WalletContext);
   const { t } = useI18n();
   const [isChecked, setIsChecked] = useState(false);
@@ -110,7 +112,12 @@ const MasterPassword = () => {
         description={t('masterPasswordDescription')}
       />
 
-      <Form className="master-password__form mt-4" onFinish={handleSubmit} form={form} initialValues={{ password: "", confirmPassword: "" }}>
+      <Form
+        className="master-password__form mt-4"
+        onFinish={handleSubmit}
+        form={form}
+        initialValues={{ password: '', confirmPassword: '' }}
+      >
         <div className="master-password__input-group">
           <label htmlFor="password" className="visually-hidden">
             {t('enterYourPassword')}
@@ -143,7 +150,7 @@ const MasterPassword = () => {
           <div className="master-password__input-container">
             <FormPasswordInput
               id="confirm-password"
-              name='confirmPassword'
+              name="confirmPassword"
               onChange={handleConfirmPasswordChange}
               placeholder={t('confirmYourPassword')}
               label={t('confirmPassword')}
@@ -164,9 +171,11 @@ const MasterPassword = () => {
             labelClassName="text-text-secondary text-xs font-regular leading-normal cursor-pointer select-none"
             checkBoxClassName="w-[16px] h-[16px] cursor-pointer [accent-color:theme('colors.primary')]"
             description={
-              <span className="bg-gradient-primary bg-clip-text text-transparent font-medium ml-1 cursor-pointer whitespace-nowrap">
-                {t('learnMore')}
-              </span>
+              <Link target="_blank" href={PATHS.RECOVERY_PHRASE_TERM}>
+                <span className="bg-gradient-primary bg-clip-text text-transparent font-medium ml-1 cursor-pointer whitespace-nowrap">
+                  {t('learnMore')}
+                </span>
+              </Link>
             }
             size="small"
           />
@@ -177,13 +186,7 @@ const MasterPassword = () => {
           </p>
         )}
 
-        <Button
-          variant="primary"
-          fullWidth
-          className="mt-4"
-          disabled={!isFormValid}
-          type="submit"
-        >
+        <Button variant="primary" fullWidth className="mt-4" disabled={!isFormValid} type="submit">
           {t('continue')}
         </Button>
       </Form>
