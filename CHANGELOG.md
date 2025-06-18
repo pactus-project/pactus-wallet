@@ -1,5 +1,23 @@
 # CHANGELOG
 
+## [0.5.0](https://github.com/pactus-project/pactus-wallet/compare/v0.4.0...v0.5.0) (2025-06-18)
+
+### Feat
+
+- **web**: inline editor ([#201](https://github.com/pactus-project/pactus-wallet/pull/201))
+- implement the content of T&C and Recovery Phrase ([#197](https://github.com/pactus-project/pactus-wallet/pull/197))
+- **account**: add account activity table ([#177](https://github.com/pactus-project/pactus-wallet/pull/177))
+- qr format ([#195](https://github.com/pactus-project/pactus-wallet/pull/195))
+- bridge pac using wrapto ([#194](https://github.com/pactus-project/pactus-wallet/pull/194))
+- implement indexdb for storage ([#185](https://github.com/pactus-project/pactus-wallet/pull/185))
+- **web**: add branding for qr code address ([#193](https://github.com/pactus-project/pactus-wallet/pull/193))
+- encode private key with bech32m ([#192](https://github.com/pactus-project/pactus-wallet/pull/192))
+
+### Fix
+
+- **web**: fix call api loop ([#200](https://github.com/pactus-project/pactus-wallet/pull/200))
+- **web**: keep previous data when fetch fail ([#199](https://github.com/pactus-project/pactus-wallet/pull/199))
+
 ## 0.4.0 (2025-05-29)
 
 ### Feat

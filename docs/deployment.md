@@ -22,7 +22,11 @@ Please carefully follow the instructions provided below:
 
 Before proceeding with the release process,
 ensure that your `origin` remote is set to `git@github.com:pactus-project/pactus-wallet.git` and not your local fork.
-It is recommended to re-clone the project in a location other than your current working directory.
+
+```bash
+git remote -vv
+```
+
 Also, make sure that you have set up
 [GPG for your GitHub account](https://docs.github.com/en/authentication/managing-commit-signature-verification/adding-a-gpg-key-to-your-github-account).
 
