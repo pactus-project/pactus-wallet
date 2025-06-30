@@ -17,7 +17,7 @@ const BridgePac: React.FC = () => {
         }}
         aria-label={t('bridge')}
         startIcon={<Image src={bridgeIcon} alt="" width={20} height={20} aria-hidden="true" />}
-        className="w-[119px] h-[38px] border-1 border-[#2D2D2D] tablet:border-none"
+        className="w-[119px] h-[38px] border-[1px] border-solid border-[#2D2D2D] tablet:border-none"
         fullWidth
       >
         {t('bridge')}

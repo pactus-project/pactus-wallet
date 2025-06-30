@@ -283,7 +283,19 @@ const Wallet = () => {
               <BridgePac />
             </div>
           </div>
-          <div></div>
+          <div className="w-full pl-7 pr-4 mt-12">
+            <div className="flex justify-between items-center w-full mb-4">
+              <div className='text-xl font-semibold'>Activity</div>
+              {/* <div className='text-sm font-medium underline'>See all</div> */}
+            </div>
+            <TransactionsHistory
+              transactions={transactions}
+              onLoadMore={loadTransactions}
+              isLoading={isLoadingTransactions}
+              hasMore={hasMore}
+              hasError={hasTransactionError}
+            />
+          </div>
         </div>
       </Mobile>
       <ShowPrivateKeyModal
