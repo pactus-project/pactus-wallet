@@ -45,6 +45,10 @@ export const WalletContext = createContext<WalletContextType>({
   setHeaderTitle: () => {
     /* Will be implemented in provider */
   },
+  emoji: '',
+  setEmoji: () => {
+    /* Will be implemented in provider */
+  },
   showLoadingDialog: () => {
     /* Will be implemented in provider */
   },
