@@ -171,7 +171,7 @@ const MasterPassword = () => {
             labelClassName="text-text-secondary text-xs font-regular leading-normal cursor-pointer select-none"
             checkBoxClassName="w-[16px] h-[16px] cursor-pointer [accent-color:theme('colors.primary')]"
             description={
-              <Link target="_blank" href={PATHS.RECOVERY_PHRASE_TERM}>
+              <Link target="_blank" href={PATHS.RECOVERY_PHRASE_NOTICE}>
                 <span className="bg-gradient-primary bg-clip-text text-transparent font-medium ml-1 cursor-pointer whitespace-nowrap">
                   {t('learnMore')}
                 </span>

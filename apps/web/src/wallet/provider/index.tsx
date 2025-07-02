@@ -98,7 +98,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         if (
           !walletData &&
           window.location.pathname != PATHS.TERMS_AND_CONDITIONS &&
-          window.location.pathname != PATHS.RECOVERY_PHRASE_TERM
+          window.location.pathname != PATHS.RECOVERY_PHRASE_NOTICE
         ) {
           setWalletStatusState(WalletStatus.WALLET_LOCKED);
           router.replace(PATHS.GET_START);
