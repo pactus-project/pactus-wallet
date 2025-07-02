@@ -23,7 +23,7 @@ import { fetchAccountTransactions, Transaction } from '@/services/transaction';
 import { formatPactusAddress } from '../../utils/common';
 import { PACVIEWER_URL } from '../../utils/constants';
 const Wallet = () => {
-  const { wallet, setHeaderTitle } = useContext(WalletContext);
+  const { wallet, setHeaderTitle, setEmoji } = useContext(WalletContext);
   const [copied, setCopied] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [showPublicKeyModal, setShowPublicKeyModal] = useState(false);
@@ -74,6 +74,7 @@ const Wallet = () => {
     } catch (error) {
       console.error('Failed to load transactions:', error);
       setHasTransactionError(true);
+      setHasMore(false);
     } finally {
       setIsLoadingTransactions(false);
     }
@@ -89,8 +90,9 @@ const Wallet = () => {
   }, [addressData?.address]);
 
   useEffect(() => {
-    setHeaderTitle(`🤝 ${addressData?.label ?? ''}`);
-  }, [addressData?.label, setHeaderTitle]);
+    setHeaderTitle(addressData?.label ?? '');
+    setEmoji(addressData?.emoji ?? '🤝');
+  }, [addressData?.label, addressData?.emoji, setHeaderTitle, setEmoji]);
 
   return (
     <Suspense fallback={<div>{t('loading')}</div>}>

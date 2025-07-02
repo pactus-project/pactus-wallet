@@ -24,7 +24,7 @@ export interface Account {
 }
 
 const WalletManager: React.FC<WalletManagerProps> = () => {
-  const { setHeaderTitle } = useContext(WalletContext);
+  const { setHeaderTitle, setEmoji } = useContext(WalletContext);
   const [privateKeyAddress, setPrivateKeyAddress] = useState<string>('');
   const { accountList } = useAccount();
   const { push } = useRouter();
@@ -97,6 +97,7 @@ const WalletManager: React.FC<WalletManagerProps> = () => {
 
   useEffect(() => {
     setHeaderTitle(t("settingsWalletManager"));
+    setEmoji('');
   }, []);
 
   return (

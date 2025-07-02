@@ -44,6 +44,8 @@ const Sidebar = ({ isOpen = true, onClose = noop, isMobile = false }: SidebarPro
   const searchParams = useSearchParams();
   const [isAddAccountModalOpen, setIsAddAccountModalOpen] = useState(false);
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedName, setEditedName] = useState(wallet?.getName() || '');
   const navigate = useRouter().push;
 
   const { t } = useI18n();
@@ -106,6 +108,27 @@ const Sidebar = ({ isOpen = true, onClose = noop, isMobile = false }: SidebarPro
     };
   }, [isOpen, isMobile, onClose]);
 
+  const handleWalletNameClick = () => {
+    setIsEditing(true);
+    setEditedName(wallet?.getName() || '');
+  };
+
+  const handleWalletNameBlur = () => {
+    setIsEditing(false);
+    if (editedName.trim() !== wallet?.getName()) {
+      wallet?.updateName(editedName.trim());
+    }
+  };
+
+  const handleWalletNameKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleWalletNameBlur();
+    } else if (e.key === 'Escape') {
+      setIsEditing(false);
+      setEditedName(wallet?.getName() || '');
+    }
+  };
+
   return (
     <aside className={`sidebar ${isMobile ? 'mobile' : ''} ${isOpen ? 'open' : 'closed'}`}>
       {isMobile && (
@@ -132,9 +155,27 @@ const Sidebar = ({ isOpen = true, onClose = noop, isMobile = false }: SidebarPro
         </button>
       )}
       <div className={`sidebar__header ${isMobile ? 'mt-4' : ''}`}>
-        <div className={`sidebar__wallet-info ${isMobile ? 'mt-4' : ''}`}>
+        <div className={`sidebar__wallet-info gap-1 ${isMobile ? 'mt-4' : ''}`}>
           <span className="sidebar__wallet-emoji">😀</span>
-          <h2 className="sidebar__wallet-name">{wallet?.getName()}</h2>
+          {isEditing ? (
+            <input
+              type="text"
+              value={editedName}
+              onChange={(e) => setEditedName(e.target.value)}
+              onBlur={handleWalletNameBlur}
+              onKeyDown={handleWalletNameKeyDown}
+              className="w-full sidebar__wallet-name bg-transparent border border-[#4C4F6B] rounded px-2 py-1 focus:outline-none focus:border-[#D2D3E0]"
+              autoFocus
+            />
+          ) : (
+            <h2 
+              className="sidebar__wallet-name cursor-text border-b border-transparent hover:border-b hover:border-[#4C4F6B] transition-colors duration-200"
+              onClick={handleWalletNameClick}
+              title={t('clickToEdit')}
+            >
+              {wallet?.getName()}
+            </h2>
+          )}
           <Image src={lockIcon} alt="Wallet is locked" className="sidebar__lock-icon" />
         </div>
 

@@ -113,7 +113,7 @@ const TransactionsHistory: React.FC<TransactionsHistoryProps> = ({
             </thead>
 
             <tbody className="transactions-history__body">
-                {hasError ? (
+                {hasError && transactions.length === 0 ? (
                 <tr>
                     <td colSpan={6} className="transactions-history__empty">
                     {t("fetchTransactionFail")}

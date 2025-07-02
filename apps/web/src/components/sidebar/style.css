@@ -36,12 +36,16 @@
 }
 
 .sidebar__wallet-name {
+  font-size: 14px;
+  font-weight: 600;
   color: var(--color-text-secondary);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  margin: 0;
+  padding: 2px 4px;
+}
+
+.sidebar__wallet-name:focus {
+  outline: none;
+  border-color: var(--color-text-secondary);
 }
 
 .sidebar__lock-icon {
