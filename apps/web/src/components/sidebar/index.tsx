@@ -30,6 +30,7 @@ interface SidebarProps {
   isOpen?: boolean;
   onClose?: () => void;
   isMobile?: boolean;
+  hamburgerRef?: React.RefObject<null |HTMLButtonElement>;
 }
 
 // Function to prevent linter errors with empty arrow functions
@@ -37,7 +38,7 @@ const noop = () => {
   /* Intentionally empty */
 };
 
-const Sidebar = ({ isOpen = true, onClose = noop, isMobile = false }: SidebarProps) => {
+const Sidebar = ({ isOpen = true, onClose = noop, isMobile = false, hamburgerRef }: SidebarProps) => {
   const { wallet } = useWallet();
   const { accountList } = useAccount();
   const pathname = usePathname();
@@ -91,22 +92,23 @@ const Sidebar = ({ isOpen = true, onClose = noop, isMobile = false }: SidebarPro
       document.body.style.overflow = 'hidden';
       const handleClickOutside = (e: MouseEvent) => {
         const target = e.target as HTMLElement;
+        if (hamburgerRef && hamburgerRef.current && hamburgerRef.current.contains(target)) {
+          return;
+        }
         if (!target.closest('.sidebar') && isOpen) {
           onClose();
         }
       };
-
       document.addEventListener('mousedown', handleClickOutside);
       return () => {
         document.body.style.overflow = '';
         document.removeEventListener('mousedown', handleClickOutside);
       };
     }
-
     return () => {
       document.body.style.overflow = '';
     };
-  }, [isOpen, isMobile, onClose]);
+  }, [isOpen, isMobile, onClose, hamburgerRef]);
 
   const handleWalletNameClick = () => {
     setIsEditing(true);

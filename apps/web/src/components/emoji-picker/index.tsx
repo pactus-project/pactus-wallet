@@ -15,7 +15,7 @@ const EmojiPicker: React.FC<EmojiPickerProps> = ({ trigger, onSelect, className 
       trigger={trigger}
       classNames={{
         trigger: `hover:bg-surface-medium rounded-md p-2 shadow-lg ${className || ''}`,
-        content: 'bg-surface-medium rounded-md p-2 shadow-lg'
+        content: 'bg-surface-medium rounded-md p-2 shadow-lg max-w-[100vw]'
       }}
       align="start"
       sideOffset={5}
