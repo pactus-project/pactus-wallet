@@ -8,7 +8,7 @@ import EmojiPicker from '../emoji-picker';
 const Header: React.FC<{
   isSidebarOpen: boolean;
   setIsSidebarOpen: (isOpen: boolean) => void;
-  hamburgerRef: React.RefObject<HTMLButtonElement>;
+  hamburgerRef: React.RefObject<null | HTMLButtonElement>;
 }> = ({
   isSidebarOpen,
   setIsSidebarOpen,

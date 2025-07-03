@@ -30,7 +30,7 @@ interface SidebarProps {
   isOpen?: boolean;
   onClose?: () => void;
   isMobile?: boolean;
-  hamburgerRef?: React.RefObject<HTMLButtonElement>;
+  hamburgerRef?: React.RefObject<null |HTMLButtonElement>;
 }
 
 // Function to prevent linter errors with empty arrow functions
