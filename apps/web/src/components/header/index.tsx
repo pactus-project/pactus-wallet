@@ -8,12 +8,15 @@ import EmojiPicker from '../emoji-picker';
 const Header: React.FC<{
   isSidebarOpen: boolean;
   setIsSidebarOpen: (isOpen: boolean) => void;
+  hamburgerRef: React.RefObject<HTMLButtonElement>;
 }> = ({
   isSidebarOpen,
   setIsSidebarOpen,
+  hamburgerRef,
 }: {
   isSidebarOpen: boolean;
   setIsSidebarOpen: (isOpen: boolean) => void;
+  hamburgerRef: React.RefObject<HTMLButtonElement>;
 }) => {
   const searchParams = useSearchParams();
   const address = searchParams?.get('address') ?? '';
@@ -89,6 +92,7 @@ const Header: React.FC<{
           )}
         </div>
         <button
+          ref={hamburgerRef}
           className="absolute top-2 right-4 z-50 p-2 rounded-md text-white hover:bg-gray-700 transition-colors tablet:hidden"
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
           aria-label="Toggle sidebar"

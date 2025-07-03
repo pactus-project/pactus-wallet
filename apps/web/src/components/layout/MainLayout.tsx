@@ -1,5 +1,5 @@
 'use client';
-import { Suspense, useState, useEffect } from 'react';
+import { Suspense, useState, useEffect, useRef } from 'react';
 import Sidebar from '../sidebar';
 import Header from '../header';
 import { usePathname } from 'next/navigation';
@@ -10,6 +10,7 @@ function MainLayout({ children }) {
   const pathname = usePathname();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const hamburgerRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const handleResize = () => {
@@ -38,9 +39,10 @@ function MainLayout({ children }) {
             isOpen={isSidebarOpen}
             onClose={() => setIsSidebarOpen(false)}
             isMobile={isMobile}
+            hamburgerRef={hamburgerRef}
           />
           <div className="flex-1 flex flex-col md:ml-[219px]">
-            <Header isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
+            <Header isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} hamburgerRef={hamburgerRef} />
             {children}
           </div>
           <Toaster duration={2500} richColors closeButton position="top-center" />

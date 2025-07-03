@@ -227,7 +227,7 @@ const Wallet = () => {
               </div>
             </div>
             <div>
-              <div>$26927</div>
+              {/* <div>$26927</div> */}
               <div>2.05 PAC</div>
             </div>
           </div>
