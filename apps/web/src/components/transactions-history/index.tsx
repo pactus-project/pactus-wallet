@@ -59,33 +59,6 @@ const TransactionsHistory: React.FC<TransactionsHistoryProps> = ({
       <Tablet>
         <div className="transactions-history shadow-inset" style={{ height }}>
           <div className="transactions-history__wrapper">
-            {/* <div className='flex gap-[64px] items-center pb-3 pt-5 px-8 border-b-1 border-[#15191C] shadow-[0px_1px_2.2px_0px_#66666640]'>
-              <div className='text-xl font-semibold'>{t("activity")}</div>
-              <div className="relative flex-1">
-                <Image
-                  src={searchIcon}
-                  alt=""
-                  width={16}
-                  height={16}
-                  className="absolute left-2 top-2/4 -translate-y-1/2 opacity-50"
-                  aria-hidden="true"
-                />
-                <input
-                  type="text"
-                  className="command-search__input !bg-[#15191C] !border-none !h-8"
-                  placeholder="Search by tx hash or address"
-                  value={searchQuery}
-                  onChange={e => setSearchQuery(e.target.value)}
-                  autoComplete="off"
-                  autoFocus
-                />
-              </div>
-              <div className='items-center flex rounded-md bg-[#15191C] text-xs font-medium text-[#858699] w-fit px-4 h-8 gap-3'>
-                <div className='hover:text-white cursor-pointer'>{t("oneDay")}</div>
-                <div className='hover:text-white cursor-pointer'>{t("oneWeek")}</div>
-                <div className='hover:text-white cursor-pointer'>{t("all")}</div>
-              </div>
-            </div> */}
             <div className="px-8 py-6">
               <table className="transactions-history__table bg-[#15191C] rounded-md">
                 <thead className="transactions-history__header">

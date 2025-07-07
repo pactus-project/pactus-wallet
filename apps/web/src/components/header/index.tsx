@@ -62,7 +62,7 @@ const Header: React.FC<{
           {emoji && (
             <EmojiPicker
               trigger={
-                <span className="text-sm text-[#D2D3E0] font-semibold mb-[1px] cursor-pointer hover:opacity-80 transition-opacity">
+                <span className="text-sm text-quaternary font-semibold mb-[1px] cursor-pointer hover:opacity-80 transition-opacity">
                   {emoji}
                 </span>
               }
@@ -76,19 +76,19 @@ const Header: React.FC<{
               onChange={e => setEditedTitle(e.target.value)}
               onBlur={handleBlur}
               onKeyDown={handleKeyDown}
-              className="text-sm text-[#D2D3E0] font-semibold bg-transparent border border-[#4C4F6B] rounded px-2 py-1 focus:outline-none focus:border-[#D2D3E0]"
+              className="text-sm text-quaternary font-semibold bg-transparent border border-[#4C4F6B] rounded px-2 py-1 focus:outline-none focus:border-quaternary"
               autoFocus
             />
           ) : address ? (
             <h1
-              className="text-sm text-[#D2D3E0] font-semibold cursor-text border-b border-transparent hover:border-b hover:border-[#4C4F6B] transition-colors duration-200"
+              className="text-sm text-quaternary font-semibold cursor-text border-b border-transparent hover:border-b hover:border-[#4C4F6B] transition-colors duration-200"
               onClick={handleClick}
               title={t('clickToEdit')}
             >
               {headerTitle}
             </h1>
           ) : (
-            <h1 className="text-sm text-[#D2D3E0] font-semibold">{headerTitle}</h1>
+            <h1 className="text-sm text-quaternary font-semibold">{headerTitle}</h1>
           )}
         </div>
         <button

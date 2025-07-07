@@ -218,17 +218,16 @@ const Wallet = () => {
         <div className="flex flex-col gap-4 items-center py-4">
           <div className="flex items-center justify-between pr-4 pl-7 w-full">
             <div className="flex items-center gap-4">
-              <div className="p-2 rounded-md bg-[#212125] flex justify-center items-center">
+              <div className="p-2 rounded-md bg-surface-light flex justify-center items-center">
                 <Image src={simpleLogo} alt="Pactus logo" />
               </div>
               <div>
                 <div className="text-lg text-white font-bold">Pactus</div>
-                <div className="text-[#6C757D]">PAC</div>
+                <div className="text-tertiary">PAC</div>
               </div>
             </div>
             <div>
-              {/* <div>$26927</div> */}
-              <div>2.05 PAC</div>
+              <div>{balance} PAC</div>
             </div>
           </div>
           <div>
