@@ -32,11 +32,18 @@ export function useBalance(address?: string) {
             setIsLoading(false);
             return 0;
           }
-          for (const address of addresses) {
-            const balance = await targetWallet.getAddressBalance(address.address);
-            const balanceValue = balance.toPac();
-            totalBalance += balanceValue;
-          }
+          const balancePromises = addresses.map(async addr => {
+            try {
+              const balance = await targetWallet.getAddressBalance(addr.address);
+              return balance.toPac();
+            } catch (addrError) {
+              console.warn(`Failed to fetch balance for address ${addr.address}:`, addrError);
+              return 0;
+            }
+          });
+
+          const balances = await Promise.all(balancePromises);
+          totalBalance = balances.reduce((sum, balance) => sum + balance, 0);
           setBalance(totalBalance);
         } else {
           const balance = await targetWallet.getAddressBalance(addressToCheck);
