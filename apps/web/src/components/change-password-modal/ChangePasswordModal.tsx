@@ -19,7 +19,7 @@ const ChangePasswordModal: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleNewPasswordChange = (e) => {
+  const handleNewPasswordChange = e => {
     setNewPasswordTouched(true);
 
     const newPassword = e.target.value;
@@ -38,13 +38,13 @@ const ChangePasswordModal: React.FC = () => {
       const result = await changePassword(oldPassword, newPassword);
 
       if (result) {
-        toast.success("Update wallet password successfully!");
+        toast.success('Update wallet password successfully!');
         setIsOpen(false);
         form.resetFields();
       }
-    } catch(err) {
+    } catch (err) {
       console.log({ err });
-      toast.error(err.message)
+      toast.error(err.message);
     } finally {
       setIsSubmitting(false);
     }
@@ -52,7 +52,13 @@ const ChangePasswordModal: React.FC = () => {
 
   return (
     <>
-      <Button onClick={() => setIsOpen(true)} className="w-[200px]">
+      <Button
+        variant="primary"
+        size="small"
+        onClick={() => setIsOpen(true)}
+        className="w-[150px] h-[38px]"
+        labelClassName="text-sm"
+      >
         Update Password
       </Button>
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} title={t('updatePassword')}>
@@ -60,7 +66,7 @@ const ChangePasswordModal: React.FC = () => {
           className="flex flex-col gap-5"
           onFinish={handleSubmit}
           form={form}
-          validateTrigger='onChange'
+          validateTrigger="onChange"
           initialValues={{
             oldPassword: '',
             newPassword: '',
@@ -68,7 +74,7 @@ const ChangePasswordModal: React.FC = () => {
           }}
         >
           <FormPasswordInput
-            id='oldPassword'
+            id="oldPassword"
             name="oldPassword"
             placeholder={t('enterYourPassword')}
             label={t('oldPassword')}

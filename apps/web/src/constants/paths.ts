@@ -7,6 +7,7 @@ export const PATHS = {
   SETTING_GENERAL: '/setting',
   WALLET_MANAGER: '/setting/wallet',
   NODE_MANAGER: '/setting/node',
+  SETTING_ABOUT: '/setting/about',
   TERMS_AND_CONDITIONS: '/terms-and-conditions',
   RECOVERY_PHRASE_NOTICE: '/recovery-phrase-notice',
 };
@@ -18,4 +19,5 @@ export const PATHS_WITH_SIDEBAR = [
   PATHS.SETTING_GENERAL,
   PATHS.WALLET_MANAGER,
   PATHS.NODE_MANAGER,
+  PATHS.SETTING_ABOUT,
 ];
