@@ -23,8 +23,8 @@ export function useBalance(address?: string) {
 
       try {
         // If no address is provided, get the first address from the wallet
-        let addressToCheck = specificAddress || address;
-
+        const addressToCheck = specificAddress || address;
+        let totalBalance = 0;
         if (!addressToCheck) {
           const addresses = targetWallet.getAddresses();
           if (addresses.length === 0) {
@@ -32,15 +32,20 @@ export function useBalance(address?: string) {
             setIsLoading(false);
             return 0;
           }
-          addressToCheck = addresses[0].address;
+          for (const address of addresses) {
+            const balance = await targetWallet.getAddressBalance(address.address);
+            const balanceValue = balance.toPac();
+            totalBalance += balanceValue;
+          }
+          setBalance(totalBalance);
+        } else {
+          const balance = await targetWallet.getAddressBalance(addressToCheck);
+          const balanceValue = balance.toPac();
+          totalBalance = balanceValue;
+          setBalance(totalBalance);
         }
 
-        // Fetch balance for the address
-        const balance = await targetWallet.getAddressBalance(addressToCheck);
-        const balanceValue = balance.toPac();
-
-        setBalance(balanceValue);
-        return balanceValue;
+        return totalBalance;
       } catch (err) {
         setBalance(0);
         const errorMessage = err instanceof Error ? err.message : 'Failed to fetch balance';
