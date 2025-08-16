@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## [1.0.0](https://github.com/pactus-project/pactus-wallet/compare/v0.5.0...v1.0.0) (2025-08-14)
+
+### Feat
+
+- **web**: adding about tab in setting  ([#212](https://github.com/pactus-project/pactus-wallet/pull/212))
+- **web**: responsive for mobile ([#210](https://github.com/pactus-project/pactus-wallet/pull/210))
+
+### Fix
+
+- missing total balance overview section ([#213](https://github.com/pactus-project/pactus-wallet/pull/213))
+
 ## [0.5.0](https://github.com/pactus-project/pactus-wallet/compare/v0.4.0...v0.5.0) (2025-06-18)
 
 ### Feat
