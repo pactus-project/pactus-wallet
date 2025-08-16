@@ -19,10 +19,8 @@ const isDev = process.env.NODE_ENV === 'development';
 export const metadata: Metadata = {
   title: 'Pactus Wallet',
   description:
-    'Pactus Wallet is an open-source, client-based wallet for securely managing digital assets on the Pactus blockchain. Non-custodial, fast, and user-friendly.',
-  icons: {
-    icon: ['/favicon.ico?v=4'],
-  },
+    `Pactus Wallet is an open-source, client-based wallet for securely managing digital assets on the Pactus blockchain.
+    Non-custodial, fast, and user-friendly.`,
 };
 
 export const viewport = {
