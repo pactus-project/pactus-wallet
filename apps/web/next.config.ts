@@ -38,6 +38,11 @@ const nextConfig: NextConfig = {
   // Transpile packages from the monorepo
   transpilePackages: ['@pactus-wallet/wallet'],
 
+  // Disable Next.js ESLint and use your own config
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+
   webpack: (config, { isServer, dev }) => {
     // Enable WebAssembly support in Webpack
     config.experiments = {
@@ -75,7 +80,6 @@ const nextConfig: NextConfig = {
 
     // Set the publicPath to ensure correct loading of WASM files
     config.output.publicPath = '/_next/';
-
 
     if (!isServer) {
       // Add CopyPlugin to copy wallet-core.wasm to the output directory
