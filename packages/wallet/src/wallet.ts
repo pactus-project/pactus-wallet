@@ -309,20 +309,90 @@ export class Wallet {
 
     return addressInfo;
   }
+
+  /**
+   * Derive an address at a specific index without adding it to the wallet
+   * @param index The derivation index
+   * @param password Password for wallet encryption
+   * @returns Promise<AddressInfo> - The derived address information
+   */
+  private async deriveAddressAtIndex(index: number, password: string): Promise<AddressInfo> {
+    const derivationPath = sprintf(
+      "m/44'/%d'/3'/%d'",
+      this.ledger.coinType.toString(),
+      index.toString()
+    );
+
+    const hdWallet = await this.hdWallet(password);
+    const privateKey = hdWallet.getKey(this.core.CoinType.pactus, derivationPath);
+
+    // Get public key
+    const publicKey = privateKey.getPublicKeyEd25519();
+
+    // Select the appropriate derivation based on network type
+    const derivation = this.isTestnet()
+      ? this.core.Derivation.pactusTestnet
+      : this.core.Derivation.pactusMainnet;
+
+    // Create the address using AnyAddress for both networks
+    const address = this.core.AnyAddress.createWithPublicKeyDerivation(
+      publicKey,
+      this.core.CoinType.pactus,
+      derivation
+    ).description();
+
+    const prefix = this.publicKeyPrefix();
+    const publicKeyStr = encodeBech32WithType(prefix, publicKey.data(), SignatureType.Ed25519);
+
+    return {
+      address,
+      label: `Recovered Address ${index + 1}`,
+      emoji: '🤝',
+      path: derivationPath,
+      publicKey: publicKeyStr,
+    };
+  }
+
+  /**
+   * Recover addresses according to PIP-41 specification
+   * @param password Password for wallet encryption
+   * @returns Promise<AddressInfo[]> - Array of recovered addresses
+   */
   async recoverAddress(password: string): Promise<AddressInfo[]> {
     const recoveredAddresses: AddressInfo[] = [];
-    let currentIndex = 1;
+    let inactiveCount = 1;
+    let currentIndex = 0;
 
-    while (currentIndex <= 32) {
-      const addrInfo1 = await this.createAddress(`Address ${currentIndex.toString()}`, password);
-      const isActive = await this.isAddressActive(addrInfo1.address);
+    while (true) {
+      const currentAddress = await this.deriveAddressAtIndex(currentIndex, password);
 
-      if (isActive) {
-        recoveredAddresses.push(addrInfo1);
+      const isIndexed = await this.isAddressActive(currentAddress.address);
+
+      if (isIndexed) {
+        inactiveCount++;
+
+        if (inactiveCount > 32) {
+          break;
+        }
+
+        currentIndex++;
+      } else {
+        inactiveCount = 1;
+        recoveredAddresses.push(currentAddress);
+        currentIndex++;
       }
-
-      currentIndex++;
     }
+
+    // Add all recovered addresses to the wallet's ledger
+    for (const addressInfo of recoveredAddresses) {
+      this.ledger.addresses.set(addressInfo.address, addressInfo);
+    }
+
+    // Update the next index for future address creation
+    this.ledger.purposes.purposeBIP44.nextEd25519Index = currentIndex;
+
+    // Save the updated ledger
+    this.saveLedger();
 
     return recoveredAddresses;
   }
