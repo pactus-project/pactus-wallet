@@ -50,10 +50,10 @@ const WALLET_CONFIG = {
 
 // The type of blockchain address used in Pactus.
 export enum AddressType {
-  Treasury = 0,        // Reserved for the treasury account.
-  Validator = 1,       // Used by validators in the consensus process.
-  BLSAccount = 2,      // Account with a BLS public key.
-  Ed25519Account = 3,  // Account with an Ed25519 public key.
+  Treasury = 0, // Reserved for the treasury account.
+  Validator = 1, // Used by validators in the consensus process.
+  BLSAccount = 2, // Account with a BLS public key.
+  Ed25519Account = 3, // Account with an Ed25519 public key.
 }
 
 // The type of cryptographic signature scheme used in Pactus.
@@ -308,6 +308,38 @@ export class Wallet {
     this.saveLedger();
 
     return addressInfo;
+  }
+  async recoverAddress(password: string): Promise<AddressInfo[]> {
+    const recoveredAddresses: AddressInfo[] = [];
+    let currentIndex = 1;
+
+    while (currentIndex <= 32) {
+      const addrInfo1 = await this.createAddress(`Address ${currentIndex.toString()}`, password);
+      const isActive = await this.isAddressActive(addrInfo1.address);
+
+      if (isActive) {
+        recoveredAddresses.push(addrInfo1);
+      }
+
+      currentIndex++;
+    }
+
+    return recoveredAddresses;
+  }
+  async isAddressActive(address: string): Promise<boolean> {
+    try {
+      const publicKey = await this.getValidatorPublicKey(address);
+
+      if (!publicKey) {
+        return false;
+      }
+
+      return true;
+    } catch (error) {
+      console.error('Failed to get validator public key: ', error);
+
+      return false;
+    }
   }
 
   /**
