@@ -1,4 +1,9 @@
+import { initWasm } from '@trustwallet/wallet-core';
+import { IStorage, MemoryStorage, NetworkValues } from '../dist';
 import { encodeBech32WithType, sprintf } from './utils';
+import { Wallet } from './wallet';
+import { MnemonicValues, Vault } from './types/vault';
+import { StorageKey } from './storage-key';
 
 describe('sprintf function', () => {
   test.each([
@@ -33,5 +38,46 @@ describe('sprintf function', () => {
         expect(encoded).toBe(expected);
       }
     );
+  });
+});
+
+describe('changeWalletPassword', () => {
+  let wallet: Wallet;
+  let storage: IStorage;
+
+  const oldPassword = '*OldPassword123';
+  const newPassword = '*NewPassword123';
+
+  beforeEach(async () => {
+    storage = new MemoryStorage();
+    const core = await initWasm();
+    const password = '*OldPassword123';
+    wallet = await Wallet.create(
+      core,
+      storage,
+      password,
+      MnemonicValues.NORMAL,
+      NetworkValues.MAINNET
+    );
+  });
+
+  it('should change the password and re-encrypt the vault', async () => {
+    const resultKeystore = await wallet.changeWalletPassword(oldPassword, newPassword, storage);
+    const vaultKey = StorageKey.walletVaultKey(wallet.getID());
+    const newSerializedVault = storage.get(vaultKey) || '';
+    expect(newSerializedVault).toBeTruthy();
+
+    const newVault = Vault.deserialize(newSerializedVault);
+    const decryptedData = await newVault.encrypter.decrypt(newVault.keyStore, newPassword);
+    const needTruthy = JSON.parse(decryptedData).master_node;
+    expect(needTruthy).toBeTruthy();
+
+    expect(resultKeystore).toBe(newVault.keyStore);
+  });
+
+  it('should throw if old password is incorrect', async () => {
+    await expect(
+      wallet.changeWalletPassword('wrong-password', newPassword, storage)
+    ).rejects.toThrow('Invalid password');
   });
 });

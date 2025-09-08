@@ -368,8 +368,6 @@ export class Wallet {
 
       const isIndexed = await this.isAddressActive(currentAddress.address);
 
-      if (isIndexed) {
-
       if (isIndexed === false) {
         inactiveCount++;
 
