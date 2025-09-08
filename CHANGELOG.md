@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## [1.0.0](https://github.com/pactus-project/pactus-wallet/compare/v0.5.0...v1.0.0) (2025-08-14)
+## [1.0.0] (2025-08-14)
 
 ### Feat
 
@@ -11,7 +11,7 @@
 
 - missing total balance overview section ([#213](https://github.com/pactus-project/pactus-wallet/pull/213))
 
-## [0.5.0](https://github.com/pactus-project/pactus-wallet/compare/v0.4.0...v0.5.0) (2025-06-18)
+## [0.5.0] (2025-06-18)
 
 ### Feat
 
