@@ -369,6 +369,8 @@ export class Wallet {
       const isIndexed = await this.isAddressActive(currentAddress.address);
 
       if (isIndexed) {
+
+      if (isIndexed === false) {
         inactiveCount++;
 
         if (inactiveCount > 32) {
@@ -400,14 +402,12 @@ export class Wallet {
     try {
       const publicKey = await this.getValidatorPublicKey(address);
 
-      if (!publicKey) {
-        return false;
+      if (publicKey !== '') {
+        return true;
       }
 
-      return true;
-    } catch (error) {
-      console.error('Failed to get validator public key: ', error);
-
+      return false;
+    } catch {
       return false;
     }
   }
@@ -727,8 +727,8 @@ export class Wallet {
       const result = await client.pactusBlockchainGetPublicKey(txParams.address);
 
       return result.public_key ?? '';
-    } catch (error) {
-      throw new NetworkError(`Failed to get validator public key: ${error}`);
+    } catch {
+      return '';
     }
   }
 
