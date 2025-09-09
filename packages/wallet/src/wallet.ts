@@ -50,10 +50,10 @@ const WALLET_CONFIG = {
 
 // The type of blockchain address used in Pactus.
 export enum AddressType {
-  Treasury = 0,        // Reserved for the treasury account.
-  Validator = 1,       // Used by validators in the consensus process.
-  BLSAccount = 2,      // Account with a BLS public key.
-  Ed25519Account = 3,  // Account with an Ed25519 public key.
+  Treasury = 0, // Reserved for the treasury account.
+  Validator = 1, // Used by validators in the consensus process.
+  BLSAccount = 2, // Account with a BLS public key.
+  Ed25519Account = 3, // Account with an Ed25519 public key.
 }
 
 // The type of cryptographic signature scheme used in Pactus.
@@ -308,6 +308,98 @@ export class Wallet {
     this.saveLedger();
 
     return addressInfo;
+  }
+
+  /**
+   * Derive an address at a specific index without adding it to the wallet
+   * @param index The derivation index
+   * @param password Password for wallet encryption
+   * @returns Promise<AddressInfo> - The derived address information
+   */
+  private async deriveAddressAtIndex(index: number, password: string): Promise<AddressInfo> {
+    const derivationPath = sprintf(
+      "m/44'/%d'/3'/%d'",
+      this.ledger.coinType.toString(),
+      index.toString()
+    );
+
+    const hdWallet = await this.hdWallet(password);
+    const privateKey = hdWallet.getKey(this.core.CoinType.pactus, derivationPath);
+
+    // Get public key
+    const publicKey = privateKey.getPublicKeyEd25519();
+
+    // Select the appropriate derivation based on network type
+    const derivation = this.isTestnet()
+      ? this.core.Derivation.pactusTestnet
+      : this.core.Derivation.pactusMainnet;
+
+    // Create the address using AnyAddress for both networks
+    const address = this.core.AnyAddress.createWithPublicKeyDerivation(
+      publicKey,
+      this.core.CoinType.pactus,
+      derivation
+    ).description();
+
+    const prefix = this.publicKeyPrefix();
+    const publicKeyStr = encodeBech32WithType(prefix, publicKey.data(), SignatureType.Ed25519);
+
+    return {
+      address,
+      label: `Address ${index + 1}`,
+      emoji: '🤝', // TODO: derive default emoji from address data
+      path: derivationPath,
+      publicKey: publicKeyStr,
+    };
+  }
+
+  /**
+   * Recover addresses according to PIP-41 specification
+   * @param password Password for wallet encryption
+   * @returns Promise<AddressInfo[]> - Array of recovered addresses
+   */
+  async recoverAddress(password: string): Promise<AddressInfo[]> {
+    const recoveredAddresses: AddressInfo[] = [];
+    let inactiveCount = 1;
+    let currentIndex = 0;
+    const ADDRESS_GAP_LIMIT = 32;
+
+    while (inactiveCount <= ADDRESS_GAP_LIMIT) {
+      const currentAddress = await this.deriveAddressAtIndex(currentIndex, password);
+      const isActiveIndexed = await this.isAddressActive(currentAddress.address);
+
+      if (isActiveIndexed) {
+        inactiveCount = 1;
+        recoveredAddresses.push(currentAddress);
+      } else {
+        inactiveCount++;
+      }
+
+      currentIndex++;
+    }
+
+    // Add all recovered addresses to the wallet's ledger
+    for (const addressInfo of recoveredAddresses) {
+      this.ledger.addresses.set(addressInfo.address, addressInfo);
+    }
+
+    // Update the next index for future address creation
+    this.ledger.purposes.purposeBIP44.nextEd25519Index = currentIndex;
+
+    // Save the updated ledger
+    this.saveLedger();
+
+    return recoveredAddresses;
+  }
+
+  async isAddressActive(address: string): Promise<boolean> {
+    try {
+      const publicKey = await this.getIndexedPublicKey(address);
+
+      return publicKey !== '';
+    } catch {
+      return false;
+    }
   }
 
   /**
@@ -614,7 +706,7 @@ export class Wallet {
   /**
    * Get public key of validator
    */
-  async getValidatorPublicKey(address: string): Promise<string> {
+  async getIndexedPublicKey(address: string): Promise<string> {
     const client = this.getClient();
 
     try {
@@ -625,8 +717,8 @@ export class Wallet {
       const result = await client.pactusBlockchainGetPublicKey(txParams.address);
 
       return result.public_key ?? '';
-    } catch (error) {
-      throw new NetworkError(`Failed to get validator public key: ${error}`);
+    } catch {
+      return '';
     }
   }
 
@@ -792,7 +884,6 @@ export class Wallet {
     }
 
     const oldVault = Vault.deserialize(vaultVal);
-
     const encrypter = oldVault.encrypter;
 
     try {
@@ -800,7 +891,9 @@ export class Wallet {
       const newEncrypter = Encrypter.defaultEncrypter();
       const newKeyStore = await newEncrypter.encrypt(decryptedKeyStore, newPassword);
 
-      const vault = new Vault(encrypter, newKeyStore);
+      const vault = new Vault(newEncrypter, newKeyStore);
+
+      this.vault = vault;
 
       storage.set(vaultKey, vault.serialize());
 

@@ -1,4 +1,8 @@
+import { initWasm } from '@trustwallet/wallet-core';
+import { IStorage, MemoryStorage, NetworkValues } from '../dist';
 import { encodeBech32WithType, sprintf } from './utils';
+import { Wallet } from './wallet';
+import { MnemonicValues } from './types/vault';
 
 describe('sprintf function', () => {
   test.each([
@@ -33,5 +37,45 @@ describe('sprintf function', () => {
         expect(encoded).toBe(expected);
       }
     );
+  });
+});
+
+describe('changeWalletPassword', () => {
+  let wallet: Wallet;
+  let storage: IStorage;
+
+  const oldPassword = '*OldPassword123';
+  const newPassword = '*NewPassword123';
+
+  beforeEach(async () => {
+    storage = new MemoryStorage();
+    const core = await initWasm();
+    const password = '*OldPassword123';
+    wallet = await Wallet.create(
+      core,
+      storage,
+      password,
+      MnemonicValues.NORMAL,
+      NetworkValues.MAINNET
+    );
+  });
+
+  it('should change the password and re-encrypt the vault', async () => {
+    const originalSeed = await wallet.getMnemonic(oldPassword);
+
+    await wallet.changeWalletPassword(oldPassword, newPassword, storage);
+
+    // Verify we can get the same seed with the new password
+    const newSeed = await wallet.getMnemonic(newPassword);
+    expect(newSeed).toBe(originalSeed);
+
+    // Verify old password no longer works
+    await expect(wallet.getMnemonic(oldPassword)).rejects.toThrow();
+  });
+
+  it('should throw if old password is incorrect', async () => {
+    await expect(
+      wallet.changeWalletPassword('wrong-password', newPassword, storage)
+    ).rejects.toThrow('Invalid password');
   });
 });

@@ -153,7 +153,7 @@ export function useSendTransaction() {
 
   const getValidatorPublicKey = useCallback(
     async (address: string): Promise<string> => {
-      return wallet?.getValidatorPublicKey(address) ?? '';
+      return wallet?.getIndexedPublicKey(address) ?? '';
     },
     [wallet]
   );

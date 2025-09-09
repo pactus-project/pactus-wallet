@@ -3,7 +3,7 @@ import * as bip39 from 'bip39';
 import { MnemonicError } from './error';
 import { MemoryStorage } from './storage/memory-storage';
 import { StorageKey } from './storage-key';
-import { MnemonicValues, Vault } from './types/vault';
+import { MnemonicValues } from './types/vault';
 import { NetworkValues } from './types/wallet_info';
 import { getWordCount } from './utils';
 import { Wallet } from './wallet';
@@ -119,18 +119,26 @@ describe('Pactus Wallet Tests', () => {
       const addrInfo1 = await wallet.createAddress('Address 1', password);
       const privateKey1 = await wallet.getPrivateKey(addrInfo1.path, password);
       expect(addrInfo1.address).toBe('pc1rcx9x55nfme5juwdgxd2ksjdcmhvmvkrygmxpa3');
-      expect(addrInfo1.publicKey).toBe('public1rd5p573yq3j5wkvnasslqa7ne5vw87qcj5a0wlwxcj2t2xlaca9lstzm8u5');
+      expect(addrInfo1.publicKey).toBe(
+        'public1rd5p573yq3j5wkvnasslqa7ne5vw87qcj5a0wlwxcj2t2xlaca9lstzm8u5'
+      );
       expect(addrInfo1.label).toBe('Address 1');
       expect(addrInfo1.path).toBe("m/44'/21888'/3'/0'");
-      expect(privateKey1).toBe('SECRET1R3K02X58V70X9RFVWN5QUN0CKHKYXWD7R40G3HX47L8W9HXJQHMASKGEPH2');
+      expect(privateKey1).toBe(
+        'SECRET1R3K02X58V70X9RFVWN5QUN0CKHKYXWD7R40G3HX47L8W9HXJQHMASKGEPH2'
+      );
 
       const addrInfo2 = await wallet.createAddress('Address 2', password);
       const privateKey2 = await wallet.getPrivateKey(addrInfo2.path, password);
       expect(addrInfo2.address).toBe('pc1r7aynw9urvh66ktr3fte2gskjjnxzruflkgde94');
-      expect(addrInfo2.publicKey).toBe('public1r8jud8m6mfuyhwq6lupmuz0pq6uzhm9a6hkqfmc89jk7k6fr30e2sns7ghs');
+      expect(addrInfo2.publicKey).toBe(
+        'public1r8jud8m6mfuyhwq6lupmuz0pq6uzhm9a6hkqfmc89jk7k6fr30e2sns7ghs'
+      );
       expect(addrInfo2.label).toBe('Address 2');
       expect(addrInfo2.path).toBe("m/44'/21888'/3'/1'");
-      expect(privateKey2).toBe('SECRET1RHCHV0XJMKXDLVG47MHU3PREN0RP6QFEM4C5YSV6LKF4NTF9PCR3S860T80');
+      expect(privateKey2).toBe(
+        'SECRET1RHCHV0XJMKXDLVG47MHU3PREN0RP6QFEM4C5YSV6LKF4NTF9PCR3S860T80'
+      );
     });
 
     it('should restore a testnet wallet with deterministic addresses from standard 12-word mnemonic', async () => {
@@ -206,13 +214,17 @@ describe('Pactus Wallet Tests', () => {
 
       const addrInfo1 = await wallet.createAddress('Address 1', password);
       expect(addrInfo1.address).toBe('pc1r8rel7ctk0p4cs49wlhdccvkk27rpllwhrv3g6z');
-      expect(addrInfo1.publicKey).toBe('public1rs6yq6kf9hyll78qsfk338k06j96sv69j6dpn9rqats0urnqaj4fsfhxgza');
+      expect(addrInfo1.publicKey).toBe(
+        'public1rs6yq6kf9hyll78qsfk338k06j96sv69j6dpn9rqats0urnqaj4fsfhxgza'
+      );
       expect(addrInfo1.label).toBe('Address 1');
       expect(addrInfo1.path).toBe("m/44'/21888'/3'/0'");
 
       const addrInfo2 = await wallet.createAddress('Address 2', password);
       expect(addrInfo2.address).toBe('pc1rssed2c3h6l9fm6gu4v7nmj5s33a388e8ygtgc4');
-      expect(addrInfo2.publicKey).toBe('public1r503wn3q8hlf9hsq6f7v2vmke5mgphx3kvatasqtlzyfaadvuhy0s2tzq84');
+      expect(addrInfo2.publicKey).toBe(
+        'public1r503wn3q8hlf9hsq6f7v2vmke5mgphx3kvatasqtlzyfaadvuhy0s2tzq84'
+      );
       expect(addrInfo2.label).toBe('Address 2');
       expect(addrInfo2.path).toBe("m/44'/21888'/3'/1'");
     });
@@ -368,7 +380,9 @@ describe('Pactus Wallet Tests', () => {
       expect(addrInfo1).toBeTruthy();
       expect(addrInfo1?.path).toBe("m/44'/21777'/3'/0'");
       expect(addrInfo1?.label).toBe('Account 1');
-      expect(addrInfo1?.publicKey).toBe('tpublic1rpduuzct4tdvmtgmreknjx86zv6sdvk4udf47whc3nqxcq0phuf7sycm6l9');
+      expect(addrInfo1?.publicKey).toBe(
+        'tpublic1rpduuzct4tdvmtgmreknjx86zv6sdvk4udf47whc3nqxcq0phuf7sycm6l9'
+      );
 
       // New address should use testnet coin type
       const addrInfo2 = await wallet.createAddress('Address 2', testPassword);
@@ -483,16 +497,54 @@ describe('Pactus Wallet Tests', () => {
       expect(addrInfo1.address).toBe('tpc1r35xwz99uw2qrhz9wmdanaqcsge2nzsfegvv555');
       expect(addrInfo2.address).toBe('tpc1r34xj32k004j8v35fx6uqw4yaka54g6jdr58tvk');
 
-      expect(addrInfo1.publicKey).toBe('tpublic1rpduuzct4tdvmtgmreknjx86zv6sdvk4udf47whc3nqxcq0phuf7sycm6l9');
-      expect(addrInfo2.publicKey).toBe('tpublic1rhpzmczhn0382yekcvkdsjtf4l5nxu0gxqekgenxfhxlmxdyygztq7zydz8');
+      expect(addrInfo1.publicKey).toBe(
+        'tpublic1rpduuzct4tdvmtgmreknjx86zv6sdvk4udf47whc3nqxcq0phuf7sycm6l9'
+      );
+      expect(addrInfo2.publicKey).toBe(
+        'tpublic1rhpzmczhn0382yekcvkdsjtf4l5nxu0gxqekgenxfhxlmxdyygztq7zydz8'
+      );
 
-      expect(privateKey1).toBe('TSECRET1R4VMP0A2U3G74Z2XUHFRSDV3GJVVSPN22P9DFL3GK3SLP2D4H2SKQ5HJKKV');
-      expect(privateKey2).toBe('TSECRET1R25L9JLEVH7SMYMDA5VM8G5SFWLDUYMGXJ8TWS30S0N0ZWRYK7QCQ80XZYQ');
+      expect(privateKey1).toBe(
+        'TSECRET1R4VMP0A2U3G74Z2XUHFRSDV3GJVVSPN22P9DFL3GK3SLP2D4H2SKQ5HJKKV'
+      );
+      expect(privateKey2).toBe(
+        'TSECRET1R25L9JLEVH7SMYMDA5VM8G5SFWLDUYMGXJ8TWS30S0N0ZWRYK7QCQ80XZYQ'
+      );
 
       expect(addrInfo1.path).toBe("m/44'/21777'/3'/0'");
       expect(addrInfo2.path).toBe("m/44'/21777'/3'/1'");
 
       expect(wallet.isTestnet()).toBeTruthy();
+    });
+  });
+
+  describe('Testnet Address Recovery', () => {
+    it('should generate testnet addresses with the correct prefix and format', async () => {
+      const testMnemonic =
+        'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon cactus';
+      const passphrase = '';
+
+      const wallet = await Wallet.restore(
+        core,
+        storage,
+        testMnemonic,
+        passphrase,
+        NetworkValues.TESTNET
+      );
+
+      let callCount = 0;
+      wallet.isAddressActive = jest.fn().mockImplementation(async (_address: string) => {
+        callCount++;
+        // Return true for addresses 1, 2, and 5 (creating gaps)
+        return callCount === 1 || callCount === 2 || callCount === 5;
+      });
+
+      const recoveredAddresses = await wallet.recoverAddress(password);
+
+      expect(recoveredAddresses).toHaveLength(3);
+      expect(recoveredAddresses[0].path).toBe("m/44'/21777'/3'/0'");
+      expect(recoveredAddresses[1].path).toBe("m/44'/21777'/3'/1'");
+      expect(recoveredAddresses[2].path).toBe("m/44'/21777'/3'/4'");
     });
   });
 
@@ -538,43 +590,179 @@ describe('Pactus Wallet Tests', () => {
   });
 });
 
-describe('changeWalletPassword', () => {
-  let wallet: Wallet;
+describe('Address Recovery', () => {
+  let core: WalletCore;
   let storage: IStorage;
-
-  const oldPassword = '*OldPassword123';
-  const newPassword = '*NewPassword123';
+  const password = '';
 
   beforeEach(async () => {
+    core = await initWasm();
     storage = new MemoryStorage();
-    const core = await initWasm();
-    const password = '*OldPassword123';
-    wallet = await Wallet.create(
+  });
+
+  it('should recover addresses successfully', async () => {
+    const testMnemonic =
+      'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon cactus';
+    const wallet = await Wallet.restore(
+      core,
+      storage,
+      testMnemonic,
+      password,
+      NetworkValues.TESTNET
+    );
+
+    // Mock the isAddressActive method to return predictable results
+    const _originalIsAddressActive = wallet.isAddressActive;
+    let callCount = 0;
+    wallet.isAddressActive = jest.fn().mockImplementation(async (_address: string) => {
+      callCount++;
+      // Return true for first 2 addresses, then false to stop recovery
+      return callCount <= 2;
+    });
+
+    const recoveredAddresses = await wallet.recoverAddress(password);
+
+    expect(recoveredAddresses).toHaveLength(2);
+    expect(recoveredAddresses[0].label).toContain('Address 1');
+    expect(recoveredAddresses[0].path).toBe("m/44'/21777'/3'/0'");
+    expect(recoveredAddresses[1].path).toBe("m/44'/21777'/3'/1'");
+  });
+
+  it('should handle no active addresses', async () => {
+    const testMnemonic =
+      'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon cactus';
+    const wallet = await Wallet.restore(
+      core,
+      storage,
+      testMnemonic,
+      password,
+      NetworkValues.TESTNET
+    );
+
+    // Mock isAddressActive to always return false
+    wallet.isAddressActive = jest.fn().mockResolvedValue(false);
+
+    const recoveredAddresses = await wallet.recoverAddress(password);
+
+    expect(recoveredAddresses).toHaveLength(0);
+  });
+});
+
+describe('Address Activity Check', () => {
+  let core: WalletCore;
+  let storage: IStorage;
+  const password = '';
+
+  beforeEach(async () => {
+    core = await initWasm();
+    storage = new MemoryStorage();
+  });
+
+  it('should return false for inactive address', async () => {
+    const wallet = await Wallet.create(
       core,
       storage,
       password,
       MnemonicValues.NORMAL,
-      NetworkValues.MAINNET
+      NetworkValues.TESTNET
     );
+
+    // Mock getValidatorPublicKey to return empty string (inactive)
+    wallet.getIndexedPublicKey = jest.fn().mockResolvedValue('');
+
+    const isActive = await wallet.isAddressActive('tpc1test123');
+    expect(isActive).toBe(false);
   });
 
-  it('should change the password and re-encrypt the vault', async () => {
-    const resultKeystore = await wallet.changeWalletPassword(oldPassword, newPassword, storage);
-    const vaultKey = StorageKey.walletVaultKey(wallet.getID());
-    const newSerializedVault = storage.get(vaultKey) || '';
-    expect(newSerializedVault).toBeTruthy();
+  it('should return true for active address', async () => {
+    const wallet = await Wallet.create(
+      core,
+      storage,
+      password,
+      MnemonicValues.NORMAL,
+      NetworkValues.TESTNET
+    );
 
-    const newVault = Vault.deserialize(newSerializedVault);
-    const decryptedData = await newVault.encrypter.decrypt(newVault.keyStore, newPassword);
-    const needTruthy = JSON.parse(decryptedData).master_node;
-    expect(needTruthy).toBeTruthy();
+    // Mock getIndexedPublicKey to return a public key (active)
+    wallet.getIndexedPublicKey = jest.fn().mockResolvedValue('public1test123');
 
-    expect(resultKeystore).toBe(newVault.keyStore);
+    const isActive = await wallet.isAddressActive('tpc1test123');
+    expect(isActive).toBe(true);
   });
 
-  it('should throw if old password is incorrect', async () => {
-    await expect(
-      wallet.changeWalletPassword('wrong-password', newPassword, storage)
-    ).rejects.toThrow('Invalid password');
+  it('should return false when getValidatorPublicKey throws error', async () => {
+    const wallet = await Wallet.create(
+      core,
+      storage,
+      password,
+      MnemonicValues.NORMAL,
+      NetworkValues.TESTNET
+    );
+
+    // Mock getIndexedPublicKey to throw error
+    wallet.getIndexedPublicKey = jest.fn().mockRejectedValue(new Error('Network error'));
+
+    const isActive = await wallet.isAddressActive('tpc1test123');
+    expect(isActive).toBe(false);
+  });
+});
+
+describe('Validator Public Key', () => {
+  let core: WalletCore;
+  let storage: IStorage;
+  const password = '';
+
+  beforeEach(async () => {
+    core = await initWasm();
+    storage = new MemoryStorage();
+  });
+
+  it('should return empty string when public key not found', async () => {
+    // ARRANGE
+    const wallet = await Wallet.create(
+      core,
+      storage,
+      password,
+      MnemonicValues.NORMAL,
+      NetworkValues.TESTNET
+    );
+
+    // Mock the network call to simulate "not found"
+    const mockClient = {
+      pactusBlockchainGetPublicKey: jest.fn().mockRejectedValue(new Error('Not Found')),
+    };
+    jest.spyOn(wallet as any, 'getClient').mockReturnValue(mockClient);
+
+    // ACT
+    const publicKey = await wallet.getIndexedPublicKey('invalid-address');
+
+    // ASSERT
+    expect(publicKey).toBe(''); // Should return empty string on error
+  });
+
+  it('should return public key when found', async () => {
+    // ARRANGE
+    const wallet = await Wallet.create(
+      core,
+      storage,
+      password,
+      MnemonicValues.NORMAL,
+      NetworkValues.TESTNET
+    );
+
+    // Mock successful response
+    const mockClient = {
+      pactusBlockchainGetPublicKey: jest.fn().mockResolvedValue({
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        public_key: 'public1test123abc',
+      }),
+    };
+    jest.spyOn(wallet as any, 'getClient').mockReturnValue(mockClient);
+
+    // ACT
+    const publicKey = await wallet.getIndexedPublicKey('tpc1test123');
+
+    // ASSERT
+    expect(publicKey).toBe('public1test123abc');
   });
 });
