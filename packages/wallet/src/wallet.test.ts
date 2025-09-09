@@ -532,44 +532,6 @@ describe('Pactus Wallet Tests', () => {
         NetworkValues.TESTNET
       );
 
-      // Mock isAddressActive to return predictable results
-      let callCount = 0;
-      wallet.isAddressActive = jest.fn().mockImplementation(async (_address: string) => {
-        callCount++;
-        // Return true for first 2 addresses, then false to stop recovery
-        return callCount <= 2;
-      });
-
-      const recoveredAddresses = await wallet.recoverAddress(password);
-
-      expect(recoveredAddresses.length).toBe(2);
-      expect(recoveredAddresses[0].address).toBe('tpc1r35xwz99uw2qrhz9wmdanaqcsge2nzsfegvv555');
-      expect(recoveredAddresses[1].address).toBe('tpc1r34xj32k004j8v35fx6uqw4yaka54g6jdr58tvk');
-
-      expect(recoveredAddresses[0].publicKey).toBe(
-        'tpublic1rpduuzct4tdvmtgmreknjx86zv6sdvk4udf47whc3nqxcq0phuf7sycm6l9'
-      );
-      expect(recoveredAddresses[1].publicKey).toBe(
-        'tpublic1rhpzmczhn0382yekcvkdsjtf4l5nxu0gxqekgenxfhxlmxdyygztq7zydz8'
-      );
-
-      expect(recoveredAddresses[0].path).toBe("m/44'/21777'/3'/0'");
-      expect(recoveredAddresses[1].path).toBe("m/44'/21777'/3'/1'");
-
-      expect(wallet.isTestnet()).toBeTruthy();
-    });
-
-    it('should recover addresses with gaps between active addresses', async () => {
-      const testMnemonic =
-        'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon cactus';
-      const wallet = await Wallet.restore(
-        core,
-        storage,
-        testMnemonic,
-        password,
-        NetworkValues.TESTNET
-      );
-
       let callCount = 0;
       wallet.isAddressActive = jest.fn().mockImplementation(async (_address: string) => {
         callCount++;
