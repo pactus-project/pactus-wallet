@@ -558,6 +558,32 @@ describe('Pactus Wallet Tests', () => {
 
       expect(wallet.isTestnet()).toBeTruthy();
     });
+
+    it('should recover addresses with gaps between active addresses', async () => {
+      const testMnemonic =
+        'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon cactus';
+      const wallet = await Wallet.restore(
+        core,
+        storage,
+        testMnemonic,
+        password,
+        NetworkValues.TESTNET
+      );
+
+      let callCount = 0;
+      wallet.isAddressActive = jest.fn().mockImplementation(async (_address: string) => {
+        callCount++;
+        // Return true for addresses 1, 2, and 5 (creating gaps)
+        return callCount === 1 || callCount === 2 || callCount === 5;
+      });
+
+      const recoveredAddresses = await wallet.recoverAddress(password);
+
+      expect(recoveredAddresses).toHaveLength(3);
+      expect(recoveredAddresses[0].path).toBe("m/44'/21777'/3'/0'");
+      expect(recoveredAddresses[1].path).toBe("m/44'/21777'/3'/1'");
+      expect(recoveredAddresses[2].path).toBe("m/44'/21777'/3'/4'");
+    });
   });
 
   describe('Wallet Transaction Signing', () => {
@@ -635,7 +661,7 @@ describe('Address Recovery', () => {
     const recoveredAddresses = await wallet.recoverAddress(password);
 
     expect(recoveredAddresses).toHaveLength(2);
-    expect(recoveredAddresses[0].label).toContain('Recovered Address');
+    expect(recoveredAddresses[0].label).toContain('Address 1');
     expect(recoveredAddresses[0].path).toBe("m/44'/21777'/3'/0'");
     expect(recoveredAddresses[1].path).toBe("m/44'/21777'/3'/1'");
   });
@@ -680,7 +706,7 @@ describe('Address Activity Check', () => {
     );
 
     // Mock getValidatorPublicKey to return empty string (inactive)
-    wallet.getValidatorPublicKey = jest.fn().mockResolvedValue('');
+    wallet.getIndexedPublicKey = jest.fn().mockResolvedValue('');
 
     const isActive = await wallet.isAddressActive('tpc1test123');
     expect(isActive).toBe(false);
@@ -695,8 +721,8 @@ describe('Address Activity Check', () => {
       NetworkValues.TESTNET
     );
 
-    // Mock getValidatorPublicKey to return a public key (active)
-    wallet.getValidatorPublicKey = jest.fn().mockResolvedValue('public1test123');
+    // Mock getIndexedPublicKey to return a public key (active)
+    wallet.getIndexedPublicKey = jest.fn().mockResolvedValue('public1test123');
 
     const isActive = await wallet.isAddressActive('tpc1test123');
     expect(isActive).toBe(true);
@@ -711,8 +737,8 @@ describe('Address Activity Check', () => {
       NetworkValues.TESTNET
     );
 
-    // Mock getValidatorPublicKey to throw error
-    wallet.getValidatorPublicKey = jest.fn().mockRejectedValue(new Error('Network error'));
+    // Mock getIndexedPublicKey to throw error
+    wallet.getIndexedPublicKey = jest.fn().mockRejectedValue(new Error('Network error'));
 
     const isActive = await wallet.isAddressActive('tpc1test123');
     expect(isActive).toBe(false);
@@ -746,7 +772,7 @@ describe('Validator Public Key', () => {
     jest.spyOn(wallet as any, 'getClient').mockReturnValue(mockClient);
 
     // ACT
-    const publicKey = await wallet.getValidatorPublicKey('invalid-address');
+    const publicKey = await wallet.getIndexedPublicKey('invalid-address');
 
     // ASSERT
     expect(publicKey).toBe(''); // Should return empty string on error
@@ -772,7 +798,7 @@ describe('Validator Public Key', () => {
     jest.spyOn(wallet as any, 'getClient').mockReturnValue(mockClient);
 
     // ACT
-    const publicKey = await wallet.getValidatorPublicKey('tpc1test123');
+    const publicKey = await wallet.getIndexedPublicKey('tpc1test123');
 
     // ASSERT
     expect(publicKey).toBe('public1test123abc');

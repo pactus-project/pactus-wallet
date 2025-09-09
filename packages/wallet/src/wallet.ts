@@ -346,8 +346,8 @@ export class Wallet {
 
     return {
       address,
-      label: `Recovered Address ${index + 1}`,
-      emoji: '🤝',
+      label: `Address ${index + 1}`,
+      emoji: '🤝', // TODO: derive default emoji from address data
       path: derivationPath,
       publicKey: publicKeyStr,
     };
@@ -393,7 +393,7 @@ export class Wallet {
   }
   async isAddressActive(address: string): Promise<boolean> {
     try {
-      const publicKey = await this.getValidatorPublicKey(address);
+      const publicKey = await this.getIndexedPublicKey(address);
 
       return publicKey !== '';
     } catch {
@@ -705,7 +705,7 @@ export class Wallet {
   /**
    * Get public key of validator
    */
-  async getValidatorPublicKey(address: string): Promise<string> {
+  async getIndexedPublicKey(address: string): Promise<string> {
     const client = this.getClient();
 
     try {
