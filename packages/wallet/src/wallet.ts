@@ -391,6 +391,7 @@ export class Wallet {
 
     return recoveredAddresses;
   }
+
   async isAddressActive(address: string): Promise<boolean> {
     try {
       const publicKey = await this.getIndexedPublicKey(address);
@@ -883,7 +884,6 @@ export class Wallet {
     }
 
     const oldVault = Vault.deserialize(vaultVal);
-
     const encrypter = oldVault.encrypter;
 
     try {
@@ -891,7 +891,9 @@ export class Wallet {
       const newEncrypter = Encrypter.defaultEncrypter();
       const newKeyStore = await newEncrypter.encrypt(decryptedKeyStore, newPassword);
 
-      const vault = new Vault(encrypter, newKeyStore);
+      const vault = new Vault(newEncrypter, newKeyStore);
+
+      this.vault = vault;
 
       storage.set(vaultKey, vault.serialize());
 

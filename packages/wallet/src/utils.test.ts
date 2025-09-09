@@ -2,8 +2,7 @@ import { initWasm } from '@trustwallet/wallet-core';
 import { IStorage, MemoryStorage, NetworkValues } from '../dist';
 import { encodeBech32WithType, sprintf } from './utils';
 import { Wallet } from './wallet';
-import { MnemonicValues, Vault } from './types/vault';
-import { StorageKey } from './storage-key';
+import { MnemonicValues } from './types/vault';
 
 describe('sprintf function', () => {
   test.each([
@@ -62,17 +61,16 @@ describe('changeWalletPassword', () => {
   });
 
   it('should change the password and re-encrypt the vault', async () => {
-    const resultKeystore = await wallet.changeWalletPassword(oldPassword, newPassword, storage);
-    const vaultKey = StorageKey.walletVaultKey(wallet.getID());
-    const newSerializedVault = storage.get(vaultKey) || '';
-    expect(newSerializedVault).toBeTruthy();
+    const originalSeed = await wallet.getMnemonic(oldPassword);
 
-    const newVault = Vault.deserialize(newSerializedVault);
-    const decryptedData = await newVault.encrypter.decrypt(newVault.keyStore, newPassword);
-    const needTruthy = JSON.parse(decryptedData).master_node;
-    expect(needTruthy).toBeTruthy();
+    await wallet.changeWalletPassword(oldPassword, newPassword, storage);
 
-    expect(resultKeystore).toBe(newVault.keyStore);
+    // Verify we can get the same seed with the new password
+    const newSeed = await wallet.getMnemonic(newPassword);
+    expect(newSeed).toBe(originalSeed);
+
+    // Verify old password no longer works
+    await expect(wallet.getMnemonic(oldPassword)).rejects.toThrow();
   });
 
   it('should throw if old password is incorrect', async () => {
