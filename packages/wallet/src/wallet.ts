@@ -358,28 +358,33 @@ export class Wallet {
    * @param password Password for wallet encryption
    * @returns Promise<AddressInfo[]> - Array of recovered addresses
    */
-  async recoverAddress(password: string): Promise<AddressInfo[]> {
-    const recoveredAddresses: AddressInfo[] = [];
+  async recoverAddress(password: string): Promise<void> {
+    let recoveredCount = 1;
     let inactiveCount = 1;
     let currentIndex = 0;
-    const ADDRESS_GAP_LIMIT = 32;
+    const ADDRESS_GAP_LIMIT = 8;
 
-    while (inactiveCount <= ADDRESS_GAP_LIMIT) {
-      const currentAddress = await this.deriveAddressAtIndex(currentIndex, password);
+    let currentAddress = await this.deriveAddressAtIndex(currentIndex, password);
+    while (true) {
       const isActiveIndexed = await this.isAddressActive(currentAddress.address);
 
       if (isActiveIndexed) {
+        recoveredCount += inactiveCount;
         inactiveCount = 1;
-        recoveredAddresses.push(currentAddress);
       } else {
         inactiveCount++;
+        if (inactiveCount > ADDRESS_GAP_LIMIT) {
+          break
+        }
       }
 
-      currentIndex++;
+      currentIndex++
+      currentAddress = await this.deriveAddressAtIndex(currentIndex, password);
     }
 
     // Add all recovered addresses to the wallet's ledger
-    for (const addressInfo of recoveredAddresses) {
+    for (let index = 0; index < recoveredCount; index++) {
+      const addressInfo = await this.deriveAddressAtIndex(index, password);
       this.ledger.addresses.set(addressInfo.address, addressInfo);
     }
 
@@ -388,8 +393,6 @@ export class Wallet {
 
     // Save the updated ledger
     this.saveLedger();
-
-    return recoveredAddresses;
   }
 
   async isAddressActive(address: string): Promise<boolean> {

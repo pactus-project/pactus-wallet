@@ -518,36 +518,6 @@ describe('Pactus Wallet Tests', () => {
     });
   });
 
-  describe('Testnet Address Recovery', () => {
-    it('should generate testnet addresses with the correct prefix and format', async () => {
-      const testMnemonic =
-        'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon cactus';
-      const passphrase = '';
-
-      const wallet = await Wallet.restore(
-        core,
-        storage,
-        testMnemonic,
-        passphrase,
-        NetworkValues.TESTNET
-      );
-
-      let callCount = 0;
-      wallet.isAddressActive = jest.fn().mockImplementation(async (_address: string) => {
-        callCount++;
-        // Return true for addresses 1, 2, and 5 (creating gaps)
-        return callCount === 1 || callCount === 2 || callCount === 5;
-      });
-
-      const recoveredAddresses = await wallet.recoverAddress(password);
-
-      expect(recoveredAddresses).toHaveLength(3);
-      expect(recoveredAddresses[0].path).toBe("m/44'/21777'/3'/0'");
-      expect(recoveredAddresses[1].path).toBe("m/44'/21777'/3'/1'");
-      expect(recoveredAddresses[2].path).toBe("m/44'/21777'/3'/4'");
-    });
-  });
-
   describe('Wallet Transaction Signing', () => {
     it('should sign a transaction correctly', async () => {
       // Create wallet with a known mnemonic
@@ -593,58 +563,67 @@ describe('Pactus Wallet Tests', () => {
 describe('Address Recovery', () => {
   let core: WalletCore;
   let storage: IStorage;
+  let wallet: Wallet;
   const password = '';
 
-  beforeEach(async () => {
+  beforeEach(async ()  => {
     core = await initWasm();
     storage = new MemoryStorage();
-  });
-
-  it('should recover addresses successfully', async () => {
     const testMnemonic =
       'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon cactus';
-    const wallet = await Wallet.restore(
+    wallet = await Wallet.restore(
       core,
       storage,
       testMnemonic,
       password,
-      NetworkValues.TESTNET
+      NetworkValues.MAINNET
     );
+  });
 
-    // Mock the isAddressActive method to return predictable results
-    const _originalIsAddressActive = wallet.isAddressActive;
+  it('recover addresses from a fresh wallet without any active addresses', async () => {
+    wallet.isAddressActive = jest.fn().mockImplementation(async (_address: string) => {
+      return false
+    });
+
+    await wallet.recoverAddress(password);
+
+    expect(wallet.getAddresses()).toHaveLength(1);
+    expect(wallet.getAddresses()[0].path).toBe("m/44'/21888'/3'/0'");
+  });
+
+  it('recover addresses with one gap at the beginning', async () => {
+
     let callCount = 0;
     wallet.isAddressActive = jest.fn().mockImplementation(async (_address: string) => {
       callCount++;
-      // Return true for first 2 addresses, then false to stop recovery
-      return callCount <= 2;
+      return callCount === 1;
     });
 
-    const recoveredAddresses = await wallet.recoverAddress(password);
 
-    expect(recoveredAddresses).toHaveLength(2);
-    expect(recoveredAddresses[0].label).toContain('Address 1');
-    expect(recoveredAddresses[0].path).toBe("m/44'/21777'/3'/0'");
-    expect(recoveredAddresses[1].path).toBe("m/44'/21777'/3'/1'");
+    await wallet.recoverAddress(password);
+
+    expect(wallet.getAddresses()).toHaveLength(2);
+    expect(wallet.getAddresses()[0].path).toBe("m/44'/21888'/3'/0'");
+    expect(wallet.getAddresses()[1].path).toBe("m/44'/21888'/3'/1'");
   });
 
-  it('should handle no active addresses', async () => {
-    const testMnemonic =
-      'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon cactus';
-    const wallet = await Wallet.restore(
-      core,
-      storage,
-      testMnemonic,
-      password,
-      NetworkValues.TESTNET
-    );
+  it('recover addresses with gaps in the middle of the address list', async () => {
+    let callCount = 0;
+    wallet.isAddressActive = jest.fn().mockImplementation(async (_address: string) => {
+      callCount++;
+      // Return true for addresses 1, 2, and 5 (creating gaps)
+      return callCount === 1 || callCount === 2 || callCount === 5;
+    });
 
-    // Mock isAddressActive to always return false
-    wallet.isAddressActive = jest.fn().mockResolvedValue(false);
+    await wallet.recoverAddress(password);
 
-    const recoveredAddresses = await wallet.recoverAddress(password);
-
-    expect(recoveredAddresses).toHaveLength(0);
+    expect(wallet.getAddresses()).toHaveLength(6);
+    expect(wallet.getAddresses()[0].path).toBe("m/44'/21888'/3'/0'");
+    expect(wallet.getAddresses()[1].path).toBe("m/44'/21888'/3'/1'");
+    expect(wallet.getAddresses()[2].path).toBe("m/44'/21888'/3'/2'");
+    expect(wallet.getAddresses()[3].path).toBe("m/44'/21888'/3'/3'");
+    expect(wallet.getAddresses()[4].path).toBe("m/44'/21888'/3'/4'");
+    expect(wallet.getAddresses()[5].path).toBe("m/44'/21888'/3'/5'");
   });
 });
 
