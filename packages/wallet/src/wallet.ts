@@ -365,6 +365,7 @@ export class Wallet {
     const ADDRESS_GAP_LIMIT = 8;
 
     let currentAddress = await this.deriveAddressAtIndex(currentIndex, password);
+
     while (true) {
       const isActiveIndexed = await this.isAddressActive(currentAddress.address);
 
@@ -373,18 +374,20 @@ export class Wallet {
         inactiveCount = 1;
       } else {
         inactiveCount++;
+
         if (inactiveCount > ADDRESS_GAP_LIMIT) {
-          break
+          break;
         }
       }
 
-      currentIndex++
+      currentIndex++;
       currentAddress = await this.deriveAddressAtIndex(currentIndex, password);
     }
 
     // Add all recovered addresses to the wallet's ledger
     for (let index = 0; index < recoveredCount; index++) {
       const addressInfo = await this.deriveAddressAtIndex(index, password);
+
       this.ledger.addresses.set(addressInfo.address, addressInfo);
     }
 

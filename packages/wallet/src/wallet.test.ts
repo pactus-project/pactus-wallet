@@ -566,7 +566,7 @@ describe('Address Recovery', () => {
   let wallet: Wallet;
   const password = '';
 
-  beforeEach(async ()  => {
+  beforeEach(async () => {
     core = await initWasm();
     storage = new MemoryStorage();
     const testMnemonic =
@@ -581,9 +581,7 @@ describe('Address Recovery', () => {
   });
 
   it('recover addresses from a fresh wallet without any active addresses', async () => {
-    wallet.isAddressActive = jest.fn().mockImplementation(async (_address: string) => {
-      return false
-    });
+    wallet.isAddressActive = jest.fn().mockImplementation(async (_address: string) => false);
 
     await wallet.recoverAddress(password);
 
@@ -592,13 +590,11 @@ describe('Address Recovery', () => {
   });
 
   it('recover addresses with one gap at the beginning', async () => {
-
     let callCount = 0;
     wallet.isAddressActive = jest.fn().mockImplementation(async (_address: string) => {
       callCount++;
       return callCount === 1;
     });
-
 
     await wallet.recoverAddress(password);
 
