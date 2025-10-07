@@ -267,42 +267,10 @@ export class Wallet {
    * @returns AddressInfo object containing the generated address and metadata
    */
   async createAddress(label: string, password: string): Promise<AddressInfo> {
-    const derivationPath = sprintf(
-      "m/44'/%d'/3'/%d'",
-      this.ledger.coinType.toString(),
-      this.ledger.purposes.purposeBIP44.nextEd25519Index.toString()
-    );
+    const addressInfo =
+      await this.deriveAddressAtIndex(this.ledger.purposes.purposeBIP44.nextEd25519Index, label, password);
 
-    const hdWallet = await this.hdWallet(password);
-    const privateKey = hdWallet.getKey(this.core.CoinType.pactus, derivationPath);
-
-    // Get public key
-    const publicKey = privateKey.getPublicKeyEd25519();
-
-    // Select the appropriate derivation based on network type
-    const derivation = this.isTestnet()
-      ? this.core.Derivation.pactusTestnet
-      : this.core.Derivation.pactusMainnet;
-
-    // Create the address using AnyAddress for both networks
-    const address = this.core.AnyAddress.createWithPublicKeyDerivation(
-      publicKey,
-      this.core.CoinType.pactus,
-      derivation
-    ).description();
-
-    const prefix = this.publicKeyPrefix();
-    const publicKeyStr = encodeBech32WithType(prefix, publicKey.data(), SignatureType.Ed25519);
-
-    const addressInfo: AddressInfo = {
-      address,
-      label,
-      emoji: '🤝',
-      path: derivationPath,
-      publicKey: publicKeyStr,
-    };
-
-    this.ledger.addresses.set(address, addressInfo);
+    this.ledger.addresses.set(addressInfo.address, addressInfo);
     this.ledger.purposes.purposeBIP44.nextEd25519Index++;
 
     this.saveLedger();
@@ -316,7 +284,7 @@ export class Wallet {
    * @param password Password for wallet encryption
    * @returns Promise<AddressInfo> - The derived address information
    */
-  private async deriveAddressAtIndex(index: number, password: string): Promise<AddressInfo> {
+  private async deriveAddressAtIndex(index: number, label: string, password: string): Promise<AddressInfo> {
     const derivationPath = sprintf(
       "m/44'/%d'/3'/%d'",
       this.ledger.coinType.toString(),
@@ -346,7 +314,7 @@ export class Wallet {
 
     return {
       address,
-      label: `Address ${index + 1}`,
+      label,
       emoji: '🤝', // TODO: derive default emoji from address data
       path: derivationPath,
       publicKey: publicKeyStr,
@@ -358,38 +326,39 @@ export class Wallet {
    * @param password Password for wallet encryption
    * @returns Promise<AddressInfo[]> - Array of recovered addresses
    */
-  async recoverAddress(password: string): Promise<AddressInfo[]> {
-    const recoveredAddresses: AddressInfo[] = [];
-    let inactiveCount = 1;
+  async recoverAddress(password: string): Promise<void> {
+    let recoveredCount = 1;
+    let inactiveCount = 0;
     let currentIndex = 0;
-    const ADDRESS_GAP_LIMIT = 32;
+    const ADDRESS_GAP_LIMIT = 8;
 
-    while (inactiveCount <= ADDRESS_GAP_LIMIT) {
-      const currentAddress = await this.deriveAddressAtIndex(currentIndex, password);
+    let currentAddress = await this.deriveAddressAtIndex(currentIndex, '', password);
+
+    while (true) {
       const isActiveIndexed = await this.isAddressActive(currentAddress.address);
 
       if (isActiveIndexed) {
+        recoveredCount += inactiveCount;
         inactiveCount = 1;
-        recoveredAddresses.push(currentAddress);
       } else {
         inactiveCount++;
+
+        if (inactiveCount > ADDRESS_GAP_LIMIT) {
+          break;
+        }
       }
 
       currentIndex++;
+      currentAddress = await this.deriveAddressAtIndex(currentIndex, '', password);
     }
 
     // Add all recovered addresses to the wallet's ledger
-    for (const addressInfo of recoveredAddresses) {
-      this.ledger.addresses.set(addressInfo.address, addressInfo);
+    for (let index = 0; index < recoveredCount; index++) {
+      await this.createAddress(`Address ${index + 1}`, password);
     }
-
-    // Update the next index for future address creation
-    this.ledger.purposes.purposeBIP44.nextEd25519Index = currentIndex;
 
     // Save the updated ledger
     this.saveLedger();
-
-    return recoveredAddresses;
   }
 
   async isAddressActive(address: string): Promise<boolean> {
