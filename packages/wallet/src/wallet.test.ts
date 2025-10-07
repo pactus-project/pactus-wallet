@@ -593,7 +593,7 @@ describe('Address Recovery', () => {
     let callCount = 0;
     wallet.isAddressActive = jest.fn().mockImplementation(async (_address: string) => {
       callCount++;
-      return callCount === 1;
+      return callCount === 2;
     });
 
     await wallet.recoverAddress(password);
@@ -613,13 +613,12 @@ describe('Address Recovery', () => {
 
     await wallet.recoverAddress(password);
 
-    expect(wallet.getAddresses()).toHaveLength(6);
+    expect(wallet.getAddresses()).toHaveLength(5);
     expect(wallet.getAddresses()[0].path).toBe("m/44'/21888'/3'/0'");
     expect(wallet.getAddresses()[1].path).toBe("m/44'/21888'/3'/1'");
     expect(wallet.getAddresses()[2].path).toBe("m/44'/21888'/3'/2'");
     expect(wallet.getAddresses()[3].path).toBe("m/44'/21888'/3'/3'");
     expect(wallet.getAddresses()[4].path).toBe("m/44'/21888'/3'/4'");
-    expect(wallet.getAddresses()[5].path).toBe("m/44'/21888'/3'/5'");
   });
 });
 

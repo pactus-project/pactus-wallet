@@ -328,7 +328,7 @@ export class Wallet {
    */
   async recoverAddress(password: string): Promise<void> {
     let recoveredCount = 1;
-    let inactiveCount = 1;
+    let inactiveCount = 0;
     let currentIndex = 0;
     const ADDRESS_GAP_LIMIT = 8;
 
