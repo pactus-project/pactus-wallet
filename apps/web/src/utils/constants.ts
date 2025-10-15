@@ -7,6 +7,6 @@ export const PASSWORD_VALIDATORS = {
   HAS_NUMBER: /\d/,
 };
 export const PACVIEWER_URL = {
-  MAINNET: 'https://pacviewer.com/',
-  TESTNET: 'https://phoenix.pacviewer.com/',
+  MAINNET: 'https://pacviewer.com',
+  TESTNET: 'https://phoenix.pacviewer.com',
 };
