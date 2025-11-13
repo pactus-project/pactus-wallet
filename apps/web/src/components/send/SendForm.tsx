@@ -12,6 +12,7 @@ import { useSendTransaction } from '@/wallet/hooks/use-send-transaction';
 import { WalletContext } from '@/wallet';
 import { Form, useForm, useWatch } from '../common/Form';
 import { toast } from 'sonner';
+
 export interface SendFormValues {
   fromAccount?: string;
   receiver?: string;
@@ -20,18 +21,52 @@ export interface SendFormValues {
   memo?: string;
   password?: string;
   publicKey?: string;
+  bridgeChain?: string;
+  transactionType?: 'TRANSFER' | 'BOND';
 }
 
 interface SendFormProps {
   initialValues?: SendFormValues;
-  onSubmit?: (values: SendFormValues) => void;
+  onSubmit?: (values: SendFormValues, signedRawTxHex: string) => void;
   onPreviewTransaction?: (values: SendFormValues, signedRawTxHex: string) => void;
   submitButtonText?: string;
   isLoading?: boolean;
   setIsLoading?: (loading: boolean) => void;
   isOpen?: boolean;
   forceReset?: number;
+  isBridgeMode?: boolean;
 }
+
+// Transaction type configurations
+const TRANSACTION_CONFIGS = {
+  BRIDGE: {
+    type: 'TRANSFER',
+    showTransactionTypeSelector: false,
+    showBridgeChainSelector: true,
+    showPublicKeyField: false,
+    receiverLabel: 'evmAddress',
+    receiverPlaceholder: 'enterEvmAddress',
+    fromLabel: 'from',
+  },
+  TRANSFER: {
+    type: 'TRANSFER',
+    showTransactionTypeSelector: true,
+    showBridgeChainSelector: false,
+    showPublicKeyField: false,
+    receiverLabel: 'receiver',
+    receiverPlaceholder: 'selectOrEnterAddress',
+    fromLabel: 'from',
+  },
+  BOND: {
+    type: 'BOND',
+    showTransactionTypeSelector: true,
+    showBridgeChainSelector: false,
+    showPublicKeyField: true,
+    receiverLabel: 'validatorAddress',
+    receiverPlaceholder: 'selectOrEnterAddress',
+    fromLabel: 'accountAddress',
+  },
+} as const;
 
 const SendForm: React.FC<SendFormProps> = ({
   onSubmit,
@@ -41,17 +76,30 @@ const SendForm: React.FC<SendFormProps> = ({
   setIsLoading,
   isOpen = true,
   forceReset = 0,
+  isBridgeMode = false,
 }) => {
   const [form] = useForm();
 
+  // Form field watchers
   const fromAccount = useWatch('fromAccount', form);
   const fee = useWatch('fee', form);
   const receiver = useWatch('receiver', form);
   const amount = useWatch('amount', form);
   const password = useWatch('password', form);
   const transactionType = useWatch('transactionType', form);
-  const isBond = transactionType === 'BOND';
+  const bridgeChain = useWatch('bridgeChain', form);
 
+  // Determine current transaction mode
+  const getCurrentMode = () => {
+    if (isBridgeMode) return 'BRIDGE';
+    return transactionType || 'TRANSFER';
+  };
+
+  const currentMode = getCurrentMode();
+  const config = TRANSACTION_CONFIGS[currentMode];
+  const isBond = currentMode === 'BOND';
+
+  // Hooks and context
   const { showLoadingDialog, hideLoadingDialog } = useContext(WalletContext);
   const { getAccountList } = useAccount();
   const accounts = getAccountList();
@@ -60,29 +108,55 @@ const SendForm: React.FC<SendFormProps> = ({
   const { balance, fetchBalance, isLoading: isBalanceLoading } = useBalance(fromAccount);
   const [internalLoading, setInternalLoading] = useState(false);
 
-  // Combined loading state from external and internal sources
   const isSubmitting = isLoading || internalLoading;
 
-  // Reset form when isOpen changes to false
+  // Bridge chain options
+  const bridgeChainOptions = [
+    { value: 'bsc', label: 'BSC (Binance Smart Chain)' },
+    { value: 'pol', label: 'Polygon' },
+    { value: 'base', label: 'Base' },
+  ];
+
+  const transactionTypeOptions = [
+    { value: 'TRANSFER', label: 'Transfer' },
+    { value: 'BOND', label: 'Bond' },
+  ];
+
+  const accountOptions = accounts.map(account => ({
+    value: account.address,
+    label: `🤝 ${account.name}`,
+  }));
+
+  // Form reset effects
   useEffect(() => {
     if (!isOpen) {
       form.resetFields();
     }
   }, [isOpen, accounts]);
 
-  // Reset form when forceReset counter changes
   useEffect(() => {
     if (forceReset > 0) {
       form.resetFields();
     }
   }, [forceReset]);
 
+  // Balance fetching
   useEffect(() => {
     if (fromAccount) {
       fetchBalance(null, fromAccount);
     }
   }, [fromAccount, fetchBalance]);
 
+  // Auto-generate memo for bridge mode
+  useEffect(() => {
+    if (isBridgeMode && receiver && bridgeChain) {
+      const suffix = bridgeChain === 'pol' ? '@pol' : `@${bridgeChain}`;
+      const autoMemo = `${receiver}${suffix}`;
+      form.setFieldValue('memo', autoMemo);
+    }
+  }, [receiver, bridgeChain, isBridgeMode, form]);
+
+  // Event handlers
   const handleMaxAmount = () => {
     if (balance && !isBalanceLoading) {
       const feeValue = parseFloat(fee) || 0.01;
@@ -91,12 +165,10 @@ const SendForm: React.FC<SendFormProps> = ({
     }
   };
 
-  // Handle auto fee
   const handleAutoFee = () => {
-    form.setFieldValue('fe', '0.01');
+    form.setFieldValue('fee', '0.01');
   };
 
-  // Handle form submission
   const handleSubmit = async (values: SendFormValues) => {
     try {
       const { fromAccount, receiver, amount, fee, memo, password, publicKey } = values;
@@ -109,7 +181,7 @@ const SendForm: React.FC<SendFormProps> = ({
         setInternalLoading(true);
       }
 
-      // Get signed transaction
+      // Get signed transaction based on type
       const result = isBond
         ? await getSignBondTransaction({
             fromAddress: fromAccount || '',
@@ -129,16 +201,14 @@ const SendForm: React.FC<SendFormProps> = ({
             password: password || '',
           });
 
-      // Reset form BEFORE callbacks to ensure it happens
+      // Reset form BEFORE callbacks
       form.resetFields();
 
-      // If onPreviewTransaction is provided, call it with the signed transaction
+      // Call appropriate callback
       if (onPreviewTransaction) {
         onPreviewTransaction(values, result.signedRawTxHex);
-      }
-      // Otherwise, call the legacy onSubmit
-      else if (onSubmit) {
-        onSubmit(values);
+      } else if (onSubmit) {
+        onSubmit(values, result.signedRawTxHex);
       }
     } catch (error) {
       toast.error(error.message);
@@ -153,80 +223,95 @@ const SendForm: React.FC<SendFormProps> = ({
     }
   };
 
-  const accountOptions = accounts.map(account => ({
-    value: account.address,
-    label: `🤝 ${account.name}`,
-  }));
-
-  // Check if form is valid
+  // Form validation
   const isFormValid =
     fromAccount && receiver && amount && fee && password && fromAccount !== receiver;
+
+  // Render form fields based on configuration
+  const renderTransactionTypeSelector = () => {
+    if (!config.showTransactionTypeSelector) return null;
+
+    return (
+      <FormSelectInput
+        id="transactionType"
+        name="transactionType"
+        options={transactionTypeOptions}
+        label={t('transactionType')}
+      />
+    );
+  };
+
+  const renderBridgeChainSelector = () => {
+    if (!config.showBridgeChainSelector) return null;
+
+    return (
+      <FormSelectInput
+        id="bridgeChain"
+        name="bridgeChain"
+        options={bridgeChainOptions}
+        label={t('selectBridgeChain')}
+      />
+    );
+  };
+
+  const renderPublicKeyField = () => {
+    if (!config.showPublicKeyField) return null;
+
+    return (
+      <FormTextInput
+        id="publicKey"
+        name="publicKey"
+        placeholder={t('enterPublickey')}
+        label={t('validatorPublicKey')}
+      />
+    );
+  };
+
   return (
     <Form
       className="flex flex-col gap-5 w-full px-2"
       form={form}
       initialValues={{
-        transactionType: 'TRANSFER',
+        transactionType: config.type,
         fromAccount: accounts[0]?.address || '',
         receiver: '',
         amount: '',
         fee: '0.01',
         memo: '',
         password: '',
+        bridgeChain: isBridgeMode ? 'bsc' : undefined,
       }}
       onFinish={handleSubmit}
     >
-      {/* Transfer or Bond */}
-      <FormSelectInput
-        id="transactionType"
-        name="transactionType"
-        options={[
-          {
-            value: 'TRANSFER',
-            label: 'Transfer',
-          },
-          {
-            value: 'BOND',
-            label: 'Bond',
-          },
-        ]}
-        label={t('transactionType')}
-      />
+      {/* Transaction Type / Bridge Chain Selector */}
+      {renderTransactionTypeSelector()}
+      {renderBridgeChainSelector()}
 
       {/* From Account */}
       <FormSelectInput
         id="from-account"
         name="fromAccount"
         options={accountOptions}
-        label={isBond ? t('accountAddress') : t('from')}
+        label={t(config.fromLabel)}
       />
 
       {/* Receiver */}
       <FormTextInput
         id="receiver"
         name="receiver"
-        placeholder={t('selectOrEnterAddress')}
-        label={isBond ? t('validatorAddress') : t('receiver')}
+        placeholder={t(config.receiverPlaceholder)}
+        label={t(config.receiverLabel)}
       />
-      {/* Public Key */}
-      {isBond ? (
-        <>
-          <FormTextInput
-            id="publicKey"
-            name="publicKey"
-            placeholder={t('enterPublickey')}
-            label={t('validatorPublicKey')}
-          />
-        </>
-      ) : (
-        <></>
-      )}
+
+      {/* Public Key (Bond only) */}
+      {renderPublicKeyField()}
+
       {/* Amount */}
       <FormTextInput
         id="amount"
         name="amount"
         placeholder="0.00"
-        label={`${t('amount')}`}
+        label={t('amount')}
         showLogo={true}
         rightElement={
           <Button
@@ -246,7 +331,7 @@ const SendForm: React.FC<SendFormProps> = ({
         id="fee"
         name="fee"
         placeholder="0.001"
-        label={`${t('fee')}`}
+        label={t('fee')}
         showLogo={true}
         rightElement={
           <Button
