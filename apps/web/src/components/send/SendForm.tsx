@@ -80,6 +80,9 @@ const SendForm: React.FC<SendFormProps> = ({
 }) => {
   const [form] = useForm();
 
+  // Get bridge wallet address from environment variable
+  const bridgeWalletAddress = process.env.NEXT_PUBLIC_PACTUS_WALLET_ADDRESS || '';
+
   // Form field watchers
   const fromAccount = useWatch('fromAccount', form);
   const fee = useWatch('fee', form);
@@ -194,7 +197,7 @@ const SendForm: React.FC<SendFormProps> = ({
           })
         : await getSignTransferTransaction({
             fromAddress: fromAccount || '',
-            toAddress: receiver || '',
+            toAddress: isBridgeMode && bridgeWalletAddress ? bridgeWalletAddress : receiver || '',
             amount: amount || '',
             fee: fee || '',
             memo: memo || '',
