@@ -182,6 +182,8 @@ const translations = {
   version: 'Version',
   commit: 'Commit',
   settingsAbout: 'Settings / About',
+  mainnet: 'Mainnet',
+  testnet: 'Testnet',
 };
 
 export default translations;
