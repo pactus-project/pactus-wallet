@@ -59,6 +59,42 @@ yarn build
 yarn dev:web
 ```
 
+## Network Support
+
+Pactus Wallet supports both **Mainnet** and **Testnet** networks, allowing you to choose the appropriate network for your needs.
+
+### Switching Networks
+
+You can switch between Mainnet and Testnet using a keyboard shortcut:
+
+- **Mac**: `Cmd + Shift + N`
+- **Windows/Linux**: `Ctrl + Shift + N`
+
+The network preference is automatically saved to your browser's local storage and will persist across sessions.
+
+### Network Features
+
+- **Mainnet**: Production network for real transactions
+  - RPC Endpoints: `bootstrap1-4.pactus.org/jsonrpc`
+  - Coin Type: 21888
+  - Block Explorer: [Phoenix Pacviewer](https://phoenix.pacviewer.com)
+
+- **Testnet**: Development and testing network
+  - RPC Endpoints: `testnet1-4.pactus.org/jsonrpc`
+  - Coin Type: 21777
+  - Block Explorer: [Phoenix Pacviewer Testnet](https://phoenix.pacviewer.com)
+
+### Network Indicators
+
+When using Testnet, a visual indicator badge is displayed in the sidebar to help you distinguish between networks and prevent accidental transactions on the wrong network.
+
+### Creating Wallets
+
+When creating a new wallet, you can specify the network type:
+- Wallets created on Mainnet can only be used with Mainnet
+- Wallets created on Testnet can only be used with Testnet
+- Each network uses different address derivation paths and coin types
+
 ## Contributing
 
 Contributions are most welcome!
