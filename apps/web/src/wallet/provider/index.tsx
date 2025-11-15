@@ -150,6 +150,48 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     initializeWallet();
   }, [router]); // Only depend on router to prevent unnecessary re-runs
 
+  // Load network preference from localStorage on mount
+  useEffect(() => {
+    const storedNetwork = localStorage.getItem('networkType');
+    if (storedNetwork === NetworkValues.MAINNET || storedNetwork === NetworkValues.TESTNET) {
+      setNetworkTypeState(storedNetwork as NetworkType);
+    } else {
+      // Default to MAINNET if nothing stored or invalid value
+      setNetworkTypeState(NetworkValues.MAINNET);
+      localStorage.setItem('networkType', NetworkValues.MAINNET);
+    }
+  }, []);
+
+  // Keyboard shortcut handler for network switching (Cmd/Ctrl + Shift + N)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Check for Cmd/Ctrl + Shift + N
+      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key.toLowerCase() === 'n') {
+        e.preventDefault();
+        setNetworkTypeState(currentNetwork => {
+          const newNetwork =
+            currentNetwork === NetworkValues.MAINNET
+              ? NetworkValues.TESTNET
+              : NetworkValues.MAINNET;
+          localStorage.setItem('networkType', newNetwork);
+          return newNetwork;
+        });
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  // Update localStorage whenever networkType changes (via setNetworkType)
+  const setNetworkType = (value: NetworkType | ((prev: NetworkType) => NetworkType)) => {
+    setNetworkTypeState(prev => {
+      const newValue = typeof value === 'function' ? value(prev) : value;
+      localStorage.setItem('networkType', newValue);
+      return newValue;
+    });
+  };
+
   // Update wallet status and handle navigation
   const setWalletStatus = (value: WalletStatus) => {
     localStorage.setItem('walletStatus', value);
@@ -197,7 +239,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         mnemonic,
         setMnemonic: setMnemonicState,
         networkType,
-        setNetworkType: setNetworkTypeState,
+        setNetworkType, // Use the new wrapper function
         walletName,
         setWalletName: setWalletNameState,
         walletManager,
