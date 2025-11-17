@@ -81,7 +81,7 @@ const SendForm: React.FC<SendFormProps> = ({
   const [form] = useForm();
 
   // Get bridge wallet address from environment variable
-  const bridgeWalletAddress = process.env.NEXT_PUBLIC_PACTUS_WALLET_ADDRESS || '';
+  const bridgeWalletAddress = process.env.NEXT_PUBLIC_WRAPTO_WALLET_ADDRESS || '';
 
   // Form field watchers
   const fromAccount = useWatch('fromAccount', form);
