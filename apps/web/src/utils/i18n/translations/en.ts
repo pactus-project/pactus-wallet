@@ -182,6 +182,12 @@ const translations = {
   version: 'Version',
   commit: 'Commit',
   settingsAbout: 'Settings / About',
+  bridgeToChain: 'Bridge to Chain',
+  selectBridgeChain: 'Select destination chain',
+  bridgePreview: 'Bridge Preview',
+  bridgeTransaction: 'Bridge Transaction',
+  enterEvmAddress: 'Enter EVM address',
+  evmAddress: 'EVM address',
   mainnet: 'Mainnet',
   testnet: 'Testnet',
 };
