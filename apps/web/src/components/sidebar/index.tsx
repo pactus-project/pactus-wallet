@@ -22,6 +22,7 @@ import AddAccountModal from '../add-account-modal';
 import CommandSearch from '../command-search';
 import { PATHS } from '@/constants/paths';
 import { useI18n } from '../../utils/i18n';
+import { NetworkValues } from '@pactus-wallet/wallet';
 
 // External links
 const REPOSITORY_URL = 'https://github.com/pactus-project/pactus-wallet/issues/new/choose';
@@ -30,7 +31,7 @@ interface SidebarProps {
   isOpen?: boolean;
   onClose?: () => void;
   isMobile?: boolean;
-  hamburgerRef?: React.RefObject<null |HTMLButtonElement>;
+  hamburgerRef?: React.RefObject<null | HTMLButtonElement>;
 }
 
 // Function to prevent linter errors with empty arrow functions
@@ -38,8 +39,13 @@ const noop = () => {
   /* Intentionally empty */
 };
 
-const Sidebar = ({ isOpen = true, onClose = noop, isMobile = false, hamburgerRef }: SidebarProps) => {
-  const { wallet } = useWallet();
+const Sidebar = ({
+  isOpen = true,
+  onClose = noop,
+  isMobile = false,
+  hamburgerRef,
+}: SidebarProps) => {
+  const { wallet, networkType } = useWallet();
   const { accountList } = useAccount();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -50,6 +56,8 @@ const Sidebar = ({ isOpen = true, onClose = noop, isMobile = false, hamburgerRef
   const navigate = useRouter().push;
 
   const { t } = useI18n();
+
+  const isTestnet = networkType === NetworkValues.TESTNET;
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -163,20 +171,29 @@ const Sidebar = ({ isOpen = true, onClose = noop, isMobile = false, hamburgerRef
             <input
               type="text"
               value={editedName}
-              onChange={(e) => setEditedName(e.target.value)}
+              onChange={e => setEditedName(e.target.value)}
               onBlur={handleWalletNameBlur}
               onKeyDown={handleWalletNameKeyDown}
               className="w-full sidebar__wallet-name bg-transparent border border-[#4C4F6B] rounded px-2 py-1 focus:outline-none focus:border-[#D2D3E0]"
               autoFocus
             />
           ) : (
-            <h2 
+            <h2
               className="sidebar__wallet-name cursor-text border-b border-transparent hover:border-b hover:border-[#4C4F6B] transition-colors duration-200"
               onClick={handleWalletNameClick}
               title={t('clickToEdit')}
             >
               {wallet?.getName()}
             </h2>
+          )}
+          {/* Network indicator badge - only show when on Testnet */}
+          {isTestnet && (
+            <span
+              className="px-1.5 py-0.5 text-[10px] font-semibold rounded bg-orange-500/20 text-orange-400 border border-orange-500/30"
+              title={t('testnet')}
+            >
+              {t('testnet')}
+            </span>
           )}
           <Image src={lockIcon} alt="Wallet is locked" className="sidebar__lock-icon" />
         </div>

@@ -188,6 +188,8 @@ const translations = {
   bridgeTransaction: 'Bridge Transaction',
   enterEvmAddress: 'Enter EVM address',
   evmAddress: 'EVM address',
+  mainnet: 'Mainnet',
+  testnet: 'Testnet',
 };
 
 export default translations;
