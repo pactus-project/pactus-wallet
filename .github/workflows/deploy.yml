@@ -28,11 +28,13 @@ jobs:
             echo "IS_PRODUCTION=true" >> $GITHUB_ENV
             echo "CNAME=wallet.pactus.org" >> $GITHUB_ENV
             echo "NEXT_PUBLIC_GA_ID=${{ secrets.NEXT_PUBLIC_GA_PRODUCTION_ID }}" >> $GITHUB_ENV
+            echo "WRAPTO_DEPOSIT_ADDRESS=${{ vars.WRAPTO_DEPOSIT_ADDRESS }}" >> $GITHUB_ENV
           else
             echo "🧪 Using staging environment"
             echo "IS_PRODUCTION=false" >> $GITHUB_ENV
             echo "CNAME=wallet-beta.pactus.org" >> $GITHUB_ENV
             echo "NEXT_PUBLIC_GA_ID=${{ secrets.NEXT_PUBLIC_GA_BETA_ID }}" >> $GITHUB_ENV
+            echo "WRAPTO_DEPOSIT_ADDRESS=${{ vars.WRAPTO_DEPOSIT_ADDRESS }}" >> $GITHUB_ENV
           fi
 
       - name: Set up Node.js
