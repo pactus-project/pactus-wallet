@@ -115,9 +115,9 @@ const SendForm: React.FC<SendFormProps> = ({
 
   // Bridge chain options
   const bridgeChainOptions = [
-    { value: 'bsc', label: 'BSC (Binance Smart Chain)' },
-    { value: 'pol', label: 'Polygon' },
-    { value: 'base', label: 'Base' },
+    { value: 'BSC', label: 'BSC (Binance Smart Chain)' },
+    { value: 'Polygon', label: 'Polygon' },
+    { value: 'Base', label: 'Base' },
   ];
 
   const transactionTypeOptions = [
@@ -153,7 +153,9 @@ const SendForm: React.FC<SendFormProps> = ({
   // Auto-generate memo for bridge mode
   useEffect(() => {
     if (isBridgeMode && receiver && bridgeChain) {
-      const suffix = bridgeChain === 'pol' ? '@pol' : `@${bridgeChain}`;
+      console.log('receiver', receiver);
+      console.log('bridgeChain', bridgeChain);
+      const suffix = `@${bridgeChain}`;
       const autoMemo = `${receiver}${suffix}`;
       form.setFieldValue('memo', autoMemo);
     }
@@ -187,22 +189,22 @@ const SendForm: React.FC<SendFormProps> = ({
       // Get signed transaction based on type
       const result = isBond
         ? await getSignBondTransaction({
-            fromAddress: fromAccount || '',
-            toAddress: receiver || '',
-            amount: amount || '',
-            fee: fee || '',
-            memo: memo || '',
-            password: password || '',
-            publicKey: publicKey || '',
-          })
+          fromAddress: fromAccount || '',
+          toAddress: receiver || '',
+          amount: amount || '',
+          fee: fee || '',
+          memo: memo || '',
+          password: password || '',
+          publicKey: publicKey || '',
+        })
         : await getSignTransferTransaction({
-            fromAddress: fromAccount || '',
-            toAddress: isBridgeMode && bridgeWalletAddress ? bridgeWalletAddress : receiver || '',
-            amount: amount || '',
-            fee: fee || '',
-            memo: memo || '',
-            password: password || '',
-          });
+          fromAddress: fromAccount || '',
+          toAddress: isBridgeMode && bridgeWalletAddress ? bridgeWalletAddress : receiver || '',
+          amount: amount || '',
+          fee: fee || '',
+          memo: memo || '',
+          password: password || '',
+        });
 
       // Reset form BEFORE callbacks
       form.resetFields();
@@ -282,7 +284,7 @@ const SendForm: React.FC<SendFormProps> = ({
         fee: '0.01',
         memo: '',
         password: '',
-        bridgeChain: isBridgeMode ? 'bsc' : undefined,
+        bridgeChain: isBridgeMode ? 'BSC' : undefined,
       }}
       onFinish={handleSubmit}
     >
