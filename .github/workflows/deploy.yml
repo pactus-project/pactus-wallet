@@ -25,9 +25,10 @@ jobs:
         run: |
           echo "CNAME=${{ vars.CNAME }}" >> $GITHUB_ENV
           echo "IS_PRODUCTION=${{ vars.IS_PRODUCTION }}" >> $GITHUB_ENV
+          echo "NEXT_PUBLIC_IS_PRODUCTION=${{ vars.IS_PRODUCTION }}" >> $GITHUB_ENV
           echo "NODE_VERSION=${{ vars.NODE_VERSION }}" >> $GITHUB_ENV
-          echo "GA_ID=${{ vars.GA_ID }}" >> $GITHUB_ENV
-          echo "WRAPTO_DEPOSIT_ADDRESS=${{ vars.WRAPTO_DEPOSIT_ADDRESS }}" >> $GITHUB_ENV
+          echo "NEXT_PUBLIC_GA_ID=${{ vars.GA_ID }}" >> $GITHUB_ENV
+          echo "NEXT_PUBLIC_WRAPTO_WALLET_ADDRESS=${{ vars.WRAPTO_DEPOSIT_ADDRESS }}" >> $GITHUB_ENV
 
       - name: Set up Node
         uses: actions/setup-node@v4

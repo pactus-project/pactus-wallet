@@ -17,7 +17,7 @@ export interface WalletContextType {
   mnemonic: string;
   setMnemonic: React.Dispatch<React.SetStateAction<string>>;
   networkType: NetworkType;
-  setNetworkType: React.Dispatch<React.SetStateAction<NetworkType>>;
+  setNetworkType: () => void; // Network type is determined by IS_PRODUCTION env var only
   walletName: string;
   setWalletName: React.Dispatch<React.SetStateAction<string>>;
   walletManager: WalletManager | null;

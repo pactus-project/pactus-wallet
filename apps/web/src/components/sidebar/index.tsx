@@ -22,7 +22,6 @@ import AddAccountModal from '../add-account-modal';
 import CommandSearch from '../command-search';
 import { PATHS } from '@/constants/paths';
 import { useI18n } from '../../utils/i18n';
-import { NetworkValues } from '@pactus-wallet/wallet';
 
 // External links
 const REPOSITORY_URL = 'https://github.com/pactus-project/pactus-wallet/issues/new/choose';
@@ -45,7 +44,7 @@ const Sidebar = ({
   isMobile = false,
   hamburgerRef,
 }: SidebarProps) => {
-  const { wallet, networkType } = useWallet();
+  const { wallet } = useWallet();
   const { accountList } = useAccount();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -57,7 +56,7 @@ const Sidebar = ({
 
   const { t } = useI18n();
 
-  const isTestnet = networkType === NetworkValues.TESTNET;
+  const isTestnet = process.env.NEXT_PUBLIC_IS_PRODUCTION === 'false';
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
