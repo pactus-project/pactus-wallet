@@ -4,7 +4,7 @@ import type { ReactNode } from 'react';
 import { createContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { Wallet, WalletManager } from '@pactus-wallet/wallet';
-import { NetworkType, NetworkValues, BrowserStorage, initWalletSDK } from '@pactus-wallet/wallet';
+import { NetworkValues, BrowserStorage, initWalletSDK } from '@pactus-wallet/wallet';
 import type { WalletContextType } from '../types';
 import { WalletStatus } from '../types';
 import Loading from '@/components/loading';
