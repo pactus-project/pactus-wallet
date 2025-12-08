@@ -4,7 +4,7 @@ import type { ReactNode } from 'react';
 import { createContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { Wallet, WalletManager } from '@pactus-wallet/wallet';
-import { NetworkType, NetworkValues, BrowserStorage, initWalletSDK } from '@pactus-wallet/wallet';
+import { NetworkValues, BrowserStorage, initWalletSDK } from '@pactus-wallet/wallet';
 import type { WalletContextType } from '../types';
 import { WalletStatus } from '../types';
 import Loading from '@/components/loading';
@@ -69,7 +69,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   const [walletStatus, setWalletStatusState] = useState<WalletStatus>(WalletStatus.WALLET_LOCKED);
   const [password, setPasswordState] = useState<string>('');
   const [mnemonic, setMnemonicState] = useState<string>('');
-  const [networkType, setNetworkTypeState] = useState<NetworkType>(NetworkValues.MAINNET);
+  const networkType = process.env.NEXT_PUBLIC_IS_PRODUCTION === 'false' ? NetworkValues.TESTNET : NetworkValues.MAINNET;
   const [walletName, setWalletNameState] = useState<string>('');
   const [walletManager, setWalletManager] = useState<WalletManager | null>(null);
   const [isInitializingManager, setIsInitializingManager] = useState<boolean>(true);
@@ -150,46 +150,10 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     initializeWallet();
   }, [router]); // Only depend on router to prevent unnecessary re-runs
 
-  // Load network preference from localStorage on mount
-  useEffect(() => {
-    const storedNetwork = localStorage.getItem('networkType');
-    if (storedNetwork === NetworkValues.MAINNET || storedNetwork === NetworkValues.TESTNET) {
-      setNetworkTypeState(storedNetwork as NetworkType);
-    } else {
-      // Default to MAINNET if nothing stored or invalid value
-      setNetworkTypeState(NetworkValues.MAINNET);
-      localStorage.setItem('networkType', NetworkValues.MAINNET);
-    }
-  }, []);
-
-  // Keyboard shortcut handler for network switching (Cmd/Ctrl + Shift + N)
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // Check for Cmd/Ctrl + Shift + N
-      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key.toLowerCase() === 'n') {
-        e.preventDefault();
-        setNetworkTypeState(currentNetwork => {
-          const newNetwork =
-            currentNetwork === NetworkValues.MAINNET
-              ? NetworkValues.TESTNET
-              : NetworkValues.MAINNET;
-          localStorage.setItem('networkType', newNetwork);
-          return newNetwork;
-        });
-      }
-    };
-
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, []);
-
-  // Update localStorage whenever networkType changes (via setNetworkType)
-  const setNetworkType = (value: NetworkType | ((prev: NetworkType) => NetworkType)) => {
-    setNetworkTypeState(prev => {
-      const newValue = typeof value === 'function' ? value(prev) : value;
-      localStorage.setItem('networkType', newValue);
-      return newValue;
-    });
+  // Placeholder setNetworkType function for context compatibility
+  // Network type is now determined by environment variable only
+  const setNetworkType = () => {
+    console.warn('Network type is determined by IS_PRODUCTION environment variable and cannot be changed at runtime');
   };
 
   // Update wallet status and handle navigation
@@ -260,8 +224,8 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       {!isLoading && (
         <>
           {walletStatus === WalletStatus.WALLET_LOCKED &&
-          wallet &&
-          window.location.pathname !== '/get-started' ? (
+            wallet &&
+            window.location.pathname !== '/get-started' ? (
             <WalletLock />
           ) : (
             children
