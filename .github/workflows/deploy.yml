@@ -11,49 +11,40 @@ permissions:
   id-token: write
 
 jobs:
-  deploying:
-    runs-on: ubuntu-latest
+  deploy:
+    environment: ${{ startsWith(github.ref, 'refs/tags/v') && 'prod' || 'beta' }}
 
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout main branch
         uses: actions/checkout@v4
         with:
           fetch-depth: 1
 
-      # Check if the workflow was triggered by a tag (production) or a branch (staging)
       - name: Set environment variables
         run: |
-          if [[ "${{ github.ref }}" == refs/tags/* ]]; then
-            echo "🔥 Using production environment"
-            echo "IS_PRODUCTION=true" >> $GITHUB_ENV
-            echo "CNAME=wallet.pactus.org" >> $GITHUB_ENV
-            echo "NEXT_PUBLIC_GA_ID=${{ secrets.NEXT_PUBLIC_GA_PRODUCTION_ID }}" >> $GITHUB_ENV
-            echo "WRAPTO_DEPOSIT_ADDRESS=${{ vars.WRAPTO_DEPOSIT_ADDRESS }}" >> $GITHUB_ENV
-          else
-            echo "🧪 Using staging environment"
-            echo "IS_PRODUCTION=false" >> $GITHUB_ENV
-            echo "CNAME=wallet-beta.pactus.org" >> $GITHUB_ENV
-            echo "NEXT_PUBLIC_GA_ID=${{ secrets.NEXT_PUBLIC_GA_BETA_ID }}" >> $GITHUB_ENV
-            echo "WRAPTO_DEPOSIT_ADDRESS=${{ vars.WRAPTO_DEPOSIT_ADDRESS }}" >> $GITHUB_ENV
-          fi
+          echo "CNAME=${{ vars.CNAME }}" >> $GITHUB_ENV
+          echo "IS_PRODUCTION=${{ vars.IS_PRODUCTION }}" >> $GITHUB_ENV
+          echo "NODE_VERSION=${{ vars.NODE_VERSION }}" >> $GITHUB_ENV
+          echo "GA_ID=${{ vars.GA_ID }}" >> $GITHUB_ENV
+          echo "WRAPTO_DEPOSIT_ADDRESS=${{ vars.WRAPTO_DEPOSIT_ADDRESS }}" >> $GITHUB_ENV
 
-      - name: Set up Node.js
+      - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: "22"
+          node-version: ${{ env.NODE_VERSION }}
+          cache: yarn
 
-      # Install all dependencies using Yarn Workspaces
       - name: Install dependencies
         run: yarn install
 
-      # Build the wallet package first
       - name: Build wallet package
         run: yarn workspace @pactus-wallet/wallet build
 
       - name: Build web app
         run: yarn build:web
 
-      - name: Deploy to Production (Tagged Release)
+      - name: Deploy to Production (Stable Release)
         if: env.IS_PRODUCTION == 'true'
         uses: peaceiris/actions-gh-pages@v4
         with:
@@ -62,7 +53,7 @@ jobs:
           publish_dir: ./apps/web/out
           cname: ${{ env.CNAME }}
 
-      - name: Deploy to Staging (Main Branch)
+      - name: Deploy to Staging (Pre-Release)
         if: env.IS_PRODUCTION == 'false'
         uses: peaceiris/actions-gh-pages@v4
         with:
