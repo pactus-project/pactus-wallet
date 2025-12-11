@@ -304,11 +304,22 @@ const SendForm: React.FC<SendFormProps> = ({
       <FormTextInput
         id="receiver"
         name="receiver"
+        validateTrigger="onBlur"
         placeholder={t(config.receiverPlaceholder)}
         label={
           config.receiverLabel === 'evmAddress' && bridgeChain
             ? `${t('addressOn')} ${bridgeChainOptions.find((c) => c.value === bridgeChain)?.label || bridgeChain}`
             : t(config.receiverLabel)
+        }
+        rules={
+          config.receiverLabel === 'evmAddress'
+            ? [
+              {
+                pattern: /^0x[a-fA-F0-9]{40}$/i,
+                message: t('invalidEvmAddress'),
+              },
+            ]
+            : undefined
         }
       />
 

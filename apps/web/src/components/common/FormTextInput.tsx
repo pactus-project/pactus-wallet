@@ -23,6 +23,7 @@ interface FormTextInputProps {
   autoComplete?: string;
   showLogo?: boolean;
   rules?: Rule[];
+  validateTrigger?: string | string[];
 }
 
 const FormTextInput: React.FC<FormTextInputProps> = ({
@@ -43,10 +44,11 @@ const FormTextInput: React.FC<FormTextInputProps> = ({
   autoComplete,
   showLogo = false,
   rules,
+  validateTrigger,
 }) => {
 
   return (
-    <FormItem name={name} className="flex flex-col gap-1" rules={rules}>
+    <FormItem name={name} className="flex flex-col gap-1" rules={rules} validateTrigger={validateTrigger}>
       <TextInput
         value={value}
         onChange={onChange}
