@@ -113,12 +113,12 @@ const SendForm: React.FC<SendFormProps> = ({
   const [internalLoading, setInternalLoading] = useState(false);
 
   const isSubmitting = isLoading || internalLoading;
-  const defaultChain = 'Base';
+  const defaultChain = 'BASE';
   // Bridge chain options
   const bridgeChainOptions = [
-    { value: 'Base', label: 'Base' },
+    { value: 'BASE', label: 'Base' },
     { value: 'BSC', label: 'BNB Chain' },
-    { value: 'Polygon', label: 'Polygon' },
+    { value: 'POLYGON', label: 'Polygon' },
   ];
 
   const transactionTypeOptions = [
@@ -289,7 +289,6 @@ const SendForm: React.FC<SendFormProps> = ({
     >
       {/* Transaction Type / Bridge Chain Selector */}
       {renderTransactionTypeSelector()}
-      {renderBridgeChainSelector()}
 
       {/* From Account */}
       <FormSelectInput
@@ -297,7 +296,9 @@ const SendForm: React.FC<SendFormProps> = ({
         name="fromAccount"
         options={accountOptions}
         label={t(config.fromLabel)}
+        disabled={initialValues?.fromAccount !== ''}
       />
+      {renderBridgeChainSelector()}
 
       {/* Receiver */}
       <FormTextInput
