@@ -51,7 +51,6 @@ export const fetchAccountTransactions = async (
   pageNo: number = 1,
   pageSize: number = 20
 ): Promise<PaginatedResponse<Transaction>> => {
-    console.log("address", pacviwerConfig.url);
   const response = await fetch(
     `${pacviwerConfig.url}/v1/accounts/${address}/txs?page_no=${pageNo}&page_size=${pageSize}`
   );

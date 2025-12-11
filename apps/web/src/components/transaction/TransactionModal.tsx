@@ -50,6 +50,7 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
     onClose();
     setIsSuccessModalOpen(false);
     fetchBalance(null, address);
+    setFormValues({});
   };
 
   const handleFormSubmit = (values: SendFormValues, signedRawTxHex: string) => {
@@ -103,8 +104,11 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
     setCountdown(0);
   };
 
+
   useEffect(() => {
-    setForceReset(forceReset + 1);
+    if (isOpen) {
+      setForceReset(prev => prev + 1);
+    }
   }, [isOpen]);
 
   return (
@@ -124,7 +128,10 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
         <SendForm
           isLoading={isLoading}
           setIsLoading={setIsLoading}
-          initialValues={formValues}
+          initialValues={{
+            ...formValues,
+            fromAccount: formValues.fromAccount || address,
+          }}
           onPreviewTransaction={handleFormSubmit}
           submitButtonText={isLoading ? t('loading') : t('next')}
           isOpen={isOpen}

@@ -117,7 +117,7 @@ const SendPreviewModal: React.FC<SendPreviewModalProps> = ({
     }
 
     if (signature) {
-      result.push({ field: 'Signature', value: signature });
+      result.push({ field: 'Signed Transaction', value: signature });
     }
 
     return result;

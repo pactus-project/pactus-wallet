@@ -77,6 +77,7 @@ const SendForm: React.FC<SendFormProps> = ({
   isOpen = true,
   forceReset = 0,
   isBridgeMode = false,
+  initialValues,
 }) => {
   const [form] = useForm();
 
@@ -112,12 +113,12 @@ const SendForm: React.FC<SendFormProps> = ({
   const [internalLoading, setInternalLoading] = useState(false);
 
   const isSubmitting = isLoading || internalLoading;
-  const defaultChain = 'BSC';
+  const defaultChain = 'Base';
   // Bridge chain options
   const bridgeChainOptions = [
-    { value: 'BSC', label: 'BNB (BNB Smart Chain)' },
-    { value: 'Polygon', label: 'Polygon' },
     { value: 'Base', label: 'Base' },
+    { value: 'BSC', label: 'BNB Chain' },
+    { value: 'Polygon', label: 'Polygon' },
   ];
 
   const transactionTypeOptions = [
@@ -276,13 +277,13 @@ const SendForm: React.FC<SendFormProps> = ({
       form={form}
       initialValues={{
         transactionType: config.type,
-        fromAccount: accounts[0]?.address || '',
+        fromAccount: initialValues?.fromAccount || accounts[0]?.address || '',
         receiver: '',
         amount: '',
         fee: '0.01',
         memo: '',
         password: '',
-        bridgeChain: isBridgeMode ? defaultChain : undefined,
+        bridgeChain: initialValues?.bridgeChain || (isBridgeMode ? defaultChain : undefined),
       }}
       onFinish={handleSubmit}
     >
@@ -353,9 +354,9 @@ const SendForm: React.FC<SendFormProps> = ({
       />
 
       {/* Memo */}
-      {!isBridgeMode && (
+      <div className={isBridgeMode ? 'hidden' : 'block'}>
         <FormMemoInput />
-      )}
+      </div>
 
 
       {/* Password */}
