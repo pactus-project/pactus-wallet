@@ -107,7 +107,7 @@ const SendPreviewModal: React.FC<SendPreviewModalProps> = ({
   const data = useMemo(() => {
     const result: TransactionDetail[] = [
       { field: 'From', value: fromAccount },
-      { field: 'Receiver', value: receiver },
+      { field: 'To', value: receiver },
       { field: 'Amount', value: amount },
       { field: 'Network fee', value: fee },
     ];
