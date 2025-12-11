@@ -190,6 +190,8 @@ const translations = {
   evmAddress: 'EVM address',
   mainnet: 'Mainnet',
   testnet: 'Testnet',
+  addressOnChain: 'Address on chain',
+  addressOn: 'Address on',
 };
 
 export default translations;

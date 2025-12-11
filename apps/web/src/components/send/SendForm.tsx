@@ -112,10 +112,10 @@ const SendForm: React.FC<SendFormProps> = ({
   const [internalLoading, setInternalLoading] = useState(false);
 
   const isSubmitting = isLoading || internalLoading;
-
+  const defaultChain = 'BSC';
   // Bridge chain options
   const bridgeChainOptions = [
-    { value: 'BSC', label: 'BSC (Binance Smart Chain)' },
+    { value: 'BSC', label: 'BNB (BNB Smart Chain)' },
     { value: 'Polygon', label: 'Polygon' },
     { value: 'Base', label: 'Base' },
   ];
@@ -153,8 +153,6 @@ const SendForm: React.FC<SendFormProps> = ({
   // Auto-generate memo for bridge mode
   useEffect(() => {
     if (isBridgeMode && receiver && bridgeChain) {
-      console.log('receiver', receiver);
-      console.log('bridgeChain', bridgeChain);
       const suffix = `@${bridgeChain}`;
       const autoMemo = `${receiver}${suffix}`;
       form.setFieldValue('memo', autoMemo);
@@ -284,7 +282,7 @@ const SendForm: React.FC<SendFormProps> = ({
         fee: '0.01',
         memo: '',
         password: '',
-        bridgeChain: isBridgeMode ? 'BSC' : undefined,
+        bridgeChain: isBridgeMode ? defaultChain : undefined,
       }}
       onFinish={handleSubmit}
     >
@@ -305,7 +303,11 @@ const SendForm: React.FC<SendFormProps> = ({
         id="receiver"
         name="receiver"
         placeholder={t(config.receiverPlaceholder)}
-        label={t(config.receiverLabel)}
+        label={
+          config.receiverLabel === 'evmAddress' && bridgeChain
+            ? `${t('addressOn')} ${bridgeChainOptions.find((c) => c.value === bridgeChain)?.label || bridgeChain}`
+            : t(config.receiverLabel)
+        }
       />
 
       {/* Public Key (Bond only) */}
@@ -351,7 +353,10 @@ const SendForm: React.FC<SendFormProps> = ({
       />
 
       {/* Memo */}
-      <FormMemoInput />
+      {!isBridgeMode && (
+        <FormMemoInput />
+      )}
+
 
       {/* Password */}
       <FormPasswordInput id="password" placeholder={t('enterYourPassword')} label={t('password')} />
