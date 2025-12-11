@@ -61,7 +61,7 @@ const translations = {
   pending: 'Pending',
   failed: 'Failed',
   from: 'From',
-  receiver: 'Receiver',
+  receiver: 'To',
   max: 'Max',
   auto: 'Auto',
   selectOrEnterAddress: 'Select or enter an address',

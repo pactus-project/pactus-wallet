@@ -182,7 +182,7 @@ const Wallet = () => {
 
                 <div className="flex flex-wrap gap-2 pt-4">
                   <SendPac address={addressData?.address ?? ''} />
-                  <BridgePac />
+                  <BridgePac address={addressData?.address ?? ''} />
                   <Button
                     variant="secondary"
                     size="small"
@@ -279,7 +279,7 @@ const Wallet = () => {
             </div>
             <div className='w-full flex justify-center mt-2 gap-4'>
               <SendPac address={addressData?.address ?? ''} />
-              <BridgePac />
+              <BridgePac address={addressData?.address ?? ''} />
             </div>
           </div>
           <div className="w-full pl-7 pr-4 mt-12">
