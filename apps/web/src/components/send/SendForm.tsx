@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useAccount } from '@/wallet/hooks/use-account';
 import FormMemoInput from '@/components/common/FormMemoInput';
 import FormTextInput from '@/components/common/FormTextInput';
+import TextInput from '@/components/common/TextInput';
 import FormSelectInput from '@/components/common/FormSelectInput';
 import FormPasswordInput from '@/components/common/FormPasswordInput';
 import { useI18n } from '@/utils/i18n';
@@ -27,8 +28,8 @@ export interface SendFormValues {
 
 interface SendFormProps {
   initialValues?: SendFormValues;
-  onSubmit?: (values: SendFormValues, signedRawTxHex: string) => void;
-  onPreviewTransaction?: (values: SendFormValues, signedRawTxHex: string) => void;
+  onSubmit?: (values: SendFormValues, signedRawTxHex: string, selectedAccount?: any) => void;
+  onPreviewTransaction?: (values: SendFormValues, signedRawTxHex: string, selectedAccount?: any) => void;
   submitButtonText?: string;
   isLoading?: boolean;
   setIsLoading?: (loading: boolean) => void;
@@ -205,14 +206,17 @@ const SendForm: React.FC<SendFormProps> = ({
           password: password || '',
         });
 
+      // Find selected account
+      const selectedAccount = accounts.find(acc => acc.address === fromAccount);
+
       // Reset form BEFORE callbacks
       form.resetFields();
 
       // Call appropriate callback
       if (onPreviewTransaction) {
-        onPreviewTransaction(values, result.signedRawTxHex);
+        onPreviewTransaction(values, result.signedRawTxHex, selectedAccount);
       } else if (onSubmit) {
-        onSubmit(values, result.signedRawTxHex);
+        onSubmit(values, result.signedRawTxHex, selectedAccount);
       }
     } catch (error) {
       toast.error(error.message);
@@ -296,8 +300,16 @@ const SendForm: React.FC<SendFormProps> = ({
         name="fromAccount"
         options={accountOptions}
         label={t(config.fromLabel)}
-        disabled={initialValues?.fromAccount !== ''}
       />
+      {isBridgeMode && (
+        <TextInput
+          id="depositAddress"
+          label={t('receiver')}
+          value={bridgeWalletAddress}
+          disabled={true}
+          className='text-disabled'
+        />
+      )}
       {renderBridgeChainSelector()}
 
       {/* Receiver */}

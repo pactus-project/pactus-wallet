@@ -1,4 +1,5 @@
 import React, { useMemo, useEffect, useState } from 'react';
+
 import Modal from '@/components/modal';
 import Button from '@/components/Button';
 import {
@@ -23,6 +24,8 @@ export interface SendPreviewModalProps {
   title?: string;
   isSending?: boolean;
   countdown?: number;
+  fromAccountName?: string;
+  fromAccountEmoji?: string;
 }
 
 interface TransactionDetail {
@@ -43,6 +46,8 @@ const SendPreviewModal: React.FC<SendPreviewModalProps> = ({
   title = 'Sending',
   isSending = false,
   countdown = 0,
+  fromAccountName,
+  fromAccountEmoji,
 }) => {
   // Circle animation properties
   const circleRadius = 12;
@@ -105,8 +110,10 @@ const SendPreviewModal: React.FC<SendPreviewModalProps> = ({
 
   // Create data array
   const data = useMemo(() => {
+    const fromValue = fromAccountName ? `${fromAccount} (${fromAccountEmoji || ''}${fromAccountName})` : fromAccount;
+
     const result: TransactionDetail[] = [
-      { field: 'From', value: fromAccount },
+      { field: 'From', value: fromValue },
       { field: 'To', value: receiver },
       { field: 'Amount', value: amount },
       { field: 'Network fee', value: fee },
@@ -121,7 +128,7 @@ const SendPreviewModal: React.FC<SendPreviewModalProps> = ({
     }
 
     return result;
-  }, [fromAccount, receiver, amount, fee, memo, signature]);
+  }, [fromAccount, receiver, amount, fee, memo, signature, fromAccountName, fromAccountEmoji]);
 
   // Create table instance
   const table = useReactTable({
