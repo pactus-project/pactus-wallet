@@ -110,7 +110,8 @@ const SendPreviewModal: React.FC<SendPreviewModalProps> = ({
 
   // Create data array
   const data = useMemo(() => {
-    const fromValue = fromAccountName ? `${fromAccount} (${fromAccountEmoji || ''}${fromAccountName})` : fromAccount;
+    const formAdd = fromAccount.slice(0, 6) + '...' + fromAccount.slice(-6);
+    const fromValue = fromAccountName ? `${formAdd} (${fromAccountEmoji || ''}${fromAccountName})` : fromAccount;
 
     const result: TransactionDetail[] = [
       { field: 'From', value: fromValue },

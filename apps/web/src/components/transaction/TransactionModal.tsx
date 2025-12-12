@@ -42,7 +42,7 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
   const countdownIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [createdDate, setCreatedDate] = useState('');
-  const [selectedAccount, setSelectedAccount] = useState<any>(null);
+  const [selectedAccount, setSelectedAccount] = useState<any>(null); // eslint-disable-line @typescript-eslint/no-explicit-any
 
   const isBridgeMode = type === 'bridge';
   const modalTitle = title || (isBridgeMode ? t('bridge') : t('send'));
@@ -54,7 +54,8 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
     setFormValues({});
   };
 
-  const handleFormSubmit = (values: SendFormValues, signedRawTxHex: string, account: any) => {
+  const handleFormSubmit = (values: SendFormValues,
+    signedRawTxHex: string, account: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
     setFormValues(values);
     setSignedTxHex(signedRawTxHex);
     setSelectedAccount(account);
@@ -105,7 +106,6 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
     setIsSending(false);
     setCountdown(0);
   };
-
 
   useEffect(() => {
     if (isOpen) {
