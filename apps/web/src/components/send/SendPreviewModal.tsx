@@ -1,5 +1,5 @@
 import React, { useMemo, useEffect, useState } from 'react';
-import { useAccount } from '@/wallet/hooks/use-account';
+
 import Modal from '@/components/modal';
 import Button from '@/components/Button';
 import {
@@ -24,6 +24,8 @@ export interface SendPreviewModalProps {
   title?: string;
   isSending?: boolean;
   countdown?: number;
+  fromAccountName?: string;
+  fromAccountEmoji?: string;
 }
 
 interface TransactionDetail {
@@ -44,6 +46,8 @@ const SendPreviewModal: React.FC<SendPreviewModalProps> = ({
   title = 'Sending',
   isSending = false,
   countdown = 0,
+  fromAccountName,
+  fromAccountEmoji,
 }) => {
   // Circle animation properties
   const circleRadius = 12;
@@ -104,15 +108,9 @@ const SendPreviewModal: React.FC<SendPreviewModalProps> = ({
     []
   );
 
-  // Get account list to find account name
-  const { getAccountList } = useAccount();
-  const accounts = getAccountList();
-
   // Create data array
   const data = useMemo(() => {
-    const fromAccountName = accounts.find(acc => acc.address === fromAccount)?.name;
-    const emoji = accounts.find(acc => acc.address === fromAccount)?.emoji;
-    const fromValue = fromAccountName ? `${fromAccount} (${emoji}${fromAccountName})` : fromAccount;
+    const fromValue = fromAccountName ? `${fromAccount} (${fromAccountEmoji || ''}${fromAccountName})` : fromAccount;
 
     const result: TransactionDetail[] = [
       { field: 'From', value: fromValue },
@@ -130,7 +128,7 @@ const SendPreviewModal: React.FC<SendPreviewModalProps> = ({
     }
 
     return result;
-  }, [fromAccount, receiver, amount, fee, memo, signature, accounts]);
+  }, [fromAccount, receiver, amount, fee, memo, signature, fromAccountName, fromAccountEmoji]);
 
   // Create table instance
   const table = useReactTable({

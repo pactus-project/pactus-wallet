@@ -42,6 +42,7 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
   const countdownIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [createdDate, setCreatedDate] = useState('');
+  const [selectedAccount, setSelectedAccount] = useState<any>(null);
 
   const isBridgeMode = type === 'bridge';
   const modalTitle = title || (isBridgeMode ? t('bridge') : t('send'));
@@ -53,9 +54,10 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
     setFormValues({});
   };
 
-  const handleFormSubmit = (values: SendFormValues, signedRawTxHex: string) => {
+  const handleFormSubmit = (values: SendFormValues, signedRawTxHex: string, account: any) => {
     setFormValues(values);
     setSignedTxHex(signedRawTxHex);
+    setSelectedAccount(account);
     setIsPreviewModalOpen(true);
   };
 
@@ -154,6 +156,8 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
         title={isBridgeMode ? t('bridgePreview') : t('previewTransaction')}
         isSending={isSending}
         countdown={countdown}
+        fromAccountName={selectedAccount?.name}
+        fromAccountEmoji={selectedAccount?.emoji}
       />
 
       {/* Success Transfer Modal */}
