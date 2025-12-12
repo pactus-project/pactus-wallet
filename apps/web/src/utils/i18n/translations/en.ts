@@ -192,6 +192,7 @@ const translations = {
   testnet: 'Testnet',
   addressOnChain: 'Address on chain',
   addressOn: 'Address on',
+  invalidEvmAddress: 'Invalid EVM address',
 };
 
 export default translations;

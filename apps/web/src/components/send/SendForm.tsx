@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useAccount } from '@/wallet/hooks/use-account';
 import FormMemoInput from '@/components/common/FormMemoInput';
 import FormTextInput from '@/components/common/FormTextInput';
+import TextInput from '@/components/common/TextInput';
 import FormSelectInput from '@/components/common/FormSelectInput';
 import FormPasswordInput from '@/components/common/FormPasswordInput';
 import { useI18n } from '@/utils/i18n';
@@ -113,12 +114,12 @@ const SendForm: React.FC<SendFormProps> = ({
   const [internalLoading, setInternalLoading] = useState(false);
 
   const isSubmitting = isLoading || internalLoading;
-  const defaultChain = 'Base';
+  const defaultChain = 'BASE';
   // Bridge chain options
   const bridgeChainOptions = [
-    { value: 'Base', label: 'Base' },
+    { value: 'BASE', label: 'Base' },
     { value: 'BSC', label: 'BNB Chain' },
-    { value: 'Polygon', label: 'Polygon' },
+    { value: 'POLYGON', label: 'Polygon' },
   ];
 
   const transactionTypeOptions = [
@@ -289,7 +290,6 @@ const SendForm: React.FC<SendFormProps> = ({
     >
       {/* Transaction Type / Bridge Chain Selector */}
       {renderTransactionTypeSelector()}
-      {renderBridgeChainSelector()}
 
       {/* From Account */}
       <FormSelectInput
@@ -298,16 +298,36 @@ const SendForm: React.FC<SendFormProps> = ({
         options={accountOptions}
         label={t(config.fromLabel)}
       />
+      {isBridgeMode && (
+        <TextInput
+          id="depositAddress"
+          label={t('receiver')}
+          value={bridgeWalletAddress}
+          disabled
+        />
+      )}
+      {renderBridgeChainSelector()}
 
       {/* Receiver */}
       <FormTextInput
         id="receiver"
         name="receiver"
+        validateTrigger="onBlur"
         placeholder={t(config.receiverPlaceholder)}
         label={
           config.receiverLabel === 'evmAddress' && bridgeChain
             ? `${t('addressOn')} ${bridgeChainOptions.find((c) => c.value === bridgeChain)?.label || bridgeChain}`
             : t(config.receiverLabel)
+        }
+        rules={
+          config.receiverLabel === 'evmAddress'
+            ? [
+              {
+                pattern: /^0x[a-fA-F0-9]{40}$/i,
+                message: t('invalidEvmAddress'),
+              },
+            ]
+            : undefined
         }
       />
 
