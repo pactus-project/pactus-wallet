@@ -28,8 +28,12 @@ export interface SendFormValues {
 
 interface SendFormProps {
   initialValues?: SendFormValues;
-  onSubmit?: (values: SendFormValues, signedRawTxHex: string, selectedAccount?: any) => void;
-  onPreviewTransaction?: (values: SendFormValues, signedRawTxHex: string, selectedAccount?: any) => void;
+  onSubmit?: (values: SendFormValues, signedRawTxHex: string, selectedAccount?: any) => void; // eslint-disable-line @typescript-eslint/no-explicit-any
+  onPreviewTransaction?: (
+    values: SendFormValues,
+    signedRawTxHex: string,
+    selectedAccount?: any // eslint-disable-line @typescript-eslint/no-explicit-any
+  ) => void;
   submitButtonText?: string;
   isLoading?: boolean;
   setIsLoading?: (loading: boolean) => void;
@@ -189,22 +193,22 @@ const SendForm: React.FC<SendFormProps> = ({
       // Get signed transaction based on type
       const result = isBond
         ? await getSignBondTransaction({
-          fromAddress: fromAccount || '',
-          toAddress: receiver || '',
-          amount: amount || '',
-          fee: fee || '',
-          memo: memo || '',
-          password: password || '',
-          publicKey: publicKey || '',
-        })
+            fromAddress: fromAccount || '',
+            toAddress: receiver || '',
+            amount: amount || '',
+            fee: fee || '',
+            memo: memo || '',
+            password: password || '',
+            publicKey: publicKey || '',
+          })
         : await getSignTransferTransaction({
-          fromAddress: fromAccount || '',
-          toAddress: isBridgeMode && bridgeWalletAddress ? bridgeWalletAddress : receiver || '',
-          amount: amount || '',
-          fee: fee || '',
-          memo: memo || '',
-          password: password || '',
-        });
+            fromAddress: fromAccount || '',
+            toAddress: isBridgeMode && bridgeWalletAddress ? bridgeWalletAddress : receiver || '',
+            amount: amount || '',
+            fee: fee || '',
+            memo: memo || '',
+            password: password || '',
+          });
 
       // Find selected account
       const selectedAccount = accounts.find(acc => acc.address === fromAccount);
@@ -307,7 +311,7 @@ const SendForm: React.FC<SendFormProps> = ({
           label={t('receiver')}
           value={bridgeWalletAddress}
           disabled={true}
-          className='text-disabled'
+          className="text-disabled"
         />
       )}
       {renderBridgeChainSelector()}
@@ -320,17 +324,17 @@ const SendForm: React.FC<SendFormProps> = ({
         placeholder={t(config.receiverPlaceholder)}
         label={
           config.receiverLabel === 'evmAddress' && bridgeChain
-            ? `${t('addressOn')} ${bridgeChainOptions.find((c) => c.value === bridgeChain)?.label || bridgeChain}`
+            ? `${t('addressOn')} ${bridgeChainOptions.find(c => c.value === bridgeChain)?.label || bridgeChain}`
             : t(config.receiverLabel)
         }
         rules={
           config.receiverLabel === 'evmAddress'
             ? [
-              {
-                pattern: /^0x[a-fA-F0-9]{40}$/i,
-                message: t('invalidEvmAddress'),
-              },
-            ]
+                {
+                  pattern: /^0x[a-fA-F0-9]{40}$/i,
+                  message: t('invalidEvmAddress'),
+                },
+              ]
             : undefined
         }
       />
@@ -381,7 +385,6 @@ const SendForm: React.FC<SendFormProps> = ({
       <div className={isBridgeMode ? 'hidden' : 'block'}>
         <FormMemoInput />
       </div>
-
 
       {/* Password */}
       <FormPasswordInput id="password" placeholder={t('enterYourPassword')} label={t('password')} />
