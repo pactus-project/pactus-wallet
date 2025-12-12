@@ -1,4 +1,5 @@
 import React, { useMemo, useEffect, useState } from 'react';
+import { useAccount } from '@/wallet/hooks/use-account';
 import Modal from '@/components/modal';
 import Button from '@/components/Button';
 import {
@@ -103,10 +104,18 @@ const SendPreviewModal: React.FC<SendPreviewModalProps> = ({
     []
   );
 
+  // Get account list to find account name
+  const { getAccountList } = useAccount();
+  const accounts = getAccountList();
+
   // Create data array
   const data = useMemo(() => {
+    const fromAccountName = accounts.find(acc => acc.address === fromAccount)?.name;
+    const emoji = accounts.find(acc => acc.address === fromAccount)?.emoji;
+    const fromValue = fromAccountName ? `${fromAccount} (${emoji}${fromAccountName})` : fromAccount;
+
     const result: TransactionDetail[] = [
-      { field: 'From', value: fromAccount },
+      { field: 'From', value: fromValue },
       { field: 'To', value: receiver },
       { field: 'Amount', value: amount },
       { field: 'Network fee', value: fee },
@@ -121,7 +130,7 @@ const SendPreviewModal: React.FC<SendPreviewModalProps> = ({
     }
 
     return result;
-  }, [fromAccount, receiver, amount, fee, memo, signature]);
+  }, [fromAccount, receiver, amount, fee, memo, signature, accounts]);
 
   // Create table instance
   const table = useReactTable({

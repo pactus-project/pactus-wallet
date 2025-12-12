@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useAccount } from '@/wallet/hooks/use-account';
 import FormMemoInput from '@/components/common/FormMemoInput';
 import FormTextInput from '@/components/common/FormTextInput';
+import TextInput from '@/components/common/TextInput';
 import FormSelectInput from '@/components/common/FormSelectInput';
 import FormPasswordInput from '@/components/common/FormPasswordInput';
 import { useI18n } from '@/utils/i18n';
@@ -296,8 +297,15 @@ const SendForm: React.FC<SendFormProps> = ({
         name="fromAccount"
         options={accountOptions}
         label={t(config.fromLabel)}
-        disabled={initialValues?.fromAccount !== ''}
       />
+      {isBridgeMode && (
+        <TextInput
+          id="depositAddress"
+          label={t('receiver')}
+          value={bridgeWalletAddress}
+          disabled
+        />
+      )}
       {renderBridgeChainSelector()}
 
       {/* Receiver */}
