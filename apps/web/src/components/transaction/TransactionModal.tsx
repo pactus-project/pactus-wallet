@@ -148,7 +148,7 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
       <SendPreviewModal
         isOpen={isPreviewModalOpen}
         fromAccount={formValues.fromAccount || ''}
-        receiver={isBridgeMode ? `${wrapToDeposit} (Wrap to Deposit)` : formValues.receiver || ''}
+        receiver={isBridgeMode ? `${wrapToDeposit} (Wrapto Deposit)` : formValues.receiver || ''}
         amount={formValues.amount || ''}
         fee={formValues.fee || ''}
         memo={formValues.memo || ''}
