@@ -46,6 +46,8 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
 
   const isBridgeMode = type === 'bridge';
   const modalTitle = title || (isBridgeMode ? t('bridge') : t('send'));
+  const bridgeWalletAddress = process.env.NEXT_PUBLIC_WRAPTO_WALLET_ADDRESS || '';
+  const wrapToDeposit = bridgeWalletAddress.slice(0, 6) + '...' + bridgeWalletAddress.slice(-6);
 
   const handleCloseModal = () => {
     onClose();
@@ -146,7 +148,7 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
       <SendPreviewModal
         isOpen={isPreviewModalOpen}
         fromAccount={formValues.fromAccount || ''}
-        receiver={formValues.receiver || ''}
+        receiver={isBridgeMode ? `${wrapToDeposit} (Wrap to Deposit)` : formValues.receiver || ''}
         amount={formValues.amount || ''}
         fee={formValues.fee || ''}
         memo={formValues.memo || ''}

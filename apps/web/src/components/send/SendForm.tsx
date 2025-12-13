@@ -133,7 +133,7 @@ const SendForm: React.FC<SendFormProps> = ({
 
   const accountOptions = accounts.map(account => ({
     value: account.address,
-    label: `🤝 ${account.name}`,
+    label: `${account.address} (🤝 ${account.name})`,
   }));
 
   // Form reset effects
@@ -305,11 +305,12 @@ const SendForm: React.FC<SendFormProps> = ({
         options={accountOptions}
         label={t(config.fromLabel)}
       />
+
       {isBridgeMode && (
         <TextInput
           id="depositAddress"
           label={t('receiver')}
-          value={bridgeWalletAddress}
+          value={`${bridgeWalletAddress} (Wrap to Deposit)`}
           disabled={true}
           className="text-disabled"
         />
