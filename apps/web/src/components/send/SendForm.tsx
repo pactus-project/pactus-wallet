@@ -193,22 +193,22 @@ const SendForm: React.FC<SendFormProps> = ({
       // Get signed transaction based on type
       const result = isBond
         ? await getSignBondTransaction({
-            fromAddress: fromAccount || '',
-            toAddress: receiver || '',
-            amount: amount || '',
-            fee: fee || '',
-            memo: memo || '',
-            password: password || '',
-            publicKey: publicKey || '',
-          })
+          fromAddress: fromAccount || '',
+          toAddress: receiver || '',
+          amount: amount || '',
+          fee: fee || '',
+          memo: memo || '',
+          password: password || '',
+          publicKey: publicKey || '',
+        })
         : await getSignTransferTransaction({
-            fromAddress: fromAccount || '',
-            toAddress: isBridgeMode && bridgeWalletAddress ? bridgeWalletAddress : receiver || '',
-            amount: amount || '',
-            fee: fee || '',
-            memo: memo || '',
-            password: password || '',
-          });
+          fromAddress: fromAccount || '',
+          toAddress: isBridgeMode && bridgeWalletAddress ? bridgeWalletAddress : receiver || '',
+          amount: amount || '',
+          fee: fee || '',
+          memo: memo || '',
+          password: password || '',
+        });
 
       // Find selected account
       const selectedAccount = accounts.find(acc => acc.address === fromAccount);
@@ -310,7 +310,7 @@ const SendForm: React.FC<SendFormProps> = ({
         <TextInput
           id="depositAddress"
           label={t('receiver')}
-          value={`${bridgeWalletAddress} (Wrap to Deposit)`}
+          value={`${bridgeWalletAddress} (Wrapto Deposit)`}
           disabled={true}
           className="text-disabled"
         />
@@ -331,11 +331,11 @@ const SendForm: React.FC<SendFormProps> = ({
         rules={
           config.receiverLabel === 'evmAddress'
             ? [
-                {
-                  pattern: /^0x[a-fA-F0-9]{40}$/i,
-                  message: t('invalidEvmAddress'),
-                },
-              ]
+              {
+                pattern: /^0x[a-fA-F0-9]{40}$/i,
+                message: t('invalidEvmAddress'),
+              },
+            ]
             : undefined
         }
       />
