@@ -1,5 +1,29 @@
 # CHANGELOG
 
+## [1.1.0](https://github.com/pactus-project/pactus-wallet/compare/v1.0.0...v1.1.0) (2025-12-13)
+
+### Feat
+
+- implement bridge wrapto ([#240](https://github.com/pactus-project/pactus-wallet/pull/240))
+- update the config and testnet as default in beta version ([#239](https://github.com/pactus-project/pactus-wallet/pull/239))
+- implement bridge via wrapto ([#232](https://github.com/pactus-project/pactus-wallet/pull/232))
+- support testnet ([#233](https://github.com/pactus-project/pactus-wallet/pull/233))
+- **core, wallet**: implement address recovery ([#223](https://github.com/pactus-project/pactus-wallet/pull/223))
+
+### Fix
+
+- add the label in the dropdownlist  ([#250](https://github.com/pactus-project/pactus-wallet/pull/250))
+- resolve UI issue ([#246](https://github.com/pactus-project/pactus-wallet/pull/246))
+- resolve UI issue ([#243](https://github.com/pactus-project/pactus-wallet/pull/243))
+- resolve UI issue ([#242](https://github.com/pactus-project/pactus-wallet/pull/242))
+- remove memo when bridge ([#241](https://github.com/pactus-project/pactus-wallet/pull/241))
+- correct the url of the explorer ([#227](https://github.com/pactus-project/pactus-wallet/pull/227))
+- **wallet**: fix wallet recovery algorithm ([#226](https://github.com/pactus-project/pactus-wallet/pull/226))
+
+### Refactor
+
+- update selected send account from SendForm ([#247](https://github.com/pactus-project/pactus-wallet/pull/247))
+
 ## [1.0.0] (2025-08-14)
 
 ### Feat
