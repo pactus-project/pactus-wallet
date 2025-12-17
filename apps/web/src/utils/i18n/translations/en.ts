@@ -193,6 +193,7 @@ const translations = {
   addressOnChain: 'Address on chain',
   addressOn: 'Address on',
   invalidEvmAddress: 'Invalid EVM address',
+  minimumBridgeAmount: 'Minimum amount for bridge is 10 PAC',
 };
 
 export default translations;
