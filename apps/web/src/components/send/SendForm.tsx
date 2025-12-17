@@ -350,6 +350,22 @@ const SendForm: React.FC<SendFormProps> = ({
         placeholder="0.00"
         label={t('amount')}
         showLogo={true}
+        validateTrigger="onBlur"
+        rules={
+          isBridgeMode
+            ? [
+              {
+                validator: (_: unknown, value: string) => {
+                  const numValue = parseFloat(value);
+                  if (isNaN(numValue) || numValue < 10) {
+                    return Promise.reject(new Error(t('minimumBridgeAmount')));
+                  }
+                  return Promise.resolve();
+                },
+              },
+            ]
+            : undefined
+        }
         rightElement={
           <Button
             variant="text"

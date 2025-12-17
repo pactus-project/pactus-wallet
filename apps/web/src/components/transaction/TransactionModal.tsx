@@ -66,37 +66,39 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
 
   const handleConfirmTransaction = async () => {
     setIsSending(true);
-    setCountdown(10);
+    setCountdown(12);
 
     if (countdownIntervalRef.current) {
       clearInterval(countdownIntervalRef.current);
       countdownIntervalRef.current = null;
     }
 
-    try {
-      const broadcastedTxHash = await broadcastTransaction(signedTxHex);
-      setTxHash(broadcastedTxHash);
-
-      countdownIntervalRef.current = setInterval(() => {
-        setCountdown(prev => {
-          if (prev <= 1) {
-            if (countdownIntervalRef.current) {
-              clearInterval(countdownIntervalRef.current);
-              countdownIntervalRef.current = null;
-            }
-            setCreatedDate(new Date().toLocaleString());
-            setIsPreviewModalOpen(false);
-            setIsSending(false);
-            setIsSuccessModalOpen(true);
-            return 0;
+    // Start countdown from 12 to 0, broadcast only when reaching 0
+    countdownIntervalRef.current = setInterval(() => {
+      setCountdown(prev => {
+        if (prev <= 1) {
+          if (countdownIntervalRef.current) {
+            clearInterval(countdownIntervalRef.current);
+            countdownIntervalRef.current = null;
           }
-          return prev - 1;
-        });
-      }, 1000);
-    } catch (error) {
-      toast.error(error.message);
-      setIsSending(false);
-    }
+          // Broadcast transaction when countdown reaches 0
+          broadcastTransaction(signedTxHex)
+            .then((broadcastedTxHash) => {
+              setTxHash(broadcastedTxHash);
+              setCreatedDate(new Date().toLocaleString());
+              setIsPreviewModalOpen(false);
+              setIsSending(false);
+              setIsSuccessModalOpen(true);
+            })
+            .catch((error) => {
+              toast.error(error.message);
+              setIsSending(false);
+            });
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
   };
 
   const handleClosePreviewModal = () => {
