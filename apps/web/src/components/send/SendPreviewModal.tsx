@@ -58,9 +58,11 @@ const SendPreviewModal: React.FC<SendPreviewModalProps> = ({
   useEffect(() => {
     if (countdown > 0) {
       // Calculate progress percentage (from 0 to 100)
-      // Assuming initial countdown is 10
-      const progress = ((10 - countdown) / 10) * 100;
+      // Countdown starts at 12
+      const progress = ((12 - countdown) / 12) * 100;
       setCircleProgress(progress);
+    } else {
+      setCircleProgress(0);
     }
   }, [countdown]);
 
@@ -210,7 +212,6 @@ const SendPreviewModal: React.FC<SendPreviewModalProps> = ({
                 size="small"
                 className="w-[86px] h-[38px] bg-gradient-to-r from-[#EF0F0F] to-[#890909] text-white border-0"
                 onClick={onClose}
-                disabled={true}
               >
                 Cancel
               </Button>
