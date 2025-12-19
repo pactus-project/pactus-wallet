@@ -53,7 +53,7 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
     onClose();
     setIsSuccessModalOpen(false);
     fetchBalance(null, address);
-    setFormValues({});
+    // Don't clear formValues to preserve receiver and amount for next time
   };
 
   const handleFormSubmit = (values: SendFormValues,
@@ -111,11 +111,12 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
     setCountdown(0);
   };
 
-  useEffect(() => {
-    if (isOpen) {
-      setForceReset(prev => prev + 1);
-    }
-  }, [isOpen]);
+  // Removed forceReset on modal open to preserve form values
+  // useEffect(() => {
+  //   if (isOpen) {
+  //     setForceReset(prev => prev + 1);
+  //   }
+  // }, [isOpen]);
 
   return (
     <>
