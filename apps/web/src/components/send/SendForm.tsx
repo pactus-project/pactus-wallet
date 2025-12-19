@@ -136,19 +136,6 @@ const SendForm: React.FC<SendFormProps> = ({
     label: `${account.address} (🤝 ${account.name})`,
   }));
 
-  // Form reset effects
-  useEffect(() => {
-    if (!isOpen) {
-      form.resetFields();
-    }
-  }, [isOpen, accounts]);
-
-  useEffect(() => {
-    if (forceReset > 0) {
-      form.resetFields();
-    }
-  }, [forceReset]);
-
   // Balance fetching
   useEffect(() => {
     if (fromAccount) {
@@ -212,9 +199,6 @@ const SendForm: React.FC<SendFormProps> = ({
 
       // Find selected account
       const selectedAccount = accounts.find(acc => acc.address === fromAccount);
-
-      // Reset form BEFORE callbacks
-      form.resetFields();
 
       // Call appropriate callback
       if (onPreviewTransaction) {
