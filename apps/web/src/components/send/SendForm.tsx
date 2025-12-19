@@ -270,10 +270,10 @@ const SendForm: React.FC<SendFormProps> = ({
       initialValues={{
         transactionType: config.type,
         fromAccount: initialValues?.fromAccount || accounts[0]?.address || '',
-        receiver: '',
-        amount: '',
-        fee: '0.01',
-        memo: '',
+        receiver: initialValues?.receiver || '',
+        amount: initialValues?.amount || '',
+        fee: initialValues?.fee || '0.01',
+        memo: initialValues?.memo || '',
         password: '',
         bridgeChain: initialValues?.bridgeChain || (isBridgeMode ? defaultChain : undefined),
       }}
