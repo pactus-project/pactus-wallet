@@ -1,5 +1,5 @@
 // src/components/transaction/TransactionModal.tsx
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { useI18n } from '@/utils/i18n';
 import Modal from '@/components/modal';
 import SendForm, { SendFormValues } from '../send/SendForm';
