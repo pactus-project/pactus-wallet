@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [1.2.0](https://github.com/pactus-project/pactus-wallet/compare/v1.1.0...v1.2.0) (2025-12-20)
+
+### Feat
+
+- **wallet**: transaction countdown cancel ([#258](https://github.com/pactus-project/pactus-wallet/pull/258))
+
 ## [1.1.0](https://github.com/pactus-project/pactus-wallet/compare/v1.0.0...v1.1.0) (2025-12-13)
 
 ### Feat
