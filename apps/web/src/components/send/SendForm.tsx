@@ -180,22 +180,22 @@ const SendForm: React.FC<SendFormProps> = ({
       // Get signed transaction based on type
       const result = isBond
         ? await getSignBondTransaction({
-          fromAddress: fromAccount || '',
-          toAddress: receiver || '',
-          amount: amount || '',
-          fee: fee || '',
-          memo: memo || '',
-          password: password || '',
-          publicKey: publicKey || '',
-        })
+            fromAddress: fromAccount || '',
+            toAddress: receiver || '',
+            amount: amount || '',
+            fee: fee || '',
+            memo: memo || '',
+            password: password || '',
+            publicKey: publicKey || '',
+          })
         : await getSignTransferTransaction({
-          fromAddress: fromAccount || '',
-          toAddress: isBridgeMode && bridgeWalletAddress ? bridgeWalletAddress : receiver || '',
-          amount: amount || '',
-          fee: fee || '',
-          memo: memo || '',
-          password: password || '',
-        });
+            fromAddress: fromAccount || '',
+            toAddress: isBridgeMode && bridgeWalletAddress ? bridgeWalletAddress : receiver || '',
+            amount: amount || '',
+            fee: fee || '',
+            memo: memo || '',
+            password: password || '',
+          });
 
       // Find selected account
       const selectedAccount = accounts.find(acc => acc.address === fromAccount);
@@ -315,11 +315,11 @@ const SendForm: React.FC<SendFormProps> = ({
         rules={
           config.receiverLabel === 'evmAddress'
             ? [
-              {
-                pattern: /^0x[a-fA-F0-9]{40}$/i,
-                message: t('invalidEvmAddress'),
-              },
-            ]
+                {
+                  pattern: /^0x[a-fA-F0-9]{40}$/i,
+                  message: t('invalidEvmAddress'),
+                },
+              ]
             : undefined
         }
       />
@@ -338,16 +338,16 @@ const SendForm: React.FC<SendFormProps> = ({
         rules={
           isBridgeMode
             ? [
-              {
-                validator: (_: unknown, value: string) => {
-                  const numValue = parseFloat(value);
-                  if (isNaN(numValue) || numValue < 10) {
-                    return Promise.reject(new Error(t('minimumBridgeAmount')));
-                  }
-                  return Promise.resolve();
+                {
+                  validator: (_: unknown, value: string) => {
+                    const numValue = parseFloat(value);
+                    if (isNaN(numValue) || numValue < 10) {
+                      return Promise.reject(new Error(t('minimumBridgeAmount')));
+                    }
+                    return Promise.resolve();
+                  },
                 },
-              },
-            ]
+              ]
             : undefined
         }
         rightElement={

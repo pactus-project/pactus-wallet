@@ -114,10 +114,11 @@ const SendPreviewModal: React.FC<SendPreviewModalProps> = ({
   const data = useMemo(() => {
     const formAdd = fromAccount.slice(0, 6) + '...' + fromAccount.slice(-6);
     const fromValue = fromAccountName ? `${formAdd} (${fromAccountEmoji || ''}${fromAccountName})` : fromAccount;
+    const receiverAdd = receiver.slice(0, 6) + '...' + receiver.slice(-6);
 
     const result: TransactionDetail[] = [
       { field: 'From', value: fromValue },
-      { field: 'To', value: receiver },
+      { field: 'To', value: receiverAdd },
       { field: 'Amount', value: amount },
       { field: 'Network fee', value: fee },
     ];
