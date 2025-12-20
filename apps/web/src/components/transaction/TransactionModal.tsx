@@ -49,11 +49,15 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
   const bridgeWalletAddress = process.env.NEXT_PUBLIC_WRAPTO_WALLET_ADDRESS || '';
   const wrapToDeposit = bridgeWalletAddress.slice(0, 6) + '...' + bridgeWalletAddress.slice(-6);
 
-  const handleCloseModal = () => {
+  const handleCloseModal = (clearForm = false) => {
     onClose();
     setIsSuccessModalOpen(false);
     fetchBalance(null, address);
-    // Don't clear formValues to preserve receiver and amount for next time
+    // Clear form values only after successful transaction
+    if (clearForm) {
+      setFormValues({});
+      setForceReset(prev => prev + 1);
+    }
   };
 
   const handleFormSubmit = (values: SendFormValues,
@@ -89,6 +93,9 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
               setIsPreviewModalOpen(false);
               setIsSending(false);
               setIsSuccessModalOpen(true);
+              // Clear form values after successful transaction
+              setFormValues({});
+              setForceReset(prev => prev + 1);
             })
             .catch((error) => {
               toast.error(error.message);
@@ -111,12 +118,8 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
     setCountdown(0);
   };
 
-  // Removed forceReset on modal open to preserve form values
-  // useEffect(() => {
-  //   if (isOpen) {
-  //     setForceReset(prev => prev + 1);
-  //   }
-  // }, [isOpen]);
+  // Note: forceReset is now triggered only after successful transaction
+  // Form values are preserved when user cancels the transaction
 
   return (
     <>
@@ -168,7 +171,7 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
       {/* Success Transfer Modal */}
       <SuccessTransferModal
         isOpen={isSuccessModalOpen}
-        onClose={handleCloseModal}
+        onClose={() => handleCloseModal(true)}
         txHash={txHash}
         amount={formValues.amount || ''}
         recipient={formValues.receiver || ''}
