@@ -79,8 +79,8 @@ const SendForm: React.FC<SendFormProps> = ({
   submitButtonText = 'Next',
   isLoading = false,
   setIsLoading,
-  isOpen = true,
-  forceReset = 0,
+  isOpen: _isOpen = true,
+  forceReset: _forceReset = 0,
   isBridgeMode = false,
   initialValues,
 }) => {
