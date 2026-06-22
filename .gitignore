@@ -63,3 +63,11 @@ package-lock.json
 *.tsbuildinfo
 
 *storybook.log
+
+
+# AI agents
+.ai
+.entire
+.claude
+.agent
+.cursor
