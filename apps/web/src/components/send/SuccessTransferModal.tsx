@@ -14,7 +14,7 @@ import Typography from '../common/Typography';
 import GradientText from '../common/GradientText';
 import { successIcon, copyIcon } from '../../assets/images/icons';
 import { useWallet } from '@/wallet';
-import { PACVIEWER_URL } from '../../utils/constants';
+import { PACTUSSCAN_URL } from '../../utils/constants';
 
 interface SuccessTransferModalProps {
   isOpen: boolean;
@@ -132,9 +132,9 @@ const SuccessTransferModal: React.FC<SuccessTransferModalProps> = ({
 
   const handleViewOnExplorer = () => {
     if (wallet?.isTestnet()) {
-      window.open(`${PACVIEWER_URL.TESTNET}/transaction/${txHash}`, '_blank');
+      window.open(`${PACTUSSCAN_URL.TESTNET}/transaction/${txHash}`, '_blank');
     } else {
-      window.open(`${PACVIEWER_URL.MAINNET}/transaction/${txHash}`, '_blank');
+      window.open(`${PACTUSSCAN_URL.MAINNET}/transaction/${txHash}`, '_blank');
     }
   };
 
@@ -170,7 +170,7 @@ const SuccessTransferModal: React.FC<SuccessTransferModalProps> = ({
             {t('close')}
           </Button>
           <Button variant="primary" size="medium" onClick={handleViewOnExplorer}>
-            View on Pacviewer
+            View on PactusScan
           </Button>
         </div>
       </div>

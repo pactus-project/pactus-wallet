@@ -21,7 +21,7 @@ import TransactionsHistory from '@/components/transactions-history';
 import { fetchAccountTransactions, Transaction } from '@/services/transaction';
 import { Mobile, Tablet } from '@/components/responsive';
 import { formatPactusAddress } from '../../utils/common';
-import { PACVIEWER_URL } from '../../utils/constants';
+import { PACTUSSCAN_URL } from '../../utils/constants';
 
 const Wallet = () => {
   const { wallet, setHeaderTitle, setEmoji } = useContext(WalletContext);
@@ -54,9 +54,9 @@ const Wallet = () => {
 
   const handleViewOnExplorer = () => {
     if (wallet?.isTestnet()) {
-      window.open(`${PACVIEWER_URL.TESTNET}/address/${address}`, '_blank');
+      window.open(`${PACTUSSCAN_URL.TESTNET}/address/${address}`, '_blank');
     } else {
-      window.open(`${PACVIEWER_URL.MAINNET}/address/${address}`, '_blank');
+      window.open(`${PACTUSSCAN_URL.MAINNET}/address/${address}`, '_blank');
     }
   };
 
@@ -66,10 +66,8 @@ const Wallet = () => {
     setIsLoadingTransactions(true);
     setHasTransactionError(false);
     try {
-      const response = await fetchAccountTransactions(addressData.address, pageNo);
-      const {
-        data: { data: newTransactions, total_items: totalItems },
-      } = response;
+      const { transactions: newTransactions, total: totalItems } =
+        await fetchAccountTransactions(addressData.address, pageNo);
 
       setTransactions(prev => [...prev, ...newTransactions]);
       setHasMore(transactions.length + newTransactions.length < totalItems);

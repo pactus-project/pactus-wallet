@@ -1,63 +1,75 @@
-import { pacviwerConfig } from '@/config/pacviewer';
+import { pactusscanConfig } from '@/config/pactusscan';
 
 export interface Transaction {
-  id: string;
   hash: string;
   blockHeight: number;
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  lock_time: number;
-  version: number;
-  type: number;
-  from: string;
-  to: string;
-  value: number;
-  fee: number;
+  blockTime: number; // unix timestamp in seconds
+  payloadType: number;
+  direction: number;
+  amount: number; // in nanoPAC
+  fee: number; // in nanoPAC
+  sender: string;
+  receiver: string;
   memo: string;
-  signature: string;
-  createdAt: string;
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  from_address_alias: AddressAlias | null;
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  to_address_alias: AddressAlias | null;
 }
 
-interface AddressAlias {
-  id: string;
-  title: string;
-  description: string;
-  website: string;
-  email: string;
-  type: number;
-  icon: string;
-  addresses: string[] | null;
+export interface AccountTransactions {
+  transactions: Transaction[];
+  total: number;
 }
 
-interface PaginatedResponse<T> {
-  status: number;
-  message: string;
-  data: {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    page_no: number;
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    page_size: number;
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    total_items: number;
-    data: T[];
-  };
+interface RawTransaction {
+  hash: string;
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  block_height: number;
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  block_time: number;
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  payload_type: number;
+  direction: number;
+  amount: number;
+  fee: number;
+  sender: string;
+  receiver: string;
+  memo: string;
+}
+
+interface AccountTxsResponse {
+  txs: RawTransaction[] | null;
+  total: number;
+  pages: number;
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  per_page: number;
 }
 
 export const fetchAccountTransactions = async (
   address: string,
-  pageNo: number = 1,
-  pageSize: number = 20
-): Promise<PaginatedResponse<Transaction>> => {
+  page: number = 1,
+  limit: number = 20
+): Promise<AccountTransactions> => {
   const response = await fetch(
-    `${pacviwerConfig.url}/v1/accounts/${address}/txs?page_no=${pageNo}&page_size=${pageSize}`
+    `${pactusscanConfig.url}/api/v1/account/${address}/txs?page=${page}&limit=${limit}`
   );
 
   if (!response.ok) {
     throw new Error('Failed to fetch transactions');
   }
 
-  return response.json();
+  const result: AccountTxsResponse = await response.json();
+
+  return {
+    transactions: (result.txs ?? []).map(tx => ({
+      hash: tx.hash,
+      blockHeight: tx.block_height,
+      blockTime: tx.block_time,
+      payloadType: tx.payload_type,
+      direction: tx.direction,
+      amount: tx.amount,
+      fee: tx.fee,
+      sender: tx.sender,
+      receiver: tx.receiver,
+      memo: tx.memo,
+    })),
+    total: result.total,
+  };
 };

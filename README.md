@@ -77,12 +77,12 @@ The network preference is automatically saved to your browser's local storage an
 - **Mainnet**: Production network for real transactions
   - RPC Endpoints: `bootstrap1-4.pactus.org/jsonrpc`
   - Coin Type: 21888
-  - Block Explorer: [Phoenix Pacviewer](https://phoenix.pacviewer.com)
+  - Block Explorer: [PactusScan](https://pactusscan.com)
 
 - **Testnet**: Development and testing network
   - RPC Endpoints: `testnet1-4.pactus.org/jsonrpc`
   - Coin Type: 21777
-  - Block Explorer: [Phoenix Pacviewer Testnet](https://phoenix.pacviewer.com)
+  - Block Explorer: [PactusScan Testnet](https://phoenix.pactusscan.com)
 
 ### Network Indicators
 

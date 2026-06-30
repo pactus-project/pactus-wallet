@@ -1,11 +1,11 @@
 import React, { useEffect, useRef } from 'react';
 import { Transaction } from '@/services/transaction';
-import Image from 'next/image';
 import './style.css';
 import Skeleton from '../common/skeleton/Skeleton';
 import { useI18n } from '@/utils/i18n';
 import { formatAmount, formatDate } from '@/utils/format';
 import { Mobile, Tablet } from '../responsive';
+import { PACTUSSCAN_URL } from '@/utils/constants';
 
 interface TransactionsHistoryProps {
   transactions: Transaction[];
@@ -89,48 +89,26 @@ const TransactionsHistory: React.FC<TransactionsHistoryProps> = ({
                         ref={rowIndex === transactions.length - 1 ? lastElementRef : null}
                       >
                         <td className="transactions-history__cell">
-                          {formatDate(transaction.createdAt)}
+                          {formatDate(transaction.blockTime)}
                         </td>
                         <td className="transactions-history__cell transactions-history__cell--hash">
                           <a
-                            href={`https://pacviewer.com/transaction/${transaction.hash}`}
+                            href={`${PACTUSSCAN_URL.MAINNET}/transaction/${transaction.hash}`}
                             target="_blank"
                           >
                             {transaction.hash}
                           </a>
                         </td>
-                        <td className="transactions-history__cell flex" title={transaction.from}>
-                          {transaction.from_address_alias?.icon && (
-                            <Image
-                              src={transaction.from_address_alias.icon}
-                              alt=""
-                              width={16}
-                              height={16}
-                              className="mr-1"
-                            />
-                          )}
-                          <span className="text-truncate">
-                            {transaction.from_address_alias?.title ?? transaction.from}
-                          </span>
+                        <td className="transactions-history__cell flex" title={transaction.sender}>
+                          <span className="text-truncate">{transaction.sender}</span>
                         </td>
-                        <td className="transactions-history__cell" title={transaction.to}>
+                        <td className="transactions-history__cell" title={transaction.receiver}>
                           <div className="flex">
-                            {transaction.to_address_alias?.icon && (
-                              <Image
-                                src={transaction.to_address_alias.icon}
-                                alt=""
-                                width={16}
-                                height={16}
-                                className="mr-1"
-                              />
-                            )}
-                            <span className="text-truncate">
-                              {transaction.to_address_alias?.title ?? transaction.to}
-                            </span>
+                            <span className="text-truncate">{transaction.receiver}</span>
                           </div>
                         </td>
                         <td className="transactions-history__cell">
-                          {formatAmount(transaction.value)}
+                          {formatAmount(transaction.amount)}
                         </td>
                         <td className="transactions-history__cell">
                           {formatAmount(transaction.fee)}
@@ -179,11 +157,11 @@ const TransactionsHistory: React.FC<TransactionsHistoryProps> = ({
             <div key={index} className="w-full flex flex-col gap-2" ref={index === transactions.length - 1 ? lastMobileElementRef : null}>
               <div>
                 <div className="flex justify-between items-center text-xs font-medium">
-                  <div>{formatDate(transaction.createdAt)}</div>
-                  <div>{formatAmount(transaction.value)}</div>
+                  <div>{formatDate(transaction.blockTime)}</div>
+                  <div>{formatAmount(transaction.amount)}</div>
                 </div>
                 <div className="text-sm font-medium text-gradient">
-                  <div>{transaction.from}</div>
+                  <div>{transaction.sender}</div>
                 </div>
               </div>
               {index !== transactions.length - 1 && <div className="h-[1px] bg-gray-200 w-full" />}
