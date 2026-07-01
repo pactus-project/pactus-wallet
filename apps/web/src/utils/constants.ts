@@ -6,7 +6,7 @@ export const PASSWORD_VALIDATORS = {
   HAS_LOWERCASE: /[a-z]/,
   HAS_NUMBER: /\d/,
 };
-export const PACVIEWER_URL = {
-  MAINNET: 'https://pacviewer.com',
-  TESTNET: 'https://phoenix.pacviewer.com',
+export const PACTUSSCAN_URL = {
+  MAINNET: 'https://pactusscan.com',
+  TESTNET: 'https://phoenix.pactusscan.com',
 };
