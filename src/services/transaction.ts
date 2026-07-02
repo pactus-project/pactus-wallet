@@ -1,4 +1,4 @@
-import { pactusscanConfig } from '@/config/pactusscan';
+import { PACTUSSCAN_API_URL } from '@/config/pactusscan';
 
 export interface Transaction {
   hash: string;
@@ -45,10 +45,13 @@ interface AccountTxsResponse {
 export const fetchAccountTransactions = async (
   address: string,
   page: number = 1,
-  limit: number = 20
+  limit: number = 20,
+  isTestnet: boolean = false
 ): Promise<AccountTransactions> => {
+  const baseUrl = isTestnet ? PACTUSSCAN_API_URL.TESTNET : PACTUSSCAN_API_URL.MAINNET;
+
   const response = await fetch(
-    `${pactusscanConfig.url}/api/v1/account/${address}/txs?page=${page}&limit=${limit}`
+    `${baseUrl}/api/v1/account/${address}/txs?page=${page}&limit=${limit}`
   );
 
   if (!response.ok) {
