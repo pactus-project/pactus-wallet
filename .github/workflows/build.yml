@@ -15,13 +15,13 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "22.14"
+          node-version: "24"
 
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Install Dependencies
-        run: yarn install --frozen-lockfile
+        run: npm ci
 
       - name: Building the Project
-        run: yarn build:web
+        run: npm run build

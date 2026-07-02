@@ -108,9 +108,7 @@ This will automatically deploy production environment.
 
 Update all version references in the codebase for the next development cycle:
 
-1. Update version in all `package.json` files:
-   - [apps/web/package.json](../apps/web/package.json)
-   - [packages/wallet/package.json](../packages/wallet/package.json)
+1. Update the version in [package.json](../package.json)
 
 2. Update the version references in this document (Step 3)
 

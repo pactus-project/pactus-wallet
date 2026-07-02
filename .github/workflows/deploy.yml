@@ -34,16 +34,13 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: yarn
+          cache: npm
 
       - name: Install dependencies
-        run: yarn install
-
-      - name: Build wallet package
-        run: yarn workspace @pactus-wallet/wallet build
+        run: npm ci
 
       - name: Build web app
-        run: yarn build:web
+        run: npm run build
 
       - name: Deploy to Production (Stable Release)
         if: env.IS_PRODUCTION == 'true'
@@ -51,7 +48,7 @@ jobs:
         with:
           personal_token: ${{ secrets.DEPLOY_TOKEN }}
           external_repository: pactus-project/pactus-wallet-deploy
-          publish_dir: ./apps/web/out
+          publish_dir: ./out
           cname: ${{ env.CNAME }}
 
       - name: Deploy to Staging (Pre-Release)
@@ -59,5 +56,5 @@ jobs:
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./apps/web/out
+          publish_dir: ./out
           cname: ${{ env.CNAME }}

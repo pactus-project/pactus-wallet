@@ -10,23 +10,25 @@ users to create wallets, manage accounts, and perform transactions.
 
 ## Project Structure
 
-This project is structured as a monorepo using Yarn workspaces:
+This repository contains the web wallet application (Next.js):
 
 ```
 pactus-wallet/
-├── apps/                    # User-facing applications
-│   └── web/                 # Web wallet application (Next.js)
-└── packages/                # Shared libraries and modules
-    └── wallet/              # Core wallet functionality
+├── public/                  # Static assets
+├── src/                     # Application source code
+└── docs/                    # Project documentation
 ```
+
+The core wallet functionality lives in the
+[Pactus JS SDK](https://github.com/pactus-project/js-sdk) and is consumed as the
+[`@pactus/sdk`](https://www.npmjs.com/package/@pactus/sdk) npm package.
 
 ## Key Technologies
 
 ### Core
 
 - **[TypeScript](https://www.typescriptlang.org/)**: Statically typed JavaScript for safer code.
-- **[Yarn](https://yarnpkg.com/)**: package manager with monorepo support.
-- **[Turborepo](https://turbo.build/)**: High-performance build system for monorepos.
+- **[npm](https://docs.npmjs.com/)**: Node.js package manager.
 - **[Jest](https://jestjs.io/)** - For unit and integration testing
 
 ### Web Application
@@ -37,6 +39,7 @@ pactus-wallet/
 
 ### Wallet Core
 
+- **[Pactus JS SDK](https://github.com/pactus-project/js-sdk)**: Wallet and blockchain operations (`@pactus/sdk`).
 - **[Trust Wallet Core](https://github.com/trustwallet/wallet-core)**: Cryptographic library powering the Pactus Web Wallet.
 
 ## Getting Started
@@ -48,15 +51,17 @@ Clone the repository and install the dependencies:
 ```bash
 git clone https://github.com/pactus-project/pactus-wallet.git
 cd pactus-wallet
-yarn install
+npm install
 ```
 
 ### Running the Web Wallet
 
 ```bash
-# From the root directory
-yarn build
-yarn dev:web
+# Start the development server
+npm run dev
+
+# Or create a production build
+npm run build
 ```
 
 ## Network Support
