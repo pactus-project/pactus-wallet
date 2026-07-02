@@ -25,7 +25,6 @@
         "@tanstack/react-table": "^8.21.3",
         "clsx": "^2.1.1",
         "copy-webpack-plugin": "^14.0.0",
-        "date-fns": "^4.4.0",
         "framer-motion": "^12.42.2",
         "gray-matter": "^4.0.3",
         "next": "16.2.10",
@@ -36,7 +35,6 @@
         "react-markdown": "^10.1.0",
         "react-qr-code": "^2.2.0",
         "remark-gfm": "^4.0.1",
-        "sharp": "^0.35.3",
         "sonner": "^2.0.7",
         "tailwind-merge": "^2.6.1"
     },
