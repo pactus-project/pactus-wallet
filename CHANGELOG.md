@@ -1,5 +1,30 @@
 # CHANGELOG
 
+## [1.3.0](https://github.com/pactus-project/pactus-wallet/compare/v1.2.0...v1.3.0) (2026-07-04)
+
+### Feat
+
+- **settings**: add recovery-phrase viewer and generic explorer icon ([#306](https://github.com/pactus-project/pactus-wallet/pull/306))
+- **mobile**: bottom navigation bar and responsive settings pages ([#309](https://github.com/pactus-project/pactus-wallet/pull/309))
+
+### Fix
+
+- **send**: keep amount and recipient on the sent success modal ([#313](https://github.com/pactus-project/pactus-wallet/pull/313))
+- **mobile**: hide bottom nav while sidebar drawer is open ([#311](https://github.com/pactus-project/pactus-wallet/pull/311))
+- **web**: serve wallet-core.wasm from site root ([#302](https://github.com/pactus-project/pactus-wallet/pull/302))
+- **web**: use testnet pactusscan api on testnet ([#300](https://github.com/pactus-project/pactus-wallet/pull/300))
+
+### Refactor
+
+- **repo**: migrate to single npm app with @pactus/sdk ([#298](https://github.com/pactus-project/pactus-wallet/pull/298))
+- **web**: replace pacviewer with pactusscan ([#296](https://github.com/pactus-project/pactus-wallet/pull/296))
+- **common**: remove unused dead code ([#315](https://github.com/pactus-project/pactus-wallet/pull/315))
+
+### Chore
+
+- **deps**: bump @pactus/sdk to 0.9.3 ([#303](https://github.com/pactus-project/pactus-wallet/pull/303))
+- **repo**: ignore AI agent directories ([#289](https://github.com/pactus-project/pactus-wallet/pull/289))
+
 ## [1.2.0](https://github.com/pactus-project/pactus-wallet/compare/v1.1.0...v1.2.0) (2025-12-20)
 
 ### Feat
