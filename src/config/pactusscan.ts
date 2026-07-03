@@ -1,5 +1,4 @@
-export const pactusscanConfig = {
-  // TODO: when a separate testnet API host exists, select base per network
-  // (wallet.isTestnet()) instead of using a single mainnet base.
-  url: process.env.NEXT_PUBLIC_PACTUSSCAN_API_URL ?? 'https://api.pactusscan.com',
+export const PACTUSSCAN_API_URL = {
+  MAINNET: process.env.NEXT_PUBLIC_PACTUSSCAN_API_URL ?? 'https://api.pactusscan.com',
+  TESTNET: process.env.NEXT_PUBLIC_PACTUSSCAN_TESTNET_API_URL ?? 'https://api-testnet.pactusscan.com',
 };

@@ -6,6 +6,7 @@ import { useI18n } from '@/utils/i18n';
 import { formatAmount, formatDate } from '@/utils/format';
 import { Mobile, Tablet } from '../responsive';
 import { PACTUSSCAN_URL } from '@/utils/constants';
+import { useWallet } from '@/wallet';
 
 interface TransactionsHistoryProps {
   transactions: Transaction[];
@@ -25,6 +26,8 @@ const TransactionsHistory: React.FC<TransactionsHistoryProps> = ({
   hasError = false,
 }) => {
   const { t } = useI18n();
+  const { wallet } = useWallet();
+  const explorerUrl = wallet?.isTestnet() ? PACTUSSCAN_URL.TESTNET : PACTUSSCAN_URL.MAINNET;
   const headings = ['Date', 'TX Hash', 'From', 'To', 'Amount', 'Fee'];
   const observer = useRef<IntersectionObserver | null>(null);
   const lastElementRef = useRef<HTMLTableRowElement | null>(null);
@@ -93,7 +96,7 @@ const TransactionsHistory: React.FC<TransactionsHistoryProps> = ({
                         </td>
                         <td className="transactions-history__cell transactions-history__cell--hash">
                           <a
-                            href={`${PACTUSSCAN_URL.MAINNET}/transaction/${transaction.hash}`}
+                            href={`${explorerUrl}/transaction/${transaction.hash}`}
                             target="_blank"
                           >
                             {transaction.hash}

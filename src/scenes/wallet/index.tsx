@@ -67,7 +67,7 @@ const Wallet = () => {
     setHasTransactionError(false);
     try {
       const { transactions: newTransactions, total: totalItems } =
-        await fetchAccountTransactions(addressData.address, pageNo);
+        await fetchAccountTransactions(addressData.address, pageNo, 20, wallet?.isTestnet() ?? false);
 
       setTransactions(prev => [...prev, ...newTransactions]);
       setHasMore(transactions.length + newTransactions.length < totalItems);
@@ -79,7 +79,7 @@ const Wallet = () => {
     } finally {
       setIsLoadingTransactions(false);
     }
-  }, [addressData?.address, pageNo, hasMore, isLoadingTransactions, transactions.length]);
+  }, [addressData?.address, pageNo, hasMore, isLoadingTransactions, transactions.length, wallet]);
 
   // Reset transactions when address changes
   useEffect(() => {
