@@ -17,3 +17,10 @@
 body:has(.modal-overlay.show) .bottom-nav {
   display: none;
 }
+
+/* Hide while the mobile sidebar drawer is open: the drawer already holds the
+   full navigation, and the fixed bar (same stacking level) would otherwise
+   cover the drawer's lower items. */
+body:has(.sidebar.mobile.open) .bottom-nav {
+  display: none;
+}
