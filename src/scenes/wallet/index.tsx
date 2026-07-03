@@ -15,7 +15,7 @@ import QRCode from 'react-qr-code';
 import Button from '@/components/Button';
 import AddressInfoModal from '@/components/address-infom-modal';
 import Skeleton from '@/components/common/skeleton/Skeleton';
-import pacviewIcon from '@/assets/images/icons/pacview-icon.svg';
+import externalLinkIcon from '@/assets/images/icons/external-link-icon.svg';
 import linkIcon from '@/assets/images/icons/link-icon.svg';
 import TransactionsHistory from '@/components/transactions-history';
 import { fetchAccountTransactions, Transaction } from '@/services/transaction';
@@ -189,7 +189,7 @@ const Wallet = () => {
                     className="w-fit h-[38px]"
                     fullWidth
                     startIcon={
-                      <Image src={pacviewIcon} alt="" width={20} height={20} aria-hidden="true" />
+                      <Image src={externalLinkIcon} alt="" width={20} height={20} aria-hidden="true" />
                     }
                   >
                     {t('checkOnExplorer')}
