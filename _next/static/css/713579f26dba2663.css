@@ -1,0 +1,1 @@
+.bottom-nav{display:flex}@media (min-width:769px){.bottom-nav{display:none}}body:has(.modal-overlay.show) .bottom-nav{display:none}
