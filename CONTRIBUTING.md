@@ -19,8 +19,8 @@ Please read these guidelines before submitting a pull request or opening an issu
 
 ## Project Structure Best Practices
 
-- Keep related code in the appropriate package
-- Share common functionality through packages
+- Keep related code in the appropriate module
+- Keep core wallet functionality in the [Pactus JS SDK](https://github.com/pactus-project/js-sdk) (`@pactus/sdk`)
 - Include comprehensive tests for all code
 - Document components and APIs using JSDoc
 - Follow the established coding style and conventions
@@ -72,7 +72,7 @@ Multiple scopes can be used if changes impact several areas (e.g., `(wallet, api
 1. Fork the repository
 2. Create a feature branch: `git checkout -b feature/amazing-feature`
 3. Make your changes following our code guidelines
-4. Ensure tests pass: `yarn test`
+4. Ensure tests pass: `npm test`
 5. Commit your changes using conventional commit format
 6. Push to the branch: `git push origin feature/amazing-feature`
 7. Open a Pull Request

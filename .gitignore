@@ -57,12 +57,12 @@ Thumbs.db
 **/src/wallet-translation/*
 
 # lock files
-package-lock.json
-# yarn.lock
+yarn.lock
 
 *.tsbuildinfo
 
 *storybook.log
+storybook-static
 
 
 # AI agents
