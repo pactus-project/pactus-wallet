@@ -7,7 +7,7 @@
 :HL["/_next/static/css/4f6d933859fd5bc9.css","style"]
 :HL["/_next/static/css/7659fb3c6a353cad.css","style"]
 :HL["/_next/static/css/b2c77bf8ed5f2254.css","style"]
-:HL["/_next/static/css/713579f26dba2663.css","style"]
+:HL["/_next/static/css/a97c50a2cc29fe37.css","style"]
 :HL["/_next/static/css/955acaa57fd01e9b.css","style"]
 :HL["/_next/static/css/e1a25948e159a72a.css","style"]
-0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"(dashboard)","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}},"staleTime":300,"buildId":"LPKMEMfcGF_EfbiWmlAgU"}
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"(dashboard)","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}},"staleTime":300,"buildId":"LCxj4Flv3acPT-gutHcUl"}
