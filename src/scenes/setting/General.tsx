@@ -29,7 +29,7 @@ const General: React.FC<GeneralProps> = () => {
     },
   ];
   return (
-    <div className="flex flex-col flex-1 pl-[52px] pr-[60px] gap-4">
+    <div className="flex flex-col flex-1 px-4 tablet:pl-[52px] tablet:pr-[60px] gap-4">
       <Form className="pt-4" form={form}>
         <FormSelectInput
           id="language"

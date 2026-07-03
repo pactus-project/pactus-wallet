@@ -104,7 +104,7 @@ const WalletManager: React.FC<WalletManagerProps> = () => {
 
   return (
     <div className="w-full">
-      <div className="h-[52px] w-full flex justify-end border-b-[1px] border-surface-medium items-center gap-4 pr-4">
+      <div className="min-h-[52px] w-full flex flex-wrap justify-end border-b-[1px] border-surface-medium items-center gap-3 px-4 py-2">
         <div className="text-xs text-[#4C4F6B]">
           <span className="text-text-tertiary">{accountList.length}</span>/ 200
         </div>

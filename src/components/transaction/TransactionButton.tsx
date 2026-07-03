@@ -14,6 +14,8 @@ export interface TransactionButtonProps {
   variant?: 'primary' | 'secondary';
   className?: string;
   onClick?: () => void; // For custom actions like external URLs
+  // Render a custom trigger (e.g. a bottom-nav tab) instead of the default button.
+  renderTrigger?: (open: () => void) => React.ReactNode;
 }
 
 const TransactionButton: React.FC<TransactionButtonProps> = ({
@@ -24,6 +26,7 @@ const TransactionButton: React.FC<TransactionButtonProps> = ({
   variant = 'primary',
   className = 'w-[119px] h-[38px]',
   onClick,
+  renderTrigger,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { t } = useI18n();
@@ -42,17 +45,21 @@ const TransactionButton: React.FC<TransactionButtonProps> = ({
 
   return (
     <>
-      <Button
-        variant={variant}
-        size="small"
-        onClick={handleClick}
-        aria-label={buttonLabel}
-        startIcon={<Image src={icon} alt="" width={20} height={20} aria-hidden="true" />}
-        className={className}
-        fullWidth
-      >
-        {buttonLabel}
-      </Button>
+      {renderTrigger ? (
+        renderTrigger(handleClick)
+      ) : (
+        <Button
+          variant={variant}
+          size="small"
+          onClick={handleClick}
+          aria-label={buttonLabel}
+          startIcon={<Image src={icon} alt="" width={20} height={20} aria-hidden="true" />}
+          className={className}
+          fullWidth
+        >
+          {buttonLabel}
+        </Button>
+      )}
 
       {!onClick && (
         <TransactionModal

@@ -25,7 +25,7 @@ const About: React.FC<AboutProps> = () => {
   const commitDate = process.env.NEXT_PUBLIC_GIT_COMMIT_DATE || '';
 
   return (
-    <div className="flex flex-col flex-1 pl-[52px] pr-[60px] gap-4">
+    <div className="flex flex-col flex-1 px-4 tablet:pl-[52px] tablet:pr-[60px] gap-4">
       <div className="pt-4 space-y-6">
         <div className="space-y-4">
           <Typography variant="body1" color="text-quaternary" className="font-medium">

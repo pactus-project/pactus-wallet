@@ -1,0 +1,19 @@
+/* Mobile-only bottom navigation. Display is controlled here (not via Tailwind
+   `flex`/`tablet:hidden`) because a later `.flex` utility wins the cascade over
+   the responsive `hidden` variant and leaks the bar onto desktop. */
+.bottom-nav {
+  display: flex;
+}
+
+/* Hide on tablet and larger, matching the header hamburger breakpoint. */
+@media (min-width: 769px) {
+  .bottom-nav {
+    display: none;
+  }
+}
+
+/* Hide while a modal is open: the modal backdrop is only ~60% opaque, so a
+   fixed bar behind it would otherwise show through and collide with the popup. */
+body:has(.modal-overlay.show) .bottom-nav {
+  display: none;
+}

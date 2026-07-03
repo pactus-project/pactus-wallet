@@ -3,6 +3,7 @@ import { PATHS } from '@/constants/paths';
 import cn from '@/utils/cn';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
+import './style.css';
 
 interface SidebarItem {
   iconUrl: string;
@@ -39,7 +40,7 @@ const Item: React.FC<ItemProps> = ({ iconUrl, title, isActive = false, onClick }
   <div
     onClick={onClick}
     className={cn(
-      'flex gap-3 w-[170px] rounded-[6px] hover:bg-surface-medium py-1 px-2 cursor-pointer',
+      'setting-nav__item flex items-center gap-3 rounded-[6px] hover:bg-surface-medium py-1 px-2 cursor-pointer',
       { 'bg-surface-medium': isActive }
     )}
   >
@@ -53,7 +54,7 @@ const SettingSidebar: React.FC = () => {
   const { push } = useRouter();
   return (
     <>
-      <div className="flex flex-col gap-2 px-6 py-3 w-[219px] border-r-[1px] border-surface-medium min-h-[calc(100vh-57px)]">
+      <div className="setting-nav">
         {sidebarData.map(({ iconUrl, title, path }) => (
           <Item
             onClick={() => push(path)}
