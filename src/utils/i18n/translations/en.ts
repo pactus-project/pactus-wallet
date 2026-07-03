@@ -133,6 +133,10 @@ const translations = {
   twentyFourWords: '24 Words',
   confirmRecoveryPhrase: 'Confirm Recovery Phrase',
   enterMissingWords: 'Enter the missing words in the correct order to verify your backup.',
+  showRecoveryPhrase: 'Show Recovery Phrase',
+  toShowRecoveryPhrase: 'Enter your password to reveal your recovery phrase.',
+  recoveryPhraseNeverShare:
+    'Never share your recovery phrase. Anyone with these words can take full control of your wallet.',
 
   // Import Wallet
   importExistingWallet: 'Import Existing Wallet',

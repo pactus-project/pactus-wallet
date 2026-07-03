@@ -2,6 +2,7 @@
 
 import { plusIcon, trashIcon, showPasswordIcon } from '@/assets';
 import ShowPrivateKeyModal from '@/components/password-modal';
+import ShowRecoveryPhraseModal from '@/components/recovery-phrase-modal';
 import Table from '@/components/table';
 import { PATHS } from '@/constants/paths';
 import { useAccount, WalletContext } from '@/wallet';
@@ -30,6 +31,7 @@ const WalletManager: React.FC<WalletManagerProps> = () => {
   const { push } = useRouter();
   const { t } = useI18n();
   const [isAddAccountModalOpen, setIsAddAccountModalOpen] = useState(false);
+  const [isRecoveryPhraseModalOpen, setIsRecoveryPhraseModalOpen] = useState(false);
 
   const closeAddAccountModal = () => {
     setIsAddAccountModalOpen(false);
@@ -110,6 +112,17 @@ const WalletManager: React.FC<WalletManagerProps> = () => {
         <div className="text-xs font-medium text-[#D2D3E0] h-6 px-3 rounded-sm bg-surface-medium flex justify-center items-center gap-2 cursor-pointer hover:bg-surface-light">
           <button
             type="button"
+            onClick={() => setIsRecoveryPhraseModalOpen(true)}
+            aria-label="Show recovery phrase"
+            className="flex items-center gap-2"
+          >
+            <Image src={showPasswordIcon} width={16} height={16} alt="show-recovery-phrase" />{' '}
+            {t('showRecoveryPhrase')}
+          </button>
+        </div>
+        <div className="text-xs font-medium text-[#D2D3E0] h-6 px-3 rounded-sm bg-surface-medium flex justify-center items-center gap-2 cursor-pointer hover:bg-surface-light">
+          <button
+            type="button"
             onClick={() => setIsAddAccountModalOpen(true)}
             aria-label="Add new account"
             className="flex items-center gap-2"
@@ -129,6 +142,10 @@ const WalletManager: React.FC<WalletManagerProps> = () => {
         address={privateKeyAddress}
       />
       <AddAccountModal isOpen={isAddAccountModalOpen} onClose={closeAddAccountModal} />
+      <ShowRecoveryPhraseModal
+        isOpen={isRecoveryPhraseModalOpen}
+        onClose={() => setIsRecoveryPhraseModalOpen(false)}
+      />
     </div>
   );
 };
