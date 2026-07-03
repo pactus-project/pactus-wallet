@@ -39,6 +39,12 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
   const [countdown, setCountdown] = useState(0);
   const [successMessage] = useState<string | null>(null);
   const [txHash, setTxHash] = useState('');
+  // Snapshot of the sent amount/recipient captured at broadcast time, so the
+  // success modal keeps showing them after formValues is reset for the next tx.
+  const [sentDetails, setSentDetails] = useState<{ amount: string; recipient: string }>({
+    amount: '',
+    recipient: '',
+  });
   const countdownIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [createdDate, setCreatedDate] = useState('');
@@ -90,6 +96,14 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
             .then((broadcastedTxHash) => {
               setTxHash(broadcastedTxHash);
               setCreatedDate(new Date().toLocaleString());
+              // Capture what was sent before clearing the form, so the success
+              // modal can display it (formValues is reset just below).
+              setSentDetails({
+                amount: formValues.amount || '',
+                recipient: isBridgeMode
+                  ? `${wrapToDeposit} (Wrapto Deposit)`
+                  : formValues.receiver || '',
+              });
               setIsPreviewModalOpen(false);
               setIsSending(false);
               setIsSuccessModalOpen(true);
@@ -173,8 +187,8 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
         isOpen={isSuccessModalOpen}
         onClose={() => handleCloseModal(true)}
         txHash={txHash}
-        amount={formValues.amount || ''}
-        recipient={formValues.receiver || ''}
+        amount={sentDetails.amount}
+        recipient={sentDetails.recipient}
         date={createdDate}
       />
     </>
