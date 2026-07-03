@@ -5,7 +5,9 @@
     "license": "MIT",
     "private": true,
     "scripts": {
+        "predev": "node scripts/copy-wallet-core-wasm.mjs",
         "dev": "next dev --webpack",
+        "prebuild": "node scripts/copy-wallet-core-wasm.mjs",
         "build": "next build --webpack",
         "start": "next start",
         "lint": "eslint src --ext .js,.jsx,.ts,.tsx",

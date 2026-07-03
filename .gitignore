@@ -56,6 +56,9 @@ Thumbs.db
 **/public/locales/*
 **/src/wallet-translation/*
 
+# copied from @trustwallet/wallet-core by scripts/copy-wallet-core-wasm.mjs
+/public/wallet-core.wasm
+
 # lock files
 yarn.lock
 
