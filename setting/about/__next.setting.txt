@@ -3,5 +3,5 @@
 3:I[21434,["622","static/chunks/622-d5e7e27220e339de.js","7471","static/chunks/7471-aafc972c976a67d1.js","8032","static/chunks/8032-04461a481537bb5d.js","162","static/chunks/app/setting/layout-3a3480ef8116bdb4.js"],"default"]
 4:I[57121,[],""]
 5:I[74581,[],""]
-0:{"rsc":["$","$1","c",{"children":[null,["$","$L2",null,{"Component":"$3","slots":{"children":["$","$L4",null,{"parallelRouterKey":"children","template":["$","$L5",null,{}]}]},"serverProvidedParams":{"params":{},"promises":["$@6"]}}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"-jf534-62KnOaPmPZhkGU"}
+0:{"rsc":["$","$1","c",{"children":[null,["$","$L2",null,{"Component":"$3","slots":{"children":["$","$L4",null,{"parallelRouterKey":"children","template":["$","$L5",null,{}]}]},"serverProvidedParams":{"params":{},"promises":["$@6"]}}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"ARo7pD9xE82c4DDBm6goZ"}
 6:"$0:rsc:props:children:1:props:serverProvidedParams:params"
