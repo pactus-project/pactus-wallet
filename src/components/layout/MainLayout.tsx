@@ -2,6 +2,7 @@
 import { Suspense, useState, useEffect, useRef } from 'react';
 import Sidebar from '../sidebar';
 import Header from '../header';
+import BottomNav from '../bottom-nav';
 import { usePathname } from 'next/navigation';
 import { PATHS_WITH_SIDEBAR } from '@/constants/paths';
 import { Toaster } from 'sonner';
@@ -41,10 +42,11 @@ function MainLayout({ children }) {
             isMobile={isMobile}
             hamburgerRef={hamburgerRef}
           />
-          <div className="flex-1 flex flex-col md:ml-[219px]">
+          <div className="flex-1 flex flex-col md:ml-[219px] pb-[64px] tablet:pb-0">
             <Header isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} hamburgerRef={hamburgerRef} />
             {children}
           </div>
+          <BottomNav />
           <Toaster duration={2500} richColors closeButton position="top-center" />
         </main>
       </Suspense>

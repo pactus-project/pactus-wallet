@@ -12,7 +12,9 @@ import FormSelectInput from '../common/FormSelectInput';
 import { Form, useForm, useWatch } from '../common/Form';
 import { formatPactusAddress } from '@/utils/common';
 
-const ReceivePac: React.FC = () => {
+const ReceivePac: React.FC<{
+  renderTrigger?: (open: () => void) => React.ReactNode;
+}> = ({ renderTrigger }) => {
   const { t } = useI18n();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -34,17 +36,21 @@ const ReceivePac: React.FC = () => {
 
   return (
     <>
-      <Button
-        variant="secondary"
-        size="small"
-        onClick={() => setIsModalOpen(true)}
-        aria-label={t('receive')}
-        startIcon={<Image src={receiveIcon} alt="" width={20} height={20} aria-hidden="true" />}
-        className="w-[119px] h-[38px]"
-        fullWidth
-      >
-        {t('receive')}
-      </Button>
+      {renderTrigger ? (
+        renderTrigger(() => setIsModalOpen(true))
+      ) : (
+        <Button
+          variant="secondary"
+          size="small"
+          onClick={() => setIsModalOpen(true)}
+          aria-label={t('receive')}
+          startIcon={<Image src={receiveIcon} alt="" width={20} height={20} aria-hidden="true" />}
+          className="w-[119px] h-[38px]"
+          fullWidth
+        >
+          {t('receive')}
+        </Button>
+      )}
 
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={t('receive')}>
         <div className="flex flex-col gap-4 p-4">
