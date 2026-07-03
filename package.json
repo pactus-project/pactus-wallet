@@ -19,7 +19,7 @@
         "build-storybook": "storybook build"
     },
     "dependencies": {
-        "@pactus/sdk": "^0.9.1",
+        "@pactus/sdk": "^0.9.3",
         "@radix-ui/react-popover": "^1.1.18",
         "@radix-ui/react-switch": "^1.3.2",
         "@splinetool/react-spline": "^4.1.0",
