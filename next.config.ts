@@ -7,9 +7,16 @@ const walletCoreWasmPath = require.resolve('@trustwallet/wallet-core/dist/lib/wa
 // Resolve the path to the argon2.wasm file from the argon2-browser package
 const argon2WasmPath = require.resolve('argon2-browser/dist/argon2.wasm');
 
+// Expose the package version to the app (shown on the About page).
+const { version } = require('./package.json');
+
 const nextConfig: NextConfig = {
   // Configure the output to be static export
   output: 'export',
+
+  env: {
+    NEXT_PUBLIC_APP_VERSION: version,
+  },
 
   images: {
     unoptimized: true, // <-- Add this line to fix the error
