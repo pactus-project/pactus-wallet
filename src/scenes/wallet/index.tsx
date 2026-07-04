@@ -60,35 +60,47 @@ const Wallet = () => {
     }
   };
 
-  const loadTransactions = useCallback(async () => {
-    if (!addressData?.address || isLoadingTransactions || !hasMore) return;
+  // Fetch a page of transactions for a specific address. `replace` starts a
+  // fresh list (used when the address changes); otherwise it appends (infinite
+  // scroll). Takes the address explicitly so it never depends on stale state.
+  const fetchPage = useCallback(
+    async (targetAddress: string, page: number, replace: boolean) => {
+      if (!targetAddress) return;
 
-    setIsLoadingTransactions(true);
-    setHasTransactionError(false);
-    try {
-      const { transactions: newTransactions, total: totalItems } =
-        await fetchAccountTransactions(addressData.address, pageNo, 20, wallet?.isTestnet() ?? false);
+      setIsLoadingTransactions(true);
+      setHasTransactionError(false);
+      try {
+        const { transactions: newTransactions, total: totalItems } =
+          await fetchAccountTransactions(targetAddress, page, 20, wallet?.isTestnet() ?? false);
 
-      setTransactions(prev => [...prev, ...newTransactions]);
-      setHasMore(transactions.length + newTransactions.length < totalItems);
-      setPageNo(prev => prev + 1);
-    } catch (error) {
-      console.error('Failed to load transactions:', error);
-      setHasTransactionError(true);
-      setHasMore(false);
-    } finally {
-      setIsLoadingTransactions(false);
-    }
-  }, [addressData?.address, pageNo, hasMore, isLoadingTransactions, transactions.length, wallet]);
+        setTransactions(prev => (replace ? newTransactions : [...prev, ...newTransactions]));
+        setHasMore(page * 20 < totalItems);
+        setPageNo(page + 1);
+      } catch (error) {
+        console.error('Failed to load transactions:', error);
+        setHasTransactionError(true);
+        setHasMore(false);
+      } finally {
+        setIsLoadingTransactions(false);
+      }
+    },
+    [wallet]
+  );
 
-  // Reset transactions when address changes
+  // Load the first page whenever the selected address changes.
   useEffect(() => {
     setTransactions([]);
     setPageNo(1);
     setHasMore(true);
     setHasTransactionError(false);
-    loadTransactions();
-  }, [addressData?.address]);
+    fetchPage(addressData?.address ?? '', 1, true);
+  }, [addressData?.address, fetchPage]);
+
+  // Load subsequent pages for infinite scroll.
+  const loadTransactions = useCallback(() => {
+    if (isLoadingTransactions || !hasMore || !addressData?.address) return;
+    fetchPage(addressData.address, pageNo, false);
+  }, [isLoadingTransactions, hasMore, addressData?.address, pageNo, fetchPage]);
 
   useEffect(() => {
     setHeaderTitle(addressData?.label ?? '');
