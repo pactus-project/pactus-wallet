@@ -118,13 +118,19 @@ const SendForm: React.FC<SendFormProps> = ({
   const [internalLoading, setInternalLoading] = useState(false);
 
   const isSubmitting = isLoading || internalLoading;
-  const defaultChain = 'BASE';
-  // Bridge chain options
-  const bridgeChainOptions = [
-    { value: 'BASE', label: 'Base' },
-    { value: 'BSC', label: 'BNB Chain' },
-    { value: 'POLYGON', label: 'Polygon' },
+  const defaultChain = 'BSC';
+  // Bridge chain options. `enabled` reflects what Wrapto currently supports
+  // (https://wrapto.app/). Base and Polygon are temporarily disabled — kept
+  // here (not removed) so they can be re-enabled when Wrapto supports them again.
+  const allBridgeChains = [
+    { value: 'BSC', label: 'BNB Chain', enabled: true },
+    { value: 'ETHEREUM', label: 'Ethereum', enabled: true },
+    { value: 'BASE', label: 'Base', enabled: false },
+    { value: 'POLYGON', label: 'Polygon', enabled: false },
   ];
+  const bridgeChainOptions = allBridgeChains
+    .filter(chain => chain.enabled)
+    .map(({ value, label }) => ({ value, label }));
 
   const transactionTypeOptions = [
     { value: 'TRANSFER', label: 'Transfer' },
