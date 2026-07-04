@@ -11,4 +11,4 @@
 :HL["/_next/static/css/46bbbdc2d18212c4.css","style"]
 :HL["/_next/static/css/b1eb7d256a3a1391.css","style"]
 :HL["/_next/static/css/29b36616f9ff73cf.css","style"]
-0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"setting","param":null,"prefetchHints":0,"slots":{"children":{"name":"wallet","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}}}},"staleTime":300,"buildId":"wNlFdlIDBDnw00Bb31Moi"}
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"setting","param":null,"prefetchHints":0,"slots":{"children":{"name":"wallet","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}}}},"staleTime":300,"buildId":"B8Od-nzrBow-EZSYI5zes"}
