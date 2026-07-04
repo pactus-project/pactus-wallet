@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## [1.5.0](https://github.com/pactus-project/pactus-wallet/compare/v1.4.0...v1.5.0) (2026-07-05)
+
+### Fix
+
+- **bridge**: only offer the chains Wrapto currently supports (BNB Chain and Ethereum), preventing bridges to unsupported Base/Polygon that could strand funds ([#328](https://github.com/pactus-project/pactus-wallet/pull/328))
+- **wallet**: reload the transaction history when switching between addresses ([#326](https://github.com/pactus-project/pactus-wallet/pull/326))
+
 ## [1.4.0](https://github.com/pactus-project/pactus-wallet/compare/v1.3.0...v1.4.0) (2026-07-04)
 
 ### Fix
