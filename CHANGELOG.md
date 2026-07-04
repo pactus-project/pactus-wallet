@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## [1.4.0](https://github.com/pactus-project/pactus-wallet/compare/v1.3.0...v1.4.0) (2026-07-04)
+
+### Fix
+
+- **web**: serve wallet-core.wasm for nested /setting routes so a hard load of `/setting/*` no longer 404s the wasm ([#322](https://github.com/pactus-project/pactus-wallet/pull/322))
+- **mobile**: truncate long addresses, prevent horizontal overflow (bottom nav no longer pushed off-screen), and show the real app version and commit on the about page ([#320](https://github.com/pactus-project/pactus-wallet/pull/320))
+
 ## [1.3.0](https://github.com/pactus-project/pactus-wallet/compare/v1.2.0...v1.3.0) (2026-07-04)
 
 ### Feat
