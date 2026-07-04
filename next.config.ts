@@ -7,9 +7,30 @@ const walletCoreWasmPath = require.resolve('@trustwallet/wallet-core/dist/lib/wa
 // Resolve the path to the argon2.wasm file from the argon2-browser package
 const argon2WasmPath = require.resolve('argon2-browser/dist/argon2.wasm');
 
+// Expose the package version to the app (shown on the About page).
+const { version } = require('./package.json');
+
+// Resolve the current git commit (shown on the About page). Falls back to
+// 'unknown' if git is unavailable at build time.
+let gitCommit = 'unknown';
+let gitCommitDate = '';
+try {
+  const { execSync } = require('child_process');
+  gitCommit = execSync('git rev-parse --short HEAD').toString().trim();
+  gitCommitDate = execSync('git log -1 --format=%cd --date=short').toString().trim();
+} catch {
+  // keep defaults
+}
+
 const nextConfig: NextConfig = {
   // Configure the output to be static export
   output: 'export',
+
+  env: {
+    NEXT_PUBLIC_APP_VERSION: version,
+    NEXT_PUBLIC_GIT_COMMIT: gitCommit,
+    NEXT_PUBLIC_GIT_COMMIT_DATE: gitCommitDate,
+  },
 
   images: {
     unoptimized: true, // <-- Add this line to fix the error

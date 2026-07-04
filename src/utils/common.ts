@@ -19,3 +19,11 @@ export const formatPactusAddress = (address: string): string => {
 
   return `${PACTUS_PREFIX}${cleanAddress}`;
 };
+
+// Middle-truncate a long address for narrow (mobile) layouts, e.g.
+// tpc1r7aq...9k2p3q. Keeps the head and tail so it stays recognizable.
+export const truncateAddress = (address: string, head = 10, tail = 6): string => {
+  if (!address || address.length <= head + tail + 1) return address;
+
+  return `${address.slice(0, head)}...${address.slice(-tail)}`;
+};

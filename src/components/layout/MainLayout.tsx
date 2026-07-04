@@ -42,7 +42,7 @@ function MainLayout({ children }) {
             isMobile={isMobile}
             hamburgerRef={hamburgerRef}
           />
-          <div className="flex-1 flex flex-col md:ml-[219px] pb-[64px] tablet:pb-0">
+          <div className="flex-1 min-w-0 flex flex-col md:ml-[219px] pb-[64px] tablet:pb-0">
             <Header isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} hamburgerRef={hamburgerRef} />
             {children}
           </div>

@@ -12,6 +12,8 @@ import { useRouter } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
 import { useI18n } from '../../utils/i18n';
 import AddAccountModal from '../../components/add-account-modal';
+import { Mobile, Tablet } from '@/components/responsive';
+import { truncateAddress } from '@/utils/common';
 
 interface WalletManagerProps {
   title?: string;
@@ -58,14 +60,23 @@ const WalletManager: React.FC<WalletManagerProps> = () => {
       cell: info => {
         const address = info.getValue() as string;
         const query = new URLSearchParams({ address });
+        const goToWallet = () => push(`${PATHS.WALLET}?${query.toString()}`);
+        const className =
+          'text-gradient text-xs font-medium hover:filter hover:brightness-[0.9] cursor-pointer';
 
         return (
-          <span
-            onClick={() => push(`${PATHS.WALLET}?${query.toString()}`)}
-            className="text-gradient text-xs font-medium hover:filter hover:brightness-[0.9] cursor-pointer"
-          >
-            {address}
-          </span>
+          <>
+            <Mobile>
+              <span onClick={goToWallet} className={className} title={address}>
+                {truncateAddress(address)}
+              </span>
+            </Mobile>
+            <Tablet>
+              <span onClick={goToWallet} className={className}>
+                {address}
+              </span>
+            </Tablet>
+          </>
         );
       },
     },
