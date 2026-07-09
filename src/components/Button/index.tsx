@@ -71,7 +71,7 @@ export const Button = ({
     primary: 'bg-gradient-primary text-white hover:opacity-90 disabled:opacity-50',
     secondary: 'bg-background text-white hover:opacity-85 disabled:opacity-50',
     outlined:
-      'border border-gray-300 bg-transparent text-text-primary hover:bg-gray-50 disabled:text-gray-300',
+      'border border-surface-medium bg-transparent text-text-primary hover:bg-surface-medium disabled:opacity-50',
     text: 'bg-transparent text-text-primary hover:bg-gray-100 disabled:text-gray-300',
   };
 

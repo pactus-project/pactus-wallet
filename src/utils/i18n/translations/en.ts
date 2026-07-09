@@ -176,6 +176,7 @@ const translations = {
   logoutWarning:
     'Are you sure you want to sign out? This action will remove your wallet from this device. You will need your recovery phrase to recover your wallet.',
   updatePassword: 'Update Wallet Password',
+  changePassword: 'Change password',
   oldPassword: 'Old Password',
   newPassword: 'New Password',
   bondTransaction: 'Bond Transaction',
