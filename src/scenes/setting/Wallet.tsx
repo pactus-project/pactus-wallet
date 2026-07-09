@@ -3,6 +3,7 @@
 import { plusIcon, trashIcon, showPasswordIcon } from '@/assets';
 import ShowPrivateKeyModal from '@/components/password-modal';
 import ShowRecoveryPhraseModal from '@/components/recovery-phrase-modal';
+import RemoveWalletModal from '@/components/remove-wallet-modal';
 import Table from '@/components/table';
 import { PATHS } from '@/constants/paths';
 import { useAccount, WalletContext } from '@/wallet';
@@ -34,6 +35,7 @@ const WalletManager: React.FC<WalletManagerProps> = () => {
   const { t } = useI18n();
   const [isAddAccountModalOpen, setIsAddAccountModalOpen] = useState(false);
   const [isRecoveryPhraseModalOpen, setIsRecoveryPhraseModalOpen] = useState(false);
+  const [isRemoveWalletModalOpen, setIsRemoveWalletModalOpen] = useState(false);
 
   const closeAddAccountModal = () => {
     setIsAddAccountModalOpen(false);
@@ -147,6 +149,23 @@ const WalletManager: React.FC<WalletManagerProps> = () => {
         <Table columns={columns} data={accountList} />
       </div>
 
+      <section className="mt-8 mx-4 rounded-md border border-red-500/30 bg-red-500/5 p-4">
+        <h3 className="text-sm font-semibold text-red-400 mb-1">⚠ {t('dangerZone')}</h3>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <p className="text-xs text-text-tertiary max-w-[520px]">
+            {t('removeWalletDescription')}
+          </p>
+          <button
+            type="button"
+            onClick={() => setIsRemoveWalletModalOpen(true)}
+            className="text-xs font-medium text-white h-8 px-3 rounded-sm bg-red-600 hover:bg-red-700 flex items-center gap-2 cursor-pointer whitespace-nowrap"
+          >
+            <Image src={trashIcon} width={14} height={14} alt="" aria-hidden="true" />
+            {t('removeWallet')}
+          </button>
+        </div>
+      </section>
+
       <ShowPrivateKeyModal
         isOpen={Boolean(privateKeyAddress)}
         onClose={() => setPrivateKeyAddress('')}
@@ -156,6 +175,10 @@ const WalletManager: React.FC<WalletManagerProps> = () => {
       <ShowRecoveryPhraseModal
         isOpen={isRecoveryPhraseModalOpen}
         onClose={() => setIsRecoveryPhraseModalOpen(false)}
+      />
+      <RemoveWalletModal
+        isOpen={isRemoveWalletModalOpen}
+        onClose={() => setIsRemoveWalletModalOpen(false)}
       />
     </div>
   );

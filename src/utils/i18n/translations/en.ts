@@ -175,6 +175,13 @@ const translations = {
   confirmLogout: 'Logout',
   logoutWarning:
     'Are you sure you want to sign out? This action will remove your wallet from this device. You will need your recovery phrase to recover your wallet.',
+  dangerZone: 'Danger zone',
+  removeWallet: 'Remove wallet',
+  removeWalletDescription:
+    'Removing this wallet deletes it from this browser. Back up your recovery phrase first. Without it, your funds are lost forever.',
+  removeWalletTitle: 'Remove wallet?',
+  removeWalletConfirm:
+    'This permanently deletes the wallet from this browser and cannot be undone. Enter your password to confirm.',
   updatePassword: 'Update Wallet Password',
   oldPassword: 'Old Password',
   newPassword: 'New Password',

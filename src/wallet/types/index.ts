@@ -20,6 +20,7 @@ export interface WalletContextType {
   setNetworkType: () => void; // Network type is determined by IS_PRODUCTION env var only
   walletName: string;
   setWalletName: React.Dispatch<React.SetStateAction<string>>;
+  removeWallet: () => void;
   walletManager: WalletManager | null;
   isInitializingManager: boolean;
   managerError: string | null;

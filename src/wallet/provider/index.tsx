@@ -38,6 +38,9 @@ export const WalletContext = createContext<WalletContextType>({
   setWalletName: () => {
     /* Will be implemented in provider */
   },
+  removeWallet: () => {
+    /* Will be implemented in provider */
+  },
   walletManager: null,
   isInitializingManager: true,
   managerError: null,
@@ -156,6 +159,24 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     console.warn('Network type is determined by IS_PRODUCTION environment variable and cannot be changed at runtime');
   };
 
+  // Permanently remove the current wallet from this browser and reset all
+  // in-memory state, then send the user back to onboarding to create/restore
+  // a new one. Destructive: the caller is responsible for confirming intent
+  // (e.g. password re-entry) before invoking this.
+  const removeWallet = () => {
+    if (wallet && walletManager) {
+      walletManager.deleteWallet(wallet.getID());
+    }
+    localStorage.removeItem('walletStatus');
+    setWallet(null);
+    setWalletStatusState(WalletStatus.WALLET_LOCKED);
+    setPasswordState('');
+    setMnemonicState('');
+    setWalletNameState('');
+    setAccountListState([]);
+    router.replace(PATHS.GET_START);
+  };
+
   // Update wallet status and handle navigation
   const setWalletStatus = (value: WalletStatus) => {
     localStorage.setItem('walletStatus', value);
@@ -206,6 +227,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         setNetworkType, // Use the new wrapper function
         walletName,
         setWalletName: setWalletNameState,
+        removeWallet,
         walletManager,
         isInitializingManager,
         managerError,
