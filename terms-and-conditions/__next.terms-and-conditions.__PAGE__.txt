@@ -1,5 +1,5 @@
 1:"$Sreact.fragment"
-2:I[82026,["622","static/chunks/622-d5e7e27220e339de.js","2454","static/chunks/2454-73b977005ffdb170.js","283","static/chunks/app/terms-and-conditions/page-588c32dc51975052.js"],"default"]
+2:I[82026,["622","static/chunks/622-d5e7e27220e339de.js","2454","static/chunks/2454-73b977005ffdb170.js","283","static/chunks/app/terms-and-conditions/page-563db11c476a27c2.js"],"default"]
 4:I[90484,[],"OutletBoundary"]
 5:"$Sreact.suspense"
 3:Tc02,# Terms and Conditions
@@ -47,5 +47,5 @@ These Terms shall be governed by applicable laws, without regard to conflict of 
 
 ## 10. Wallet Recovery and Secret Recovery Phrase
 
-As a non-custodial service, Pactus does not have access to, store, or control your private keys, passwords, or Secret Recovery Phrases. You acknowledge that you are solely responsible for maintaining the security and confidentiality of your Secret Recovery Phrase. If you are unable to unlock your wallet, you will need to reset it using the Secret Recovery Phrase you created during setup. You understand and agree that Pactus cannot recover your wallet or digital assets if your Secret Recovery Phrase is lost, forgotten, or compromised. The loss of your Secret Recovery Phrase will result in the permanent and irreversible loss of access to your wallet and its contents, and Pactus is not responsible for any such losses or damages.0:{"rsc":["$","$1","c",{"children":[["$","$L2",null,{"content":"$3"}],null,["$","$L4",null,{"children":["$","$5",null,{"name":"Next.MetadataOutlet","children":"$@6"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"NP5yfiJsIa70DqUP1OCfE"}
+As a non-custodial service, Pactus does not have access to, store, or control your private keys, passwords, or Secret Recovery Phrases. You acknowledge that you are solely responsible for maintaining the security and confidentiality of your Secret Recovery Phrase. If you are unable to unlock your wallet, you will need to reset it using the Secret Recovery Phrase you created during setup. You understand and agree that Pactus cannot recover your wallet or digital assets if your Secret Recovery Phrase is lost, forgotten, or compromised. The loss of your Secret Recovery Phrase will result in the permanent and irreversible loss of access to your wallet and its contents, and Pactus is not responsible for any such losses or damages.0:{"rsc":["$","$1","c",{"children":[["$","$L2",null,{"content":"$3"}],null,["$","$L4",null,{"children":["$","$5",null,{"name":"Next.MetadataOutlet","children":"$@6"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"KphzLPs-mM8_a2no2r2UX"}
 6:null
