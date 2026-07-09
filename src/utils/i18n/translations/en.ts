@@ -183,6 +183,7 @@ const translations = {
   removeWalletConfirm:
     'This permanently deletes the wallet from this browser and cannot be undone. Enter your password to confirm.',
   updatePassword: 'Update Wallet Password',
+  changePassword: 'Change password',
   oldPassword: 'Old Password',
   newPassword: 'New Password',
   bondTransaction: 'Bond Transaction',

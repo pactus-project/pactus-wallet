@@ -9,7 +9,12 @@ import { validatePassword } from '@/utils/password-validator';
 import { useAccount } from '@/wallet';
 import { toast } from 'sonner';
 
-const ChangePasswordModal: React.FC = () => {
+interface ChangePasswordModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen, onClose }) => {
   const { t } = useI18n();
   const { changePassword } = useAccount();
   const [form] = useForm();
@@ -17,7 +22,6 @@ const ChangePasswordModal: React.FC = () => {
   const [newPasswordError, setNewPasswordError] = useState('');
   const [newPasswordTouched, setNewPasswordTouched] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
 
   const handleNewPasswordChange = e => {
     setNewPasswordTouched(true);
@@ -39,7 +43,7 @@ const ChangePasswordModal: React.FC = () => {
 
       if (result) {
         toast.success('Update wallet password successfully!');
-        setIsOpen(false);
+        onClose();
         form.resetFields();
       }
     } catch (err) {
@@ -51,17 +55,7 @@ const ChangePasswordModal: React.FC = () => {
   };
 
   return (
-    <>
-      <Button
-        variant="primary"
-        size="small"
-        onClick={() => setIsOpen(true)}
-        className="w-[150px] h-[38px]"
-        labelClassName="text-sm"
-      >
-        Update Password
-      </Button>
-      <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} title={t('updatePassword')}>
+    <Modal isOpen={isOpen} onClose={onClose} title={t('updatePassword')}>
         <Form
           className="flex flex-col gap-5"
           onFinish={handleSubmit}
@@ -119,8 +113,7 @@ const ChangePasswordModal: React.FC = () => {
             {isSubmitting ? 'Creating...' : 'Create'}
           </Button>
         </Form>
-      </Modal>
-    </>
+    </Modal>
   );
 };
 
