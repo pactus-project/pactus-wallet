@@ -339,7 +339,7 @@ const SendForm: React.FC<SendFormProps> = ({
         name="amount"
         placeholder="0.00"
         label={t('amount')}
-        showLogo={true}
+        unit="PAC"
         validateTrigger="onBlur"
         rules={
           isBridgeMode
@@ -375,7 +375,7 @@ const SendForm: React.FC<SendFormProps> = ({
         name="fee"
         placeholder="0.001"
         label={t('fee')}
-        showLogo={true}
+        unit="PAC"
         rightElement={
           <Button
             variant="text"
