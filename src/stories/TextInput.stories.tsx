@@ -60,6 +60,19 @@ export const WithRightElement: Story = {
   },
 };
 
+// With unit and right element, as used for amounts and fees
+export const WithUnit: Story = {
+  args: {
+    id: 'unit-input',
+    name: 'unit-input',
+    value: '123.253698',
+    label: 'Amount',
+    placeholder: '0.00',
+    unit: 'PAC',
+    rightElement: <TextButton onClick={() => console.log('Max clicked')}>Max</TextButton>,
+  },
+};
+
 // Disabled state
 export const Disabled: Story = {
   args: {

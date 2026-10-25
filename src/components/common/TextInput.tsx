@@ -19,6 +19,8 @@ interface TextInputProps {
   showLogo?: boolean;
   rightElement?: React.ReactNode;
   autoComplete?: string;
+  /** Unit shown at the right of the input, before the right element (for example "PAC"). */
+  unit?: string;
 }
 
 const TextInput: React.FC<TextInputProps> = ({
@@ -38,7 +40,10 @@ const TextInput: React.FC<TextInputProps> = ({
   rightElement,
   autoComplete,
   showLogo = false,
+  unit,
 }) => {
+  const rightPadding = rightElement ? (unit ? 'pr-28' : 'pr-16') : unit ? 'pr-12' : '';
+
   return (
     <div className="flex flex-col gap-3">
       {!hideLabel && label && (
@@ -64,16 +69,23 @@ const TextInput: React.FC<TextInputProps> = ({
           value={value}
           onChange={onChange}
           onBlur={onBlur}
-          className={`w-full p-3 rounded-md bg-background text-text-primary text-sm border border-border focus:outline-none focus:border-primary ${
-            rightElement ? 'pr-16' : ''
-          } ${className}`}
+          className={`w-full p-3 rounded-md bg-background text-text-primary text-sm border border-border focus:outline-none focus:border-primary ${rightPadding} ${className}`}
           placeholder={placeholder}
           disabled={disabled}
           required={required}
           autoComplete={autoComplete}
         />
-        {rightElement && (
-          <div className="absolute right-2 top-1/2 -translate-y-1/2">{rightElement}</div>
+        {(unit || rightElement) && (
+          <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
+            {unit && (
+              <span
+                className={`pointer-events-none text-sm text-quaternary ${rightElement ? '' : 'pr-1'}`}
+              >
+                {unit}
+              </span>
+            )}
+            {rightElement}
+          </div>
         )}
       </div>
     </div>

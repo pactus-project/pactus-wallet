@@ -24,6 +24,7 @@ interface FormTextInputProps {
   showLogo?: boolean;
   rules?: Rule[];
   validateTrigger?: string | string[];
+  unit?: string;
 }
 
 const FormTextInput: React.FC<FormTextInputProps> = ({
@@ -45,6 +46,7 @@ const FormTextInput: React.FC<FormTextInputProps> = ({
   showLogo = false,
   rules,
   validateTrigger,
+  unit,
 }) => {
 
   return (
@@ -66,6 +68,7 @@ const FormTextInput: React.FC<FormTextInputProps> = ({
         rightElement={rightElement}
         autoComplete={autoComplete}
         showLogo={showLogo}
+        unit={unit}
       />
     </FormItem>
   );
