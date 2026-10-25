@@ -13,6 +13,9 @@ import { useSendTransaction } from '@/wallet/hooks/use-send-transaction';
 import { WalletContext } from '@/wallet';
 import { Form, useForm, useWatch } from '../common/Form';
 import { toast } from 'sonner';
+import { getMaxSendAmount, parsePacToNano } from '@/utils/amount';
+
+const DEFAULT_FEE = '0.01';
 
 export interface SendFormValues {
   fromAccount?: string;
@@ -114,7 +117,12 @@ const SendForm: React.FC<SendFormProps> = ({
   const accounts = getAccountList();
   const { t } = useI18n();
   const { getSignTransferTransaction, getSignBondTransaction } = useSendTransaction();
-  const { balance, fetchBalance, isLoading: isBalanceLoading } = useBalance(fromAccount);
+  const {
+    balance,
+    balanceNano,
+    fetchBalance,
+    isLoading: isBalanceLoading,
+  } = useBalance(fromAccount);
   const [internalLoading, setInternalLoading] = useState(false);
 
   const isSubmitting = isLoading || internalLoading;
@@ -161,14 +169,14 @@ const SendForm: React.FC<SendFormProps> = ({
   // Event handlers
   const handleMaxAmount = () => {
     if (balance && !isBalanceLoading) {
-      const feeValue = parseFloat(fee) || 0.01;
-      const maxAmount = Math.max(0, balance - feeValue);
-      form.setFieldValue('amount', maxAmount.toFixed(5));
+      // Work in nanoPAC so the amount is never rounded above the balance.
+      const feeNano = parsePacToNano(fee ?? '') || parsePacToNano(DEFAULT_FEE);
+      form.setFieldValue('amount', getMaxSendAmount(balanceNano, feeNano ?? 0n));
     }
   };
 
   const handleAutoFee = () => {
-    form.setFieldValue('fee', '0.01');
+    form.setFieldValue('fee', DEFAULT_FEE);
   };
 
   const handleSubmit = async (values: SendFormValues) => {
@@ -278,7 +286,7 @@ const SendForm: React.FC<SendFormProps> = ({
         fromAccount: initialValues?.fromAccount || accounts[0]?.address || '',
         receiver: initialValues?.receiver || '',
         amount: initialValues?.amount || '',
-        fee: initialValues?.fee || '0.01',
+        fee: initialValues?.fee || DEFAULT_FEE,
         memo: initialValues?.memo || '',
         password: '',
         bridgeChain: initialValues?.bridgeChain || (isBridgeMode ? defaultChain : undefined),
