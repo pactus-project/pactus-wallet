@@ -1,5 +1,23 @@
 # CHANGELOG
 
+## [1.6.0](https://github.com/pactus-project/pactus-wallet/compare/v1.5.0...v1.6.0) (2026-10-26)
+
+### Feat
+
+- **settings**: add remove wallet action with password confirmation ([#333](https://github.com/pactus-project/pactus-wallet/pull/333))
+- **send**: show the PAC unit inside the Amount and Fee fields instead of the logo after the label ([#350](https://github.com/pactus-project/pactus-wallet/pull/350))
+
+### Fix
+
+- **send**: stop the Max button from rounding the amount above the balance, which made transactions fail with insufficient funds ([#348](https://github.com/pactus-project/pactus-wallet/pull/348))
+- **settings**: separate language and security in general settings ([#334](https://github.com/pactus-project/pactus-wallet/pull/334))
+
+### Chore
+
+- **deps**: bump next to 16.4.3 and sharp to 0.35.5 ([#357](https://github.com/pactus-project/pactus-wallet/pull/357))
+- **deps**: bump storybook packages to 10.6.3 ([#353](https://github.com/pactus-project/pactus-wallet/pull/353), [#359](https://github.com/pactus-project/pactus-wallet/pull/359))
+- **deps**: bump vite, postcss, protobufjs, serialize-javascript, browserslist, nanoid, fast-uri, brace-expansion, handlebars and js-yaml ([#354](https://github.com/pactus-project/pactus-wallet/pull/354), [#338](https://github.com/pactus-project/pactus-wallet/pull/338), [#335](https://github.com/pactus-project/pactus-wallet/pull/335), [#351](https://github.com/pactus-project/pactus-wallet/pull/351), [#343](https://github.com/pactus-project/pactus-wallet/pull/343), [#340](https://github.com/pactus-project/pactus-wallet/pull/340), [#352](https://github.com/pactus-project/pactus-wallet/pull/352), [#356](https://github.com/pactus-project/pactus-wallet/pull/356), [#358](https://github.com/pactus-project/pactus-wallet/pull/358), [#346](https://github.com/pactus-project/pactus-wallet/pull/346))
+
 ## [1.5.0](https://github.com/pactus-project/pactus-wallet/compare/v1.4.0...v1.5.0) (2026-07-05)
 
 ### Fix
