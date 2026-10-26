@@ -10,4 +10,4 @@
 :HL["/_next/static/css/a97c50a2cc29fe37.css","style"]
 2:[["children",{"s":"__PAGE__","h":160}]]
 1:[["children",{"s":"recovery-phrase-term","h":96,"c":"$Q2"}]]
-0:{"b":"nRLLcDeWX_rk_hZObzJoz","t":{"t":{"s":"","h":80,"c":"$Q1"}}}
+0:{"b":"GW8xyXwVMcT8tdOD-0NWh","t":{"t":{"s":"","h":80,"c":"$Q1"}}}
