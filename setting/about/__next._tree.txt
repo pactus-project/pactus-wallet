@@ -11,4 +11,7 @@
 :HL["/_next/static/css/46bbbdc2d18212c4.css","style"]
 :HL["/_next/static/css/b1eb7d256a3a1391.css","style"]
 :HL["/_next/static/css/29b36616f9ff73cf.css","style"]
-0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"setting","param":null,"prefetchHints":0,"slots":{"children":{"name":"about","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}}}},"staleTime":300,"buildId":"2HSBU90dBi236bQEI3WCr"}
+3:[["children",{"s":"__PAGE__","h":160}]]
+2:[["children",{"s":"about","h":96,"c":"$Q3"}]]
+1:[["children",{"s":"setting","h":96,"c":"$Q2"}]]
+0:{"b":"bMjlfMCJQ_0wRy8bZMFYz","t":{"t":{"s":"","h":80,"c":"$Q1"}}}

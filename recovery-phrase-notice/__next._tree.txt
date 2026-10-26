@@ -8,4 +8,6 @@
 :HL["/_next/static/css/7659fb3c6a353cad.css","style"]
 :HL["/_next/static/css/b2c77bf8ed5f2254.css","style"]
 :HL["/_next/static/css/a97c50a2cc29fe37.css","style"]
-0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"recovery-phrase-notice","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}},"staleTime":300,"buildId":"2HSBU90dBi236bQEI3WCr"}
+2:[["children",{"s":"__PAGE__","h":160}]]
+1:[["children",{"s":"recovery-phrase-notice","h":96,"c":"$Q2"}]]
+0:{"b":"bMjlfMCJQ_0wRy8bZMFYz","t":{"t":{"s":"","h":80,"c":"$Q1"}}}
