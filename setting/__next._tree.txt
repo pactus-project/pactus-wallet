@@ -13,4 +13,4 @@
 :HL["/_next/static/css/29b36616f9ff73cf.css","style"]
 2:[["children",{"s":"__PAGE__","h":160}]]
 1:[["children",{"s":"setting","h":96,"c":"$Q2"}]]
-0:{"b":"B9DwhsjCvkHfAZfClP7gS","t":{"t":{"s":"","h":80,"c":"$Q1"}}}
+0:{"b":"nRLLcDeWX_rk_hZObzJoz","t":{"t":{"s":"","h":80,"c":"$Q1"}}}
