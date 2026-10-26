@@ -10,4 +10,4 @@
 :HL["/_next/static/css/a97c50a2cc29fe37.css","style"]
 2:[["children",{"s":"__PAGE__","h":160}]]
 1:[["children",{"s":"_not-found","h":96,"c":"$Q2"}]]
-0:{"b":"-BMdrwya6fcUDav2sSq_h","t":{"t":{"s":"","h":80,"c":"$Q1"}}}
+0:{"b":"AgcjE0_eyoK2-0rRG5ZPO","t":{"t":{"s":"","h":80,"c":"$Q1"}}}
